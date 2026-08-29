@@ -224,6 +224,52 @@ def test_benchmark_binds_every_task_to_one_locked_round(
     } == {("round-001", manifest["manifest_sha256"])}
 
 
+def test_benchmark_can_run_one_selected_game(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    workspace = tmp_path / "external benchmark workspace"
+    observed: list[str] = []
+    real_build = build_round_contracts
+
+    def build_mock_round(
+        round_dir: Path,
+        active_games: object,
+        *,
+        config: object,
+        round_id: str,
+    ) -> dict[str, object]:
+        assert isinstance(config, dict)
+        return real_build(
+            round_dir,
+            active_games,  # type: ignore[arg-type]
+            config=config,
+            generator=_mock_contract_generator(config),
+            round_id=round_id,
+            timestamp="2026-08-28T00:00:00+00:00",
+        )
+
+    def complete_task(**kwargs: object) -> dict[str, object]:
+        game = kwargs["game"]
+        observed.append(game.slug)  # type: ignore[union-attr]
+        return {"status": "completed", "official_total": 68.5}
+
+    monkeypatch.setenv("DASHSCOPE_API_KEY", "integration-test-key")
+    monkeypatch.setattr(benchmark_module, "build_round_contracts", build_mock_round)
+    monkeypatch.setattr(benchmark_module, "run_task", complete_task)
+    state = benchmark_module.run_benchmark(
+        workspace=workspace,
+        run_id="snake-run-001",
+        round_id="round-001",
+        game_slug="snake",
+        progress=lambda _message: None,
+    )
+
+    assert observed == ["snake"]
+    assert [record["game"] for record in state["matrix"]] == ["snake"]
+    assert state["policy_descriptor"]["selected_game_slugs"] == ["snake"]
+
+
 def _installed_console_script() -> Path | None:
     found = shutil.which("code2play")
     if found:

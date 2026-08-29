@@ -5,7 +5,12 @@ from types import SimpleNamespace
 
 from code2play.config.project import ModelConfig, game_by_slug, load_config
 from code2play.generation.staged import generate_candidate_project
-from code2play.providers.dashscope import DashScopeChatJudge, GenerationResult
+from code2play.providers.dashscope import (
+    DashScopeChatJudge,
+    GenerationResult,
+    _model_aliases,
+    _restore_aliases,
+)
 
 
 STATE = """class GameState:
@@ -149,3 +154,33 @@ def test_provider_is_qwen_only_and_uses_fake_openai_compatible_client(tmp_path: 
     )
     assert judge.json_text("Return JSON.", "{}", "smoke") == {"ok": True}
     assert (tmp_path / "raw_input.json").is_file()
+
+
+def test_provider_restores_blinded_checkpoint_and_dimension_ids() -> None:
+    aliases = _model_aliases(
+        "snake.D2.1.01 snake.D2.2.01 D2.1 D2.2",
+    )
+    value = {
+        "checkpoint_id": "criterion_1_01",
+        "dimension": "interaction modeling",
+        "source_checkpoint_ids": [r"criterion\_2\_01"],
+        "rationale": "interaction modeling",
+        "penalties": {
+            "game element modeling": 0,
+            "interaction modeling": 1,
+        },
+        "rationale_by_dimension": {
+            "interaction modeling": "The explanatory text remains unchanged.",
+        },
+    }
+
+    restored = _restore_aliases(value, aliases)
+
+    assert restored["checkpoint_id"] == "snake.D2.1.01"
+    assert restored["dimension"] == "D2.2"
+    assert restored["source_checkpoint_ids"] == ["snake.D2.2.01"]
+    assert restored["rationale"] == "interaction modeling"
+    assert restored["penalties"] == {"D2.1": 0, "D2.2": 1}
+    assert restored["rationale_by_dimension"] == {
+        "D2.2": "The explanatory text remains unchanged.",
+    }

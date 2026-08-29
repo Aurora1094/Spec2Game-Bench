@@ -296,7 +296,10 @@ def _d4_contract_policy(
 
 
 def _batch_policy_descriptor(
-    config: dict[str, Any], manifest: Mapping[str, Any] | None = None
+    config: dict[str, Any],
+    manifest: Mapping[str, Any] | None = None,
+    *,
+    selected_game_slugs: list[str] | None = None,
 ) -> dict[str, Any]:
     locked = {
         key: config[key]
@@ -304,10 +307,13 @@ def _batch_policy_descriptor(
     }
     locked["d4_contracts"] = _d4_contract_policy(config, manifest)
     locked["runtime_protocol"] = runtime_protocol_descriptor()
-    return {
+    descriptor: dict[str, Any] = {
         "schema_version": 1,
         "locked_policy": locked,
     }
+    if selected_game_slugs is not None:
+        descriptor["selected_game_slugs"] = list(selected_game_slugs)
+    return descriptor
 
 
 def _policy_sha256(config: dict[str, Any], manifest: Mapping[str, Any] | None = None) -> str:
@@ -318,8 +324,14 @@ def _task_policy_descriptor(
     config: dict[str, Any],
     game: GameConfig,
     manifest: Mapping[str, Any] | None = None,
+    *,
+    selected_game_slugs: list[str] | None = None,
 ) -> dict[str, Any]:
-    batch_descriptor = _batch_policy_descriptor(config, manifest)
+    batch_descriptor = _batch_policy_descriptor(
+        config,
+        manifest,
+        selected_game_slugs=selected_game_slugs,
+    )
     return {
         "schema_version": 1,
         "batch_policy_sha256": sha256_json(batch_descriptor),
@@ -330,8 +342,19 @@ def _task_policy_descriptor(
     }
 
 
-def _task_policy_sha256(config: dict[str, Any], game: GameConfig) -> str:
-    return sha256_json(_task_policy_descriptor(config, game))
+def _task_policy_sha256(
+    config: dict[str, Any],
+    game: GameConfig,
+    *,
+    selected_game_slugs: list[str] | None = None,
+) -> str:
+    return sha256_json(
+        _task_policy_descriptor(
+            config,
+            game,
+            selected_game_slugs=selected_game_slugs,
+        )
+    )
 
 
 def _render_prompt_contract(
@@ -414,6 +437,7 @@ def run_task(
     resume: bool,
     progress: Callable[[str], None] = print,
     experimental_single_model: str | None = None,
+    selected_game_slugs: list[str] | None = None,
 ) -> dict[str, Any]:
     task_id = f"{game.slug}__{model.id}__r{repetition:02d}"
     task_dir = run_dir / "tasks" / task_id
@@ -426,7 +450,12 @@ def run_task(
     )
     if round_manifest.get("round_id") != round_id or round_manifest.get("manifest_sha256") != contract_manifest_sha256:
         raise ValueError("D4 round contract manifest hash drifted before candidate execution")
-    task_policy_descriptor = _task_policy_descriptor(config, game, round_manifest)
+    task_policy_descriptor = _task_policy_descriptor(
+        config,
+        game,
+        round_manifest,
+        selected_game_slugs=selected_game_slugs,
+    )
     task_policy_sha256 = sha256_json(task_policy_descriptor)
     state = (
         _read_json(state_path)
@@ -616,6 +645,7 @@ def run_benchmark(
     config_path: str | Path | None = None,
     workspace: str | Path | None = None,
     round_id: str | None = None,
+    game_slug: str | None = None,
     progress: Callable[[str], None] = print,
 ) -> dict[str, Any]:
     config = load_config(config_path) if config_path else load_config()
@@ -626,6 +656,11 @@ def run_benchmark(
     run_dir = workspace_run_dir(workspace_root, run_id)
     run_dir.mkdir(parents=True, exist_ok=True)
     configured_games = games(config)
+    selected_games = configured_games
+    if game_slug is not None:
+        selected_games = [game for game in configured_games if game.slug == game_slug]
+        if not selected_games:
+            raise ValueError(f"Unknown configured game: {game_slug}")
     existing_batch_state_path = run_dir / "run_state.json"
     existing_batch_state = (
         _read_json(existing_batch_state_path)
@@ -646,7 +681,13 @@ def run_benchmark(
     )
     contract_manifest_sha256 = str(round_manifest["manifest_sha256"])
     batch_state_path = run_dir / "run_state.json"
-    batch_policy_descriptor = _batch_policy_descriptor(config, round_manifest)
+    batch_policy_descriptor = _batch_policy_descriptor(
+        config,
+        round_manifest,
+        selected_game_slugs=(
+            [game.slug for game in selected_games] if game_slug is not None else None
+        ),
+    )
     batch_policy_sha256 = sha256_json(batch_policy_descriptor)
     matrix = [
         {
@@ -659,7 +700,7 @@ def run_benchmark(
             "contract_manifest_sha256": contract_manifest_sha256,
             "d4_contract": _d4_contract_policy(config, round_manifest).get(game.slug),
         }
-        for game in configured_games
+        for game in selected_games
         for model in models(config)
         for repetition in range(1, repetitions + 1)
     ]
@@ -697,7 +738,7 @@ def run_benchmark(
     results: list[dict[str, Any]] = []
     _save_state(batch_state_path, batch_state)
 
-    for game in configured_games:
+    for game in selected_games:
         for model in models(config):
             for repetition in range(1, repetitions + 1):
                 task_id = f"{game.slug}__{model.id}__r{repetition:02d}"
@@ -726,6 +767,11 @@ def run_benchmark(
                         contract_manifest_sha256=contract_manifest_sha256,
                         resume=resume,
                         progress=progress,
+                        selected_game_slugs=(
+                            [item.slug for item in selected_games]
+                            if game_slug is not None
+                            else None
+                        ),
                     )
                     record.update(
                         {

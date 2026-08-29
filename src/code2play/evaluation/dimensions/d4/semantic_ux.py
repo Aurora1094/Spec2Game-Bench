@@ -26,6 +26,9 @@ SCORE_ANCHORS = """
 5 = Excellent: unambiguous, complete, deliberate, and polished, with no material defect.
 """.strip()
 
+D42_MAX_TRANSITIONS_PER_BATCH = 4
+D42_MAX_IMAGES_PER_BATCH = D42_MAX_TRANSITIONS_PER_BATCH * 3
+
 
 def _payload_sha256(value: Any) -> str:
     encoded = json.dumps(
@@ -103,6 +106,8 @@ Return JSON only with one result for every supplied transition:
   }}]
 }}
 All scores must be integers from 0 to 5.
+Keep every evidence list and limitations list to one concise item, and every
+rationale to one concise sentence.
 """.strip()
 
 D43_INSTRUCTIONS = """
@@ -340,8 +345,8 @@ def _evaluate_d42(
             item for item in transition_checkpoints if item["dimension"] == dimension
         ]
         deterministic_slices = [
-            dimension_checkpoints[start : start + 12]
-            for start in range(0, len(dimension_checkpoints), 12)
+            dimension_checkpoints[start : start + D42_MAX_TRANSITIONS_PER_BATCH]
+            for start in range(0, len(dimension_checkpoints), D42_MAX_TRANSITIONS_PER_BATCH)
         ]
         for slice_index, batch_checkpoints in enumerate(deterministic_slices, start=1):
             _evaluate_d42_slice(
@@ -430,7 +435,10 @@ def _evaluate_d42_slice(
             pending.append(checkpoint)
         if not rows:
             return
-        if len(rows) > 12 or len(images) > 36:
+        if (
+            len(rows) > D42_MAX_TRANSITIONS_PER_BATCH
+            or len(images) > D42_MAX_IMAGES_PER_BATCH
+        ):
             raise ValueError("D4.2 batch exceeds configured transition/image limits")
         batch_prompt = json.dumps(
             {"transition_batch": rows}, ensure_ascii=False, separators=(",", ":")

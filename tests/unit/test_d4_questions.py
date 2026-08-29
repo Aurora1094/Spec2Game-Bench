@@ -37,6 +37,24 @@ class _FailingQuestionGenerator:
         raise RuntimeError("transport unavailable")
 
 
+class _GroupedKeyQuestionGenerator:
+    def json_vision(self, _instructions, _prompt, _images, _purpose):
+        return {
+            "questions": [
+                {
+                    "options": {"A": "press D", "B": "press S"},
+                    "correct_choice": "B",
+                    "answer_rationale": "The food is below the snake.",
+                },
+                {
+                    "options": {"A": "press A", "B": "press W"},
+                    "correct_choice": "B",
+                    "answer_rationale": "The upward turn is the legal route.",
+                },
+            ]
+        }
+
+
 def _fixture(tmp_path: Path):
     config = load_config()
     game = game_by_slug(config, "snake")
@@ -109,3 +127,28 @@ def test_dynamic_questions_bind_real_images_deterministically(tmp_path: Path) ->
     )
     assert failed["status"] == "judge_output_unavailable"
     assert failed["candidate_failure_proven"] is False
+
+
+def test_grouped_keyboard_operations_accept_concrete_key_choices(tmp_path: Path) -> None:
+    contract, spec, sample, _manifest = _fixture(tmp_path)
+    contract["allowed_operations"] = [
+        "press W, A, S, or D to change the snake's movement direction",
+    ]
+    candidate_sha = "c" * 64
+
+    pack = build_d43_question_pack_single_pass(
+        d4_contract=contract,
+        d2_checkpoints=spec["evaluation"]["d2"]["checkpoints"],
+        sample_manifest=sample,
+        candidate_project_sha256=candidate_sha,
+        generator=_GroupedKeyQuestionGenerator(),
+    )
+
+    assert pack["status"] == "completed"
+    assert pack["questions"][0]["options"] == {"A": "press D", "B": "press S"}
+    validate_d43_question_pack(
+        pack,
+        d4_contract=contract,
+        sample_manifest=sample,
+        candidate_project_sha256=candidate_sha,
+    )

@@ -31,6 +31,10 @@ EVIDENCE_SELECTION_POLICY = "deterministic_material_pair_v1"
 MAX_D43_EVIDENCE_IMAGES = 12
 MIN_REVIEW_CONFIDENCE = 0.7
 _CJK_PATTERN = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
+_CONTROL_TOKEN_PATTERN = re.compile(
+    r"\b(?:[A-Z]|[1-9]|space|left|right|up|down|enter|escape)\b",
+    re.IGNORECASE,
+)
 
 GENERATOR_INSTRUCTIONS = """
 You create exactly two evaluator-only multiple-choice question records from
@@ -42,6 +46,7 @@ contain options A and B and a correct_choice. Both options must be concrete
 legal physical player operations, and exactly one must be visibly and
 strategically best for the fixed target. Do not use restart, invalid/no-op,
 lifecycle-only, or unavailable operations. Every rationale must be English.
+Use the operation strings from the supplied allowed_operations list exactly.
 """.strip()
 
 
@@ -72,6 +77,43 @@ def _english(value: Any, label: str) -> str:
     return result
 
 
+def _operation_key(value: str) -> str:
+    return re.sub(r"\s+", " ", value.strip().rstrip(".")).casefold()
+
+
+def _operation_aliases(
+    allowed_operations: Sequence[str],
+) -> tuple[dict[str, str], list[str]]:
+    """Expand grouped keyboard descriptions into concrete, deterministic choices."""
+
+    aliases: dict[str, str] = {}
+    concrete: list[str] = []
+    for raw_operation in allowed_operations:
+        operation = str(raw_operation)
+        aliases.setdefault(_operation_key(operation), operation)
+        active_verb: str | None = None
+        for segment in operation.split(","):
+            prefix = re.split(r"\b(?:to|while)\b", segment, maxsplit=1, flags=re.IGNORECASE)[0]
+            verb_match = re.search(r"\b(press|hold)\b", prefix, flags=re.IGNORECASE)
+            if verb_match is not None:
+                active_verb = verb_match.group(1).casefold()
+            if active_verb is None:
+                continue
+            for match in _CONTROL_TOKEN_PATTERN.finditer(prefix):
+                token = match.group(0)
+                label = token.upper() if len(token) == 1 else token.title()
+                canonical = f"{active_verb} {label}"
+                aliases.setdefault(_operation_key(canonical), canonical)
+                if canonical not in concrete:
+                    concrete.append(canonical)
+    return aliases, concrete
+
+
+def _question_operations(allowed_operations: Sequence[str]) -> list[str]:
+    _aliases, concrete = _operation_aliases(allowed_operations)
+    return concrete or [str(operation) for operation in allowed_operations]
+
+
 def _normalize_options(
     value: Any,
     label: str,
@@ -82,10 +124,10 @@ def _normalize_options(
     options = {key: _english(value[key], f"{label}.{key}") for key in ("A", "B")}
     if options["A"] == options["B"]:
         raise ValueError(f"{label} choices must differ")
-    allowed = {str(operation).casefold(): str(operation) for operation in allowed_operations}
+    allowed, _concrete = _operation_aliases(allowed_operations)
     normalized: dict[str, str] = {}
     for key, operation in options.items():
-        canonical = allowed.get(operation.casefold())
+        canonical = allowed.get(_operation_key(operation))
         if canonical is None:
             raise ValueError(f"{label}.{key} is not one of the contract operations")
         normalized[key] = canonical
@@ -224,7 +266,7 @@ def _question_prompt(d4_contract: Mapping[str, Any], checkpoints: Sequence[Mappi
         source_text.append({"question_number": index + 1, **{key: row[key] for key in ("item", "objective", "initial_state", "trigger", "expected_transition") if key in row}})
     return json.dumps({
         "target": d4_contract["target"],
-        "allowed_operations": d4_contract["allowed_operations"],
+        "allowed_operations": _question_operations(d4_contract["allowed_operations"]),
         "fixed_public_question": D43_QUESTION_TEXT,
         "assigned_source_context": source_text,
         "binding_rule": "The first supplied image is permanently bound to question 1 and the second to question 2.",

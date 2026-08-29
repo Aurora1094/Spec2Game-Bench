@@ -63,13 +63,64 @@ The workspace contains `private-configs/`, `rounds/<round-id>/`,
 creates root-level `runs/`, checkpoint exports, rendered prompts, or candidate
 projects.
 
+## Project structure
+
+The repository keeps benchmark definitions and source code in Git. Generated
+contracts, candidates, evaluation traces, reports, and questionnaire bundles
+are written to the external workspace described above.
+
+```text
+Code2Play-Bench/
+|-- benchmark/                  # Official benchmark data and schemas
+|   |-- catalog.yaml            # Ordered list of the 15 games
+|   |-- games/<game-slug>/      # Per-game specification and checkpoints
+|   |   |-- game.yaml
+|   |   |-- spec.md
+|   |   `-- checkpoints.jsonl
+|   |-- schemas/                # JSON schemas for benchmark artifacts
+|   `-- conversion_audit.json   # Source-data conversion hashes
+|-- configs/examples/           # Reproducible configuration examples
+|-- docs/                       # Protocol, data, D4, and questionnaire docs
+|-- experiments/                # Benchmark launch scripts
+|-- scripts/                    # Source-data conversion utilities
+|-- src/code2play/
+|   |-- cli.py                  # Command-line interface
+|   |-- config/                 # Configuration and workspace resolution
+|   |-- generation/              # Staged candidate generation and prompts
+|   |-- execution/              # Isolation, sampling, and benchmark runner
+|   |-- evaluation/             # D1-D4 evaluation and score assembly
+|   |-- d4/                     # D4 contracts, visual evidence, and questions
+|   |-- providers/              # DashScope/Qwen provider integration
+|   |-- human_review/            # Blind questionnaire export and validation
+|   |-- planning/               # No-send and live request plans
+|   `-- reporting/              # Machine-readable reports
+|-- tests/
+|   |-- unit/                   # Unit tests for individual modules
+|   |-- integration/            # End-to-end CLI and pipeline tests
+|   `-- compatibility/          # Boundary and policy compatibility tests
+|-- main.py                     # Source-tree CLI entry point
+|-- pyproject.toml              # Package metadata and dependencies
+`-- README.md
+```
+
+Generated artifacts are stored outside the repository:
+
+```text
+Code2Play-Workspace/
+|-- private-configs/
+|-- rounds/<round-id>/          # Locked D4 contracts and manifest
+|-- runs/<run-id>/              # Candidates, traces, evaluations, and reports
+|-- candidates/                 # Candidate project artifacts
+`-- questionnaires/             # Public blind bundles and private mappings
+```
+
 ## Commands
 
 ```text
 code2play validate
 code2play preflight [--live]
 code2play contract build [--round-id ID]
-code2play benchmark [--run-id ID] [--round-id ID]
+code2play benchmark [--game SLUG] [--run-id ID] [--round-id ID]
 code2play evaluate --game SLUG --candidate PATH
 code2play plan [--game SLUG] [--candidate PATH]
 code2play smoke [--live]
@@ -82,6 +133,12 @@ benchmark run. `contract build --mock` is a local fixture mode only and must
 not be used for official results. `plan` without `--candidate` writes a
 no-send logical request plan; the candidate form samples a real candidate and
 therefore requires the API key.
+
+For a focused live trial, keep the round contract fixed and select one game:
+
+```powershell
+python main.py benchmark --game snake --run-id snake_trial_001 --round-id round-live-003
+```
 
 There is no questionnaire server and no command that validates or collects
 filled human responses. The human-review surface is limited to anonymous

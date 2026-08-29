@@ -54,6 +54,7 @@ EXPECTED_SLUGS = (
 EXPECTED_DIMENSIONS = {"D2.1": 97, "D2.2": 94, "D2.3": 150, "D2.4": 66, "D2.5": 130}
 CHECKPOINT_ID_RE = re.compile(r"^(?P<slug>[a-z][a-z0-9_]*)\.D2\.[1-5]\.\d{2}$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+CHECKPOINT_CJK_RE = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
 
 
 def _schema_errors(value: Any, schema_path: Path, label: str) -> list[str]:
@@ -219,13 +220,20 @@ def validate_benchmark(config: Mapping[str, Any]) -> dict[str, Any]:
                 "expected_transition",
                 "detection_method",
             ):
-                if not str(row.get(field) or "").strip():
+                text = str(row.get(field) or "").strip()
+                if not text:
                     errors.append(f"{checkpoint_id}: missing {field}")
+                elif CHECKPOINT_CJK_RE.search(text):
+                    errors.append(f"{checkpoint_id}: {field} must be English")
             rubric = row.get("score_rubric")
             if not isinstance(rubric, Mapping) or any(
                 not str(rubric.get(str(score)) or "").strip() for score in range(3)
             ):
                 errors.append(f"{checkpoint_id}: score_rubric 0/1/2 is incomplete")
+            elif any(
+                CHECKPOINT_CJK_RE.search(str(rubric[str(score)])) for score in range(3)
+            ):
+                errors.append(f"{checkpoint_id}: score_rubric must be English")
             dimension = str(row.get("dimension"))
             dimensions[dimension] = dimensions.get(dimension, 0) + 1
         expected_count = int(item.get("checkpoint_count", -1))
@@ -363,6 +371,7 @@ def cmd_benchmark(args: argparse.Namespace) -> int:
         config_path=args.config_path,
         workspace=resolve_workspace(args.workspace),
         round_id=args.round_id,
+        game_slug=args.game,
     )
     _json(
         {
@@ -558,10 +567,11 @@ def build_parser() -> argparse.ArgumentParser:
     build.add_argument("--mock", action="store_true", help="use deterministic local contract fixtures")
     build.set_defaults(handler=cmd_contract_build)
 
-    benchmark = commands.add_parser("benchmark", help="run the 15-game main experiment")
+    benchmark = commands.add_parser("benchmark", help="run the benchmark, optionally for one game")
     _runtime_options(benchmark)
     benchmark.add_argument("--run-id", default="main_r1")
     benchmark.add_argument("--round-id")
+    benchmark.add_argument("--game", choices=EXPECTED_SLUGS, help="run one selected game")
     benchmark.add_argument("--no-resume", dest="resume", action="store_false")
     benchmark.set_defaults(handler=cmd_benchmark, resume=True)
 

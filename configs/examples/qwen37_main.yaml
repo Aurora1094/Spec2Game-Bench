@@ -40,8 +40,8 @@ judge:
   compiler:
     max_checkpoints_per_batch: 8
   visual:
-    max_transitions_per_batch: 12
-    max_images_per_batch: 36
+    max_transitions_per_batch: 4
+    max_images_per_batch: 12
   routes:
     action_compiler:
       provider: alibaba_dashscope

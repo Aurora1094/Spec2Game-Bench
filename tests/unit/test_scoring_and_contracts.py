@@ -9,6 +9,7 @@ from code2play.cli import EXPECTED_SLUGS, _mock_contract_generator
 from code2play.config.project import games, load_config
 from code2play.d4.contracts import (
     D4_CONTRACT_VERSION,
+    _normalize_generated_body,
     build_round_contracts,
     load_round_contract,
     validate_round_manifest,
@@ -78,3 +79,32 @@ def test_round_contracts_are_generated_once_and_hash_locked(tmp_path: Path) -> N
     )
     with pytest.raises(ValueError, match="manifest SHA256"):
         validate_round_manifest(changed, round_dir=round_dir)
+
+
+def test_legacy_contract_fields_are_normalized_to_the_locked_schema() -> None:
+    config = load_config()
+    game = next(item for item in games(config) if item.slug == "snake")
+    from code2play.generation.prompt_builder import load_evaluator_checkpoints, load_spec
+    from code2play.d4.contracts import eligible_d43_checkpoints
+
+    checkpoints = load_evaluator_checkpoints(load_spec(game.spec))
+    eligible = eligible_d43_checkpoints(checkpoints)
+    normalized = _normalize_generated_body(
+        {
+            "player_goal": "Collect food and survive as long as possible.",
+            "legal_physical_operations": [
+                "Press W to move up.",
+                "Press A to move left.",
+                "Press R to restart the game after game over.",
+            ],
+            "art_requirements": ["Use a clear, readable game scene."],
+            "eligible_source_requirement_ids": [r"criterion\_2\_01", r"criterion\_2\_02"],
+        },
+        game_slug="snake",
+        eligible_ids={row["id"] for row in eligible},
+    )
+
+    assert normalized["target"] == "Collect food and survive as long as possible."
+    assert normalized["allowed_operations"] == ["Press W to move up.", "Press A to move left."]
+    assert normalized["art_direction"] == ["Use a clear, readable game scene."]
+    assert normalized["d4_3"]["source_checkpoint_ids"] == [eligible[0]["id"], eligible[1]["id"]]

@@ -164,6 +164,33 @@ def _model_visible_texts(*texts: str) -> tuple[str, ...]:
     return tuple(_model_visible_text(text) for text in texts)
 
 
+def _model_aliases(*texts: str) -> dict[str, str]:
+    """Build unambiguous model-visible aliases for post-call normalization."""
+
+    candidates: dict[str, set[str]] = {}
+
+    def register(alias: str, original: str) -> None:
+        if alias and alias != original:
+            candidates.setdefault(alias, set()).add(original)
+
+    for text in texts:
+        original_text = str(text)
+        for match in _CHECKPOINT_RE.finditer(original_text):
+            original = match.group(0)
+            parts = original.split(".")
+            register("criterion_" + "_".join(parts[-2:]), original)
+        for match in _DIMENSION_RE.finditer(original_text):
+            original = match.group(0).upper().replace("_", ".")
+            register(_DIMENSION_NAMES.get(original, original), original)
+
+    # Never guess when two hidden identifiers collapse to one public alias.
+    return {
+        alias: next(iter(originals))
+        for alias, originals in candidates.items()
+        if len(originals) == 1
+    }
+
+
 def parse_json_object(text: str) -> dict[str, Any]:
     cleaned = str(text).strip().lstrip("\ufeff")
     cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned, flags=re.IGNORECASE)
@@ -177,15 +204,48 @@ def parse_json_object(text: str) -> dict[str, Any]:
     return value
 
 
-def _restore_aliases(value: Any, aliases: Mapping[str, str]) -> Any:
+_ALIAS_FIELDS = frozenset(
+    {
+        "batch_id",
+        "checkpoint_id",
+        "d4_3_source_checkpoint_ids",
+        "dimension",
+        "source_checkpoint_id",
+        "source_checkpoint_ids",
+        "task_id",
+    }
+)
+
+
+def _restore_alias_value(value: str, aliases: Mapping[str, str]) -> str:
+    normalized = re.sub(r"\\([_.])", r"\1", value)
+    if normalized in aliases:
+        return aliases[normalized]
+    folded = normalized.casefold()
+    for alias, original in aliases.items():
+        if alias.casefold() == folded:
+            return original
+    return value
+
+
+def _restore_aliases(
+    value: Any,
+    aliases: Mapping[str, str],
+    *,
+    field: str | None = None,
+) -> Any:
     if isinstance(value, str):
-        for original, alias in aliases.items():
-            value = value.replace(alias, original)
+        if field in _ALIAS_FIELDS:
+            return _restore_alias_value(value, aliases)
         return value
     if isinstance(value, list):
-        return [_restore_aliases(item, aliases) for item in value]
+        return [_restore_aliases(item, aliases, field=field) for item in value]
     if isinstance(value, dict):
-        return {key: _restore_aliases(item, aliases) for key, item in value.items()}
+        return {
+            restored_key: _restore_aliases(item, aliases, field=restored_key)
+            for key, item in value.items()
+            for restored_key in (_restore_alias_value(str(key), aliases),)
+        }
     return value
 
 
@@ -450,10 +510,11 @@ class DashScopeChatJudge:
         visible = _model_visible_texts(instructions, prompt, *(label for _path, label in images))
         safe_instructions = _redact(visible[0], [self._api_key])
         safe_prompt = _redact(visible[1], [self._api_key])
-        aliases: dict[str, str] = {}
-        for original, alias in zip((instructions, prompt, *(label for _path, label in images)), visible, strict=True):
-            if original != alias:
-                aliases[alias] = original
+        aliases = _model_aliases(
+            instructions,
+            prompt,
+            *(label for _path, label in images),
+        )
         content: list[dict[str, Any]] = [{"type": "text", "text": safe_prompt}]
         image_records: list[dict[str, Any]] = []
         for (path, _label), label in zip(images, visible[2:], strict=True):

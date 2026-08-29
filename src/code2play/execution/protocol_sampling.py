@@ -466,6 +466,7 @@ def _compile_checkpoint_programs(
 
     effective_workers = _resolve_d2_worker_count(max_workers, len(batches)) if batches else 0
     repair_rows: list[tuple[int, dict[str, Any]]] = []
+    batch_failures: list[dict[str, str]] = []
     if batches:
         with ThreadPoolExecutor(max_workers=effective_workers, thread_name_prefix="gamebench-d2-compiler-batch") as executor:
             futures = {
@@ -486,6 +487,14 @@ def _compile_checkpoint_programs(
                 batch_id, rows = futures[future]
                 try:
                     valid, repair_ids = future.result()
+                except ValueError as exc:
+                    # A malformed batch is still recoverable: retry each row with
+                    # the stricter single-checkpoint compiler prompt.
+                    repair_rows.extend((index, checkpoint) for index, checkpoint in rows)
+                    batch_failures.append(
+                        {"batch_id": batch_id, "error_type": type(exc).__name__}
+                    )
+                    continue
                 except Exception as exc:
                     for pending in futures:
                         pending.cancel()
@@ -514,11 +523,13 @@ def _compile_checkpoint_programs(
 
     programs = [programs_by_index[index] for index in range(len(checkpoints))]
     return programs, {
-        "strategy": "parallel_dimension_batches_with_single_item_repair_v1",
+        "strategy": "parallel_dimension_batches_with_single_item_repair_v2",
         "effective_workers": effective_workers,
         "checkpoint_count": len(checkpoints),
         "base_batch_count": len(batches),
         "max_checkpoints_per_batch": 8,
+        "batch_failure_count": len(batch_failures),
+        "batch_failures": batch_failures,
         "repair_count": len(repair_rows),
         "repair_checkpoint_ids": [checkpoint["id"] for _index, checkpoint in repair_rows],
         "reused_validated_count": len(cached),

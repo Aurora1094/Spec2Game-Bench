@@ -136,6 +136,11 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
             errors.append("judge aggregation must be single_valid_response")
         if judge.get("temperature") != 0.0 or judge.get("stateless") is not True:
             errors.append("judge requests must be stateless at temperature zero")
+        if judge.get("visual") != {
+            "max_transitions_per_batch": 4,
+            "max_images_per_batch": 12,
+        }:
+            errors.append("visual judge batch limits differ from the locked benchmark policy")
         routes = judge.get("routes", {})
         expected_limits = {
             "action_compiler": 6000,

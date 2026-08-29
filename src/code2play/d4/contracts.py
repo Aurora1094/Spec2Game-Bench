@@ -11,7 +11,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
-from typing import Any, Mapping, Sequence
+from typing import Any, Callable, Mapping, Sequence
 from uuid import uuid4
 
 from jsonschema import Draft202012Validator
@@ -39,7 +39,7 @@ CONTRACT_GENERATOR_MODEL = DASHSCOPE_MODEL
 CONTRACT_VALIDATOR_MODELS = (DASHSCOPE_MODEL,)
 MAX_REVISION_ROUNDS = 0
 RUNTIME_QUESTION_POLICY = "qwen37_plus_dynamic_visual_questions_fixed_local_binding_v1"
-CONTRACT_PROMPT_VERSION = "d4_round_contract_prompt_v1"
+CONTRACT_PROMPT_VERSION = "d4_round_contract_prompt_v2"
 CONTRACT_SCHEMA_PATH = (
     Path(__file__).resolve().parents[3] / "benchmark" / "schemas" / "d4_contract.schema.json"
 )
@@ -56,6 +56,19 @@ player operations, and exactly two eligible source requirement IDs for runtime
 visual questions. Do not invent scenes or answers. Do not include evaluator
 instructions, scoring rules, candidate code, screenshots, or private rubric
 text. Every natural-language string must be in English.
+
+Use exactly these top-level field names and no legacy alternatives:
+{
+  "target": "the player's goal",
+  "allowed_operations": ["one concrete physical operation"],
+  "art_direction": ["one screenshot-judgeable visual requirement"],
+  "art_sample_size": 8,
+  "sample_seed": 41,
+  "d4_3_source_checkpoint_ids": ["first eligible ID", "second eligible ID"]
+}
+Only include gameplay operations that can be used to pursue the target.
+Exclude restart, reset, quit, close, invalid, no-op, and other lifecycle-only
+controls from "allowed_operations".
 """.strip()
 
 
@@ -97,6 +110,56 @@ def _string_list(value: Any, label: str, minimum: int = 1, maximum: int = 12) ->
     return result
 
 
+def _contract_field(value: Mapping[str, Any], canonical: str, *legacy: str) -> Any:
+    """Read a canonical field while accepting unambiguous legacy aliases."""
+
+    present = [(name, value[name]) for name in (canonical, *legacy) if name in value]
+    if not present:
+        return None
+    selected_name, selected = present[0]
+    for name, candidate in present[1:]:
+        if candidate != selected:
+            raise ValueError(
+                f"D4 contract fields {selected_name!r} and {name!r} conflict"
+            )
+    return selected
+
+
+def _source_checkpoint_ids(value: Mapping[str, Any]) -> Any:
+    candidates: list[tuple[str, Any]] = []
+    for name in ("d4_3_source_checkpoint_ids", "eligible_source_requirement_ids"):
+        if name in value:
+            candidates.append((name, value[name]))
+    nested = value.get("d4_3")
+    if isinstance(nested, Mapping) and "source_checkpoint_ids" in nested:
+        candidates.append(("d4_3.source_checkpoint_ids", nested["source_checkpoint_ids"]))
+    if not candidates:
+        return None
+    selected_name, selected = candidates[0]
+    for name, candidate in candidates[1:]:
+        if candidate != selected:
+            raise ValueError(
+                f"D4 contract fields {selected_name!r} and {name!r} conflict"
+            )
+    return selected
+
+
+def _canonical_checkpoint_id(source_id: Any, eligible_ids: set[str]) -> Any:
+    if not isinstance(source_id, str):
+        return source_id
+    # Some model responses preserve Markdown escapes from the prompt.
+    candidate = re.sub(r"\\([_.])", r"\1", source_id)
+    if candidate in eligible_ids:
+        return candidate
+    matches = []
+    for eligible_id in eligible_ids:
+        parts = eligible_id.split(".")
+        alias = "criterion_" + "_".join(parts[-2:]) if len(parts) >= 2 else ""
+        if candidate == alias:
+            matches.append(eligible_id)
+    return matches[0] if len(matches) == 1 else candidate
+
+
 def eligible_d43_checkpoints(checkpoints: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
     return [
         {
@@ -126,26 +189,42 @@ def _public_input(spec_path: Path, checkpoints: Sequence[Mapping[str, Any]]) -> 
 def _normalize_generated_body(value: Any, *, game_slug: str, eligible_ids: set[str]) -> dict[str, Any]:
     if not isinstance(value, Mapping):
         raise ValueError("D4 contract output must be an object")
-    target = _english(value.get("target"), "target")
-    operations = _string_list(value.get("allowed_operations"), "allowed_operations", maximum=12)
-    for operation in operations:
-        lowered = operation.lower()
-        if any(term in lowered for term in _DISALLOWED_TERMS):
-            raise ValueError(f"allowed operation is disallowed: {operation!r}")
-    art_direction = _string_list(value.get("art_direction"), "art_direction", maximum=12)
+    target = _english(_contract_field(value, "target", "player_goal"), "target")
+    legacy_operations = "allowed_operations" not in value and "legal_physical_operations" in value
+    operations = _string_list(
+        _contract_field(value, "allowed_operations", "legal_physical_operations"),
+        "allowed_operations",
+        maximum=12,
+    )
+    disallowed = [
+        operation
+        for operation in operations
+        if any(term in operation.lower() for term in _DISALLOWED_TERMS)
+    ]
+    if legacy_operations:
+        # Older contract responses included lifecycle controls in this list.
+        operations = [operation for operation in operations if operation not in disallowed]
+        if not operations:
+            raise ValueError("allowed_operations must contain a gameplay operation")
+    elif disallowed:
+        raise ValueError(f"allowed operation is disallowed: {disallowed[0]!r}")
+    art_direction = _string_list(
+        _contract_field(value, "art_direction", "art_requirements"),
+        "art_direction",
+        maximum=12,
+    )
     sample_size = value.get("art_sample_size", D41_ART_SAMPLE_SIZE)
     sample_seed = value.get("sample_seed", D41_SAMPLE_SEED)
     if isinstance(sample_size, bool) or not isinstance(sample_size, int) or not 1 <= sample_size <= 12:
         raise ValueError("art_sample_size must be an integer from 1 through 12")
     if isinstance(sample_seed, bool) or not isinstance(sample_seed, int) or sample_seed < 0:
         raise ValueError("sample_seed must be a non-negative integer")
-    source_ids = value.get("d4_3_source_checkpoint_ids")
-    if source_ids is None and isinstance(value.get("d4_3"), Mapping):
-        source_ids = value["d4_3"].get("source_checkpoint_ids")
+    source_ids = _source_checkpoint_ids(value)
     if not isinstance(source_ids, list) or len(source_ids) != D43_QUESTION_COUNT:
         raise ValueError("d4_3_source_checkpoint_ids must contain exactly two IDs")
     normalized_sources = []
     for index, source_id in enumerate(source_ids):
+        source_id = _canonical_checkpoint_id(source_id, eligible_ids)
         source_id = _english(source_id, f"d4_3_source_checkpoint_ids[{index}]")
         if source_id not in eligible_ids:
             raise ValueError(f"D4.3 source references ineligible checkpoint {source_id!r}")
@@ -209,14 +288,25 @@ def validate_d4_contract(
     return dict(contract)
 
 
-def _invoke_generator(generator: Any, prompt: str, slug: str) -> dict[str, Any]:
+def _invoke_generator(
+    generator: Any,
+    prompt: str,
+    slug: str,
+    *,
+    validator: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
+) -> dict[str, Any]:
     if callable(generator) and not hasattr(generator, "json_text"):
         try:
             value = generator(slug, prompt)
         except TypeError:
             value = generator(prompt)
     else:
-        value = generator.json_text(GENERATOR_INSTRUCTIONS, prompt, f"d4_contract_generation_{slug}")
+        purpose = f"d4_contract_generation_{slug}"
+        validated = getattr(generator, "json_text_validated", None)
+        if validator is not None and callable(validated):
+            value = validated(GENERATOR_INSTRUCTIONS, prompt, purpose, validator)
+        else:
+            value = generator.json_text(GENERATOR_INSTRUCTIONS, prompt, purpose)
     if not isinstance(value, dict):
         raise ValueError("contract generator must return a JSON object")
     return value
@@ -319,8 +409,21 @@ def build_round_contracts(
         if len(eligible) < D43_QUESTION_COUNT:
             raise ValueError(f"{game.slug} does not have two eligible dynamic D2.2 checkpoints")
         prompt, input_hash, checkpoint_hash = _public_input(game.spec, checkpoints)
-        raw = _invoke_generator(generator, prompt, game.slug)
-        body = _normalize_generated_body(raw, game_slug=game.slug, eligible_ids={row["id"] for row in eligible})
+        eligible_ids = {row["id"] for row in eligible}
+
+        def normalize(value: Any) -> dict[str, Any]:
+            return _normalize_generated_body(
+                value,
+                game_slug=game.slug,
+                eligible_ids=eligible_ids,
+            )
+
+        raw = _invoke_generator(generator, prompt, game.slug, validator=normalize)
+        body = _normalize_generated_body(
+            raw,
+            game_slug=game.slug,
+            eligible_ids=eligible_ids,
+        )
         contract = {
             "schema_version": D4_CONTRACT_SCHEMA_VERSION,
             "contract_version": D4_CONTRACT_VERSION,
