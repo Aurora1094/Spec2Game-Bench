@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Code2Play game metadata",
+  "type": "object",
+  "required": ["schema_version", "slug", "name", "difficulty", "spec", "checkpoints", "variants"],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "slug": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "name": {"type": "string", "minLength": 1},
+    "difficulty": {"enum": ["easy", "medium", "hard"]},
+    "spec": {"const": "spec.md"},
+    "checkpoints": {"const": "checkpoints.jsonl"},
+    "variants": {"type": "array", "maxItems": 0},
+    "window_size": {"type": "array", "prefixItems": [{"type": "integer", "minimum": 1}, {"type": "integer", "minimum": 1}], "minItems": 2, "maxItems": 2}
+  },
+  "additionalProperties": true
+}

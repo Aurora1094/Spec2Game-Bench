@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "code2play-bench"
+version = "1.0.0"
+description = "Code2Play-Bench: a 15-game staged code generation benchmark"
+requires-python = ">=3.10"
+dependencies = [
+  "openai>=1.30",
+  "Pillow>=10.0",
+  "PyYAML>=6.0",
+  "pygame>=2.5",
+  "python-docx>=1.1",
+  "jsonschema>=4.20",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.6",
+]
+
+[project.scripts]
+code2play = "code2play.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+code2play = [
+  "evaluation/dimensions/d3/config.json",
+  "generation/templates/*.md",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+exclude = ["benchmark/games"]

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Code2Play round D4 contract",
+  "type": "object",
+  "required": ["schema_version", "contract_version", "design_version", "policy", "round_id", "game_slug", "target", "allowed_operations", "art_direction", "art_sample_size", "sample_seed", "d4_3", "input_sha256", "checkpoint_jsonl_sha256", "generator", "contract_sha256"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "contract_version": {"const": "round_v1"},
+    "design_version": {"const": "d4_round_contract_qwen37_plus_v1"},
+    "policy": {"const": "qwen37_plus_single_pass_locally_validated"},
+    "round_id": {"type": "string", "minLength": 1},
+    "game_slug": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "target": {"type": "string", "minLength": 1},
+    "allowed_operations": {"type": "array", "minItems": 1, "maxItems": 12, "items": {"type": "string", "minLength": 1}},
+    "art_direction": {"type": "array", "minItems": 1, "maxItems": 12, "items": {"type": "string", "minLength": 1}},
+    "art_sample_size": {"type": "integer", "minimum": 1, "maximum": 12},
+    "sample_seed": {"type": "integer", "minimum": 0},
+    "d4_3": {
+      "type": "object",
+      "required": ["question_count", "fixed_question", "source_checkpoint_ids", "evidence_source", "requires_distinct_evidence", "runtime_question_policy"],
+      "properties": {
+        "question_count": {"const": 2},
+        "fixed_question": {"type": "string", "minLength": 1},
+        "source_checkpoint_ids": {"type": "array", "prefixItems": [{"type": "string"}, {"type": "string"}], "minItems": 2, "maxItems": 2},
+        "evidence_source": {"const": "real_d4_2_frames_for_dynamic_d2_2"},
+        "requires_distinct_evidence": {"const": true},
+        "runtime_question_policy": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    },
+    "input_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "checkpoint_jsonl_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "generator": {
+      "type": "object",
+      "required": ["provider", "model", "api_style", "temperature", "prompt_version"],
+      "properties": {
+        "provider": {"const": "alibaba_dashscope"},
+        "model": {"const": "qwen3.7-plus"},
+        "api_style": {"const": "chat_completions"},
+        "temperature": {"const": 0.0},
+        "prompt_version": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    },
+    "contract_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": true
+}

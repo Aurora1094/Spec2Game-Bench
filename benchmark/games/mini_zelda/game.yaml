@@ -1,0 +1,12 @@
+schema_version: 1
+slug: mini_zelda
+name: "Mini Zelda-like Room Adventure"
+difficulty: hard
+spec: spec.md
+checkpoints: checkpoints.jsonl
+variants: []
+window_size: [800, 700]
+source_audit:
+  docx_sha256: 6262c4a856c5fe1f640a2cb2d39ecba290237b204f3cd86a23c6ad08b234816a
+  csv_sha256: ff4ebc5c260bf132401ce3e7608d01eb6eda43921ae9fd23a1bd1dafe3ac15ff
+  checkpoint_count: 58

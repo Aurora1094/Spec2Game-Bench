@@ -1,0 +1,318 @@
+{
+  "games": [
+    {
+      "checkpoint_count": 29,
+      "csv": {
+        "file": "snake_checkpoints.csv",
+        "sha256": "5a96dd14f393b31c4f0a10abf6b5e61deda6b8eb53202beb5c2686151a32a3ec"
+      },
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 3,
+        "D2.3": 10,
+        "D2.4": 3,
+        "D2.5": 8
+      },
+      "docx": {
+        "file": "1_easy_Snake.docx",
+        "sha256": "8a1bb586a58d6734f9167b05829a3e0cd625d841abee1c8adc311e8c262cbb95"
+      },
+      "slug": "snake",
+      "spec_body_sha256": "acca3a1ab2c8c9105f64d2bbac472ac95e3dfd2f52beddffbff7c14de4b9cfe4"
+    },
+    {
+      "checkpoint_count": 32,
+      "csv": {
+        "file": "dodge_blocks_checkpoints.csv",
+        "sha256": "c1a8a5a08a1046467587a91d04475518dde70410fe7999d2dea74d7720eb12d6"
+      },
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 6,
+        "D2.4": 5,
+        "D2.5": 10
+      },
+      "docx": {
+        "file": "2_easy_Dodge Blocks.docx",
+        "sha256": "da89de26c5985c07e21abe05199c969e8c8f3f101608974e9a42676d065cbcc1"
+      },
+      "slug": "dodge_blocks",
+      "spec_body_sha256": "f9ef2a087e61eab8539fa2d6792e5fd8ad44d316e0efa752a0ba5b0d109c2a57"
+    },
+    {
+      "checkpoint_count": 34,
+      "csv": {
+        "file": "whack_a_mole_checkpoints.csv",
+        "sha256": "4ea14a45ee28d3bd635c0c61b71aa6c4e24f3b97ceb93e6f94c649daf071e675"
+      },
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 7,
+        "D2.3": 10,
+        "D2.4": 4,
+        "D2.5": 8
+      },
+      "docx": {
+        "file": "3_easy_Whack-a-Mole.docx",
+        "sha256": "5e4a822616d7251944c9f1368c28ed8fa784b183001c81450c212ddcdd7a621d"
+      },
+      "slug": "whack_a_mole",
+      "spec_body_sha256": "f291c346b107258074817b44875676f62932cac8ba5c936bb7d623709fd8b30e"
+    },
+    {
+      "checkpoint_count": 33,
+      "csv": {
+        "file": "asteroids_checkpoints.csv",
+        "sha256": "5f811af9f189e6a7eb0d8541d5d1897aff174e1e72fc2c476d965791042b00bd"
+      },
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 10,
+        "D2.4": 3,
+        "D2.5": 9
+      },
+      "docx": {
+        "file": "4_easy_Asteroids.docx",
+        "sha256": "ca5e1458ff7c845aaf7f142117b3d13380f773dead1ab07f3e25f62368313687"
+      },
+      "slug": "asteroids",
+      "spec_body_sha256": "bf74d46ad4ddafb80fa93281ba897edeaf6713899e840eb77ab3ffcff8cc166c"
+    },
+    {
+      "checkpoint_count": 27,
+      "csv": {
+        "file": "maze_runner_checkpoints.csv",
+        "sha256": "ba5d83c5539b11c1fbc193d75e5b02fd87742da8a2f1425d9c3f734370835dd7"
+      },
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 7,
+        "D2.3": 4,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "docx": {
+        "file": "5_easy_Maze Runner.docx",
+        "sha256": "39198e7a82006710fcd3daa7cd07fd2190c3d165cb61b3277e063e16fc46f668"
+      },
+      "slug": "maze_runner",
+      "spec_body_sha256": "cbc90f0b70576fd34a7bb492b5524f6c0894676e73f90614a30d32ceadc772f0"
+    },
+    {
+      "checkpoint_count": 30,
+      "csv": {
+        "file": "space_invaders_checkpoints.csv",
+        "sha256": "504380e00acf31d2be19e4c4d96d704921ce00a723b465cf4c2ecedeb38dc864"
+      },
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 3,
+        "D2.3": 10,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "docx": {
+        "file": "6_medium_Space Invaders.docx",
+        "sha256": "15be2f80dc475bb21d7fa9c63fe7afc7331607a71c1ca964eefa3ddfa5cf1f7d"
+      },
+      "slug": "space_invaders",
+      "spec_body_sha256": "23135d2e63a4f0e910bac1ed017ce541a0da2e1524ade21743ddfcb16d58b06e"
+    },
+    {
+      "checkpoint_count": 30,
+      "csv": {
+        "file": "simple_platformer_checkpoints.csv",
+        "sha256": "4f183081c2418be5c508b53c69efc27251fb22b609ad13a5dcf1930020662468"
+      },
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 5,
+        "D2.3": 6,
+        "D2.4": 2,
+        "D2.5": 12
+      },
+      "docx": {
+        "file": "7_medium_Simple Platformer.docx",
+        "sha256": "2899d7e2b8afe3c1f72007904125e2723c5600bb67bac526eaf86dbfb9879613"
+      },
+      "slug": "simple_platformer",
+      "spec_body_sha256": "3c56a7a18ebb9dc94e4485053f9ebb4f2c3ea811fa92b75768d63e2b517ab243"
+    },
+    {
+      "checkpoint_count": 32,
+      "csv": {
+        "file": "tetris_checkpoints.csv",
+        "sha256": "ac618752e822495c86ecc091dc9d9f72c91d2d87e96415030bfbe50e5630a021"
+      },
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 6,
+        "D2.3": 8,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "docx": {
+        "file": "8_medium_tetris.docx",
+        "sha256": "e2b8764f59050d7715d27b555ad889a921cf8f6ecc5c8515008bf35650aa8774"
+      },
+      "slug": "tetris",
+      "spec_body_sha256": "061ad4d320a88fa88ab746536af4a64d0b0eeefe4865da5eee53b1180d948983"
+    },
+    {
+      "checkpoint_count": 32,
+      "csv": {
+        "file": "match3_checkpoints.csv",
+        "sha256": "d015e4aed9534bdcd062672a3a5e028735187941f8ec3cc4fbbb81e8d22f9eab"
+      },
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 5,
+        "D2.3": 10,
+        "D2.4": 5,
+        "D2.5": 6
+      },
+      "docx": {
+        "file": "9_medium_Match-3.docx",
+        "sha256": "8bbb6373e20f83c27ca385e4b9afd852e57877f8c2b90bf0dc4e8e2b4fc20349"
+      },
+      "slug": "match3",
+      "spec_body_sha256": "03e5509bd8a613fb1a343863f5903d4a68ad360524dc63cca582b0b439ba54b8"
+    },
+    {
+      "checkpoint_count": 41,
+      "csv": {
+        "file": "simple_shop_checkpoints.csv",
+        "sha256": "b33c782fb378c5adca20f36276f282af339284c5259a0d527ce199bd89c6cf51"
+      },
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 12,
+        "D2.4": 6,
+        "D2.5": 7
+      },
+      "docx": {
+        "file": "10_medium_Simple Shop Management.docx",
+        "sha256": "e48fc54754a1aaf292e2eb4f6f4aa0fc6521673b8d3ba9ec8ca373d1dcae881a"
+      },
+      "slug": "simple_shop",
+      "spec_body_sha256": "fdac9f07e87797e96f1d204baa074fa9f012fa4ef35464d50372b842ba16b659"
+    },
+    {
+      "checkpoint_count": 39,
+      "csv": {
+        "file": "carrot_defense_checkpoints.csv",
+        "sha256": "c535b7957bdfa57ac48cd45d32701d8b717253e08cb90f0e5e17337780846104"
+      },
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 11,
+        "D2.4": 6,
+        "D2.5": 6
+      },
+      "docx": {
+        "file": "11_hard_carrot Defense-like.docx",
+        "sha256": "f4f665fac8671814cd2a8dcc3c5636dbe1698d61f2549522dfb5104ac91553bd"
+      },
+      "slug": "carrot_defense",
+      "spec_body_sha256": "f610f6beb2609c2bd274acc1f63456a2cad50cd2a51a42df70fca76e0f98a303"
+    },
+    {
+      "checkpoint_count": 33,
+      "csv": {
+        "file": "farming_lite_checkpoints.csv",
+        "sha256": "0727d08dcd34ab9140ad1ddba1c81951ed744aa3c2f2d26dad22127d31ba4e57"
+      },
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 3,
+        "D2.3": 9,
+        "D2.4": 6,
+        "D2.5": 9
+      },
+      "docx": {
+        "file": "12_hard_Farming-lite.docx",
+        "sha256": "1c63d5099aeb488338795fd9f45c0fa2189d886bb6befb2bbcb7495169ef8533"
+      },
+      "slug": "farming_lite",
+      "spec_body_sha256": "50de231bb0ba83139ed7d3efe6e010ca3f3a01413b90c45e43d9bba64b637902"
+    },
+    {
+      "checkpoint_count": 36,
+      "csv": {
+        "file": "pipe_connection_checkpoints.csv",
+        "sha256": "0bfe2625f705e7c6c2dbb8da819b526748e99030739ccdd5b37b9d250659d63f"
+      },
+      "dimension_counts": {
+        "D2.1": 8,
+        "D2.2": 8,
+        "D2.3": 10,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "docx": {
+        "file": "13_hard_Pipe Connection Puzzle.docx",
+        "sha256": "2b8cf4432f77437de2e31f49fb005e9a8f8ca3c7966bf0f46771fa8c2f81c5ea"
+      },
+      "slug": "pipe_connection",
+      "spec_body_sha256": "97b9dd7678985dbddc79ebaa4a8e59c72e2675c121d9676f52eb0866da2deb27"
+    },
+    {
+      "checkpoint_count": 51,
+      "csv": {
+        "file": "arena_shooter_checkpoints.csv",
+        "sha256": "8c63a380c5c5e37103fe8db498d3fa9bf4f9f2672e72f00d2f8f3b4f4096ca35"
+      },
+      "dimension_counts": {
+        "D2.1": 9,
+        "D2.2": 8,
+        "D2.3": 14,
+        "D2.4": 5,
+        "D2.5": 15
+      },
+      "docx": {
+        "file": "14_hard_Top-down Arena Shooter.docx",
+        "sha256": "277562803efaa3fa1edea1b65594c95eee7ee957ecb32062a0e4937810ec916a"
+      },
+      "slug": "arena_shooter",
+      "spec_body_sha256": "4814b6d46455d525c620f14e2688c6fcf1f5c4932b6b642d907eef9ccd4bc3fe"
+    },
+    {
+      "checkpoint_count": 58,
+      "csv": {
+        "file": "mini_zelda_checkpoints.csv",
+        "sha256": "ff4ebc5c260bf132401ce3e7608d01eb6eda43921ae9fd23a1bd1dafe3ac15ff"
+      },
+      "dimension_counts": {
+        "D2.1": 12,
+        "D2.2": 9,
+        "D2.3": 20,
+        "D2.4": 7,
+        "D2.5": 10
+      },
+      "docx": {
+        "file": "15_hard_Mini Zelda-like Room Adventure.docx",
+        "sha256": "6262c4a856c5fe1f640a2cb2d39ecba290237b204f3cd86a23c6ad08b234816a"
+      },
+      "slug": "mini_zelda",
+      "spec_body_sha256": "c2367e1577a2eb5bc7be641f93166ca6205aa3bc1380554fcc2405d836ffa405"
+    }
+  ],
+  "schema_version": 1,
+  "source_file_policy": "source files are external and are not copied into the repository",
+  "source_root_name": "Code2Play bench",
+  "totals": {
+    "checkpoints": 537,
+    "dimensions": {
+      "D2.1": 97,
+      "D2.2": 94,
+      "D2.3": 150,
+      "D2.4": 66,
+      "D2.5": 130
+    },
+    "games": 15
+  }
+}

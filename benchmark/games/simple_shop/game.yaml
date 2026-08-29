@@ -1,0 +1,12 @@
+schema_version: 1
+slug: simple_shop
+name: "Simple Shop Management"
+difficulty: medium
+spec: spec.md
+checkpoints: checkpoints.jsonl
+variants: []
+window_size: [600, 800]
+source_audit:
+  docx_sha256: e48fc54754a1aaf292e2eb4f6f4aa0fc6521673b8d3ba9ec8ca373d1dcae881a
+  csv_sha256: b33c782fb378c5adca20f36276f282af339284c5259a0d527ce199bd89c6cf51
+  checkpoint_count: 41

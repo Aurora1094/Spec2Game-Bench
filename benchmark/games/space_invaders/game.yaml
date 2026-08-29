@@ -1,0 +1,12 @@
+schema_version: 1
+slug: space_invaders
+name: "Space Invaders"
+difficulty: medium
+spec: spec.md
+checkpoints: checkpoints.jsonl
+variants: []
+window_size: [800, 600]
+source_audit:
+  docx_sha256: 15be2f80dc475bb21d7fa9c63fe7afc7331607a71c1ca964eefa3ddfa5cf1f7d
+  csv_sha256: 504380e00acf31d2be19e4c4d96d704921ce00a723b465cf4c2ecedeb38dc864
+  checkpoint_count: 30

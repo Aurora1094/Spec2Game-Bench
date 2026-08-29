@@ -1,0 +1,12 @@
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.py[cod]
+build/
+dist/
+*.egg-info/
+
+# Benchmark outputs belong to CODE2PLAY_WORKSPACE, not this repository.
+.env
+*.key
+*.pem

@@ -1,0 +1,12 @@
+schema_version: 1
+slug: match3
+name: "Match-3"
+difficulty: medium
+spec: spec.md
+checkpoints: checkpoints.jsonl
+variants: []
+window_size: [600, 800]
+source_audit:
+  docx_sha256: 8bbb6373e20f83c27ca385e4b9afd852e57877f8c2b90bf0dc4e8e2b4fc20349
+  csv_sha256: d015e4aed9534bdcd062672a3a5e028735187941f8ec3cc4fbbb81e8d22f9eab
+  checkpoint_count: 32

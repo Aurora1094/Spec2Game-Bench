@@ -1,0 +1,300 @@
+{
+  "catalog_id": "code2play-bench-v1",
+  "checkpoint_count": 537,
+  "dimensions": {
+    "D2.1": 97,
+    "D2.2": 94,
+    "D2.3": 150,
+    "D2.4": 66,
+    "D2.5": 130
+  },
+  "game_count": 15,
+  "games": [
+    {
+      "checkpoint_count": 29,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 3,
+        "D2.3": 10,
+        "D2.4": 3,
+        "D2.5": 8
+      },
+      "name": "Snake",
+      "path": "games/snake",
+      "slug": "snake",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 6,
+        "D2.4": 5,
+        "D2.5": 10
+      },
+      "name": "Dodge Blocks",
+      "path": "games/dodge_blocks",
+      "slug": "dodge_blocks",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ]
+    },
+    {
+      "checkpoint_count": 34,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 7,
+        "D2.3": 10,
+        "D2.4": 4,
+        "D2.5": 8
+      },
+      "name": "Whack-a-Mole",
+      "path": "games/whack_a_mole",
+      "slug": "whack_a_mole",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 10,
+        "D2.4": 3,
+        "D2.5": 9
+      },
+      "name": "Asteroids",
+      "path": "games/asteroids",
+      "slug": "asteroids",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ]
+    },
+    {
+      "checkpoint_count": 27,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 7,
+        "D2.3": 4,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Maze Runner",
+      "path": "games/maze_runner",
+      "slug": "maze_runner",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ]
+    },
+    {
+      "checkpoint_count": 30,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 3,
+        "D2.3": 10,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "name": "Space Invaders",
+      "path": "games/space_invaders",
+      "slug": "space_invaders",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ]
+    },
+    {
+      "checkpoint_count": 30,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 5,
+        "D2.3": 6,
+        "D2.4": 2,
+        "D2.5": 12
+      },
+      "name": "Simple Platformer",
+      "path": "games/simple_platformer",
+      "slug": "simple_platformer",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 6,
+        "D2.3": 8,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "name": "Tetris",
+      "path": "games/tetris",
+      "slug": "tetris",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 5,
+        "D2.3": 10,
+        "D2.4": 5,
+        "D2.5": 6
+      },
+      "name": "Match-3",
+      "path": "games/match3",
+      "slug": "match3",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ]
+    },
+    {
+      "checkpoint_count": 41,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 12,
+        "D2.4": 6,
+        "D2.5": 7
+      },
+      "name": "Simple Shop Management",
+      "path": "games/simple_shop",
+      "slug": "simple_shop",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ]
+    },
+    {
+      "checkpoint_count": 39,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 11,
+        "D2.4": 6,
+        "D2.5": 6
+      },
+      "name": "Carrot Defense-like",
+      "path": "games/carrot_defense",
+      "slug": "carrot_defense",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 3,
+        "D2.3": 9,
+        "D2.4": 6,
+        "D2.5": 9
+      },
+      "name": "Farming-lite",
+      "path": "games/farming_lite",
+      "slug": "farming_lite",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ]
+    },
+    {
+      "checkpoint_count": 36,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 8,
+        "D2.2": 8,
+        "D2.3": 10,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Pipe Connection Puzzle",
+      "path": "games/pipe_connection",
+      "slug": "pipe_connection",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ]
+    },
+    {
+      "checkpoint_count": 51,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 9,
+        "D2.2": 8,
+        "D2.3": 14,
+        "D2.4": 5,
+        "D2.5": 15
+      },
+      "name": "Top-down Arena Shooter",
+      "path": "games/arena_shooter",
+      "slug": "arena_shooter",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ]
+    },
+    {
+      "checkpoint_count": 58,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 12,
+        "D2.2": 9,
+        "D2.3": 20,
+        "D2.4": 7,
+        "D2.5": 10
+      },
+      "name": "Mini Zelda-like Room Adventure",
+      "path": "games/mini_zelda",
+      "slug": "mini_zelda",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ]
+    }
+  ],
+  "schema_version": 1
+}

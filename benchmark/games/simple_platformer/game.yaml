@@ -1,0 +1,12 @@
+schema_version: 1
+slug: simple_platformer
+name: "Simple Platformer"
+difficulty: medium
+spec: spec.md
+checkpoints: checkpoints.jsonl
+variants: []
+window_size: [800, 600]
+source_audit:
+  docx_sha256: 2899d7e2b8afe3c1f72007904125e2723c5600bb67bac526eaf86dbfb9879613
+  csv_sha256: 4f183081c2418be5c508b53c69efc27251fb22b609ad13a5dcf1930020662468
+  checkpoint_count: 30

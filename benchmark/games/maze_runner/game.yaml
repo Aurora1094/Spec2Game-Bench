@@ -1,0 +1,12 @@
+schema_version: 1
+slug: maze_runner
+name: "Maze Runner"
+difficulty: easy
+spec: spec.md
+checkpoints: checkpoints.jsonl
+variants: []
+window_size: [600, 800]
+source_audit:
+  docx_sha256: 39198e7a82006710fcd3daa7cd07fd2190c3d165cb61b3277e063e16fc46f668
+  csv_sha256: ba5d83c5539b11c1fbc193d75e5b02fd87742da8a2f1425d9c3f734370835dd7
+  checkpoint_count: 27

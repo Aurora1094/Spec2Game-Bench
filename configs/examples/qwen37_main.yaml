@@ -1,0 +1,116 @@
+schema_version: 3
+project_name: Code2Play-Bench
+catalog_path: benchmark/catalog.yaml
+region: us-east-1
+
+generation:
+  protocol: staged_project_v1
+  temperature: 0.2
+  attempts: 2
+  retry_delays_seconds: [2]
+  stop_on_truncation: false
+  semantic_retries: 0
+  total_max_output_tokens: 16000
+  stages:
+    - id: state
+      target: state.py
+      max_output_tokens: 3000
+    - id: game
+      target: game.py
+      max_output_tokens: 7000
+    - id: rendering
+      target: rendering.py
+      max_output_tokens: 4000
+    - id: main
+      target: main.py
+      max_output_tokens: 2000
+
+judge:
+  policy: optimized_qwen_single_pass_v1
+  provider: alibaba_dashscope
+  model: qwen3.7-plus
+  api_style: chat_completions
+  temperature: 0.0
+  stateless: true
+  enable_thinking: false
+  attempts: 2
+  retry_delays_seconds: [2]
+  scoring_repetitions: 1
+  aggregation: single_valid_response
+  compiler:
+    max_checkpoints_per_batch: 8
+  visual:
+    max_transitions_per_batch: 12
+    max_images_per_batch: 36
+  routes:
+    action_compiler:
+      provider: alibaba_dashscope
+      model: qwen3.7-plus
+      api_style: chat_completions
+      enable_thinking: false
+      max_output_tokens: 6000
+    functionality:
+      provider: alibaba_dashscope
+      model: qwen3.7-plus
+      api_style: chat_completions
+      enable_thinking: false
+      max_output_tokens: 2000
+    specification_deviation:
+      provider: alibaba_dashscope
+      model: qwen3.7-plus
+      api_style: chat_completions
+      enable_thinking: false
+      max_output_tokens: 800
+    code_quality:
+      provider: alibaba_dashscope
+      model: qwen3.7-plus
+      api_style: chat_completions
+      enable_thinking: false
+      max_output_tokens: 1200
+    artistic_visual:
+      provider: alibaba_dashscope
+      model: qwen3.7-plus
+      api_style: chat_completions
+      enable_thinking: false
+      max_output_tokens: 800
+    dynamic_visual:
+      provider: alibaba_dashscope
+      model: qwen3.7-plus
+      api_style: chat_completions
+      enable_thinking: false
+      max_output_tokens: 2000
+    question_generation:
+      provider: alibaba_dashscope
+      model: qwen3.7-plus
+      api_style: chat_completions
+      enable_thinking: false
+      max_output_tokens: 1000
+    question_answering:
+      provider: alibaba_dashscope
+      model: qwen3.7-plus
+      api_style: chat_completions
+      enable_thinking: false
+      max_output_tokens: 500
+    contract_generation:
+      provider: alibaba_dashscope
+      model: qwen3.7-plus
+      api_style: chat_completions
+      enable_thinking: false
+      max_output_tokens: 2000
+
+evaluation:
+  d1_gate_mode: contribution_only
+  d2_workers: 4
+  sampling_timeout_seconds: 45
+  weights:
+    D1: 0.20
+    D2: 0.50
+    D3: 0.15
+    D4: 0.15
+
+models:
+  - id: qwen3_7_plus
+    name: Qwen3.7 Plus
+    provider: alibaba_dashscope
+    model: qwen3.7-plus
+    api_style: chat_completions

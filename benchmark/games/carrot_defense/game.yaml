@@ -1,0 +1,12 @@
+schema_version: 1
+slug: carrot_defense
+name: "Carrot Defense-like"
+difficulty: hard
+spec: spec.md
+checkpoints: checkpoints.jsonl
+variants: []
+window_size: [800, 600]
+source_audit:
+  docx_sha256: f4f665fac8671814cd2a8dcc3c5636dbe1698d61f2549522dfb5104ac91553bd
+  csv_sha256: c535b7957bdfa57ac48cd45d32701d8b717253e08cb90f0e5e17337780846104
+  checkpoint_count: 39

@@ -1,0 +1,67 @@
+{
+  "schema_version": 6,
+  "rules_revision": "20260728",
+  "method": "five_dimension_tool_qwen_single_pass_semantic_fusion_100_point",
+  "required_tools": {
+    "ruff": "0.15.22",
+    "radon": "6.0.1",
+    "bandit": "1.9.4"
+  },
+  "tool_raw_max_scores": {
+    "maintainability": 30,
+    "reliability": 20,
+    "security": 15,
+    "efficiency": 10,
+    "conformance": 10
+  },
+  "dimension_max_scores": {
+    "maintainability": 30,
+    "reliability": 25,
+    "security": 15,
+    "efficiency": 15,
+    "conformance": 15
+  },
+  "tool_point_caps": {
+    "maintainability": 20,
+    "reliability": 15,
+    "security": 12,
+    "efficiency": 10,
+    "conformance": 13
+  },
+  "judge_point_caps": {
+    "maintainability": 10,
+    "reliability": 10,
+    "security": 3,
+    "efficiency": 5,
+    "conformance": 2
+  },
+  "score_max": 100,
+  "security": {
+    "critical_total_cap": 50,
+    "forbidden_call_prefixes": [
+      "eval",
+      "exec",
+      "compile",
+      "os.system",
+      "os.popen",
+      "subprocess",
+      "socket",
+      "requests",
+      "urllib.request"
+    ]
+  },
+  "semantic_judge": {
+    "policy": "optimized_qwen_single_pass_v1",
+    "region": "us-east-1",
+    "stateless": true,
+    "max_output_tokens": 1200,
+    "temperature": 0.0,
+    "provider": "alibaba_dashscope",
+    "model": "qwen3.7-plus",
+    "api": "chat_completions",
+    "enable_thinking": false,
+    "criterion_scale_max": 100,
+    "repetitions": 1,
+    "aggregation": "single_valid_response"
+  }
+}

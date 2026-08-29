@@ -1,0 +1,12 @@
+schema_version: 1
+slug: snake
+name: "Snake"
+difficulty: easy
+spec: spec.md
+checkpoints: checkpoints.jsonl
+variants: []
+window_size: [600, 800]
+source_audit:
+  docx_sha256: 8a1bb586a58d6734f9167b05829a3e0cd625d841abee1c8adc311e8c262cbb95
+  csv_sha256: 5a96dd14f393b31c4f0a10abf6b5e61deda6b8eb53202beb5c2686151a32a3ec
+  checkpoint_count: 29

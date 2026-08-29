@@ -1,0 +1,12 @@
+schema_version: 1
+slug: tetris
+name: "Tetris"
+difficulty: medium
+spec: spec.md
+checkpoints: checkpoints.jsonl
+variants: []
+window_size: [600, 800]
+source_audit:
+  docx_sha256: e2b8764f59050d7715d27b555ad889a921cf8f6ecc5c8515008bf35650aa8774
+  csv_sha256: ac618752e822495c86ecc091dc9d9f72c91d2d87e96415030bfbe50e5630a021
+  checkpoint_count: 32
