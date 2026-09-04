@@ -8,14 +8,16 @@ from typing import Any
 
 from code2play.execution.candidate_project import CandidateProject
 
-from code2play.providers.dashscope import SemanticJudge
+from code2play.providers.dashscope import JudgeAttemptsExhausted, SemanticJudge
 from code2play.generation.prompt_builder import load_spec
 
 from .base import FunctionalityResult
 
 
 DIMENSIONS = ("D2.1", "D2.2", "D2.3", "D2.4", "D2.5")
+D2_BATCH_TARGET_PROMPT_CHARS = 500_000
 MAX_CHECKPOINT_JUDGE_PROMPT_CHARS = 600_000
+D2_BATCH_MAX_CHECKPOINTS = 8
 OPAQUE_RANDOM_STATE_KEYS = frozenset({"rng_state", "random_state", "prng_state"})
 DIMENSION_NAMES = {
     "D2.1": "Game Element Modeling",
@@ -132,18 +134,34 @@ def _compact_opaque_state_for_judge(value: Any, key: str | None = None) -> Any:
     return value
 
 
+def _strip_d4_only_trace_evidence(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {
+            key: _strip_d4_only_trace_evidence(child)
+            for key, child in value.items()
+            if key != "frames"
+            and not key.startswith("visual_")
+            and not key.startswith("d4_")
+        }
+    if isinstance(value, list):
+        return [_strip_d4_only_trace_evidence(item) for item in value]
+    return value
+
+
 def _compact_trace_for_judge(trace: dict[str, Any]) -> dict[str, Any]:
     """Remove duplicated and replay-only data from the Judge request.
 
-    The raw trace remains unchanged on disk. RNG internals prove deterministic
-    replay but have no semantic value when judging a board transition, so the
-    prompt carries their stable hashes instead of thousands of integers per
-    observation.
+    The raw trace remains unchanged on disk. D4 frame and visual-probe fields
+    are deliberately excluded from D2 text judging, while RNG internals are
+    represented by stable hashes rather than thousands of replay-only integers.
     """
     compact = {
         key: value
         for key, value in trace.items()
         if key != "compiled_program"
+        and key != "frames"
+        and not key.startswith("visual_")
+        and not key.startswith("d4_")
     }
     compact_cases: list[Any] = []
     for raw_case in trace.get("cases", []):
@@ -167,7 +185,7 @@ def _compact_trace_for_judge(trace: dict[str, Any]) -> dict[str, Any]:
         case["observations"] = compact_observations
         compact_cases.append(case)
     compact["cases"] = compact_cases
-    return _compact_opaque_state_for_judge(compact)
+    return _compact_opaque_state_for_judge(_strip_d4_only_trace_evidence(compact))
 
 
 def _validate_checkpoint_prompt_size(prompt: str, checkpoint_id: str) -> str:
@@ -343,6 +361,62 @@ def _dimension_batch_prompt(
     )
 
 
+def _partition_dimension_batches(
+    dimension: str,
+    checkpoints: list[dict[str, Any]],
+    trace_by_id: dict[str, dict[str, Any]],
+    source: str,
+    game_description: str,
+) -> list[tuple[list[dict[str, Any]], int]]:
+    """Greedily partition a dimension under the D2 text-judge budget."""
+
+    batches: list[tuple[list[dict[str, Any]], int]] = []
+    current: list[dict[str, Any]] = []
+    current_size = 0
+    for checkpoint in checkpoints:
+        singleton = [checkpoint]
+        singleton_size = len(
+            _dimension_batch_prompt(
+                dimension,
+                singleton,
+                trace_by_id,
+                source,
+                game_description,
+            )
+        )
+        checkpoint_id = str(checkpoint["id"])
+        if singleton_size > MAX_CHECKPOINT_JUDGE_PROMPT_CHARS:
+            raise ValueError(
+                f"D2 checkpoint {checkpoint_id} remains too large after D4 evidence "
+                f"exclusion and semantic compaction: {singleton_size} characters exceeds "
+                f"the hard limit of {MAX_CHECKPOINT_JUDGE_PROMPT_CHARS}"
+            )
+
+        prospective = [*current, checkpoint]
+        prospective_size = len(
+            _dimension_batch_prompt(
+                dimension,
+                prospective,
+                trace_by_id,
+                source,
+                game_description,
+            )
+        )
+        if current and (
+            len(prospective) > D2_BATCH_MAX_CHECKPOINTS
+            or prospective_size > D2_BATCH_TARGET_PROMPT_CHARS
+        ):
+            batches.append((current, current_size))
+            current = singleton
+            current_size = singleton_size
+        else:
+            current = prospective
+            current_size = prospective_size
+    if current:
+        batches.append((current, current_size))
+    return batches
+
+
 def _deviation_prompt(
     source: str,
     functional_specification: dict[str, Any],
@@ -496,52 +570,82 @@ def _judge_dimension_batch(
     batchable = [checkpoint for checkpoint in executable if "score_rubric" in checkpoint]
     isolated = [checkpoint for checkpoint in executable if "score_rubric" not in checkpoint]
     fallback_ids: list[str] = []
-    batch_succeeded = False
+    batch_reports: list[dict[str, Any]] = []
     if batchable:
-        checkpoint_ids = [checkpoint["id"] for checkpoint in batchable]
-        prompt = _dimension_batch_prompt(
+        batches = _partition_dimension_batches(
             dimension,
             batchable,
             trace_by_id,
             source,
             game_description,
         )
-        validated_prompt = _validate_checkpoint_prompt_size(prompt, dimension)
         request = getattr(judge, "json_text_validated", None)
-        def validate_batch(value: dict[str, Any]) -> dict[str, Any]:
-            valid_rows, missing_rows = _normalize_dimension_batch(
-                value, dimension, checkpoint_ids
+        for batch_index, (batch, prompt_characters) in enumerate(batches, start=1):
+            checkpoint_ids = [str(checkpoint["id"]) for checkpoint in batch]
+            prompt = _dimension_batch_prompt(
+                dimension,
+                batch,
+                trace_by_id,
+                source,
+                game_description,
             )
-            if missing_rows:
+            if len(prompt) != prompt_characters:
+                raise RuntimeError("D2 batch prompt changed during partitioning")
+            validated_prompt = _validate_checkpoint_prompt_size(prompt, dimension)
+
+            def validate_batch(value: dict[str, Any]) -> dict[str, Any]:
+                valid_rows, missing_rows = _normalize_dimension_batch(
+                    value, dimension, checkpoint_ids
+                )
+                if missing_rows:
+                    raise ValueError(
+                        f"Functionality batch {dimension} omitted or invalidated: "
+                        + ", ".join(missing_rows)
+                    )
+                return value
+
+            purpose = f"d2_dimension_{dimension}_batch_{batch_index:02d}"
+            raw = (
+                request(
+                    BATCH_CHECKPOINT_JUDGE_INSTRUCTIONS,
+                    validated_prompt,
+                    purpose=purpose,
+                    validator=validate_batch,
+                )
+                if callable(request)
+                else judge.json_text(
+                    BATCH_CHECKPOINT_JUDGE_INSTRUCTIONS,
+                    validated_prompt,
+                    purpose=purpose,
+                )
+            )
+            valid, invalid_ids = _normalize_dimension_batch(
+                raw, dimension, checkpoint_ids
+            )
+            if invalid_ids:
                 raise ValueError(
                     f"Functionality batch {dimension} omitted or invalidated: "
-                    + ", ".join(missing_rows)
+                    + ", ".join(invalid_ids)
                 )
-            return value
-        raw = (
-            request(
-                BATCH_CHECKPOINT_JUDGE_INSTRUCTIONS,
-                validated_prompt,
-                purpose=f"d2_dimension_{dimension}",
-                validator=validate_batch,
+            overlap = sorted(set(valid).intersection(results))
+            if overlap:
+                raise ValueError(
+                    f"Functionality batch {dimension} duplicated checkpoint(s): "
+                    + ", ".join(overlap)
+                )
+            results.update(valid)
+            batch_reports.append(
+                {
+                    "batch_index": batch_index,
+                    "checkpoint_ids": checkpoint_ids,
+                    "checkpoint_count": len(checkpoint_ids),
+                    "prompt_characters": prompt_characters,
+                    "target_prompt_characters": D2_BATCH_TARGET_PROMPT_CHARS,
+                    "hard_prompt_characters": MAX_CHECKPOINT_JUDGE_PROMPT_CHARS,
+                    "purpose": purpose,
+                    "status": "completed",
+                }
             )
-            if callable(request)
-            else judge.json_text(
-                BATCH_CHECKPOINT_JUDGE_INSTRUCTIONS,
-                validated_prompt,
-                purpose=f"d2_dimension_{dimension}",
-            )
-        )
-        valid, fallback_ids = _normalize_dimension_batch(
-            raw, dimension, checkpoint_ids
-        )
-        if fallback_ids:
-            raise ValueError(
-                f"Functionality batch {dimension} omitted or invalidated: "
-                + ", ".join(fallback_ids)
-            )
-        results.update(valid)
-        batch_succeeded = True
     for checkpoint in isolated:
         results[checkpoint["id"]] = _judge_checkpoint(
             checkpoint,
@@ -554,7 +658,10 @@ def _judge_dimension_batch(
         "dimension": dimension,
         "checkpoint_count": len(checkpoints),
         "batchable_count": len(batchable),
-        "batch_succeeded": batch_succeeded,
+        "batch_succeeded": bool(batchable),
+        "batch_strategy": "greedy_character_budget_v2",
+        "batch_count": len(batch_reports),
+        "batches": batch_reports,
         "fallback_checkpoint_ids": fallback_ids,
         "isolated_checkpoint_ids": [checkpoint["id"] for checkpoint in isolated],
     }
@@ -620,6 +727,10 @@ def _judge_checkpoints(
                         dimension_results, report = future.result()
                         results_by_id.update(dimension_results)
                         batch_reports[dimension] = report
+                    except JudgeAttemptsExhausted:
+                        for pending in futures:
+                            pending.cancel()
+                        raise
                     except Exception as exc:
                         for pending in futures:
                             pending.cancel()
@@ -634,7 +745,7 @@ def _judge_checkpoints(
         raise RuntimeError("D2 judge produced no result for: " + ", ".join(missing))
     results = [results_by_id[checkpoint["id"]] for checkpoint in checkpoints]
     return results, {
-        "strategy": "parallel_dimension_single_valid_response_batches_v1",
+        "strategy": "parallel_dimension_character_budget_batches_v2",
         "effective_workers": effective_workers,
         "dimension_batch_count": len(active_dimensions),
         "checkpoint_count": len(checkpoints),

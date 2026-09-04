@@ -27,7 +27,7 @@ from code2play.d4.questions import (
     QUESTION_REVIEW_POLICY,
     build_d43_question_pack_single_pass,
 )
-from code2play.providers.dashscope import JudgeRouter
+from code2play.providers.dashscope import JudgeAttemptsExhausted, JudgeRouter
 from code2play.execution.protocol_sampling import sample_evaluation_protocol
 from code2play.config.project import GameConfig, load_config, normalized_policy_sha256
 from code2play.generation.prompt_builder import load_spec
@@ -53,6 +53,51 @@ def _read_json(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError(f"Expected JSON object: {path}")
     return value
+
+
+def _judge_failure_detail(
+    stage: str,
+    exc: JudgeAttemptsExhausted,
+) -> dict[str, Any]:
+    return {
+        "failure_origin": "judge_or_transport",
+        "candidate_failure_proven": False,
+        "failure_stage": stage,
+        "retryable_stage": stage,
+        "error_type": exc.error_type,
+        "message": redact_text(exc.error_message),
+        **exc.to_dict(),
+    }
+
+
+def _judge_gap_payload(
+    stage: str,
+    exc: JudgeAttemptsExhausted,
+) -> dict[str, Any]:
+    return {
+        "status": "judge_output_unavailable",
+        "candidate_failure_proven": False,
+        "judge_failure": _judge_failure_detail(stage, exc),
+    }
+
+
+def _d2_judge_gap_payload(judge_failure: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "status": "judge_output_unavailable",
+        "passed": None,
+        "total": None,
+        "score": None,
+        "criteria_scores": {},
+        "reasons": {},
+        "evidence": {
+            "status": "judge_output_unavailable",
+            "candidate_failure_proven": False,
+            "judge_failure": judge_failure,
+        },
+        "specialized_items": {},
+        "candidate_failure_proven": False,
+        "judge_failure": judge_failure,
+    }
 
 
 def _require_project_hash(project: CandidateProject, expected: str, stage: str) -> None:
@@ -95,7 +140,7 @@ def _run_stage(
             return existing
 
     attempt = int(record.get("attempts", 0)) + 1
-    for key in ("error", "error_type"):
+    for key in ("error", "error_type", "judge_failure"):
         record.pop(key, None)
     record.update(
         {
@@ -134,7 +179,7 @@ def _run_stage(
             },
         )
         raise
-    for key in ("error", "error_type"):
+    for key in ("error", "error_type", "judge_failure"):
         record.pop(key, None)
     retryable_gap = payload.get("status") in {
         "judge_output_unavailable",
@@ -147,6 +192,9 @@ def _run_stage(
             "finished_at": utc_now(),
         }
     )
+    judge_failure = payload.get("judge_failure")
+    if retryable_gap and isinstance(judge_failure, dict):
+        record["judge_failure"] = judge_failure
     state["status"] = "running"
     state["active_stage"] = None
     _write_state(state_path, state)
@@ -275,6 +323,22 @@ def evaluate_candidate(
         }
         _write_state(state_path, state)
 
+    def finish(result: dict[str, Any]) -> dict[str, Any]:
+        result["evaluation_policy"] = evaluation_policy
+        write_json(task_root / "summary.json", result)
+        state.update(
+            {
+                "status": result["status"],
+                "active_stage": None,
+                "finished_at": utc_now(),
+                "official_total": result["official_total"],
+            }
+        )
+        for key in ("error", "error_type", "failed_at", "failed_stage"):
+            state.pop(key, None)
+        _write_state(state_path, state)
+        return result
+
     d1_payload = _run_stage(
         name="D1",
         state=state,
@@ -313,14 +377,17 @@ def evaluate_candidate(
         _require_project_hash(candidate, project_hash, "D2 sampling")
         evidence = evaluation_dir / "semantic_evidence" / f"sampling_attempt_{attempt:03d}"
         compiler = router.for_role("action_compiler")
-        return sample_evaluation_protocol(
-            project=candidate,
-            spec_path=game.spec,
-            evidence_dir=evidence,
-            timeout_sec=sampling_timeout_seconds,
-            d2_max_workers=d2_workers,
-            checkpoint_compiler=compiler,
-        )
+        try:
+            return sample_evaluation_protocol(
+                project=candidate,
+                spec_path=game.spec,
+                evidence_dir=evidence,
+                timeout_sec=sampling_timeout_seconds,
+                d2_max_workers=d2_workers,
+                checkpoint_compiler=compiler,
+            )
+        except JudgeAttemptsExhausted as exc:
+            return _judge_gap_payload("sampling", exc)
 
     sample_manifest = _run_stage(
         name="sampling",
@@ -330,16 +397,40 @@ def evaluate_candidate(
         operation=run_sampling,
     )
 
+    if sample_manifest.get("status") == "judge_output_unavailable":
+        judge_failure = sample_manifest.get("judge_failure")
+        if not isinstance(judge_failure, dict):
+            raise ValueError("Sampling judge gap is missing failure metadata")
+        partial = assemble_result(
+            game=game.slug,
+            model=model_id,
+            repetition=repetition,
+            candidate_project_sha256=project_hash,
+            d4_configured=game.d4_configured,
+            d1_detail=d1_payload,
+            d2_detail=_d2_judge_gap_payload(judge_failure),
+            d3_detail=d3_payload,
+            d4_detail=None,
+        )
+        partial["failure_semantics"] = (
+            "Evaluator-side sampling Judge attempts were exhausted; completed "
+            "D1/D3 evidence is retained and only sampling will be retried."
+        )
+        return finish(partial)
+
     def run_d2(attempt: int) -> dict[str, Any]:
         _require_project_hash(candidate, project_hash, "D2")
         judge = routed_judge
-        result = evaluate_dimension2(
-            game_id=game.slug,
-            project=candidate,
-            spec_path=game.spec,
-            sample_manifest=sample_manifest,
-            judge=judge,
-        )
+        try:
+            result = evaluate_dimension2(
+                game_id=game.slug,
+                project=candidate,
+                spec_path=game.spec,
+                sample_manifest=sample_manifest,
+                judge=judge,
+            )
+        except JudgeAttemptsExhausted as exc:
+            return _d2_judge_gap_payload(_judge_failure_detail("D2", exc))
         payload = result.to_dict()
         payload["status"] = str(result.evidence.get("status", "completed"))
         return payload
@@ -448,17 +539,4 @@ def evaluate_candidate(
         d3_detail=d3_payload,
         d4_detail=d4_payload,
     )
-    result["evaluation_policy"] = evaluation_policy
-    write_json(task_root / "summary.json", result)
-    state.update(
-        {
-            "status": result["status"],
-            "active_stage": None,
-            "finished_at": utc_now(),
-            "official_total": result["official_total"],
-        }
-    )
-    for key in ("error", "error_type", "failed_at", "failed_stage"):
-        state.pop(key, None)
-    _write_state(state_path, state)
-    return result
+    return finish(result)

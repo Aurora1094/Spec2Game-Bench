@@ -86,6 +86,29 @@ class ModelResult:
     raw_usage: dict[str, Any] = field(default_factory=dict)
 
 
+class JudgeAttemptsExhausted(RuntimeError):
+    """A retryable Judge request used both permitted attempts without output."""
+
+    def __init__(self, *, purpose: str, attempts: int, error: BaseException) -> None:
+        self.purpose = str(purpose)
+        self.attempts = int(attempts)
+        self.error_type = type(error).__name__
+        self.error_message = _redact(str(error))
+        super().__init__(
+            f"Judge request {self.purpose!r} exhausted {self.attempts} attempts: "
+            f"{self.error_type}: {self.error_message}"
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "purpose": self.purpose,
+            "attempt_limit": self.attempts,
+            "attempts_made": self.attempts,
+            "last_error_type": self.error_type,
+            "last_error": self.error_message,
+        }
+
+
 @dataclass
 class GenerationResult:
     provider: str
@@ -281,6 +304,13 @@ def _retryable(exc: BaseException) -> bool:
         return status in {401, 408, 409, 429} or status >= 500
     name = type(exc).__name__.lower()
     return any(value in name for value in ("timeout", "connection", "proxy", "ssl", "throttl"))
+
+
+def _permanent_judge_configuration_error(exc: BaseException) -> bool:
+    """Authentication and request-configuration faults are not rescore gaps."""
+
+    status = getattr(exc, "status_code", None)
+    return isinstance(status, int) and status in {400, 401, 403, 404, 422}
 
 
 def _chat_client() -> tuple[Any, str, str]:
@@ -580,10 +610,34 @@ class DashScopeChatJudge:
                 last = exc
                 failure = {"attempt": attempt, "type": type(exc).__name__, "message": _redact(str(exc), [self._api_key])}
                 (self.log_dir / f"attempt_error_{attempt:03d}.json").write_text(json.dumps(failure, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-                if attempt >= self.attempts or (not isinstance(exc, (ValueError, json.JSONDecodeError)) and not _retryable(exc)):
+                retryable_output_error = isinstance(exc, (ValueError, json.JSONDecodeError))
+                retryable_transport_error = _retryable(exc) and not _permanent_judge_configuration_error(exc)
+                if not retryable_output_error and not retryable_transport_error:
                     raise
+                if attempt >= self.attempts:
+                    raise JudgeAttemptsExhausted(
+                        purpose=purpose,
+                        attempts=self.attempts,
+                        error=exc,
+                    ) from exc
                 if isinstance(exc, (ValueError, json.JSONDecodeError)):
-                    messages = [*messages, {"role": "assistant", "content": _redact(str(raw_text) if "raw_text" in locals() else "", [self._api_key])}, {"role": "user", "content": "Return one corrected complete JSON object. The previous response failed local validation."}]
+                    correction = (
+                        "Discard the previous response and regenerate one corrected, "
+                        "complete minified JSON object. The previous response failed "
+                        "local validation with this exact error: "
+                        f"{type(exc).__name__}: {exc}"
+                    )
+                    messages = [
+                        *messages,
+                        {
+                            "role": "assistant",
+                            "content": _redact(
+                                str(raw_text) if "raw_text" in locals() else "",
+                                [self._api_key],
+                            ),
+                        },
+                        {"role": "user", "content": _redact(correction, [self._api_key])},
+                    ]
                 time.sleep(self.retry_delays_seconds[min(attempt - 1, len(self.retry_delays_seconds) - 1)])
         raise RuntimeError(_redact(f"Qwen judge failed: {last}", [self._api_key]))
 
@@ -692,6 +746,7 @@ __all__ = [
     "DASHSCOPE_PROVIDER",
     "DashScopeChatJudge",
     "GenerationResult",
+    "JudgeAttemptsExhausted",
     "JudgeRouter",
     "MAX_JUDGE_OUTPUT_TOKENS",
     "ModelRequest",

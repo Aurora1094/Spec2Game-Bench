@@ -3,11 +3,15 @@ from __future__ import annotations
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
+import code2play.providers.dashscope as dashscope
 from code2play.config.project import ModelConfig, game_by_slug, load_config
 from code2play.generation.staged import generate_candidate_project
 from code2play.providers.dashscope import (
     DashScopeChatJudge,
     GenerationResult,
+    JudgeAttemptsExhausted,
     _model_aliases,
     _restore_aliases,
 )
@@ -184,3 +188,53 @@ def test_provider_restores_blinded_checkpoint_and_dimension_ids() -> None:
     assert restored["rationale_by_dimension"] == {
         "D2.2": "The explanatory text remains unchanged.",
     }
+
+
+class _InvalidCompletions:
+    def __init__(self) -> None:
+        self.calls = 0
+        self.messages: list[list[dict[str, object]]] = []
+
+    def create(self, **kwargs):
+        self.calls += 1
+        self.messages.append(kwargs["messages"])
+        return SimpleNamespace(
+            choices=[SimpleNamespace(message=SimpleNamespace(content="{"))],
+            usage={"prompt_tokens": 2, "completion_tokens": 3},
+        )
+
+
+class _InvalidClient:
+    def __init__(self) -> None:
+        self.chat = SimpleNamespace(completions=_InvalidCompletions())
+
+
+def test_provider_stops_after_two_invalid_json_attempts(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    client = _InvalidClient()
+    sleeps: list[float] = []
+    monkeypatch.setattr(dashscope.time, "sleep", lambda seconds: sleeps.append(seconds))
+    judge = DashScopeChatJudge(
+        tmp_path,
+        model="qwen3.7-plus",
+        role="smoke",
+        max_output_tokens=64,
+        client=client,
+    )
+
+    with pytest.raises(JudgeAttemptsExhausted) as raised:
+        judge.json_text_validated(
+            "Return JSON.",
+            "{}",
+            "invalid_json_test",
+            validator=lambda value: value,
+        )
+
+    assert client.chat.completions.calls == 2
+    assert sleeps == [2.0]
+    assert raised.value.to_dict()["attempts_made"] == 2
+    correction = client.chat.completions.messages[1][-1]["content"]
+    assert "complete minified JSON object" in str(correction)
+    assert "JSONDecodeError" in str(correction)

@@ -32,6 +32,14 @@ class _QuestionGenerator:
         }
 
 
+class _ValidatedQuestionGenerator:
+    def json_vision_validated(self, instructions, prompt, images, purpose, validator):
+        assert callable(validator)
+        value = _QuestionGenerator().json_vision(instructions, prompt, images, purpose)
+        validator(value)
+        return value
+
+
 class _FailingQuestionGenerator:
     def json_vision(self, *_args, **_kwargs):
         raise RuntimeError("transport unavailable")
@@ -107,7 +115,7 @@ def test_dynamic_questions_bind_real_images_deterministically(tmp_path: Path) ->
         d2_checkpoints=spec["evaluation"]["d2"]["checkpoints"],
         sample_manifest=sample,
         candidate_project_sha256=candidate_sha,
-        generator=_QuestionGenerator(),
+        generator=_ValidatedQuestionGenerator(),
     )
     assert pack["status"] == "completed"
     assert [item["source_slot"] for item in pack["questions"]] == [1, 2]

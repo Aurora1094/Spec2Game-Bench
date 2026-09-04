@@ -14,7 +14,10 @@ import sys
 from threading import Thread
 from typing import Any, Callable
 
-from code2play.execution.candidate_project import CandidateProject
+from code2play.execution.candidate_project import (
+    CandidateProject,
+    CandidateProjectSnapshot,
+)
 
 from code2play.generation.prompt_builder import load_spec
 
@@ -26,7 +29,7 @@ from code2play.evaluation.checkpoint_compiler import (
     state_schema,
 )
 from code2play.d4.compiler import compile_visual_program, normalize_visual_program
-from code2play.providers.dashscope import SemanticJudge
+from code2play.providers.dashscope import JudgeAttemptsExhausted, SemanticJudge
 from code2play.d4.visual_difference import (
     VISUAL_DIFFERENCE_POLICY,
     analyze_visual_difference,
@@ -109,7 +112,7 @@ class _CandidateRpc:
 
     def __init__(
         self,
-        project: CandidateProject,
+        project: CandidateProject | CandidateProjectSnapshot,
         *,
         cwd: Path,
         stderr_path: Path,
@@ -487,6 +490,10 @@ def _compile_checkpoint_programs(
                 batch_id, rows = futures[future]
                 try:
                     valid, repair_ids = future.result()
+                except JudgeAttemptsExhausted:
+                    for pending in futures:
+                        pending.cancel()
+                    raise
                 except ValueError as exc:
                     # A malformed batch is still recoverable: retry each row with
                     # the stricter single-checkpoint compiler prompt.
@@ -516,6 +523,8 @@ def _compile_checkpoint_programs(
                 initial_schema=initial_schema,
                 compiler=compiler,
             )
+        except JudgeAttemptsExhausted:
+            raise
         except Exception as exc:
             raise RuntimeError(
                 f"Evaluator-side LLM failed to repair D2 checkpoint {checkpoint['id']}"
@@ -656,7 +665,7 @@ def _compile_d4_programs(
 def _sample_one_compiled_checkpoint(
     *,
     worker_index: int,
-    project: CandidateProject,
+    project: CandidateProject | CandidateProjectSnapshot,
     checkpoint: dict[str, Any],
     program: dict[str, Any],
     seed: int,
@@ -945,7 +954,7 @@ def _sample_one_compiled_checkpoint(
 
 def _sample_compiled_d2_parallel(
     *,
-    project: CandidateProject,
+    project: CandidateProject | CandidateProjectSnapshot,
     checkpoints: list[dict[str, Any]],
     programs: list[dict[str, Any]],
     seed: int,
@@ -1017,7 +1026,7 @@ def _render_frame(rpc: _CandidateRpc, path: Path) -> str:
 def _sample_one_compiled_d4_task(
     *,
     worker_index: int,
-    project: CandidateProject,
+    project: CandidateProject | CandidateProjectSnapshot,
     group: str,
     program: dict[str, Any],
     seed: int,
@@ -1157,7 +1166,7 @@ def _sample_one_compiled_d4_task(
 
 def _sample_compiled_d4_parallel(
     *,
-    project: CandidateProject,
+    project: CandidateProject | CandidateProjectSnapshot,
     programs: dict[str, list[dict[str, Any]]],
     seed: int,
     sample_dir: Path,
@@ -1245,9 +1254,80 @@ def _sample_compiled_d4_parallel(
 
 
 
+def _records_by_checkpoint_id(
+    checkpoints: list[dict[str, Any]],
+    records: list[dict[str, Any]],
+    *,
+    label: str,
+) -> dict[str, dict[str, Any]]:
+    """Bind worker output by contract IDs, never by completion order."""
+
+    expected_ids = [str(checkpoint["id"]) for checkpoint in checkpoints]
+    if len(set(expected_ids)) != len(expected_ids):
+        raise ValueError(f"{label} checkpoint contract contains duplicate ids")
+    by_id: dict[str, dict[str, Any]] = {}
+    for record in records:
+        if not isinstance(record, dict) or not isinstance(record.get("id"), str):
+            raise ValueError(f"{label} produced a record without a checkpoint id")
+        checkpoint_id = record["id"]
+        if checkpoint_id in by_id:
+            raise ValueError(f"{label} produced a duplicate checkpoint id: {checkpoint_id}")
+        if checkpoint_id not in expected_ids:
+            raise ValueError(f"{label} produced an unknown checkpoint id: {checkpoint_id}")
+        by_id[checkpoint_id] = record
+    missing = [checkpoint_id for checkpoint_id in expected_ids if checkpoint_id not in by_id]
+    if missing:
+        raise ValueError(
+            f"{label} is missing checkpoint record(s): " + ", ".join(missing)
+        )
+    return by_id
+
+
+def _ordered_d4_2_records(
+    checkpoints: list[dict[str, Any]],
+    d2_records: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Build D4.2 evidence in the declared dynamic-checkpoint order."""
+
+    by_id = _records_by_checkpoint_id(
+        checkpoints, d2_records, label="D2 sampling"
+    )
+    ordered: list[dict[str, Any]] = []
+    for checkpoint in checkpoints:
+        if checkpoint.get("kind") != "dynamic":
+            continue
+        record = by_id[str(checkpoint["id"])]
+        ordered.append(
+            {
+                "id": record["id"],
+                "status": (
+                    "completed"
+                    if record.get("status") == "completed" and record.get("frames")
+                    else "visual_evidence_unavailable"
+                ),
+                "sampling_authority": "reused_functionality_action_execution",
+                "compiled_program": record.get("compiled_program"),
+                "frames": record.get("frames", []),
+                "visual_status": record.get("visual_status"),
+                "visual_probe_policy": record.get("visual_probe_policy"),
+                "visual_distinct_image_count": record.get(
+                    "visual_distinct_image_count", 0
+                ),
+                "visual_difference_policy": record.get("visual_difference_policy"),
+                "visual_materially_distinct_image_count": record.get(
+                    "visual_materially_distinct_image_count", 0
+                ),
+                "visual_probe_summary": record.get("visual_probe_summary", []),
+                "visual_errors": record.get("visual_errors", []),
+                "sampling_error": record.get("sampling_error"),
+            }
+        )
+    return ordered
+
+
 def _run_candidate_phase(
     *,
-    project: CandidateProject,
+    project: CandidateProject | CandidateProjectSnapshot,
     spec: dict[str, Any],
     contract: dict[str, Any],
     checkpoints: list[dict[str, Any]],
@@ -1283,38 +1363,7 @@ def _run_candidate_phase(
 
     d4_programs = {"d4_2": [], "d4_3": []}
     d4_compiler_parallelism = None
-    d4_records = {
-        "d4_2": [
-            {
-                "id": record["id"],
-                "status": (
-                    "completed"
-                    if record.get("status") == "completed" and record.get("frames")
-                    else "visual_evidence_unavailable"
-                ),
-                "sampling_authority": "reused_functionality_action_execution",
-                "compiled_program": record.get("compiled_program"),
-                "frames": record.get("frames", []),
-                "visual_status": record.get("visual_status"),
-                "visual_probe_policy": record.get("visual_probe_policy"),
-                "visual_distinct_image_count": record.get(
-                    "visual_distinct_image_count", 0
-                ),
-                "visual_difference_policy": record.get(
-                    "visual_difference_policy"
-                ),
-                "visual_materially_distinct_image_count": record.get(
-                    "visual_materially_distinct_image_count", 0
-                ),
-                "visual_probe_summary": record.get("visual_probe_summary", []),
-                "visual_errors": record.get("visual_errors", []),
-                "sampling_error": record.get("sampling_error"),
-            }
-            for checkpoint, record in zip(checkpoints, d2_records)
-            if checkpoint.get("kind") == "dynamic"
-        ],
-        "d4_3": [],
-    }
+    d4_records = {"d4_2": _ordered_d4_2_records(checkpoints, d2_records), "d4_3": []}
     d4_sampling_parallelism = None
     d4_transcripts = []
 
@@ -1353,27 +1402,26 @@ def _protocol_failure_phase(
         }
         for checkpoint in checkpoints
     ]
-    d4_contract = contract.get("d4")
-    if isinstance(d4_contract, dict):
-        d4_2 = [
-            {
-                "id": checkpoint["id"],
-                "task_type": "d4_2_transition",
-                "status": status,
-                "sampling_authority": "evaluator_llm_compiled_program",
-                "candidate_received_task_id": False,
-                "compiled_program": None,
-                "cases": [],
-                "frames": [],
-                "sampling_error": error,
-            }
-            for checkpoint in checkpoints
-            if checkpoint.get("kind") == "dynamic"
-        ]
-        d4_3 = []
-    else:
-        d4_2 = []
-        d4_3 = []
+    # D4 contracts are round-locked outside the game spec. Always preserve a
+    # placeholder for every dynamic checkpoint so syntax-invalid candidates are
+    # scored as deterministic candidate failures rather than malformed evidence.
+    d4_2 = [
+        {
+            "id": checkpoint["id"],
+            "task_type": "d4_2_transition",
+            "status": status,
+            "sampling_authority": "evaluator_llm_compiled_program",
+            "candidate_received_task_id": False,
+            "compiled_program": None,
+            "cases": [],
+            "frames": [],
+            "visual_errors": [],
+            "sampling_error": error,
+        }
+        for checkpoint in checkpoints
+        if checkpoint.get("kind") == "dynamic"
+    ]
+    d4_3: list[dict[str, Any]] = []
     return {
         "d2_programs": [],
         "d2_compiler_parallelism": parallelism,
@@ -1381,9 +1429,9 @@ def _protocol_failure_phase(
         "d2_sampling_parallelism": parallelism,
         "d2_transcripts": [],
         "d4_programs": {"d4_2": [], "d4_3": []},
-        "d4_compiler_parallelism": parallelism if isinstance(d4_contract, dict) else None,
+        "d4_compiler_parallelism": parallelism,
         "d4_records": {"d4_2": d4_2, "d4_3": d4_3},
-        "d4_sampling_parallelism": parallelism if isinstance(d4_contract, dict) else None,
+        "d4_sampling_parallelism": parallelism,
         "d4_transcripts": [],
     }
 
@@ -1404,12 +1452,18 @@ def _sample_protocol(
     sample_dir = evidence_dir / "samples"
     sample_dir.mkdir(parents=True, exist_ok=True)
     workers_root = sample_dir / "candidate_workers"
+    snapshot = project.validated_snapshot()
+    snapshot_path = sample_dir / "candidate_snapshot.json"
+    snapshot_path.write_text(
+        json.dumps(snapshot.to_dict(), ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
     audit_root = workers_root / "protocol_audit"
     audit_cwd = audit_root / "cwd"
     audit_cwd.mkdir(parents=True, exist_ok=True)
     audit_rpc = _CandidateRpc(
-        project,
+        snapshot,
         cwd=audit_cwd,
         stderr_path=audit_root / "stderr.txt",
         timeout_sec=timeout_sec,
@@ -1455,12 +1509,12 @@ def _sample_protocol(
             }
         phase_result = _protocol_failure_phase(checkpoints, contract, error)
     else:
-        candidate_source = project.source_bundle()
+        candidate_source = snapshot.source_bundle()
         defer_logs = getattr(checkpoint_compiler, "defer_logs", None)
         log_context = defer_logs() if callable(defer_logs) else nullcontext()
         with log_context:
             phase_result = _run_candidate_phase(
-                project=project,
+                project=snapshot,
                 spec=spec,
                 contract=contract,
                 checkpoints=checkpoints,
@@ -1561,7 +1615,9 @@ def _sample_protocol(
         "candidate_project_copied_to_isolated_cwd": True,
         "candidate_environment_sanitized": True,
         "sensitive_evaluator_artifacts_written_after_candidate_exit": True,
-        "candidate_project_sha256": project.project_sha256(),
+        "candidate_project_sha256": snapshot.project_sha256,
+        "candidate_snapshot": snapshot.to_dict(),
+        "candidate_snapshot_path": str(snapshot_path.resolve()),
         "protocol_audit": protocol_audit,
         "compiler_parallelism": phase_result["d2_compiler_parallelism"],
         "d2_parallelism": phase_result["d2_sampling_parallelism"],

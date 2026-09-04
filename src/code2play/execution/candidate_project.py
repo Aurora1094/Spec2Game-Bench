@@ -69,6 +69,79 @@ class ProjectValidation:
         return asdict(self)
 
 
+@dataclass(frozen=True)
+class CandidateProjectFile:
+    """One byte-for-byte member of a validated candidate snapshot."""
+
+    filename: str
+    content: bytes
+    sha256: str
+
+
+@dataclass(frozen=True)
+class CandidateProjectSnapshot:
+    """Immutable candidate bytes validated once before parallel execution."""
+
+    files: tuple[CandidateProjectFile, ...]
+    project_sha256: str
+    validation: ProjectValidation
+    entrypoint: str = "candidate.main"
+    factory: str = "create_gamebench_adapter"
+
+    def file_hashes(self) -> dict[str, str]:
+        return {item.filename: item.sha256 for item in self.files}
+
+    def source_bundle(self) -> str:
+        parts: list[str] = []
+        by_name = {item.filename: item for item in self.files}
+        for filename in GENERATED_FILES:
+            source = by_name[filename].content.decode(
+                "utf-8-sig", errors="replace"
+            ).lstrip("\ufeff")
+            parts.append(f"# ===== FILE: {filename} =====\n{source.rstrip()}\n")
+        return "\n".join(parts)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "strategy": "validated_candidate_snapshot_v1",
+            "project_sha256": self.project_sha256,
+            "file_hashes": self.file_hashes(),
+            "files": list(PROJECT_FILES),
+            "validation": self.validation.to_dict(),
+        }
+
+    def copy_to_isolated(self, target: Path) -> Path:
+        """Materialize verified bytes without reparsing candidate Python code."""
+
+        destination = Path(target).resolve()
+        if destination.exists() and (
+            destination.is_symlink() or not destination.is_dir() or any(destination.iterdir())
+        ):
+            raise FileExistsError(
+                f"Isolated candidate target is not an empty directory: {destination}"
+            )
+        destination.mkdir(parents=True, exist_ok=True)
+        for item in self.files:
+            path = destination / item.filename
+            path.write_bytes(item.content)
+            if path.is_symlink() or _sha256_bytes(path.read_bytes()) != item.sha256:
+                raise ValueError(
+                    f"Candidate snapshot file hash changed during isolated copy: {item.filename}"
+                )
+        actual = sorted(
+            path.relative_to(destination).as_posix()
+            for path in destination.rglob("*")
+        )
+        if actual != sorted(PROJECT_FILES):
+            raise ValueError("Isolated candidate snapshot contains unexpected paths")
+        records = "".join(
+            f"{item.filename}\0{item.sha256}\n" for item in self.files
+        )
+        if _sha256_text(records) != self.project_sha256:
+            raise ValueError("Candidate snapshot project hash changed during isolated copy")
+        return destination
+
+
 def _sha256_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
 
@@ -359,6 +432,42 @@ class CandidateProject:
                 + json.dumps(validation.to_dict(), ensure_ascii=False, sort_keys=True)
             )
 
+    def validated_snapshot(self) -> CandidateProjectSnapshot:
+        """Capture one structure-checked, AST-diagnosed candidate for workers.
+
+        ``validate`` deliberately keeps syntax and interface findings non-blocking so
+        a malformed generated candidate can still receive deterministic zero-score
+        evidence. Structure safety remains mandatory before its bytes are copied.
+        """
+
+        validation = self.validate()
+        if not validation.structure_valid:
+            raise ValueError(
+                "Candidate project structure is unsafe or incomplete: "
+                + json.dumps(validation.to_dict(), ensure_ascii=False, sort_keys=True)
+            )
+        snapshot_files: list[CandidateProjectFile] = []
+        for filename in PROJECT_FILES:
+            content = self.path(filename).read_bytes()
+            snapshot_files.append(
+                CandidateProjectFile(
+                    filename=filename,
+                    content=content,
+                    sha256=_sha256_bytes(content),
+                )
+            )
+        files = tuple(snapshot_files)
+        records = "".join(
+            f"{item.filename}\0{item.sha256}\n" for item in files
+        )
+        return CandidateProjectSnapshot(
+            files=files,
+            project_sha256=_sha256_text(records),
+            validation=validation,
+            entrypoint=self.entrypoint,
+            factory=self.factory,
+        )
+
     def file_hashes(self) -> dict[str, str]:
         self.assert_safe_structure()
         return {
@@ -433,6 +542,8 @@ def initialize_candidate_project(root: Path | str) -> CandidateProject:
 __all__ = [
     "BENCHMARK_INIT_SOURCE",
     "CandidateProject",
+    "CandidateProjectFile",
+    "CandidateProjectSnapshot",
     "GENERATED_FILES",
     "PROJECT_FILES",
     "ProjectValidation",

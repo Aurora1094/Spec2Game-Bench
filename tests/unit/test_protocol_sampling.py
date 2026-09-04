@@ -2,7 +2,10 @@ from __future__ import annotations
 
 from typing import Any
 
+import pytest
+
 from code2play.execution.protocol_sampling import _compile_checkpoint_programs
+from code2play.providers.dashscope import JudgeAttemptsExhausted
 
 
 class _BatchFailureCompiler:
@@ -61,3 +64,37 @@ def test_batch_compiler_failure_falls_back_to_single_checkpoint() -> None:
         "d2_compile_batch_D2.1_01",
         "d2_compile_repair_snake.D2.1.01",
     ]
+
+
+class _ExhaustedCompiler:
+    def __init__(self) -> None:
+        self.calls = 0
+
+    def json_text_validated(self, *_args, **_kwargs):
+        self.calls += 1
+        raise JudgeAttemptsExhausted(
+            purpose="d2_compile_repair_snake.D2.1.01",
+            attempts=2,
+            error=ValueError("truncated JSON"),
+        )
+
+
+def test_compiler_attempt_exhaustion_propagates_for_rescore_handling() -> None:
+    compiler = _ExhaustedCompiler()
+    checkpoints = [
+        {"id": "snake.D2.1.01", "dimension": "D2.1", "kind": "dynamic"}
+    ]
+
+    with pytest.raises(JudgeAttemptsExhausted):
+        _compile_checkpoint_programs(
+            checkpoints=checkpoints,
+            game_description="A small snake game.",
+            functional_requirements=[],
+            candidate_source="class GameState: pass",
+            initial_snapshot={},
+            initial_schema={},
+            compiler=compiler,
+            max_workers=1,
+        )
+
+    assert compiler.calls == 1

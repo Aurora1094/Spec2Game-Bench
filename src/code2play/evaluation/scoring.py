@@ -6,6 +6,9 @@ from typing import Any
 
 
 WEIGHTS = {"D1": 0.20, "D2": 0.50, "D3": 0.15, "D4": 0.15}
+RESCORE_STATUSES = frozenset(
+    {"judge_output_unavailable", "completed_with_judge_gap", "needs_rescore"}
+)
 
 
 def _number(value: Any) -> float | None:
@@ -88,7 +91,10 @@ def assemble_result(
         ),
     }
 
-    if not d4_configured:
+    has_rescore_gap = d2_status in RESCORE_STATUSES or d4_status in RESCORE_STATUSES
+    if has_rescore_gap:
+        official_total: float | None = None
+    elif not d4_configured:
         official_total: float | None = None
     elif not gate:
         official_total = round(contributions["D1"] or 0.0, 6)
@@ -103,11 +109,7 @@ def assemble_result(
             6,
         )
 
-    result_status = (
-        "needs_rescore"
-        if d4_status == "completed_with_judge_gap"
-        else "completed"
-    )
+    result_status = "needs_rescore" if has_rescore_gap else "completed"
     return {
         "schema_version": 1,
         "task": {

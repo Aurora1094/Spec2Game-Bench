@@ -19,6 +19,7 @@ from code2play.evaluation.dimensions.d2.protocol_evaluator import (
     DIMENSIONS,
     _deviation_prompt,
     _dimension_batch_prompt,
+    _partition_dimension_batches,
 )
 from code2play.evaluation.dimensions.d3.judge import D3_JUDGE_INSTRUCTIONS, build_judge_prompt
 from code2play.evaluation.dimensions.d4.semantic_ux import _evaluate_d41, _evaluate_d42, _evaluate_d43
@@ -42,12 +43,7 @@ _FORBIDDEN_CHECKPOINT = re.compile(
     r"(?<![A-Za-z0-9_])[A-Za-z][A-Za-z0-9_]*\.D[1-4](?:\.[0-9]+)+",
     re.IGNORECASE,
 )
-_SCORING_PURPOSES = (
-    "d2_dimension_D2.1",
-    "d2_dimension_D2.2",
-    "d2_dimension_D2.3",
-    "d2_dimension_D2.4",
-    "d2_dimension_D2.5",
+_FIXED_SCORING_PURPOSES = (
     "d2_specification_deviation",
     "d3_semantic_code_quality",
     "d4_1_artistic_visual_quality",
@@ -167,7 +163,12 @@ class PlanningJudge:
     def json_text(self, instructions: str, prompt: str, purpose: str) -> dict[str, Any]:
         self._record(instructions, prompt, (), purpose)
         if purpose.startswith("d2_dimension_"):
-            dimension = purpose.removeprefix("d2_dimension_")
+            match = re.fullmatch(
+                r"d2_dimension_(D2\.\d)(?:_batch_\d+)?", purpose
+            )
+            if match is None:
+                raise KeyError(f"No planning scaffold for text purpose {purpose!r}")
+            dimension = match.group(1)
             ids = self._ids(r'"checkpoint_id"\s*:\s*"([^"]+)"', prompt)
             return {
                 "dimension": dimension,
@@ -440,14 +441,40 @@ def run_request_plan(
     trace_by_id = {item["id"]: item for item in sample_manifest["d2"]}
     source = candidate.source_bundle()
     planner = PlanningJudge(config["judge"])
+    d2_scoring_purposes: list[str] = []
 
     for dimension in DIMENSIONS:
-        batch = [item for item in checkpoints if item["dimension"] == dimension]
-        planner.json_text(
-            BATCH_CHECKPOINT_JUDGE_INSTRUCTIONS,
-            _dimension_batch_prompt(dimension, batch, trace_by_id, source, spec.get("body", "")),
-            purpose=f"d2_dimension_{dimension}",
-        )
+        batchable = [
+            item
+            for item in checkpoints
+            if item["dimension"] == dimension
+            and "score_rubric" in item
+            and trace_by_id[item["id"]].get("status")
+            not in {"sampling_failed", "not_run_adapter_contract"}
+        ]
+        for batch_index, (batch, _prompt_characters) in enumerate(
+            _partition_dimension_batches(
+                dimension,
+                batchable,
+                trace_by_id,
+                source,
+                spec.get("body", ""),
+            ),
+            start=1,
+        ):
+            purpose = f"d2_dimension_{dimension}_batch_{batch_index:02d}"
+            d2_scoring_purposes.append(purpose)
+            planner.json_text(
+                BATCH_CHECKPOINT_JUDGE_INSTRUCTIONS,
+                _dimension_batch_prompt(
+                    dimension,
+                    batch,
+                    trace_by_id,
+                    source,
+                    spec.get("body", ""),
+                ),
+                purpose=purpose,
+            )
     planner.json_text(
         DEVIATION_JUDGE_INSTRUCTIONS,
         _deviation_prompt(
@@ -498,8 +525,9 @@ def run_request_plan(
         # The fixed logical request slots are added below with an explicit condition.
         pass
 
+    scoring_purposes = [*d2_scoring_purposes, *_FIXED_SCORING_PURPOSES]
     recorded = {row["request_id"]: row for row in planner.requests}
-    for purpose in _SCORING_PURPOSES:
+    for purpose in scoring_purposes:
         if purpose in recorded:
             continue
         role = RoutedSemanticJudge._role(purpose)
@@ -520,9 +548,10 @@ def run_request_plan(
             "estimated_image_input_tokens": 0,
             "images": [],
         })
-    planner.requests.sort(key=lambda row: _SCORING_PURPOSES.index(row["request_id"]))
-    if len(planner.requests) != 14:
-        raise AssertionError("plan mode must produce exactly 14 scoring request slots")
+    purpose_order = {purpose: index for index, purpose in enumerate(scoring_purposes)}
+    planner.requests.sort(
+        key=lambda row: (purpose_order.get(str(row["request_id"]), len(purpose_order)), str(row["request_id"]))
+    )
 
     generation_requests = _generation_requests(game, candidate, config)
     compiler_requests, compiler_actual = _compiler_usage(root / "model_calls" / "action_compiler")
@@ -592,7 +621,7 @@ def run_request_plan(
                 )
             ),
             "compilation_sent": len(compiler_requests),
-            "scoring_constructed_not_sent": 14,
+            "scoring_constructed_not_sent": len(planner.requests),
         },
         "token_budget": {
             "generation": generation_budget,

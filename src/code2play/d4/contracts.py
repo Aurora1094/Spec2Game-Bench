@@ -35,6 +35,7 @@ D43_QUESTION_TEXT = "Based on the current screenshot and game objective, what is
 D41_ART_SAMPLE_SIZE = 8
 D41_SAMPLE_SEED = 41
 D43_QUESTION_COUNT = 2
+MIN_ALLOWED_OPERATIONS = 2
 CONTRACT_GENERATOR_MODEL = DASHSCOPE_MODEL
 CONTRACT_VALIDATOR_MODELS = (DASHSCOPE_MODEL,)
 MAX_REVISION_ROUNDS = 0
@@ -66,6 +67,11 @@ Use exactly these top-level field names and no legacy alternatives:
   "sample_seed": 41,
   "d4_3_source_checkpoint_ids": ["first eligible ID", "second eligible ID"]
 }
+The allowed_operations list MUST contain at least two distinct concrete
+gameplay operations. Use one operation per list item; split grouped controls
+such as "press W, A, S, or D" into separate concrete entries. If a game has
+one control family, use distinct legal targets, objects, or actions explicitly
+described by the supplied specification. Do not invent controls.
 Only include gameplay operations that can be used to pursue the target.
 Exclude restart, reset, quit, close, invalid, no-op, and other lifecycle-only
 controls from "allowed_operations".
@@ -208,6 +214,14 @@ def _normalize_generated_body(value: Any, *, game_slug: str, eligible_ids: set[s
             raise ValueError("allowed_operations must contain a gameplay operation")
     elif disallowed:
         raise ValueError(f"allowed operation is disallowed: {disallowed[0]!r}")
+    operation_keys = {
+        re.sub(r"\s+", " ", operation.strip().rstrip(".")).casefold()
+        for operation in operations
+    }
+    if len(operation_keys) < MIN_ALLOWED_OPERATIONS:
+        raise ValueError(
+            "allowed_operations must contain at least two distinct gameplay operations"
+        )
     art_direction = _string_list(
         _contract_field(value, "art_direction", "art_requirements"),
         "art_direction",

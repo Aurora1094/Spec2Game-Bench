@@ -47,6 +47,8 @@ legal physical player operations, and exactly one must be visibly and
 strategically best for the fixed target. Do not use restart, invalid/no-op,
 lifecycle-only, or unavailable operations. Every rationale must be English.
 Use the operation strings from the supplied allowed_operations list exactly.
+The two options must be distinct; never repeat the same operation, even when
+the screenshot suggests that one operation is clearly preferable.
 """.strip()
 
 
@@ -345,6 +347,16 @@ def build_d43_question_pack_single_pass(*, d4_contract: Mapping[str, Any], d2_ch
         return pack
     selected = selection["evidence"]
     prompt = _question_prompt(d4_contract, d2_checkpoints, pool["source_checkpoint_ids"])
+
+    def validate_generated(value: dict[str, Any]) -> dict[str, Any]:
+        _normalize_questions(
+            value,
+            selected,
+            pool["source_checkpoint_ids"],
+            d4_contract["allowed_operations"],
+        )
+        return value
+
     try:
         method = getattr(generator, "json_vision_validated", None)
         if callable(method):
@@ -353,7 +365,7 @@ def build_d43_question_pack_single_pass(*, d4_contract: Mapping[str, Any], d2_ch
                 prompt,
                 _bound_images(selected),
                 "d4_3_questions_single_pass",
-                validator=lambda value: value,
+                validator=validate_generated,
             )
         else:
             raw = generator.json_vision(

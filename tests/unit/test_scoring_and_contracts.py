@@ -47,6 +47,22 @@ def test_official_weights_and_d1_contribution_gate() -> None:
     assert gated["dimensions"]["D2"]["weighted_contribution"] == 0.0
 
 
+def test_judge_gap_has_no_official_total_even_when_d1_gate_fails() -> None:
+    result = assemble_result(
+        game="snake",
+        model="qwen3_7_plus",
+        repetition=1,
+        candidate_project_sha256="a" * 64,
+        d4_configured=True,
+        d1_detail={"score": 40, "gate_pass": False},
+        d2_detail={"score": None, "status": "judge_output_unavailable"},
+        d3_detail={"score": 70, "max_score": 100, "status": "completed"},
+        d4_detail={"score_normalized": 0.8, "status": "completed"},
+    )
+    assert result["status"] == "needs_rescore"
+    assert result["official_total"] is None
+
+
 def test_round_contracts_are_generated_once_and_hash_locked(tmp_path: Path) -> None:
     config = load_config()
     round_dir = tmp_path / "round-001"
@@ -108,3 +124,24 @@ def test_legacy_contract_fields_are_normalized_to_the_locked_schema() -> None:
     assert normalized["allowed_operations"] == ["Press W to move up.", "Press A to move left."]
     assert normalized["art_direction"] == ["Use a clear, readable game scene."]
     assert normalized["d4_3"]["source_checkpoint_ids"] == [eligible[0]["id"], eligible[1]["id"]]
+
+
+def test_contract_requires_two_distinct_gameplay_operations() -> None:
+    config = load_config()
+    game = next(item for item in games(config) if item.slug == "snake")
+    from code2play.generation.prompt_builder import load_evaluator_checkpoints, load_spec
+    from code2play.d4.contracts import eligible_d43_checkpoints
+
+    checkpoints = load_evaluator_checkpoints(load_spec(game.spec))
+    eligible = eligible_d43_checkpoints(checkpoints)
+    with pytest.raises(ValueError, match="at least two distinct"):
+        _normalize_generated_body(
+            {
+                "target": "Collect food and survive as long as possible.",
+                "allowed_operations": ["Press W to move up."],
+                "art_direction": ["Use a clear, readable game scene."],
+                "d4_3_source_checkpoint_ids": [eligible[0]["id"], eligible[1]["id"]],
+            },
+            game_slug="snake",
+            eligible_ids={row["id"] for row in eligible},
+        )

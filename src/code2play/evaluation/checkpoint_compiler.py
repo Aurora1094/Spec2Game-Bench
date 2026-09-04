@@ -44,12 +44,6 @@ MAX_PATTERN_MEMBERS = 8
 MAX_TERMINAL_TASK_CALLS_PER_CASE = 64
 MAX_TERMINAL_SETUP_REPEATS = 16
 MAX_DT_SECONDS = 10.0
-MAX_STRUCTURED_OUTPUT_ATTEMPTS = 4
-STRUCTURED_OUTPUT_RETRY_REMINDER = (
-    "Structured-output retry: start over from the original Input and Shape. "
-    "Return the complete outer JSON object, never a nested case, action, command, "
-    "or sequence object by itself. Do not quote or reuse any prior output."
-)
 
 
 def state_schema(value: Any) -> Any:
@@ -596,40 +590,17 @@ def request_validated_compiler_output(
     purpose: str,
     normalize: Callable[[Any], dict[str, Any]],
 ) -> dict[str, Any]:
-    """Request and validate up to four independent structured outputs.
+    """Use the Judge client's fixed two-attempt validation-and-correction path."""
 
-    Only JSON parsing and structural-normalization failures (``ValueError``)
-    trigger a new stateless model call. Each call has a distinct purpose so the
-    judge client persists a separate audit artifact. Retry prompts contain only
-    fixed structural guidance; neither the rejected object nor free-form error
-    text is fed back to the model.
-    """
-
-    last_error: ValueError | None = None
-    retry_hint = ""
-    for attempt in range(1, MAX_STRUCTURED_OUTPUT_ATTEMPTS + 1):
-        attempt_prompt = prompt
-        if attempt > 1:
-            attempt_prompt = (
-                f"{prompt}\n{STRUCTURED_OUTPUT_RETRY_REMINDER} "
-                f"Validation constraint: {retry_hint}"
-            )
-        try:
-            raw = compiler.json_text(
-                instructions,
-                attempt_prompt,
-                purpose=f"{purpose}_attempt_{attempt:02d}",
-            )
-            return normalize(raw)
-        except ValueError as exc:
-            last_error = exc
-            retry_hint = _structured_output_retry_hint(exc)
-
-    assert last_error is not None
-    raise ValueError(
-        f"{purpose} failed structured-output validation after "
-        f"{MAX_STRUCTURED_OUTPUT_ATTEMPTS} independent calls: {last_error}"
-    ) from last_error
+    request = getattr(compiler, "json_text_validated", None)
+    if callable(request):
+        return request(
+            instructions,
+            prompt,
+            purpose=purpose,
+            validator=normalize,
+        )
+    return normalize(compiler.json_text(instructions, prompt, purpose=purpose))
 
 
 def _structured_output_retry_hint(exc: ValueError) -> str:
