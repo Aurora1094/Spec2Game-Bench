@@ -428,6 +428,8 @@ def cmd_evaluate(args: argparse.Namespace) -> int:
 def _static_plan(config: Mapping[str, Any], game_slugs: list[str]) -> dict[str, Any]:
     limits = {str(stage["id"]): int(stage["max_output_tokens"]) for stage in config["generation"]["stages"]}
     routes = config["judge"]["routes"]
+    from code2play.providers.dashscope import resolve_judge_route
+
     return {
         "schema_version": 1,
         "status": "planned_not_sent",
@@ -445,7 +447,10 @@ def _static_plan(config: Mapping[str, Any], game_slugs: list[str]) -> dict[str, 
                 "max_output_tokens": route["max_output_tokens"],
                 "send": False,
             }
-            for role, route in routes.items()
+            for role, route in (
+                (role, resolve_judge_route(config["judge"], role))
+                for role in routes
+            )
         },
         "notes": [
             "This logical plan sends no request and computes no score.",

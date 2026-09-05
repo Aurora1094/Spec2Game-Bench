@@ -141,6 +141,49 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
             "max_images_per_batch": 12,
         }:
             errors.append("visual judge batch limits differ from the locked benchmark policy")
+        routing = judge.get("routing", {})
+        expected_modalities = {
+            "action_compiler": "text",
+            "functionality": "text",
+            "specification_deviation": "text",
+            "code_quality": "text",
+            "artistic_visual": "vision",
+            "dynamic_visual": "vision",
+            "question_generation": "vision",
+            "question_answering": "vision",
+            "contract_generation": "text",
+        }
+        if not isinstance(routing, Mapping) or routing.get("strategy") != "role_profile_v1":
+            errors.append("judge routing must use role_profile_v1")
+        else:
+            profiles = routing.get("profiles", {})
+            roles = routing.get("roles", {})
+            role_modalities = routing.get("role_modalities", {})
+            qwen = profiles.get("qwen") if isinstance(profiles, Mapping) else None
+            if not isinstance(qwen, Mapping) or any(
+                qwen.get(key) != value
+                for key, value in {
+                    "provider": "alibaba_dashscope",
+                    "model": "qwen3.7-plus",
+                    "api_style": "chat_completions",
+                    "api_key_env": "DASHSCOPE_API_KEY",
+                }.items()
+            ):
+                errors.append("judge routing must define the qwen profile")
+            if not isinstance(roles, Mapping) or not roles.get("text") or not roles.get("vision"):
+                errors.append("active text and vision judge profiles must be configured")
+            elif not isinstance(profiles, Mapping) or any(
+                not isinstance(profiles.get(roles.get(modality)), Mapping)
+                or profiles[roles.get(modality)].get("provider") not in {"alibaba_dashscope", "openrouter"}
+                or not profiles[roles.get(modality)].get("model")
+                for modality in ("text", "vision")
+            ):
+                errors.append("active judge profiles must use a supported provider and model")
+            if not isinstance(role_modalities, Mapping) or any(
+                role_modalities.get(role) != modality
+                for role, modality in expected_modalities.items()
+            ):
+                errors.append("judge role modalities are incomplete or invalid")
         routes = judge.get("routes", {})
         expected_limits = {
             "action_compiler": 6000,

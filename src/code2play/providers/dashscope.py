@@ -1,4 +1,4 @@
-"""The single Qwen3.7-Plus provider used by every model-facing operation.
+"""OpenAI-compatible providers used by model-facing operations.
 
 The provider deliberately keeps the evaluator-facing interface small.  It is
 also usable with a fake OpenAI-compatible client in tests, so the default test
@@ -22,11 +22,14 @@ from typing import Any, Callable, Mapping, Protocol, Sequence
 DASHSCOPE_PROVIDER = "alibaba_dashscope"
 DASHSCOPE_MODEL = "qwen3.7-plus"
 DASHSCOPE_API_STYLE = "chat_completions"
+OPENROUTER_PROVIDER = "openrouter"
+OPENROUTER_MODEL = "google/gemini-3.8-flash"
+OPENROUTER_API_STYLE = "chat_completions"
 MAX_JUDGE_OUTPUT_TOKENS = 6000
 JUDGE_TEMPERATURE = 0.0
 PANEL_POLICY = "single_qwen37_plus_stateless"
 
-_SECRET_ENV_NAMES = ("DASHSCOPE_API_KEY",)
+_SECRET_ENV_NAMES = ("DASHSCOPE_API_KEY", "OPENROUTER_API_KEY")
 _DIMENSION_NAMES = {
     "D2.1": "game element modeling",
     "D2.2": "interaction modeling",
@@ -455,14 +458,22 @@ def _usage_numbers(usage: Mapping[str, Any]) -> tuple[int, int, int, int]:
     )
 
 
-class DashScopeChatJudge:
-    """Stateless Qwen JSON/vision client with exactly one local retry."""
+class OpenAICompatibleChatJudge:
+    """Stateless JSON/vision client with exactly one local retry.
+
+    Provider and model are selected by the router. The retry contract remains
+    fixed at two attempts with a single two-second delay for every provider.
+    """
 
     def __init__(
         self,
         log_dir: Path,
         *,
-        model: str = DASHSCOPE_MODEL,
+        provider: str,
+        model: str,
+        api_style: str = "chat_completions",
+        api_key_env: str,
+        base_url: str,
         max_output_tokens: int = MAX_JUDGE_OUTPUT_TOKENS,
         enable_thinking: bool = False,
         attempts: int = 2,
@@ -470,11 +481,16 @@ class DashScopeChatJudge:
         role: str = "scoring",
         client: Any | None = None,
     ) -> None:
-        if model != DASHSCOPE_MODEL:
-            raise ValueError("Only qwen3.7-plus is permitted")
+        if not provider or not model:
+            raise ValueError("Judge provider and model must be non-empty")
+        if api_style != "chat_completions":
+            raise ValueError(f"Unsupported judge API style: {api_style!r}")
         if attempts != 2 or tuple(float(value) for value in retry_delays_seconds) != (2.0,):
-            raise ValueError("Qwen judge requests require two attempts with one 2-second delay")
+            raise ValueError("Judge requests require two attempts with one 2-second delay")
+        self.provider = str(provider)
         self.model = model
+        self.api_style = api_style
+        self.api_key_env = api_key_env
         self.max_output_tokens = int(max_output_tokens)
         self.enable_thinking = bool(enable_thinking)
         self.attempts = int(attempts)
@@ -483,10 +499,16 @@ class DashScopeChatJudge:
         self.log_dir = Path(log_dir).resolve()
         self.log_dir.mkdir(parents=True, exist_ok=True)
         if client is None:
-            client, key, base_url = _chat_client()
+            key = os.getenv(api_key_env)
+            if not key:
+                raise ValueError(f"{api_key_env} is not set")
+            try:
+                from openai import OpenAI
+            except ImportError as exc:
+                raise RuntimeError("Install the openai-compatible SDK to use a judge provider") from exc
+            client = OpenAI(api_key=key, base_url=base_url, timeout=300.0, max_retries=0)
         else:
-            key = os.getenv("DASHSCOPE_API_KEY", "")
-            base_url = os.getenv("DASHSCOPE_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1")
+            key = os.getenv(api_key_env, "")
         self.client = client
         self._api_key = key
         self.base_url = base_url
@@ -556,9 +578,9 @@ class DashScopeChatJudge:
         request_log = {
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
             "purpose": purpose,
-            "provider": DASHSCOPE_PROVIDER,
-            "model": DASHSCOPE_MODEL,
-            "api_style": DASHSCOPE_API_STYLE,
+            "provider": self.provider,
+            "model": self.model,
+            "api_style": self.api_style,
             "base_url": self.base_url,
             "role": self.role,
             "temperature": 0.0,
@@ -577,22 +599,26 @@ class DashScopeChatJudge:
         usages: list[dict[str, Any]] = []
         for attempt in range(1, self.attempts + 1):
             try:
+                request_kwargs: dict[str, Any] = {
+                    "model": self.model,
+                    "messages": messages,
+                    "max_tokens": self.max_output_tokens,
+                    "temperature": 0.0,
+                    "stream": False,
+                }
+                if self.provider == DASHSCOPE_PROVIDER:
+                    request_kwargs["extra_body"] = {"enable_thinking": self.enable_thinking}
                 response = self.client.chat.completions.create(
-                    model=DASHSCOPE_MODEL,
-                    messages=messages,
-                    max_tokens=self.max_output_tokens,
-                    temperature=0.0,
-                    extra_body={"enable_thinking": self.enable_thinking},
-                    stream=False,
+                    **request_kwargs,
                 )
                 dumped = _dump(response)
                 choices = _get(response, "choices", [])
                 if not choices:
-                    raise ValueError("DashScope judge returned no choices")
+                    raise ValueError(f"{self.provider} judge returned no choices")
                 message = _get(choices[0], "message")
                 raw_text = _get(message, "content")
                 if not isinstance(raw_text, str):
-                    raise ValueError("DashScope judge returned no text content")
+                    raise ValueError(f"{self.provider} judge returned no text content")
                 raw_text = _redact(raw_text, [self._api_key])
                 usage = dumped.get("usage")
                 usage = dict(usage) if isinstance(usage, Mapping) else {}
@@ -639,7 +665,74 @@ class DashScopeChatJudge:
                         {"role": "user", "content": _redact(correction, [self._api_key])},
                     ]
                 time.sleep(self.retry_delays_seconds[min(attempt - 1, len(self.retry_delays_seconds) - 1)])
-        raise RuntimeError(_redact(f"Qwen judge failed: {last}", [self._api_key]))
+        raise RuntimeError(_redact(f"{self.provider} judge failed: {last}", [self._api_key]))
+
+
+class DashScopeChatJudge(OpenAICompatibleChatJudge):
+    """DashScope Qwen3.7-Plus client."""
+
+    def __init__(
+        self,
+        log_dir: Path,
+        *,
+        model: str = DASHSCOPE_MODEL,
+        max_output_tokens: int = MAX_JUDGE_OUTPUT_TOKENS,
+        enable_thinking: bool = False,
+        attempts: int = 2,
+        retry_delays_seconds: Sequence[float] = (2,),
+        role: str = "scoring",
+        client: Any | None = None,
+        base_url: str | None = None,
+    ) -> None:
+        if model != DASHSCOPE_MODEL:
+            raise ValueError("DashScope judge only supports qwen3.7-plus")
+        super().__init__(
+            log_dir,
+            provider=DASHSCOPE_PROVIDER,
+            model=model,
+            api_style=DASHSCOPE_API_STYLE,
+            api_key_env="DASHSCOPE_API_KEY",
+            base_url=base_url or os.getenv("DASHSCOPE_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1"),
+            max_output_tokens=max_output_tokens,
+            enable_thinking=enable_thinking,
+            attempts=attempts,
+            retry_delays_seconds=retry_delays_seconds,
+            role=role,
+            client=client,
+        )
+
+
+class OpenRouterChatJudge(OpenAICompatibleChatJudge):
+    """OpenRouter client for a role that is configured for another model."""
+
+    def __init__(
+        self,
+        log_dir: Path,
+        *,
+        model: str = OPENROUTER_MODEL,
+        max_output_tokens: int = MAX_JUDGE_OUTPUT_TOKENS,
+        enable_thinking: bool = False,
+        attempts: int = 2,
+        retry_delays_seconds: Sequence[float] = (2,),
+        role: str = "scoring",
+        client: Any | None = None,
+        base_url: str | None = None,
+        api_key_env: str = "OPENROUTER_API_KEY",
+    ) -> None:
+        super().__init__(
+            log_dir,
+            provider=OPENROUTER_PROVIDER,
+            model=model,
+            api_style=OPENROUTER_API_STYLE,
+            api_key_env=api_key_env,
+            base_url=base_url or os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
+            max_output_tokens=max_output_tokens,
+            enable_thinking=enable_thinking,
+            attempts=attempts,
+            retry_delays_seconds=retry_delays_seconds,
+            role=role,
+            client=client,
+        )
 
 
 def create_dashscope_judge(
@@ -657,26 +750,70 @@ def create_dashscope_judge(
     return DashScopeChatJudge(log_dir, model=model, max_output_tokens=max_output_tokens, enable_thinking=enable_thinking, attempts=attempts, retry_delays_seconds=retry_delays_seconds, role=role, client=client)
 
 
+def create_judge(
+    log_dir: Path,
+    *,
+    provider: str,
+    model: str,
+    api_style: str = "chat_completions",
+    api_key_env: str | None = None,
+    base_url: str | None = None,
+    max_output_tokens: int = MAX_JUDGE_OUTPUT_TOKENS,
+    enable_thinking: bool = False,
+    attempts: int = 2,
+    retry_delays_seconds: Sequence[float] = (2,),
+    role: str = "scoring",
+    client: Any | None = None,
+    **_ignored: Any,
+) -> SemanticJudge:
+    if provider == DASHSCOPE_PROVIDER:
+        return DashScopeChatJudge(
+            log_dir,
+            model=model,
+            max_output_tokens=max_output_tokens,
+            enable_thinking=enable_thinking,
+            attempts=attempts,
+            retry_delays_seconds=retry_delays_seconds,
+            role=role,
+            client=client,
+            base_url=base_url,
+        )
+    if provider == OPENROUTER_PROVIDER:
+        return OpenRouterChatJudge(
+            log_dir,
+            model=model,
+            max_output_tokens=max_output_tokens,
+            enable_thinking=enable_thinking,
+            attempts=attempts,
+            retry_delays_seconds=retry_delays_seconds,
+            role=role,
+            client=client,
+            base_url=base_url,
+            api_key_env=api_key_env or "OPENROUTER_API_KEY",
+        )
+    raise ValueError(f"Unsupported judge provider: {provider!r}")
+
+
 class JudgeRouter:
-    """Route every evaluator purpose to a Qwen3.7-Plus client."""
+    """Route evaluator roles through configurable text/vision profiles."""
 
     def __init__(self, config: Mapping[str, Any], log_root: Path, client_factory: Callable[..., Any] | None = None) -> None:
         self.config = dict(config)
         self.log_root = Path(log_root).resolve()
         self._clients: dict[str, SemanticJudge] = {}
-        self._client_factory = client_factory or create_dashscope_judge
+        self._client_factory = client_factory or create_judge
 
     def for_role(self, role: str) -> SemanticJudge:
         if role in self._clients:
             return self._clients[role]
-        route = self.config.get("routes", {}).get(role)
-        if not isinstance(route, Mapping):
-            raise KeyError(f"No evaluator model route configured for role {role!r}")
-        if route.get("provider") != DASHSCOPE_PROVIDER or route.get("model") != DASHSCOPE_MODEL or route.get("api_style") != DASHSCOPE_API_STYLE:
-            raise ValueError("All model routes must use alibaba_dashscope/qwen3.7-plus/chat_completions")
+        route = resolve_judge_route(self.config, role)
         client = self._client_factory(
             self.log_root / role,
-            model=DASHSCOPE_MODEL,
+            provider=str(route["provider"]),
+            model=str(route["model"]),
+            api_style=str(route.get("api_style", "chat_completions")),
+            api_key_env=route.get("api_key_env"),
+            base_url=route.get("base_url"),
             max_output_tokens=int(route["max_output_tokens"]),
             enable_thinking=bool(route.get("enable_thinking", False)),
             attempts=int(self.config.get("attempts", 2)),
@@ -695,6 +832,36 @@ class JudgeRouter:
         if not callable(execute):
             raise TypeError(f"Configured client for {request.role!r} lacks execute()")
         return execute(request)
+
+
+def resolve_judge_route(config: Mapping[str, Any], role: str) -> dict[str, Any]:
+    """Return the effective provider route for one evaluator role.
+
+    Per-role output limits stay in ``routes``. Provider identity is selected
+    through the role's modality profile, so changing the vision provider does
+    not require touching evaluation code.
+    """
+    routes = config.get("routes", {})
+    route = routes.get(role) if isinstance(routes, Mapping) else None
+    if not isinstance(route, Mapping):
+        raise KeyError(f"No evaluator model route configured for role {role!r}")
+    resolved = dict(route)
+    routing = config.get("routing", {})
+    profiles = routing.get("profiles", {}) if isinstance(routing, Mapping) else {}
+    role_modalities = routing.get("role_modalities", {}) if isinstance(routing, Mapping) else {}
+    roles = routing.get("roles", {}) if isinstance(routing, Mapping) else {}
+    modality = role_modalities.get(role) if isinstance(role_modalities, Mapping) else None
+    profile_name = roles.get(modality) if modality and isinstance(roles, Mapping) else None
+    profile = profiles.get(profile_name) if profile_name and isinstance(profiles, Mapping) else None
+    if profile is not None:
+        if not isinstance(profile, Mapping):
+            raise ValueError(f"Judge profile {profile_name!r} must be a mapping")
+        for key in ("provider", "model", "api_style", "api_key_env", "base_url"):
+            if key in profile:
+                resolved[key] = profile[key]
+    if not resolved.get("provider") or not resolved.get("model"):
+        raise ValueError(f"Judge route {role!r} is missing provider or model")
+    return resolved
 
 
 class RoutedSemanticJudge:
@@ -751,11 +918,18 @@ __all__ = [
     "MAX_JUDGE_OUTPUT_TOKENS",
     "ModelRequest",
     "ModelResult",
+    "OPENROUTER_API_STYLE",
+    "OPENROUTER_MODEL",
+    "OPENROUTER_PROVIDER",
+    "OpenAICompatibleChatJudge",
+    "OpenRouterChatJudge",
     "RoutedSemanticJudge",
     "SemanticJudge",
+    "create_judge",
     "create_dashscope_judge",
     "extract_python_code",
     "generate_stage_source",
     "parse_json_object",
     "redact_sensitive_text",
+    "resolve_judge_route",
 ]

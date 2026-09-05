@@ -11,6 +11,7 @@ from typing import Any, Iterable
 
 SECRET_ENV_NAMES = (
     "DASHSCOPE_API_KEY",
+    "OPENROUTER_API_KEY",
 )
 SENSITIVE_KEY_RE = re.compile(
     r"^(?:authorization|api[_-]?key|access[_-]?key(?:_id)?|secret(?:_access)?_?key|"

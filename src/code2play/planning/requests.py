@@ -27,6 +27,7 @@ from code2play.providers.dashscope import (
     JudgeRouter,
     ModelRequest,
     RoutedSemanticJudge,
+    resolve_judge_route,
     _model_visible_texts,
 )
 from code2play.execution.protocol_sampling import sample_evaluation_protocol
@@ -122,7 +123,7 @@ class PlanningJudge:
         safe_prompt = redact_text(visible[1])
         labels = visible[2:]
         role = RoutedSemanticJudge._role(purpose)
-        route = self.judge_config["routes"][role]
+        route = resolve_judge_route(self.judge_config, role)
         image_records = [
             _image_record(path, label)
             for (path, _old_label), label in zip(images, labels, strict=True)

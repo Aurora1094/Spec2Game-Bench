@@ -37,6 +37,34 @@ judge:
   retry_delays_seconds: [2]
   scoring_repetitions: 1
   aggregation: single_valid_response
+  routing:
+    strategy: role_profile_v1
+    roles:
+      text: qwen
+      vision: qwen
+    role_modalities:
+      action_compiler: text
+      functionality: text
+      specification_deviation: text
+      code_quality: text
+      artistic_visual: vision
+      dynamic_visual: vision
+      question_generation: vision
+      question_answering: vision
+      contract_generation: text
+    profiles:
+      qwen:
+        provider: alibaba_dashscope
+        model: qwen3.7-plus
+        api_style: chat_completions
+        api_key_env: DASHSCOPE_API_KEY
+        base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      gemini_openrouter:
+        provider: openrouter
+        model: google/gemini-3.8-flash
+        api_style: chat_completions
+        api_key_env: OPENROUTER_API_KEY
+        base_url: https://openrouter.ai/api/v1
   compiler:
     max_checkpoints_per_batch: 8
   visual:

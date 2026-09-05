@@ -28,6 +28,7 @@ from code2play.config.project import (
     workspace_round_dir,
     workspace_run_dir,
 )
+from code2play.providers.dashscope import resolve_judge_route
 from code2play.execution.protocol_policy import (
     runtime_protocol_descriptor,
     sha256_json,
@@ -669,8 +670,17 @@ def run_benchmark(
     )
     if existing_batch_state is not None:
         validate_batch_state(existing_batch_state)
-    if not os.getenv("DASHSCOPE_API_KEY"):
-        raise ValueError("DASHSCOPE_API_KEY is not set")
+    required_api_keys = {
+        str(resolve_judge_route(config["judge"], role).get("api_key_env") or (
+            "DASHSCOPE_API_KEY"
+            if resolve_judge_route(config["judge"], role).get("provider") == "alibaba_dashscope"
+            else "OPENROUTER_API_KEY"
+        ))
+        for role in config["judge"]["routes"]
+    }
+    missing_api_keys = sorted(name for name in required_api_keys if not os.getenv(name))
+    if missing_api_keys:
+        raise ValueError("Missing judge API key environment variable(s): " + ", ".join(missing_api_keys))
     active_round_id = str(existing_batch_state.get("round_id")) if existing_batch_state and existing_batch_state.get("round_id") else (round_id or f"{run_id}-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}-{uuid4().hex[:8]}")
     round_dir = workspace_round_dir(workspace_root, active_round_id)
     round_manifest = build_round_contracts(

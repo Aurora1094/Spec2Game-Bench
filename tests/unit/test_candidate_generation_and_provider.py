@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -12,6 +13,8 @@ from code2play.providers.dashscope import (
     DashScopeChatJudge,
     GenerationResult,
     JudgeAttemptsExhausted,
+    JudgeRouter,
+    OpenRouterChatJudge,
     _model_aliases,
     _restore_aliases,
 )
@@ -238,3 +241,60 @@ def test_provider_stops_after_two_invalid_json_attempts(
     correction = client.chat.completions.messages[1][-1]["content"]
     assert "complete minified JSON object" in str(correction)
     assert "JSONDecodeError" in str(correction)
+
+
+def test_judge_router_keeps_two_roles_on_qwen_then_switches_only_vision(tmp_path: Path) -> None:
+    config = load_config()
+    calls: list[dict[str, object]] = []
+
+    def factory(_log_dir: Path, **kwargs: object) -> object:
+        calls.append(kwargs)
+        return object()
+
+    router = JudgeRouter(config["judge"], tmp_path / "qwen", client_factory=factory)
+    router.for_role("functionality")
+    router.for_role("dynamic_visual")
+    assert [(call["provider"], call["model"]) for call in calls] == [
+        ("alibaba_dashscope", "qwen3.7-plus"),
+        ("alibaba_dashscope", "qwen3.7-plus"),
+    ]
+
+    mixed_judge = deepcopy(config["judge"])
+    mixed_judge["routing"]["roles"]["vision"] = "gemini_openrouter"
+    mixed_calls: list[dict[str, object]] = []
+
+    def mixed_factory(_log_dir: Path, **kwargs: object) -> object:
+        mixed_calls.append(kwargs)
+        return object()
+
+    mixed_router = JudgeRouter(mixed_judge, tmp_path / "mixed", client_factory=mixed_factory)
+    mixed_router.for_role("functionality")
+    mixed_router.for_role("dynamic_visual")
+    assert [(call["provider"], call["model"]) for call in mixed_calls] == [
+        ("alibaba_dashscope", "qwen3.7-plus"),
+        ("openrouter", "google/gemini-3.8-flash"),
+    ]
+
+
+def test_openrouter_judge_uses_openai_compatible_request_without_dashscope_body(tmp_path: Path) -> None:
+    requests: list[dict[str, object]] = []
+
+    class Completions:
+        def create(self, **kwargs: object) -> SimpleNamespace:
+            requests.append(kwargs)
+            return SimpleNamespace(
+                choices=[SimpleNamespace(message=SimpleNamespace(content='{"ok": true}'))],
+                usage={"prompt_tokens": 2, "completion_tokens": 3},
+            )
+
+    client = SimpleNamespace(chat=SimpleNamespace(completions=Completions()))
+    judge = OpenRouterChatJudge(
+        tmp_path,
+        model="google/gemini-3.8-flash",
+        role="dynamic_visual",
+        max_output_tokens=64,
+        client=client,
+    )
+    assert judge.json_text("Return JSON.", "{}", "dynamic_visual") == {"ok": True}
+    assert requests[0]["model"] == "google/gemini-3.8-flash"
+    assert "extra_body" not in requests[0]
