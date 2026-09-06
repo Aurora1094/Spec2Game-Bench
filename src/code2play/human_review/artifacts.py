@@ -25,10 +25,17 @@ from code2play.config.project import game_by_slug, load_config
 from code2play.d4.contracts import load_round_contract
 from code2play.generation.prompt_builder import load_spec
 from code2play.execution.safe_artifacts import sanitize, write_json
+from code2play.human_review.policy import (
+    HUMAN_REVIEW_CONSTRUCT_COUNTS,
+    HUMAN_REVIEW_DESIGN_ID,
+    HUMAN_REVIEW_ITEM_COUNT,
+    human_review_game_policy,
+    load_human_review_policy,
+)
 
 
 SCHEMA_VERSION = 1
-SOURCE_RELATIVE = Path("evaluation/human_review/source/v1")
+SOURCE_RELATIVE = Path("evaluation/human_review/source")
 SOURCE_FILES = ("state.py", "game.py", "rendering.py", "main.py")
 SOURCE_TERMS = ("AST", "代码", "对象", "结构", "配置", "容器", "常量")
 CODE_QUALITY_LABELS = {
@@ -38,17 +45,12 @@ CODE_QUALITY_LABELS = {
     "efficiency": "Efficiency and resource discipline",
     "conformance": "Python conventions and readability",
 }
-ART_LABELS = {
-    "composition_and_hierarchy": "Composition and hierarchy",
-    "palette_and_contrast": "Palette and contrast",
-    "shape_and_style_consistency": "Shape and style consistency",
-    "polish": "Visual polish",
-    "dynamic_presentation": "Dynamic presentation",
-}
-DYNAMIC_LABELS = {
-    "faithfulness": "Visible feedback faithfulness",
-    "completeness": "Visible feedback completeness",
-    "timeliness": "Visible feedback timeliness",
+CONSTRUCTION_COUNTS = {
+    "d2_anchor_items": 5,
+    "d41_overall_items": 1,
+    "d42_anchor_items": 2,
+    "d43_action_items": 1,
+    "d43_validity_items": 1,
 }
 
 
@@ -174,7 +176,9 @@ def _line_numbered_source(task_dir: Path, assets: _Assets) -> list[str]:
 
 
 def _item_id(candidate_sha: str, internal_ref: str) -> str:
-    digest = hashlib.sha256(f"{candidate_sha}:{internal_ref}".encode("utf-8")).hexdigest()
+    digest = hashlib.sha256(
+        f"{candidate_sha}:{HUMAN_REVIEW_DESIGN_ID}:{internal_ref}".encode("utf-8")
+    ).hexdigest()
     return f"human-{digest[:20]}"
 
 
@@ -225,15 +229,6 @@ SCALE_0_100 = _scale(
         "50": "Mixed quality with material weaknesses.",
         "75": "Generally sound with limited weaknesses.",
         "100": "Exceptional; no material weakness found.",
-    },
-)
-SCALE_ART = _scale(
-    "ordinal_integer",
-    (0, 1, 2),
-    {
-        "0": "Poor or unevaluable; broken, unclear, or severely inconsistent.",
-        "1": "Adequate and recognizable, with noticeable weaknesses.",
-        "2": "Strong, deliberate, coherent, and polished.",
     },
 )
 SCALE_VALIDITY = _scale(
@@ -301,6 +296,31 @@ def _latest_raw_input(task_dir: Path, role: str) -> dict[str, Any]:
     return {}
 
 
+def _locked_contract_from_run_state(
+    task_dir: Path, game_slug: str
+) -> tuple[Path, str | None] | None:
+    """Recover a round contract before D4 sampling has written its manifest."""
+
+    state = _read_json(task_dir / "run_state.json")
+    descriptor = state.get("policy_descriptor")
+    descriptor = descriptor if isinstance(descriptor, Mapping) else {}
+    contract = descriptor.get("d4_contract")
+    contract = contract if isinstance(contract, Mapping) else {}
+    if contract.get("configured") is not True or contract.get("status") != "locked":
+        return None
+    round_id = str(contract.get("round_id") or "")
+    if not round_id or Path(round_id).name != round_id or round_id in {".", ".."}:
+        raise ValueError("Run-state D4 contract has an invalid round ID")
+    if task_dir.parent.name != "tasks" or len(task_dir.parents) < 4:
+        return None
+    if task_dir.parents[2].name != "runs":
+        return None
+    workspace_root = task_dir.parents[3]
+    contract_path = workspace_root / "rounds" / round_id / "contracts" / f"{game_slug}.json"
+    manifest_sha256 = contract.get("manifest_sha256")
+    return contract_path, str(manifest_sha256) if manifest_sha256 else None
+
+
 def _load_context(
     task_dir: Path,
     result: Mapping[str, Any] | None,
@@ -319,21 +339,27 @@ def _load_context(
     game = game_by_slug(config, game_slug)
     spec = load_spec(game.spec)
     checkpoints = spec["evaluation"]["d2"]["checkpoints"]
-    # Round contracts are external and are recorded in the evaluation sample
-    # manifest.  Never read a checked-in per-game contract.
+    # Round contracts are external and normally recorded in the D4 sample
+    # manifest. Before sampling is complete, recover the same locked contract
+    # from the task's run state and workspace-relative round path.
     d4_sample_manifest = _read_json(task_dir / "evaluation" / "d4_sample_manifest.json")
     d4_contract_path = d4_sample_manifest.get("d4_contract_path")
-    if not isinstance(d4_contract_path, str) or not d4_contract_path.strip():
-        raise ValueError("Human evidence requires a round-locked D4 contract path")
-    contract_path = Path(d4_contract_path).expanduser()
-    if not contract_path.is_absolute():
-        contract_path = (task_dir / contract_path).resolve()
+    expected_manifest = d4_sample_manifest.get("d4_contract_manifest_sha256")
+    if isinstance(d4_contract_path, str) and d4_contract_path.strip():
+        contract_path = Path(d4_contract_path).expanduser()
+        if not contract_path.is_absolute():
+            contract_path = (task_dir / contract_path).resolve()
+        else:
+            contract_path = contract_path.resolve()
     else:
+        recovered = _locked_contract_from_run_state(task_dir, game_slug)
+        if recovered is None:
+            raise ValueError("Human evidence requires a round-locked D4 contract path")
+        contract_path, expected_manifest = recovered
         contract_path = contract_path.resolve()
     if contract_path.name != f"{game_slug}.json" or contract_path.parent.name != "contracts":
         raise ValueError("Round-locked D4 contract path is not game-scoped")
     round_root = contract_path.parent.parent
-    expected_manifest = d4_sample_manifest.get("d4_contract_manifest_sha256")
     d4_contract = load_round_contract(
         round_root,
         game_slug,
@@ -357,6 +383,7 @@ def _load_context(
     return {
         "summary": summary,
         "task": task,
+        "config": config,
         "game": game,
         "spec": spec,
         "d4_contract": d4_contract,
@@ -372,6 +399,7 @@ def _build_functionality_items(
     context: Mapping[str, Any],
     assets: _Assets,
     source_assets: list[str],
+    anchor_ids: Iterable[str],
 ) -> list[dict[str, Any]]:
     d2 = _read_json(task_dir / "evaluation" / "d2.json")
     evidence = d2.get("evidence") if isinstance(d2.get("evidence"), dict) else {}
@@ -392,26 +420,46 @@ def _build_functionality_items(
             )
             for checkpoint in batch:
                 source_visible_by_id[str(checkpoint.get("id"))] = batch_has_source
+    raw_results = results if isinstance(results, list) else []
+    results_by_id = {
+        str(raw.get("id") or ""): raw
+        for raw in raw_results if isinstance(raw, dict)
+    }
     items: list[dict[str, Any]] = []
-    for raw in results if isinstance(results, list) else []:
-        if not isinstance(raw, dict):
-            continue
-        checkpoint_id = str(raw.get("id") or "")
-        checkpoint = by_id.get(checkpoint_id, {})
-        trace_path = _resolve_existing(raw.get("trace_path"), task_dir)
+    for anchor_index, checkpoint_id in enumerate(anchor_ids, start=1):
+        raw = results_by_id.get(checkpoint_id)
+        checkpoint = by_id[checkpoint_id]
+        trace_path = _resolve_existing(raw.get("trace_path"), task_dir) if raw else None
         trace = _read_json(trace_path) if trace_path else {}
-        compact_trace = _compact_trace_for_judge(trace) if trace else {}
-        trace_asset = assets.add_json(
-            compact_trace,
-            label=f"Compact state/action trace for criterion {len(items) + 1}",
+        trace_asset = (
+            assets.add_json(
+                _compact_trace_for_judge(trace),
+                label=(
+                    "Compact state/action trace for preregistered criterion "
+                    f"{anchor_index}"
+                ),
+            )
+            if trace
+            else None
         )
         method = str(checkpoint.get("detection_method") or "")
         include_source = source_visible_by_id.get(
             checkpoint_id, any(term in method for term in SOURCE_TERMS)
         )
-        asset_ids = [trace_asset, *(source_assets if include_source else [])]
+        asset_ids = [
+            *([trace_asset] if trace_asset else []),
+            *(source_assets if include_source else []),
+        ]
         sampling_status = str(trace.get("status") or "")
-        rateable = sampling_status not in {"sampling_failed", "not_run_adapter_contract"}
+        if raw is None or not trace:
+            rateability = "cannot_rate"
+            cannot_rate_reason = "checkpoint_evidence_unavailable"
+        elif sampling_status in {"sampling_failed", "not_run_adapter_contract"}:
+            rateability = "cannot_rate"
+            cannot_rate_reason = "candidate_execution_evidence_unavailable"
+        else:
+            rateability = "rateable"
+            cannot_rate_reason = None
         public_checkpoint = {
             key: checkpoint.get(key)
             for key in (
@@ -425,7 +473,7 @@ def _build_functionality_items(
             )
             if checkpoint.get(key) is not None
         }
-        dimension = str(checkpoint.get("dimension") or raw.get("dimension") or "")
+        dimension = str(checkpoint.get("dimension") or "")
         item = _base_item(
             candidate_sha=context["candidate_sha"],
             internal_ref=f"functionality:{checkpoint_id}",
@@ -443,15 +491,15 @@ def _build_functionality_items(
                 "source_was_visible_to_llm": include_source,
                 "sampling_program": trace.get("compiled_program"),
             },
-            rateability="rateable" if rateable else "cannot_rate",
-            cannot_rate_reason=None if rateable else "candidate_execution_evidence_unavailable",
+            rateability=rateability,
+            cannot_rate_reason=cannot_rate_reason,
         )
         item["_private"].update(
             {
                 "checkpoint_id": checkpoint_id,
-                "automatic_score": raw.get("earned"),
-                "automatic_max_score": raw.get("possible"),
-                "automatic_judge_output": raw.get("judge_output"),
+                "automatic_score": raw.get("earned") if raw else None,
+                "automatic_max_score": raw.get("possible") if raw else None,
+                "automatic_judge_output": raw.get("judge_output") if raw else None,
             }
         )
         items.append(item)
@@ -594,38 +642,36 @@ def _build_art_items(
     )
     rateable = bool(image_assets)
     scores = d41.get("criterion_scores", {})
-    result: list[dict[str, Any]] = []
-    for criterion, label in ART_LABELS.items():
-        item = _base_item(
-            candidate_sha=context["candidate_sha"],
-            internal_ref=f"artistic_visual:{criterion}",
-            construct="artistic_visual_quality",
-            label=label,
-            instruction=(
-                "Evaluate only artistic and visual presentation across the complete supplied "
-                "screenshot set. Do not score gameplay correctness, goal clarity, difficulty, "
-                "novelty, or fun. Cite asset IDs."
-            ),
-            scale=SCALE_ART,
-            evidence={
-                "asset_ids": image_assets,
-                "image_refs": image_refs,
-                "sample_seed": d41.get("sample_seed"),
-                "sample_size": d41.get("sample_size"),
-                "screenshot_index": sampled_images,
-            },
-            rateability="rateable" if rateable else "cannot_rate",
-            cannot_rate_reason=None if rateable else "visual_evidence_unavailable",
-        )
-        item["_private"].update(
-            {
-                "criterion": criterion,
-                "automatic_score": scores.get(criterion) if isinstance(scores, dict) else None,
-                "automatic_judge_output": d41.get("judge_output"),
-            }
-        )
-        result.append(item)
-    return result
+    item = _base_item(
+        candidate_sha=context["candidate_sha"],
+        internal_ref="artistic_visual:overall",
+        construct="artistic_visual_quality",
+        label="Overall visual quality",
+        instruction=(
+            "Assess the overall visual quality across the complete supplied screenshot set. "
+            "Consider composition, contrast, style consistency, polish, and dynamic "
+            "presentation together. Do not score gameplay correctness, goal clarity, "
+            "difficulty, novelty, or fun. Cite asset IDs."
+        ),
+        scale=SCALE_0_5,
+        evidence={
+            "asset_ids": image_assets,
+            "image_refs": image_refs,
+            "sample_seed": d41.get("sample_seed"),
+            "sample_size": d41.get("sample_size"),
+            "screenshot_index": sampled_images,
+        },
+        rateability="rateable" if rateable else "cannot_rate",
+        cannot_rate_reason=None if rateable else "visual_evidence_unavailable",
+    )
+    item["_private"].update(
+        {
+            "automatic_score": d41.get("score"),
+            "automatic_component_scores": scores if isinstance(scores, dict) else {},
+            "automatic_judge_output": d41.get("judge_output"),
+        }
+    )
+    return [item]
 
 
 def _selected_frame_assets(
@@ -664,64 +710,85 @@ def _selected_frame_assets(
 
 
 def _build_dynamic_items(
-    context: Mapping[str, Any], assets: _Assets, d4: Mapping[str, Any]
+    context: Mapping[str, Any],
+    assets: _Assets,
+    d4: Mapping[str, Any],
+    anchor_ids: Iterable[str],
 ) -> list[dict[str, Any]]:
     d42 = d4.get("d4_2_feedback_fidelity")
     d42 = d42 if isinstance(d42, dict) else {}
     transitions = d42.get("transitions") if isinstance(d42.get("transitions"), list) else []
+    transitions_by_id = {
+        str(transition.get("id") or ""): transition
+        for transition in transitions
+        if isinstance(transition, dict) and str(transition.get("id") or "")
+    }
     result: list[dict[str, Any]] = []
-    for transition_index, transition in enumerate(transitions, start=1):
-        if not isinstance(transition, dict):
-            continue
-        checkpoint_id = str(transition.get("id") or "")
-        checkpoint = context["checkpoint_by_id"].get(checkpoint_id, {})
+    for transition_index, checkpoint_id in enumerate(anchor_ids, start=1):
+        transition = transitions_by_id.get(checkpoint_id)
+        checkpoint = context["checkpoint_by_id"][checkpoint_id]
         frame_assets, frame_refs = _selected_frame_assets(
-            transition.get("frames", []) if isinstance(transition.get("frames"), list) else [],
+            (
+                transition.get("frames", [])
+                if isinstance(transition, Mapping)
+                and isinstance(transition.get("frames"), list)
+                else []
+            ),
             assets,
         )
-        rateable = bool(frame_assets) and transition.get("status") != "visual_evidence_unavailable"
-        component_scores = transition.get("component_scores", {})
+        rateable = (
+            transition is not None
+            and bool(frame_assets)
+            and transition.get("status") != "visual_evidence_unavailable"
+        )
+        component_scores = transition.get("component_scores", {}) if transition else {}
         public_checkpoint = {
             key: checkpoint.get(key)
             for key in ("item", "objective", "initial_state", "trigger", "expected_transition")
             if checkpoint.get(key) is not None
         }
-        for component, label in DYNAMIC_LABELS.items():
-            item = _base_item(
-                candidate_sha=context["candidate_sha"],
-                internal_ref=f"dynamic_visual:{checkpoint_id}:{component}",
-                construct="dynamic_visual_feedback",
-                label=f"{label} — transition {transition_index}",
-                instruction=(
-                    "Compare the chronological images with the textual transition and the "
-                    "evaluator-compiled action program. Judge only how the visible feedback "
-                    f"demonstrates {component}. Report an action-program limitation separately."
+        item = _base_item(
+            candidate_sha=context["candidate_sha"],
+            internal_ref=f"dynamic_visual:{checkpoint_id}:overall",
+            construct="dynamic_visual_feedback",
+            label=f"Overall dynamic feedback — transition {transition_index}",
+            instruction=(
+                "Compare the chronological images with the textual transition and the "
+                "evaluator-compiled action program. Give one integrated score for whether "
+                "the visible feedback is faithful, complete, and timely. Report an "
+                "action-program limitation separately."
+            ),
+            scale=SCALE_0_5,
+            evidence={
+                "criterion": public_checkpoint,
+                "compiled_action_program": transition.get("compiled_program") if transition else None,
+                "asset_ids": frame_assets,
+                "frame_refs": frame_refs,
+                "image_order": "chronological",
+            },
+            rateability="rateable" if rateable else "cannot_rate",
+            cannot_rate_reason=None if rateable else "visual_evidence_unavailable",
+        )
+        item["_private"].update(
+            {
+                "checkpoint_id": checkpoint_id,
+                "automatic_score": transition.get("score") if transition else None,
+                "automatic_component_scores": (
+                    component_scores if isinstance(component_scores, dict) else {}
                 ),
-                scale=SCALE_0_5,
-                evidence={
-                    "criterion": public_checkpoint,
-                    "compiled_action_program": transition.get("compiled_program"),
-                    "asset_ids": frame_assets,
-                    "frame_refs": frame_refs,
-                    "image_order": "chronological",
-                },
-                rateability="rateable" if rateable else "cannot_rate",
-                cannot_rate_reason=None if rateable else "visual_evidence_unavailable",
-            )
-            item["_private"].update(
-                {
-                    "checkpoint_id": checkpoint_id,
-                    "component": component,
-                    "automatic_score": component_scores.get(component) if isinstance(component_scores, dict) else None,
-                    "automatic_judge_output": transition.get("judge_output"),
-                }
-            )
-            result.append(item)
+                "automatic_judge_output": transition.get("judge_output") if transition else None,
+            }
+        )
+        result.append(item)
     return result
 
 
 def _build_question_items(
-    context: Mapping[str, Any], task_dir: Path, assets: _Assets, d4: Mapping[str, Any]
+    context: Mapping[str, Any],
+    task_dir: Path,
+    assets: _Assets,
+    d4: Mapping[str, Any],
+    question_slot: int,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     pack = _read_json(task_dir / "evaluation" / "d4_question_pack.json")
     d43 = d4.get("d4_3_goal_interaction_inferability")
@@ -739,7 +806,14 @@ def _build_question_items(
     questions = pack.get("questions") if isinstance(pack.get("questions"), list) else []
     result: list[dict[str, Any]] = []
     answer_keys: dict[str, Any] = {}
-    if not questions:
+    selected_question = (
+        questions[question_slot - 1]
+        if question_slot > 0
+        and len(questions) >= question_slot
+        and isinstance(questions[question_slot - 1], dict)
+        else None
+    )
+    if selected_question is None:
         raw_failures = (
             pack.get("candidate_failures")
             if isinstance(pack.get("candidate_failures"), list)
@@ -770,33 +844,37 @@ def _build_question_items(
                 for failure in raw_failures
             ),
         }
-        expected = 2
-        for index in range(expected):
-            for kind in ("validity", "answer"):
-                item = _base_item(
-                    candidate_sha=context["candidate_sha"],
-                    internal_ref=f"visual_question:{index + 1}:{kind}:unavailable",
-                    construct=("visual_question_validity" if kind == "validity" else "visual_question_answer"),
-                    label=(
-                        f"Visual question {index + 1} — evidence validity"
-                        if kind == "validity"
-                        else f"Visual question {index + 1} — action choice"
-                    ),
-                    instruction=(
-                        "This run could not construct a grounded visual question from "
-                        "candidate evidence. This item is recorded as not rateable and "
-                        "does not by itself indicate a candidate rendering failure."
-                    ),
-                    scale=SCALE_VALIDITY if kind == "validity" else _scale("categorical", ("A", "B"), {}),
-                    evidence={"availability": availability, "asset_ids": []},
-                    rateability="cannot_rate",
-                    cannot_rate_reason="visual_question_evidence_unavailable",
-                )
-                result.append(item)
+        for kind in ("validity", "answer"):
+            item = _base_item(
+                candidate_sha=context["candidate_sha"],
+                internal_ref=f"visual_question:{question_slot}:{kind}:unavailable",
+                construct=(
+                    "visual_question_validity"
+                    if kind == "validity"
+                    else "visual_question_answer"
+                ),
+                label=(
+                    f"Visual question {question_slot} — evidence validity"
+                    if kind == "validity"
+                    else f"Visual question {question_slot} — action choice"
+                ),
+                instruction=(
+                    "This run could not construct a grounded visual question from "
+                    "candidate evidence. This item is recorded as not rateable and "
+                    "does not by itself indicate a candidate rendering failure."
+                ),
+                scale=(
+                    SCALE_VALIDITY
+                    if kind == "validity"
+                    else _scale("categorical", ("A", "B"), {})
+                ),
+                evidence={"availability": availability, "asset_ids": []},
+                rateability="cannot_rate",
+                cannot_rate_reason="visual_question_evidence_unavailable",
+            )
+            result.append(item)
         return result, answer_keys
-    for index, question in enumerate(questions, start=1):
-        if not isinstance(question, dict):
-            continue
+    for index, question in ((question_slot, selected_question),):
         question_id = str(question.get("id") or f"question_{index}")
         evidence = evidence_by_id.get(str(question.get("evidence_id")), {})
         asset_id = assets.add_file(
@@ -891,25 +969,52 @@ def build_human_evidence(
     output.mkdir(parents=True, exist_ok=True)
     assets = _Assets(output)
     source_assets = _line_numbered_source(task_root, assets)
-    d2 = _read_json(task_root / "evaluation" / "d2.json")
     d4 = _read_json(task_root / "evaluation" / "d4.json")
+    review_policy = human_review_game_policy(
+        context["config"], context["game"].slug
+    )
     items = [
-        *_build_functionality_items(task_root, context, assets, source_assets),
-        *_build_deviation_items(context, source_assets, d2),
-        *_build_code_quality_items(context, source_assets, task_root),
+        *_build_functionality_items(
+            task_root,
+            context,
+            assets,
+            source_assets,
+            review_policy["d2_anchor_ids"],
+        ),
         *_build_art_items(context, task_root, assets, d4),
-        *_build_dynamic_items(context, assets, d4),
+        *_build_dynamic_items(
+            context,
+            assets,
+            d4,
+            review_policy["d42_anchor_ids"],
+        ),
     ]
-    question_items, answer_keys = _build_question_items(context, task_root, assets, d4)
+    question_items, answer_keys = _build_question_items(
+        context,
+        task_root,
+        assets,
+        d4,
+        review_policy["d43_question_slot"],
+    )
     items.extend(question_items)
+    counts = Counter(str(item["construct"]) for item in items)
+    if len(items) != HUMAN_REVIEW_ITEM_COUNT or dict(counts) != HUMAN_REVIEW_CONSTRUCT_COUNTS:
+        raise RuntimeError(
+            "human-review ten-item construction is invalid: "
+            f"items={len(items)}, counts={dict(sorted(counts.items()))}"
+        )
     _write_jsonl(output / "items.private.jsonl", items)
     write_json(output / "asset_index.json", {"schema_version": 1, "assets": list(assets.records.values())})
     write_json(output / "answer_keys.private.json", {"schema_version": 1, "answer_keys": answer_keys})
-    counts = Counter(str(item["construct"]) for item in items)
     manifest = {
         "schema_version": SCHEMA_VERSION,
         "status": "human_evidence_ready",
         "automatic_scores_modified": False,
+        "questionnaire_design_id": review_policy["design_id"],
+        "questionnaire_policy_sha256": review_policy["policy_sha256"],
+        "items_per_game": review_policy["items_per_game"],
+        "construction_counts": CONSTRUCTION_COUNTS,
+        "included_dimensions": ["D2", "D4"],
         "candidate_project_sha256": context["candidate_sha"],
         "game": context["game"].slug,
         "task_model": context["task"].get("model"),
@@ -1018,6 +1123,23 @@ def _response_row(item: Mapping[str, Any], blind_id: str) -> dict[str, Any]:
     return response
 
 
+def _source_manifest_matches_policy(
+    source_root: Path,
+    source_manifest: Mapping[str, Any],
+    policy: Mapping[str, Any],
+) -> bool:
+    return (
+        source_manifest.get("questionnaire_design_id") == policy.get("design_id")
+        and source_manifest.get("questionnaire_policy_sha256")
+        == policy.get("policy_sha256")
+        and source_manifest.get("item_count") == HUMAN_REVIEW_ITEM_COUNT
+        and source_manifest.get("counts_by_construct") == HUMAN_REVIEW_CONSTRUCT_COUNTS
+        and (source_root / "items.private.jsonl").is_file()
+        and (source_root / "asset_index.json").is_file()
+        and (source_root / "answer_keys.private.json").is_file()
+    )
+
+
 def export_blind_bundle(
     task_dir: str | Path,
     output_dir: str | Path,
@@ -1029,9 +1151,12 @@ def export_blind_bundle(
 
     task_root = Path(task_dir).resolve()
     source_root = task_root / SOURCE_RELATIVE
-    if not (source_root / "manifest.json").is_file():
-        build_human_evidence(task_root, config_path=config_path)
+    config = load_config(config_path) if config_path else load_config()
+    current_policy = load_human_review_policy(config)
     source_manifest = _read_json(source_root / "manifest.json")
+    if not _source_manifest_matches_policy(source_root, source_manifest, current_policy):
+        build_human_evidence(task_root, config_path=config_path)
+        source_manifest = _read_json(source_root / "manifest.json")
     source_asset_index = _read_json(source_root / "asset_index.json")
     raw_items = [
         json.loads(line)
@@ -1098,10 +1223,21 @@ def export_blind_bundle(
     )
     items_sha = _sha256_file(public_root / "items.jsonl")
     assets_sha = _sha256_file(public_root / "asset_index.json")
+    counts_by_construct = dict(
+        sorted(Counter(str(item["construct"]) for item in public_items).items())
+    )
     public_manifest = {
         "schema_version": SCHEMA_VERSION,
         "bundle_type": "blind_human_questionnaire",
         "blind_candidate_id": identity,
+        "questionnaire_design_id": source_manifest.get("questionnaire_design_id"),
+        "questionnaire_policy_sha256": source_manifest.get(
+            "questionnaire_policy_sha256"
+        ),
+        "items_per_game": source_manifest.get("items_per_game"),
+        "construction_counts": source_manifest.get("construction_counts"),
+        "counts_by_construct": counts_by_construct,
+        "included_dimensions": source_manifest.get("included_dimensions"),
         "item_count": len(public_items),
         "rateable_item_count": sum(item["rateability"] == "rateable" for item in public_items),
         "cannot_rate_item_count": sum(item["rateability"] == "cannot_rate" for item in public_items),
@@ -1131,9 +1267,15 @@ def export_blind_bundle(
     }
     write_json(public_root / "manifest.json", public_manifest)
     source_answer_keys = _read_json(source_root / "answer_keys.private.json")
+    game_policy = current_policy["games"].get(str(source_manifest.get("game") or ""), {})
     private_mapping = {
         "schema_version": SCHEMA_VERSION,
         "blind_candidate_id": identity,
+        "questionnaire_design_id": source_manifest.get("questionnaire_design_id"),
+        "questionnaire_policy_sha256": source_manifest.get(
+            "questionnaire_policy_sha256"
+        ),
+        "human_review_anchor_policy": game_policy,
         "task_dir": str(task_root),
         "game": source_manifest.get("game"),
         "candidate_project_sha256": source_manifest.get("candidate_project_sha256"),
@@ -1178,6 +1320,19 @@ def validate_blind_bundle(bundle_dir: str | Path) -> dict[str, Any]:
         errors.append("manifest.json is missing or invalid")
     elif manifest.get("schema_version") != SCHEMA_VERSION:
         errors.append("manifest schema_version is invalid")
+    if manifest.get("questionnaire_design_id") is not None:
+        if manifest.get("questionnaire_design_id") != HUMAN_REVIEW_DESIGN_ID:
+            errors.append("manifest questionnaire_design_id is invalid")
+        if not re.fullmatch(
+            r"[0-9a-f]{64}", str(manifest.get("questionnaire_policy_sha256") or "")
+        ):
+            errors.append("manifest questionnaire_policy_sha256 is invalid")
+        if manifest.get("items_per_game") != HUMAN_REVIEW_ITEM_COUNT:
+            errors.append("manifest items_per_game is invalid")
+        if manifest.get("construction_counts") != CONSTRUCTION_COUNTS:
+            errors.append("manifest construction_counts is invalid")
+        if manifest.get("included_dimensions") != ["D2", "D4"]:
+            errors.append("manifest included_dimensions is invalid")
     if manifest.get("bundle_type") != "blind_human_questionnaire":
         errors.append("manifest bundle_type is invalid")
     if not asset_index:
@@ -1332,6 +1487,16 @@ def validate_blind_bundle(bundle_dir: str | Path) -> dict[str, Any]:
         errors.append("manifest rateable_item_count does not match items.jsonl")
     if manifest.get("cannot_rate_item_count") != sum(item.get("rateability") == "cannot_rate" for item in items):
         errors.append("manifest cannot_rate_item_count does not match items.jsonl")
+    if manifest.get("questionnaire_design_id") == HUMAN_REVIEW_DESIGN_ID:
+        actual_construct_counts = dict(
+            sorted(Counter(str(item.get("construct")) for item in items).items())
+        )
+        if len(items) != HUMAN_REVIEW_ITEM_COUNT:
+            errors.append("ten-item questionnaire has an invalid item count")
+        if manifest.get("counts_by_construct") != HUMAN_REVIEW_CONSTRUCT_COUNTS:
+            errors.append("manifest counts_by_construct is invalid")
+        if actual_construct_counts != HUMAN_REVIEW_CONSTRUCT_COUNTS:
+            errors.append("ten-item questionnaire construct counts are invalid")
     for item, response in zip(items, responses):
         if item.get("blind_candidate_id") != response.get("blind_candidate_id"):
             errors.append(f"{item.get('human_item_id')}: blind candidate ID mismatch")

@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "design_id": "fixed_10_item_human_review",
+  "items_per_game": 10,
+  "d43_question_slot": 1,
+  "games": {
+    "snake": {
+      "d2_anchor_ids": [
+        "snake.D2.1.02",
+        "snake.D2.2.01",
+        "snake.D2.3.04",
+        "snake.D2.4.01",
+        "snake.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "snake.D2.2.01",
+        "snake.D2.3.04"
+      ]
+    },
+    "dodge_blocks": {
+      "d2_anchor_ids": [
+        "dodge_blocks.D2.1.01",
+        "dodge_blocks.D2.2.04",
+        "dodge_blocks.D2.3.03",
+        "dodge_blocks.D2.4.01",
+        "dodge_blocks.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "dodge_blocks.D2.2.04",
+        "dodge_blocks.D2.3.03"
+      ]
+    },
+    "whack_a_mole": {
+      "d2_anchor_ids": [
+        "whack_a_mole.D2.1.01",
+        "whack_a_mole.D2.2.01",
+        "whack_a_mole.D2.3.03",
+        "whack_a_mole.D2.4.01",
+        "whack_a_mole.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "whack_a_mole.D2.2.01",
+        "whack_a_mole.D2.3.03"
+      ]
+    },
+    "asteroids": {
+      "d2_anchor_ids": [
+        "asteroids.D2.1.01",
+        "asteroids.D2.2.04",
+        "asteroids.D2.3.04",
+        "asteroids.D2.4.01",
+        "asteroids.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "asteroids.D2.2.04",
+        "asteroids.D2.3.04"
+      ]
+    },
+    "maze_runner": {
+      "d2_anchor_ids": [
+        "maze_runner.D2.1.01",
+        "maze_runner.D2.2.01",
+        "maze_runner.D2.3.01",
+        "maze_runner.D2.4.01",
+        "maze_runner.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "maze_runner.D2.3.01",
+        "maze_runner.D2.5.01"
+      ]
+    },
+    "space_invaders": {
+      "d2_anchor_ids": [
+        "space_invaders.D2.1.04",
+        "space_invaders.D2.2.02",
+        "space_invaders.D2.3.03",
+        "space_invaders.D2.4.01",
+        "space_invaders.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "space_invaders.D2.2.02",
+        "space_invaders.D2.3.03"
+      ]
+    },
+    "simple_platformer": {
+      "d2_anchor_ids": [
+        "simple_platformer.D2.1.04",
+        "simple_platformer.D2.2.04",
+        "simple_platformer.D2.3.06",
+        "simple_platformer.D2.4.01",
+        "simple_platformer.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_platformer.D2.2.04",
+        "simple_platformer.D2.3.06"
+      ]
+    },
+    "tetris": {
+      "d2_anchor_ids": [
+        "tetris.D2.1.04",
+        "tetris.D2.2.01",
+        "tetris.D2.3.03",
+        "tetris.D2.4.01",
+        "tetris.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "tetris.D2.2.01",
+        "tetris.D2.3.03"
+      ]
+    },
+    "match3": {
+      "d2_anchor_ids": [
+        "match3.D2.1.01",
+        "match3.D2.2.05",
+        "match3.D2.3.07",
+        "match3.D2.4.01",
+        "match3.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "match3.D2.2.05",
+        "match3.D2.3.07"
+      ]
+    },
+    "simple_shop": {
+      "d2_anchor_ids": [
+        "simple_shop.D2.1.01",
+        "simple_shop.D2.2.01",
+        "simple_shop.D2.3.05",
+        "simple_shop.D2.4.01",
+        "simple_shop.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_shop.D2.2.01",
+        "simple_shop.D2.3.05"
+      ]
+    },
+    "carrot_defense": {
+      "d2_anchor_ids": [
+        "carrot_defense.D2.1.01",
+        "carrot_defense.D2.2.01",
+        "carrot_defense.D2.3.01",
+        "carrot_defense.D2.4.01",
+        "carrot_defense.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "carrot_defense.D2.3.01",
+        "carrot_defense.D2.3.06"
+      ]
+    },
+    "farming_lite": {
+      "d2_anchor_ids": [
+        "farming_lite.D2.1.01",
+        "farming_lite.D2.2.01",
+        "farming_lite.D2.3.07",
+        "farming_lite.D2.4.01",
+        "farming_lite.D2.5.04"
+      ],
+      "d42_anchor_ids": [
+        "farming_lite.D2.3.01",
+        "farming_lite.D2.3.07"
+      ]
+    },
+    "pipe_connection": {
+      "d2_anchor_ids": [
+        "pipe_connection.D2.1.04",
+        "pipe_connection.D2.2.02",
+        "pipe_connection.D2.3.08",
+        "pipe_connection.D2.4.02",
+        "pipe_connection.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "pipe_connection.D2.2.02",
+        "pipe_connection.D2.3.08"
+      ]
+    },
+    "arena_shooter": {
+      "d2_anchor_ids": [
+        "arena_shooter.D2.1.04",
+        "arena_shooter.D2.2.04",
+        "arena_shooter.D2.3.02",
+        "arena_shooter.D2.4.04",
+        "arena_shooter.D2.5.05"
+      ],
+      "d42_anchor_ids": [
+        "arena_shooter.D2.2.04",
+        "arena_shooter.D2.3.02"
+      ]
+    },
+    "mini_zelda": {
+      "d2_anchor_ids": [
+        "mini_zelda.D2.1.01",
+        "mini_zelda.D2.2.06",
+        "mini_zelda.D2.3.20",
+        "mini_zelda.D2.4.05",
+        "mini_zelda.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "mini_zelda.D2.2.06",
+        "mini_zelda.D2.3.20"
+      ]
+    }
+  }
+}

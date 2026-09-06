@@ -530,7 +530,7 @@ def write_task_reports(task_dir: Path | str, result: Mapping[str, Any]) -> dict[
     }
     normalized_result["generation"] = generation_summary
     try:
-        from human_review import build_human_evidence
+        from code2play.human_review.artifacts import build_human_evidence
 
         human_manifest = build_human_evidence(destination, normalized_result)
         normalized_result["human_review"] = {
@@ -539,7 +539,7 @@ def write_task_reports(task_dir: Path | str, result: Mapping[str, Any]) -> dict[
             "item_count": human_manifest["item_count"],
             "rateable_item_count": human_manifest["rateable_item_count"],
             "cannot_rate_item_count": human_manifest["cannot_rate_item_count"],
-            "manifest": "evaluation/human_review/source/v1/manifest.json",
+            "manifest": "evaluation/human_review/source/manifest.json",
             "automatic_scores_modified": False,
         }
     except BaseException as exc:
@@ -563,7 +563,7 @@ def write_task_reports(task_dir: Path | str, result: Mapping[str, Any]) -> dict[
         "score_items_csv": str(csv_path),
         "scorecard_md": str(markdown_path),
         "human_evidence_manifest": str(
-            destination / "evaluation" / "human_review" / "source" / "v1" / "manifest.json"
+            destination / "evaluation" / "human_review" / "source" / "manifest.json"
         ),
     }
 
@@ -655,7 +655,7 @@ def write_failure_reports(
             "evaluation_state": evaluation_state,
         }
         try:
-            from human_review import build_human_evidence
+            from code2play.human_review.artifacts import build_human_evidence
 
             human_manifest = build_human_evidence(
                 task_dir,
@@ -672,11 +672,11 @@ def write_failure_reports(
             )
             report["human_review"] = {
                 "status": human_manifest["status"],
-                "manifest": "evaluation/human_review/source/v1/manifest.json",
+                "manifest": "evaluation/human_review/source/manifest.json",
                 "item_count": human_manifest["item_count"],
                 "automatic_scores_modified": False,
             }
-            artifacts.append("evaluation/human_review/source/v1/manifest.json")
+            artifacts.append("evaluation/human_review/source/manifest.json")
         except BaseException as exc:
             report["human_review"] = {
                 "status": "human_evidence_build_failed",

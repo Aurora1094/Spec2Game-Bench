@@ -6,11 +6,13 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+from collections import Counter
 
 from code2play.cli import _mock_contract_generator
 from code2play.config.project import game_by_slug, load_config
 from code2play.d4.contracts import build_round_contracts
 from code2play.execution.candidate_project import CandidateProject
+from code2play.human_review.policy import HUMAN_REVIEW_CONSTRUCT_COUNTS, HUMAN_REVIEW_DESIGN_ID
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -218,8 +220,14 @@ def test_human_export_cli_covers_blind_boundary_assets_and_blank_template(
         if line.strip()
     ]
     assets = json.loads((public / "asset_index.json").read_text(encoding="utf-8"))
-    assert items
-    assert manifest["item_count"] == len(items) == len(responses)
+    assert manifest["questionnaire_design_id"] == HUMAN_REVIEW_DESIGN_ID
+    assert manifest["item_count"] == len(items) == len(responses) == 10
+    assert manifest["counts_by_construct"] == HUMAN_REVIEW_CONSTRUCT_COUNTS
+    assert Counter(item["construct"] for item in items) == HUMAN_REVIEW_CONSTRUCT_COUNTS
+    assert not {
+        "semantic_code_quality",
+        "specification_deviation",
+    } & {item["construct"] for item in items}
     assert len(assets["assets"]) > 0
     assert [item["human_item_id"] for item in items] == [
         item["human_item_id"] for item in responses

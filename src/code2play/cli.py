@@ -136,6 +136,7 @@ def validate_benchmark(config: Mapping[str, Any]) -> dict[str, Any]:
         load_spec,
         validate_all_prompts,
     )
+    from code2play.human_review.policy import human_review_policy_errors
 
     catalog = load_catalog(PROJECT_ROOT / "benchmark" / "catalog.yaml")
     errors: list[str] = []
@@ -149,6 +150,7 @@ def validate_benchmark(config: Mapping[str, Any]) -> dict[str, Any]:
         errors.append("catalog checkpoint_count must be 537")
     if catalog.get("dimensions") != EXPECTED_DIMENSIONS:
         errors.append("catalog dimension totals are invalid")
+    errors.extend(human_review_policy_errors(config))
 
     total = 0
     dimensions: dict[str, int] = {}
