@@ -28,7 +28,10 @@ from code2play.config.project import (
     workspace_round_dir,
     workspace_run_dir,
 )
-from code2play.providers.dashscope import resolve_judge_route
+from code2play.providers.dashscope import (
+    GenerationNeedsRegeneration,
+    resolve_judge_route,
+)
 from code2play.execution.protocol_policy import (
     runtime_protocol_descriptor,
     sha256_json,
@@ -55,6 +58,11 @@ def _clear_failure_metadata(record: dict[str, Any]) -> None:
 def _clear_terminal_failure_metadata(record: dict[str, Any]) -> None:
     record.pop("terminal_failure", None)
     record.pop("terminal_failure_policy_version", None)
+
+
+def _clear_generation_gap_metadata(record: dict[str, Any]) -> None:
+    for key in ("generation_failure", "generation_failed_stage"):
+        record.pop(key, None)
 
 
 def _has_current_terminal_failure(record: dict[str, Any]) -> bool:
@@ -425,6 +433,32 @@ def _set_stage(
     _save_state(state_path, state)
 
 
+def _generation_gap_result(
+    *,
+    task_id: str,
+    game: GameConfig,
+    model: ModelConfig,
+    repetition: int,
+    failure: Mapping[str, Any],
+) -> dict[str, Any]:
+    return {
+        "schema_version": 1,
+        "status": "needs_regeneration",
+        "task_id": task_id,
+        "task": {
+            "game": game.slug,
+            "model": model.id,
+            "repetition": repetition,
+            "candidate_project_sha256": None,
+        },
+        "game": game.slug,
+        "model": model.id,
+        "repetition": repetition,
+        "official_total": None,
+        "generation_failure": dict(failure),
+    }
+
+
 def run_task(
     *,
     run_dir: Path,
@@ -436,6 +470,7 @@ def run_task(
     round_dir: Path,
     contract_manifest_sha256: str,
     resume: bool,
+    resume_generation: bool = False,
     progress: Callable[[str], None] = print,
     experimental_single_model: str | None = None,
     selected_game_slugs: list[str] | None = None,
@@ -487,6 +522,35 @@ def run_task(
         _save_state(state_path, state)
         progress(f"[skip] {task_id} already completed")
         return _read_json(task_dir / "summary.json")
+    generation_state = state.get("stages", {}).get("generation", {})
+    if (
+        resume
+        and not resume_generation
+        and (
+            state.get("status") == "needs_regeneration"
+            or generation_state.get("status") == "needs_regeneration"
+        )
+    ):
+        failure = state.get("generation_failure")
+        if not isinstance(failure, Mapping):
+            failure = generation_state.get("generation_failure")
+        if not isinstance(failure, Mapping):
+            failure = _read_json(task_dir / "generation_failure.json").get("failure", {}) if (
+                task_dir / "generation_failure.json"
+            ).is_file() else {
+                "stage": generation_state.get("failed_stage", "unknown"),
+                "error": "generation output is incomplete; pass --resume-generation to retry",
+            }
+        result = _generation_gap_result(
+            task_id=task_id,
+            game=game,
+            model=model,
+            repetition=repetition,
+            failure=failure,
+        )
+        write_json(task_dir / "summary.json", result)
+        progress(f"[skip-regeneration] {task_id} use --resume-generation to retry")
+        return result
 
     try:
         prompt_bundle: dict[str, Any]
@@ -534,6 +598,7 @@ def run_task(
                 task_dir=task_dir,
                 config=config,
                 resume=resume,
+                resume_generation=resume_generation,
                 progress=progress,
             )
             project_hash = candidate_project.project_sha256()
@@ -587,11 +652,48 @@ def run_task(
         )
         _clear_failure_metadata(state)
         _clear_terminal_failure_metadata(state)
+        _clear_generation_gap_metadata(state)
         _archive_resolved_failure(task_dir)
         _save_state(state_path, state)
         progress(
             f"[{result.get('status', 'completed')}] {task_id} "
             f"total={result.get('official_total')}"
+        )
+        return result
+    except GenerationNeedsRegeneration as exc:
+        failure = exc.to_dict()
+        failed_stage = str(exc.stage)
+        _set_stage(
+            state,
+            state_path,
+            "generation",
+            "needs_regeneration",
+            failed_stage=failed_stage,
+            generation_failure=failure,
+            error_type=type(exc).__name__,
+            error=redact_text(str(exc)),
+        )
+        state.update(
+            {
+                "status": "needs_regeneration",
+                "finished_at": _now(),
+                "official_total": None,
+                "failed_stage": failed_stage,
+                "generation_failure": failure,
+            }
+        )
+        _save_state(state_path, state)
+        result = _generation_gap_result(
+            task_id=task_id,
+            game=game,
+            model=model,
+            repetition=repetition,
+            failure=failure,
+        )
+        write_json(task_dir / "summary.json", result)
+        progress(
+            f"[needs_regeneration] {task_id} at {failed_stage}: "
+            f"attempts={exc.attempts_made}"
         )
         return result
     except BaseException as exc:
@@ -642,6 +744,7 @@ def run_benchmark(
     *,
     repetitions: int = 1,
     resume: bool = True,
+    resume_generation: bool = False,
     run_id: str = DEFAULT_RUN_ID,
     config_path: str | Path | None = None,
     workspace: str | Path | None = None,
@@ -742,7 +845,13 @@ def run_benchmark(
     ):
         raise ValueError("Existing batch belongs to a different benchmark/Judge policy; use a new run ID")
     batch_state["status"] = "running"
-    for key in ("finished_at", "completed_count", "failed_count"):
+    for key in (
+        "finished_at",
+        "completed_count",
+        "failed_count",
+        "needs_rescore_count",
+        "needs_regeneration_count",
+    ):
         batch_state.pop(key, None)
     records_by_id = {item["task_id"]: item for item in batch_state["matrix"]}
     results: list[dict[str, Any]] = []
@@ -761,6 +870,17 @@ def run_benchmark(
                     progress(f"[skip-terminal] {task_id} candidate protocol failure")
                     _save_state(batch_state_path, batch_state)
                     continue
+                if (
+                    resume
+                    and record.get("status") == "needs_regeneration"
+                    and not resume_generation
+                ):
+                    progress(
+                        f"[skip-regeneration] {task_id} "
+                        "use --resume-generation to retry"
+                    )
+                    _save_state(batch_state_path, batch_state)
+                    continue
                 _clear_failure_metadata(record)
                 _clear_terminal_failure_metadata(record)
                 record.update({"status": "running", "started_at": _now()})
@@ -776,6 +896,7 @@ def run_benchmark(
                         round_dir=round_dir,
                         contract_manifest_sha256=contract_manifest_sha256,
                         resume=resume,
+                        resume_generation=resume_generation,
                         progress=progress,
                         selected_game_slugs=(
                             [item.slug for item in selected_games]
@@ -790,9 +911,27 @@ def run_benchmark(
                             "official_total": result.get("official_total"),
                         }
                     )
-                    _clear_failure_metadata(record)
-                    _clear_terminal_failure_metadata(record)
+                    if result.get("status") == "needs_regeneration":
+                        record["generation_failure"] = result.get("generation_failure")
+                        record["generation_failed_stage"] = (
+                            result.get("generation_failure", {}) or {}
+                        ).get("stage")
+                    else:
+                        _clear_failure_metadata(record)
+                        _clear_terminal_failure_metadata(record)
+                        _clear_generation_gap_metadata(record)
                     results.append(result)
+                except GenerationNeedsRegeneration as exc:
+                    failure = exc.to_dict()
+                    record.update(
+                        {
+                            "status": "needs_regeneration",
+                            "finished_at": _now(),
+                            "official_total": None,
+                            "generation_failure": failure,
+                            "generation_failed_stage": str(exc.stage),
+                        }
+                    )
                 except BaseException as exc:
                     terminal_failure = _is_terminal_candidate_failure(exc)
                     record.update(
@@ -809,17 +948,24 @@ def run_benchmark(
                     )
                 _save_state(batch_state_path, batch_state)
 
+    needs_regeneration_count = sum(
+        item["status"] == "needs_regeneration" for item in batch_state["matrix"]
+    )
+    needs_rescore_count = sum(
+        item["status"] == "needs_rescore" for item in batch_state["matrix"]
+    )
     batch_state["status"] = (
-        "completed_with_judge_gaps"
-        if any(item["status"] == "needs_rescore" for item in batch_state["matrix"])
+        "completed_with_generation_gaps"
+        if needs_regeneration_count
+        else "completed_with_judge_gaps"
+        if needs_rescore_count
         else "completed"
     )
     batch_state["finished_at"] = _now()
     batch_state["completed_count"] = sum(item["status"] == "completed" for item in batch_state["matrix"])
     batch_state["failed_count"] = sum(item["status"] == "failed" for item in batch_state["matrix"])
-    batch_state["needs_rescore_count"] = sum(
-        item["status"] == "needs_rescore" for item in batch_state["matrix"]
-    )
+    batch_state["needs_rescore_count"] = needs_rescore_count
+    batch_state["needs_regeneration_count"] = needs_regeneration_count
     _save_state(batch_state_path, batch_state)
     from code2play.reporting.reports import write_batch_reports, write_failure_reports
 

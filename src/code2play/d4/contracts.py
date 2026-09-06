@@ -17,7 +17,11 @@ from uuid import uuid4
 from jsonschema import Draft202012Validator
 
 from code2play.config.project import GameConfig, load_config
-from code2play.generation.prompt_builder import load_evaluator_checkpoints, load_spec
+from code2play.generation.prompt_builder import (
+    get_spec_path,
+    load_evaluator_checkpoints,
+    load_spec,
+)
 from code2play.providers.dashscope import (
     DASHSCOPE_API_STYLE,
     DASHSCOPE_MODEL,
@@ -28,8 +32,8 @@ from code2play.providers.dashscope import (
 
 D4_CONTRACT_SCHEMA_VERSION = 1
 D4_CONTRACT_VERSION = "round_v1"
-D4_CONTRACT_DESIGN_VERSION = "d4_round_contract_qwen37_plus_v1"
-D4_CONTRACT_POLICY = "qwen37_plus_single_pass_locally_validated"
+D4_CONTRACT_DESIGN_VERSION = "d4_round_contract_qwen37_plus_v2"
+D4_CONTRACT_POLICY = "qwen37_plus_single_pass_target_aware_v1"
 D43_SOURCE_DIMENSION = "D2.2"
 D43_QUESTION_TEXT = "Based on the current screenshot and game objective, what is the best next action?"
 D41_ART_SAMPLE_SIZE = 8
@@ -39,21 +43,45 @@ MIN_ALLOWED_OPERATIONS = 2
 CONTRACT_GENERATOR_MODEL = DASHSCOPE_MODEL
 CONTRACT_VALIDATOR_MODELS = (DASHSCOPE_MODEL,)
 MAX_REVISION_ROUNDS = 0
-RUNTIME_QUESTION_POLICY = "qwen37_plus_dynamic_visual_questions_fixed_local_binding_v1"
-CONTRACT_PROMPT_VERSION = "d4_round_contract_prompt_v2"
+RUNTIME_QUESTION_POLICY = "qwen37_plus_dynamic_visual_questions_fixed_local_binding_v3"
+CONTRACT_PROMPT_VERSION = "d4_round_contract_prompt_v3"
 CONTRACT_SCHEMA_PATH = (
     Path(__file__).resolve().parents[3] / "benchmark" / "schemas" / "d4_contract.schema.json"
 )
 
 _CJK_PATTERN = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
-_DISALLOWED_TERMS = ("restart", "reset", "lifecycle", "invalid", "no-op", "noop", "quit", "close")
+_OPERATION_ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
+_DISALLOWED_TERMS = (
+    "restart",
+    "reset",
+    "lifecycle",
+    "invalid",
+    "no-op",
+    "noop",
+    "quit",
+    "close",
+    "background",
+    "empty",
+    "waiting",
+    "nothing",
+    "no target",
+)
+_D43_LIFECYCLE_TERMS = (
+    "restart",
+    "reset",
+    "lifecycle",
+    "game over",
+    "press r",
+    "quit",
+    "close",
+)
 
 GENERATOR_INSTRUCTIONS = """
 You design the game-level evaluator contract for one Code2Play-Bench game.
 The supplied specification and eligible dynamic interaction requirements are
 the only source material. Return one JSON object only. Extract explicit
-screenshot-judgeable art requirements, the player goal, legal concrete physical
-player operations, and exactly two eligible source requirement IDs for runtime
+screenshot-judgeable art requirements, the player goal, legal gameplay
+operations, and exactly two eligible source requirement IDs for runtime
 visual questions. Do not invent scenes or answers. Do not include evaluator
 instructions, scoring rules, candidate code, screenshots, or private rubric
 text. Every natural-language string must be in English.
@@ -67,11 +95,13 @@ Use exactly these top-level field names and no legacy alternatives:
   "sample_seed": 41,
   "d4_3_source_checkpoint_ids": ["first eligible ID", "second eligible ID"]
 }
-The allowed_operations list MUST contain at least two distinct concrete
-gameplay operations. Use one operation per list item; split grouped controls
-such as "press W, A, S, or D" into separate concrete entries. If a game has
-one control family, use distinct legal targets, objects, or actions explicitly
-described by the supplied specification. Do not invent controls.
+The allowed_operations list MUST contain at least two distinct gameplay
+operations. Use one operation per list item; split grouped controls such as
+"press W, A, S, or D" into separate concrete entries. If the supplied
+specification contains an AUTHORITATIVE TARGET-SPECIFIC OPERATION POLICY,
+use its operation descriptions exactly. Under that policy, two operations may
+share a physical control when their legal target classes differ. Do not invent
+controls or target classes.
 Only include gameplay operations that can be used to pursue the target.
 Exclude restart, reset, quit, close, invalid, no-op, and other lifecycle-only
 controls from "allowed_operations".
@@ -114,6 +144,159 @@ def _string_list(value: Any, label: str, minimum: int = 1, maximum: int = 12) ->
     if len(set(result)) != len(result):
         raise ValueError(f"{label} must not contain duplicates")
     return result
+
+
+def _is_gameplay_interaction_checkpoint(row: Mapping[str, Any]) -> bool:
+    """Reject lifecycle checkpoints from target-specific D4.3 evidence pools.
+
+    A D2.2 checkpoint can be dynamic while still only exercising restart or
+    reset behavior.  Target-specific policies are allowed to name only live
+    gameplay interactions, so the declared IDs remain meaningful evidence for
+    the target classes described by the policy.
+    """
+
+    if row.get("dimension") != D43_SOURCE_DIMENSION or row.get("kind") != "dynamic":
+        return False
+    text = " ".join(
+        str(row.get(name, ""))
+        for name in (
+            "item",
+            "objective",
+            "initial_state",
+            "trigger",
+            "expected_transition",
+        )
+    ).casefold()
+    return not any(term in text for term in _D43_LIFECYCLE_TERMS)
+
+
+def normalize_spec_operation_policy(
+    value: Any,
+    *,
+    checkpoints: Sequence[Mapping[str, Any]],
+) -> dict[str, Any] | None:
+    """Validate the optional, game-authored target-specific operation inventory."""
+
+    if value is None:
+        return None
+    if not isinstance(value, Mapping):
+        raise ValueError("d4_operation_policy must be an object")
+    if value.get("mode") != "target_specific":
+        raise ValueError("d4_operation_policy.mode must be target_specific")
+    if value.get("identity") != "control_plus_target":
+        raise ValueError(
+            "d4_operation_policy.identity must be control_plus_target"
+        )
+    raw_operations = value.get("operations")
+    if not isinstance(raw_operations, list) or not 2 <= len(raw_operations) <= 12:
+        raise ValueError(
+            "d4_operation_policy.operations must contain 2 through 12 items"
+        )
+    operations: list[dict[str, str]] = []
+    seen_ids: set[str] = set()
+    seen_descriptions: set[str] = set()
+    seen_targets: set[tuple[str, str]] = set()
+    for index, raw in enumerate(raw_operations):
+        if not isinstance(raw, Mapping):
+            raise ValueError(f"d4_operation_policy.operations[{index}] must be an object")
+        operation_id = raw.get("id")
+        if not isinstance(operation_id, str) or _OPERATION_ID_PATTERN.fullmatch(operation_id.strip()) is None:
+            raise ValueError(
+                f"d4_operation_policy.operations[{index}].id is invalid"
+            )
+        operation_id = operation_id.strip()
+        operation_id_key = operation_id.casefold()
+        if operation_id_key in seen_ids:
+            raise ValueError(
+                f"d4_operation_policy.operations contains duplicate id {operation_id!r}"
+            )
+        control = _english(
+            raw.get("control"),
+            f"d4_operation_policy.operations[{index}].control",
+        )
+        target = _english(
+            raw.get("target"),
+            f"d4_operation_policy.operations[{index}].target",
+        )
+        description = _english(
+            raw.get("description"),
+            f"d4_operation_policy.operations[{index}].description",
+        )
+        description_key = re.sub(r"\s+", " ", description.rstrip(".")).casefold()
+        if description_key in seen_descriptions:
+            raise ValueError(
+                "d4_operation_policy.operations contains duplicate descriptions"
+            )
+        target_key = (control.casefold(), target.casefold())
+        if target_key in seen_targets:
+            raise ValueError(
+                "d4_operation_policy.operations must distinguish target classes"
+            )
+        semantic_text = " ".join((control, target, description)).casefold()
+        if (
+            control.casefold() in {"r", "restart", "reset"}
+            or any(term in semantic_text for term in _DISALLOWED_TERMS)
+        ):
+            raise ValueError(
+                f"d4_operation_policy operation {operation_id!r} is disallowed"
+            )
+        seen_ids.add(operation_id_key)
+        seen_descriptions.add(description_key)
+        seen_targets.add(target_key)
+        operations.append(
+            {
+                "id": operation_id,
+                "control": control,
+                "target": target,
+                "description": description,
+            }
+        )
+
+    interaction_ids = {
+        str(row.get("id"))
+        for row in checkpoints
+        if _is_gameplay_interaction_checkpoint(row)
+    }
+    raw_sources = value.get("d43_source_checkpoint_ids")
+    if not isinstance(raw_sources, list) or len(raw_sources) < D43_QUESTION_COUNT:
+        raise ValueError(
+            "d4_operation_policy.d43_source_checkpoint_ids must contain at least two IDs"
+        )
+    source_ids = [str(item).strip() for item in raw_sources]
+    if any(not item for item in source_ids) or len(set(source_ids)) != len(source_ids):
+        raise ValueError(
+            "d4_operation_policy.d43_source_checkpoint_ids must be unique non-empty IDs"
+        )
+    unknown = [item for item in source_ids if item not in interaction_ids]
+    if unknown:
+        raise ValueError(
+            "d4_operation_policy references a non-interaction checkpoint "
+            + repr(unknown[0])
+        )
+    return {
+        "mode": "target_specific",
+        "identity": "control_plus_target",
+        "operations": operations,
+        "d43_source_checkpoint_ids": source_ids,
+    }
+
+
+def _operation_policy_for_game(
+    game_slug: str,
+    checkpoints: Sequence[Mapping[str, Any]],
+) -> dict[str, Any] | None:
+    """Load the authoritative operation policy for a configured game."""
+
+    spec = load_spec(get_spec_path(game_slug))
+    return normalize_spec_operation_policy(
+        spec.get("d4_operation_policy"),
+        checkpoints=checkpoints,
+    )
+
+
+# Kept as a compatibility alias for local tooling that imported the former
+# private helper before target-specific policies were introduced.
+_normalize_spec_operation_policy = normalize_spec_operation_policy
 
 
 def _contract_field(value: Mapping[str, Any], canonical: str, *legacy: str) -> Any:
@@ -166,39 +349,120 @@ def _canonical_checkpoint_id(source_id: Any, eligible_ids: set[str]) -> Any:
     return matches[0] if len(matches) == 1 else candidate
 
 
-def eligible_d43_checkpoints(checkpoints: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
-    return [
+def eligible_d43_checkpoints(
+    checkpoints: Sequence[Mapping[str, Any]],
+    operation_policy: Mapping[str, Any] | None = None,
+) -> list[dict[str, Any]]:
+    source_rows = [
+        row
+        for row in checkpoints
+        if row.get("dimension") == D43_SOURCE_DIMENSION and row.get("kind") == "dynamic"
+    ]
+    if isinstance(operation_policy, Mapping):
+        source_rows = [
+            row for row in source_rows if _is_gameplay_interaction_checkpoint(row)
+        ]
+    rows = [
         {
             key: row[key]
             for key in ("id", "item", "objective", "initial_state", "trigger", "expected_transition")
             if key in row
         }
-        for row in checkpoints
-        if row.get("dimension") == D43_SOURCE_DIMENSION and row.get("kind") == "dynamic"
+        for row in source_rows
     ]
+    if isinstance(operation_policy, Mapping):
+        source_ids = operation_policy.get("d43_source_checkpoint_ids")
+        if isinstance(source_ids, list):
+            allowed = {str(item) for item in source_ids}
+            rows = [row for row in rows if row.get("id") in allowed]
+    return rows
 
 
-def _public_input(spec_path: Path, checkpoints: Sequence[Mapping[str, Any]]) -> tuple[str, str, str]:
+def _public_input(
+    spec_path: Path,
+    checkpoints: Sequence[Mapping[str, Any]],
+    operation_policy: Mapping[str, Any] | None = None,
+) -> tuple[str, str, str]:
     spec_bytes = spec_path.read_bytes()
     checkpoint_path = spec_path.parent / "checkpoints.jsonl"
     checkpoint_bytes = checkpoint_path.read_bytes()
     input_hash = sha256_bytes(spec_bytes + b"\n" + checkpoint_bytes)
-    prompt = (
+    prompt_parts = [
         "Game specification (public):\n\n"
         + spec_bytes.decode("utf-8-sig")
         + "\n\nEligible dynamic interaction requirements (public fields only):\n"
-        + json.dumps(eligible_d43_checkpoints(checkpoints), ensure_ascii=False, indent=2)
-    )
+        + json.dumps(
+            eligible_d43_checkpoints(checkpoints, operation_policy),
+            ensure_ascii=False,
+            indent=2,
+        )
+    ]
+    if operation_policy is not None:
+        prompt_parts.append(
+            "\n\nAUTHORITATIVE TARGET-SPECIFIC OPERATION POLICY (use exactly):\n"
+            + json.dumps(operation_policy, ensure_ascii=False, indent=2)
+        )
+    prompt = "".join(prompt_parts)
     return prompt, input_hash, sha256_bytes(checkpoint_bytes)
 
 
-def _normalize_generated_body(value: Any, *, game_slug: str, eligible_ids: set[str]) -> dict[str, Any]:
-    if not isinstance(value, Mapping):
-        raise ValueError("D4 contract output must be an object")
-    target = _english(_contract_field(value, "target", "player_goal"), "target")
-    legacy_operations = "allowed_operations" not in value and "legal_physical_operations" in value
+def _operation_key(value: str) -> str:
+    return re.sub(r"\s+", " ", value.strip().rstrip(".")).casefold()
+
+
+def _normalize_contract_operations(
+    value: Mapping[str, Any],
+    *,
+    operation_policy: Mapping[str, Any] | None,
+) -> tuple[list[str], dict[str, Any] | None]:
+    """Normalize model operations, using a game-authored inventory when present."""
+
+    raw_operations = _contract_field(
+        value,
+        "allowed_operations",
+        "legal_physical_operations",
+    )
+    if operation_policy is not None:
+        inventory = operation_policy["operations"]
+        expected = [str(item["description"]) for item in inventory]
+        if raw_operations is not None:
+            candidate_operations = _string_list(
+                raw_operations,
+                "allowed_operations",
+                maximum=12,
+            )
+            candidate_keys = [_operation_key(item) for item in candidate_operations]
+            expected_by_key = {_operation_key(item): item for item in expected}
+            unknown = [
+                item for item, key in zip(candidate_operations, candidate_keys, strict=True)
+                if key not in expected_by_key
+            ]
+            if unknown:
+                raise ValueError(
+                    "allowed_operations contains an operation outside the "
+                    f"authoritative inventory: {unknown[0]!r}"
+                )
+            if len(set(candidate_keys)) != len(candidate_keys):
+                raise ValueError("allowed_operations must not contain duplicates")
+        canonical_policy = {
+            "mode": str(operation_policy["mode"]),
+            "identity": str(operation_policy["identity"]),
+            "operation_ids": [str(item["id"]) for item in inventory],
+            "operations": [dict(item) for item in inventory],
+        }
+        provided_policy = value.get("operation_policy")
+        if provided_policy is not None and provided_policy != canonical_policy:
+            raise ValueError("operation_policy does not match the game specification")
+        return expected, canonical_policy
+
+    if raw_operations is None:
+        raise ValueError("allowed_operations is required")
+    legacy_operations = (
+        "allowed_operations" not in value
+        and "legal_physical_operations" in value
+    )
     operations = _string_list(
-        _contract_field(value, "allowed_operations", "legal_physical_operations"),
+        raw_operations,
         "allowed_operations",
         maximum=12,
     )
@@ -214,14 +478,28 @@ def _normalize_generated_body(value: Any, *, game_slug: str, eligible_ids: set[s
             raise ValueError("allowed_operations must contain a gameplay operation")
     elif disallowed:
         raise ValueError(f"allowed operation is disallowed: {disallowed[0]!r}")
-    operation_keys = {
-        re.sub(r"\s+", " ", operation.strip().rstrip(".")).casefold()
-        for operation in operations
-    }
+    operation_keys = {_operation_key(operation) for operation in operations}
     if len(operation_keys) < MIN_ALLOWED_OPERATIONS:
         raise ValueError(
             "allowed_operations must contain at least two distinct gameplay operations"
         )
+    return operations, None
+
+
+def _normalize_generated_body(
+    value: Any,
+    *,
+    game_slug: str,
+    eligible_ids: set[str],
+    operation_policy: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    if not isinstance(value, Mapping):
+        raise ValueError("D4 contract output must be an object")
+    target = _english(_contract_field(value, "target", "player_goal"), "target")
+    operations, normalized_operation_policy = _normalize_contract_operations(
+        value,
+        operation_policy=operation_policy,
+    )
     art_direction = _string_list(
         _contract_field(value, "art_direction", "art_requirements"),
         "art_direction",
@@ -245,7 +523,7 @@ def _normalize_generated_body(value: Any, *, game_slug: str, eligible_ids: set[s
         normalized_sources.append(source_id)
     if len(set(normalized_sources)) != D43_QUESTION_COUNT:
         raise ValueError("D4.3 source checkpoint IDs must be distinct")
-    return {
+    body: dict[str, Any] = {
         "game_slug": game_slug,
         "target": target,
         "allowed_operations": operations,
@@ -256,11 +534,14 @@ def _normalize_generated_body(value: Any, *, game_slug: str, eligible_ids: set[s
             "question_count": D43_QUESTION_COUNT,
             "fixed_question": D43_QUESTION_TEXT,
             "source_checkpoint_ids": normalized_sources,
-            "evidence_source": "real_d4_2_frames_for_dynamic_d2_2",
+            "evidence_source": "real_d4_2_frames_for_declared_dynamic_d2_2_interactions",
             "requires_distinct_evidence": True,
             "runtime_question_policy": RUNTIME_QUESTION_POLICY,
         },
     }
+    if normalized_operation_policy is not None:
+        body["operation_policy"] = normalized_operation_policy
+    return body
 
 
 def validate_d4_contract(
@@ -269,6 +550,7 @@ def validate_d4_contract(
     game_slug: str | None = None,
     d2_checkpoints: Sequence[Mapping[str, Any]] = (),
     expected_input_sha256: str | None = None,
+    operation_policy: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     if CONTRACT_SCHEMA_PATH.is_file():
         schema = json.loads(CONTRACT_SCHEMA_PATH.read_text(encoding="utf-8"))
@@ -292,7 +574,15 @@ def validate_d4_contract(
         raise ValueError("D4 contract game_slug is required")
     if expected_input_sha256 is not None and contract.get("input_sha256") != expected_input_sha256:
         raise ValueError("D4 contract input hash is invalid")
-    body = _normalize_generated_body(contract, game_slug=slug, eligible_ids={row["id"] for row in eligible_d43_checkpoints(d2_checkpoints)})
+    if operation_policy is None and d2_checkpoints:
+        operation_policy = _operation_policy_for_game(slug, d2_checkpoints)
+    eligible = eligible_d43_checkpoints(d2_checkpoints, operation_policy)
+    body = _normalize_generated_body(
+        contract,
+        game_slug=slug,
+        eligible_ids={row["id"] for row in eligible},
+        operation_policy=operation_policy,
+    )
     for key, expected in body.items():
         if contract.get(key) != expected:
             raise ValueError(f"D4 contract field {key!r} is not normalized")
@@ -357,7 +647,15 @@ def _existing_round(round_dir: Path, games: Sequence[GameConfig]) -> dict[str, A
     for game in games:
         spec = load_spec(game.spec)
         checkpoints = load_evaluator_checkpoints(spec)
-        _prompt, input_hash, checkpoint_hash = _public_input(game.spec, checkpoints)
+        operation_policy = normalize_spec_operation_policy(
+            spec.get("d4_operation_policy"),
+            checkpoints=checkpoints,
+        )
+        _prompt, input_hash, checkpoint_hash = _public_input(
+            game.spec,
+            checkpoints,
+            operation_policy,
+        )
         input_record = manifest["inputs"].get(game.slug, {})
         if (
             input_record.get("input_sha256") != input_hash
@@ -373,6 +671,7 @@ def _existing_round(round_dir: Path, games: Sequence[GameConfig]) -> dict[str, A
             game_slug=game.slug,
             d2_checkpoints=checkpoints,
             expected_input_sha256=input_hash,
+            operation_policy=operation_policy,
         )
     return manifest
 
@@ -419,10 +718,18 @@ def build_round_contracts(
     for game in active_games:
         spec = load_spec(game.spec)
         checkpoints = load_evaluator_checkpoints(spec)
-        eligible = eligible_d43_checkpoints(checkpoints)
+        operation_policy = normalize_spec_operation_policy(
+            spec.get("d4_operation_policy"),
+            checkpoints=checkpoints,
+        )
+        eligible = eligible_d43_checkpoints(checkpoints, operation_policy)
         if len(eligible) < D43_QUESTION_COUNT:
             raise ValueError(f"{game.slug} does not have two eligible dynamic D2.2 checkpoints")
-        prompt, input_hash, checkpoint_hash = _public_input(game.spec, checkpoints)
+        prompt, input_hash, checkpoint_hash = _public_input(
+            game.spec,
+            checkpoints,
+            operation_policy,
+        )
         eligible_ids = {row["id"] for row in eligible}
 
         def normalize(value: Any) -> dict[str, Any]:
@@ -430,6 +737,7 @@ def build_round_contracts(
                 value,
                 game_slug=game.slug,
                 eligible_ids=eligible_ids,
+                operation_policy=operation_policy,
             )
 
         raw = _invoke_generator(generator, prompt, game.slug, validator=normalize)
@@ -437,6 +745,7 @@ def build_round_contracts(
             raw,
             game_slug=game.slug,
             eligible_ids=eligible_ids,
+            operation_policy=operation_policy,
         )
         contract = {
             "schema_version": D4_CONTRACT_SCHEMA_VERSION,
@@ -457,7 +766,13 @@ def build_round_contracts(
             },
         }
         contract["contract_sha256"] = contract_sha256(contract)
-        validate_d4_contract(contract, game_slug=game.slug, d2_checkpoints=checkpoints, expected_input_sha256=input_hash)
+        validate_d4_contract(
+            contract,
+            game_slug=game.slug,
+            d2_checkpoints=checkpoints,
+            expected_input_sha256=input_hash,
+            operation_policy=operation_policy,
+        )
         contract_records[game.slug] = contract
         input_records[game.slug] = {
             "input_sha256": input_hash,
@@ -576,6 +891,19 @@ def validate_round_manifest(manifest: Mapping[str, Any], *, round_dir: str | Pat
                 or generator.get("prompt_version") != CONTRACT_PROMPT_VERSION
             ):
                 raise ValueError(f"D4 contract generator is not Qwen-only for {slug}")
+            spec = load_spec(get_spec_path(slug))
+            checkpoints = load_evaluator_checkpoints(spec)
+            operation_policy = normalize_spec_operation_policy(
+                spec.get("d4_operation_policy"),
+                checkpoints=checkpoints,
+            )
+            validate_d4_contract(
+                contract,
+                game_slug=slug,
+                d2_checkpoints=checkpoints,
+                expected_input_sha256=str(input_record.get("input_sha256")),
+                operation_policy=operation_policy,
+            )
     return dict(manifest)
 
 
@@ -624,6 +952,7 @@ __all__ = [
     "eligible_d43_checkpoints",
     "load_round_contract",
     "manifest_sha256",
+    "normalize_spec_operation_policy",
     "validate_d4_contract",
     "validate_round_manifest",
 ]

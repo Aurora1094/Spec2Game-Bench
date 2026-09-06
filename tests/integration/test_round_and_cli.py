@@ -12,7 +12,7 @@ import sysconfig
 import pytest
 
 from code2play.cli import _mock_contract_generator
-from code2play.config.project import games, load_config
+from code2play.config.project import game_by_slug, games, load_config, models
 from code2play.d4.contracts import (
     build_round_contracts,
     manifest_sha256,
@@ -268,6 +268,79 @@ def test_benchmark_can_run_one_selected_game(
     assert observed == ["snake"]
     assert [record["game"] for record in state["matrix"]] == ["snake"]
     assert state["policy_descriptor"]["selected_game_slugs"] == ["snake"]
+
+
+def test_generation_gap_skips_generation_and_evaluation_until_explicit_resume(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = load_config()
+    workspace = tmp_path / "external benchmark workspace"
+    round_dir = _build_local_round(workspace / "rounds", "round-generation-gap")
+    manifest = json.loads(
+        (round_dir / "contracts" / "manifest.json").read_text(encoding="utf-8")
+    )
+    game = game_by_slug(config, "snake")
+    model = models(config)[0]
+    run_dir = workspace / "runs" / "generation-gap-run"
+    task_dir = run_dir / "tasks" / f"{game.slug}__{model.id}__r01"
+    task_dir.mkdir(parents=True)
+    descriptor = benchmark_module._task_policy_descriptor(config, game, manifest)
+    failure = {
+        "stage": "game",
+        "attempts_made": 2,
+        "error": "incomplete generation output",
+    }
+    state = benchmark_module._initial_task_state(
+        game,
+        model,
+        1,
+        benchmark_module.sha256_json(descriptor),
+        "round-generation-gap",
+        manifest["manifest_sha256"],
+        descriptor,
+    )
+    state.update(
+        {
+            "status": "needs_regeneration",
+            "official_total": None,
+            "generation_failure": failure,
+        }
+    )
+    state["stages"]["generation"].update(
+        {
+            "status": "needs_regeneration",
+            "failed_stage": "game",
+            "generation_failure": failure,
+        }
+    )
+    _write_json(task_dir / "run_state.json", state)
+    _write_json(task_dir / "generation_failure.json", {"stage": "game", "failure": failure})
+    calls: list[str] = []
+
+    def should_not_evaluate(**_kwargs: object) -> dict[str, object]:
+        calls.append("evaluate")
+        raise AssertionError("evaluation must not run for a generation gap")
+
+    monkeypatch.setattr(benchmark_module, "evaluate_candidate", should_not_evaluate)
+    result = benchmark_module.run_task(
+        run_dir=run_dir,
+        game=game,
+        model=model,
+        repetition=1,
+        config=config,
+        round_id="round-generation-gap",
+        round_dir=round_dir,
+        contract_manifest_sha256=manifest["manifest_sha256"],
+        resume=True,
+        resume_generation=False,
+        progress=lambda _message: None,
+    )
+
+    assert result["status"] == "needs_regeneration"
+    assert result["official_total"] is None
+    assert calls == []
+    assert json.loads((task_dir / "summary.json").read_text(encoding="utf-8"))["status"] == "needs_regeneration"
 
 
 def _installed_console_script() -> Path | None:

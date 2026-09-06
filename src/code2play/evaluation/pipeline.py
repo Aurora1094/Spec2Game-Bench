@@ -275,7 +275,7 @@ def evaluate_candidate(
         d4_contract_path = Path(round_dir).resolve() / "contracts" / f"{game.slug}.json"
     evaluation_policy = {
         "judge": active_judge_config,
-        "judge_policy": "optimized_qwen_single_pass_v1",
+        "judge_policy": "optimized_qwen_single_pass_v2",
         "d1_gate_mode": "contribution_only",
         "protocol_version": 4,
         "runtime_protocol": active_runtime_protocol,

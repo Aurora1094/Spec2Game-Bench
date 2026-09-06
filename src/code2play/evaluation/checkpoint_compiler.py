@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from typing import Any, Callable
@@ -27,6 +28,17 @@ Prefer physical inputs and short deterministic time advances. Return one compact
 JSON object only: no Markdown, prose, or code fence. Omit optional/default-valued
 fields instead of spelling out empty fields.
 """.strip()
+
+BATCH_CHECKPOINT_COMPILER_INSTRUCTIONS = (
+    CHECKPOINT_COMPILER_INSTRUCTIONS.replace(
+        "You are the evaluator-side compiler for one D2 checkpoint.",
+        "You are the evaluator-side compiler for a batch of one through eight D2 checkpoints.",
+    )
+    + "\n\nThe request supplies an ordered batch. Return exactly one program for every "
+    "requested checkpoint, preserve the supplied order, and return the exact opaque "
+    "batch_id supplied in the required shape. Each program must independently obey "
+    "the same finite-action contract."
+)
 
 
 ACTION_LIST_FIELDS = (
@@ -732,8 +744,14 @@ def compile_checkpoint_program_batch(
     if not 1 <= len(checkpoints) <= 8:
         raise ValueError("A compiler batch must contain one through eight checkpoints")
     checkpoint_by_id = {str(item["id"]): item for item in checkpoints}
+    checkpoint_ids = list(checkpoint_by_id)
+    # D2 labels are deliberately hidden from the model. An opaque ID avoids the
+    # label-blinding transform changing the identifier that must round-trip.
+    response_batch_id = "batch_" + hashlib.sha256(
+        batch_id.encode("utf-8")
+    ).hexdigest()[:16]
     payload = {
-        "batch_id": batch_id,
+        "batch_id": response_batch_id,
         "textual_checkpoints": checkpoints,
         "game_description": game_description,
         "functional_requirements": functional_requirements,
@@ -749,7 +767,7 @@ def compile_checkpoint_program_batch(
             "capture_each": "set true only where an intermediate state or visual frame is useful",
         },
         "required_shape": {
-            "batch_id": batch_id,
+            "batch_id": response_batch_id,
             "programs": [
                 {
                     "checkpoint_id": item["id"],
@@ -766,26 +784,63 @@ def compile_checkpoint_program_batch(
         "need an effective physical action. Return minified JSON only.\nInput:"
         + json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
     )
+
+    def validate_batch_envelope(value: dict[str, Any]) -> dict[str, Any]:
+        if not isinstance(value, dict):
+            raise ValueError("Compiler batch output must be an object")
+        if value.get("batch_id") != response_batch_id:
+            raise ValueError(
+                "Compiler batch output must return the exact requested batch_id "
+                f"{response_batch_id!r}"
+            )
+        rows = value.get("programs")
+        if not isinstance(rows, list):
+            raise ValueError("Compiler batch output requires programs[]")
+        actual_ids: list[str] = []
+        for row_index, row in enumerate(rows):
+            if not isinstance(row, dict):
+                raise ValueError(f"Compiler batch programs[{row_index}] must be an object")
+            checkpoint_id = row.get("checkpoint_id")
+            if not isinstance(checkpoint_id, str):
+                raise ValueError(
+                    f"Compiler batch programs[{row_index}].checkpoint_id must be a string"
+                )
+            actual_ids.append(checkpoint_id)
+        if len(actual_ids) != len(set(actual_ids)):
+            raise ValueError("Compiler batch output contains duplicate checkpoint_id values")
+        unknown = [checkpoint_id for checkpoint_id in actual_ids if checkpoint_id not in checkpoint_by_id]
+        if unknown:
+            raise ValueError(
+                "Compiler batch output contains unknown checkpoint_id values: "
+                + ", ".join(unknown)
+            )
+        missing = [checkpoint_id for checkpoint_id in checkpoint_ids if checkpoint_id not in actual_ids]
+        if missing:
+            raise ValueError(
+                "Compiler batch output omitted checkpoint_id values: " + ", ".join(missing)
+            )
+        if actual_ids != checkpoint_ids:
+            raise ValueError("Compiler batch output must preserve checkpoint_id input order")
+        return value
+
     request = getattr(compiler, "json_text_validated", None)
     if callable(request):
         raw = request(
-            CHECKPOINT_COMPILER_INSTRUCTIONS,
+            BATCH_CHECKPOINT_COMPILER_INSTRUCTIONS,
             prompt,
             purpose=f"d2_compile_batch_{batch_id}",
-            validator=lambda value: (
-                value
-                if isinstance(value.get("programs"), list)
-                else (_ for _ in ()).throw(
-                    ValueError("Compiler batch output requires programs[]")
-                )
-            ),
+            validator=validate_batch_envelope,
         )
     else:
         raw = compiler.json_text(
-            CHECKPOINT_COMPILER_INSTRUCTIONS,
+            BATCH_CHECKPOINT_COMPILER_INSTRUCTIONS,
             prompt,
             purpose=f"d2_compile_batch_{batch_id}",
         )
+        # Test doubles and third-party SemanticJudge implementations may only
+        # expose json_text. Keep their batch identity rules identical to the
+        # validated production route.
+        raw = validate_batch_envelope(raw)
     rows = raw.get("programs") if isinstance(raw, dict) else None
     if not isinstance(rows, list):
         return {}, list(checkpoint_by_id)

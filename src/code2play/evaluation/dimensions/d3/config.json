@@ -51,7 +51,7 @@
     ]
   },
   "semantic_judge": {
-    "policy": "optimized_qwen_single_pass_v1",
+    "policy": "optimized_qwen_single_pass_v2",
     "region": "us-east-1",
     "stateless": true,
     "max_output_tokens": 1200,

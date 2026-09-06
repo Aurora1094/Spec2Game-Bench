@@ -7,16 +7,20 @@ suite never needs a paid API call.
 
 from __future__ import annotations
 
+import ast
 import base64
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
+import hashlib
 import json
 import mimetypes
 import os
 from pathlib import Path
 import re
+from threading import Lock
 import time
 from typing import Any, Callable, Mapping, Protocol, Sequence
+from uuid import uuid4
 
 
 DASHSCOPE_PROVIDER = "alibaba_dashscope"
@@ -126,9 +130,68 @@ class GenerationResult:
     raw_response: dict[str, Any]
     finish_reason: str | None
     truncated: bool
+    attempt_history: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+class GenerationOutputInvalid(ValueError):
+    """One model response was returned but cannot be treated as complete code."""
+
+    def __init__(self, result: GenerationResult, reasons: Sequence[str]) -> None:
+        self.result = result
+        self.reasons = tuple(str(reason) for reason in reasons if str(reason))
+        message = "; ".join(self.reasons) or "generation output failed completeness checks"
+        super().__init__(message)
+
+
+class GenerationNeedsRegeneration(RuntimeError):
+    """A generation stage exhausted its fixed attempts on incomplete output."""
+
+    def __init__(
+        self,
+        *,
+        stage: str,
+        attempts: int,
+        attempt_history: Sequence[Mapping[str, Any]],
+        error: BaseException | None = None,
+    ) -> None:
+        self.stage = str(stage)
+        self.attempts = int(attempts)
+        self.attempts_made = self.attempts
+        self.attempt_history = [dict(item) for item in attempt_history]
+        self.error_type = type(error).__name__ if error is not None else "GenerationOutputInvalid"
+        self.error_message = _redact(str(error)) if error is not None else "incomplete generation output"
+        self.failure_reasons = [
+            str(reason)
+            for item in self.attempt_history
+            for reason in item.get("reasons", [])
+            if str(reason)
+        ]
+        super().__init__(
+            f"Generation stage {self.stage!r} exhausted {self.attempts} attempts; "
+            f"regeneration required: {self.error_message}"
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "type": type(self).__name__,
+            "stage": self.stage,
+            "attempt_limit": self.attempts,
+            "attempts_made": self.attempts_made,
+            "attempts": [
+                {
+                    key: value
+                    for key, value in item.items()
+                    if key not in {"text", "code", "raw_response", "request_parameters"}
+                }
+                for item in self.attempt_history
+            ],
+            "failure_reasons": list(dict.fromkeys(self.failure_reasons)),
+            "error_type": self.error_type,
+            "error": self.error_message,
+        }
 
 
 def _dump(value: Any) -> dict[str, Any]:
@@ -288,7 +351,12 @@ def _finish_reason(response: Mapping[str, Any]) -> str | None:
 
 
 def _is_truncated(reason: str | None) -> bool:
-    return str(reason or "").lower() in {"length", "max_tokens", "max_output_tokens", "incomplete"}
+    return str(reason or "").strip().casefold() in {
+        "length",
+        "max_tokens",
+        "max_output_tokens",
+        "incomplete",
+    }
 
 
 def extract_python_code(text: str) -> str:
@@ -418,19 +486,81 @@ def generate_stage_source(
     temperature: float = 0.2,
     attempts: int = 2,
     retry_delays_seconds: list[float] | None = None,
+    stage: str | None = None,
+    stop_on_truncation: bool = True,
+    result_validator: Callable[[GenerationResult], Sequence[str] | None] | None = None,
 ) -> GenerationResult:
     del region
     if getattr(model, "provider", None) != DASHSCOPE_PROVIDER or getattr(model, "model", None) != DASHSCOPE_MODEL:
         raise ValueError("Candidate generation only supports alibaba_dashscope/qwen3.7-plus")
     delays = retry_delays_seconds or [2.0]
+    if int(attempts) != 2 or tuple(float(delay) for delay in delays) != (2.0,):
+        raise ValueError(
+            "Candidate generation requires two attempts with one 2-second delay"
+        )
     last: BaseException | None = None
+    history: list[dict[str, Any]] = []
     for attempt in range(1, int(attempts) + 1):
         try:
             result = _generate_once(model, prompt, max_output_tokens=max_output_tokens, temperature=temperature)
             result.attempts = attempt
+            reasons = generation_output_issues(result, stage=stage)
+            if result_validator is not None:
+                try:
+                    custom_reasons = result_validator(result)
+                except BaseException as exc:
+                    custom_reasons = [f"result_validator:{type(exc).__name__}: {exc}"]
+                if custom_reasons:
+                    reasons.extend(str(reason) for reason in custom_reasons)
+            reasons = list(dict.fromkeys(reason for reason in reasons if str(reason)))
+            if stop_on_truncation and reasons:
+                invalid = GenerationOutputInvalid(result, reasons)
+                record = _generation_attempt_record(
+                    attempt=attempt,
+                    result=result,
+                    reasons=reasons,
+                    error=invalid,
+                )
+                history.append(record)
+                raise invalid
+            result.attempt_history = [*history, _generation_attempt_record(
+                attempt=attempt,
+                result=result,
+                reasons=reasons,
+            )]
             return result
+        except GenerationOutputInvalid as exc:
+            last = exc
+            if attempt >= attempts:
+                raise GenerationNeedsRegeneration(
+                    stage=stage or "unknown",
+                    attempts=attempt,
+                    attempt_history=history,
+                    error=exc,
+                ) from exc
+            time.sleep(float(delays[min(attempt - 1, len(delays) - 1)] if delays else 0))
         except BaseException as exc:
             last = exc
+            # An empty response is an output-completeness failure even though
+            # the provider did not return a GenerationResult object.
+            empty_output = isinstance(exc, ValueError) and "no text content" in str(exc).lower()
+            if empty_output and stop_on_truncation:
+                history.append(
+                    _generation_attempt_record(
+                        attempt=attempt,
+                        reasons=("empty_output",),
+                        error=exc,
+                    )
+                )
+                if attempt >= attempts:
+                    raise GenerationNeedsRegeneration(
+                        stage=stage or "unknown",
+                        attempts=attempt,
+                        attempt_history=history,
+                        error=exc,
+                    ) from exc
+                time.sleep(float(delays[min(attempt - 1, len(delays) - 1)] if delays else 0))
+                continue
             if attempt >= attempts or not _retryable(exc):
                 raise RuntimeError(_redact(f"Model call failed: {type(exc).__name__}: {exc}")) from exc
             time.sleep(float(delays[min(attempt - 1, len(delays) - 1)] if delays else 0))
@@ -458,6 +588,126 @@ def _usage_numbers(usage: Mapping[str, Any]) -> tuple[int, int, int, int]:
     )
 
 
+def _normalize_response_format(value: Mapping[str, Any] | None) -> dict[str, Any] | None:
+    """Validate the optional JSON-mode configuration for a judge profile."""
+
+    if value is None:
+        return None
+    if not isinstance(value, Mapping):
+        raise ValueError("judge response_format must be an object when configured")
+    normalized = dict(value)
+    if normalized != {"type": "json_object"}:
+        raise ValueError("judge response_format must be exactly {'type': 'json_object'}")
+    return normalized
+
+
+_EOF_SYNTAX_MARKERS = (
+    "unexpected eof",
+    "eof in multi-line statement",
+    "incomplete input",
+    "was never closed",
+    "unterminated string",
+    "unterminated triple-quoted string",
+    "expected an indented block",
+    "expected 'except' or 'finally' block",
+    "expected 'finally' or 'except' block",
+)
+
+
+def _has_unclosed_code_fence(text: str) -> bool:
+    fences = re.findall(r"(?m)^[ \t]*```(?:[A-Za-z0-9_-]+)?[ \t]*$", str(text))
+    return len(fences) % 2 == 1
+
+
+def _is_eof_syntax_error(error: SyntaxError) -> bool:
+    message = str(getattr(error, "msg", error)).casefold()
+    return any(marker in message for marker in _EOF_SYNTAX_MARKERS)
+
+
+def generation_output_issues(
+    result: GenerationResult,
+    *,
+    stage: str | None = None,
+) -> list[str]:
+    """Return only conservative completeness defects for a generated response.
+
+    Ordinary syntax, interface, and dependency defects remain candidate
+    diagnostics.  This helper is intentionally limited to defects that make it
+    unsafe to install the response as a stage artifact.
+    """
+
+    issues: list[str] = []
+    finish_reason = str(result.finish_reason or "").casefold()
+    if result.truncated or _is_truncated(result.finish_reason):
+        issues.append(f"truncated_finish_reason:{finish_reason or 'truncated'}")
+    if not str(result.text or "").strip():
+        issues.append("empty_output")
+    if _has_unclosed_code_fence(result.text):
+        issues.append("unclosed_code_fence")
+    if not str(result.code or "").strip():
+        issues.append("empty_code")
+    if str(result.code or "").strip():
+        try:
+            ast.parse(result.code, filename=stage or "generated.py")
+        except SyntaxError as exc:
+            if _is_eof_syntax_error(exc):
+                issues.append(f"eof_syntax_error:{exc.msg}")
+    return list(dict.fromkeys(issues))
+
+
+def _generation_attempt_record(
+    *,
+    attempt: int,
+    result: GenerationResult | None = None,
+    reasons: Sequence[str] = (),
+    error: BaseException | None = None,
+) -> dict[str, Any]:
+    text = result.text if result is not None else ""
+    record: dict[str, Any] = {
+        "attempt": int(attempt),
+        "provider": result.provider if result is not None else None,
+        "requested_model": result.requested_model if result is not None else None,
+        "response_model": result.response_model if result is not None else None,
+        "finish_reason": result.finish_reason if result is not None else None,
+        "usage": result.usage if result is not None else None,
+        "request_id": result.request_id if result is not None else None,
+        "output_sha256": hashlib.sha256(str(text).encode("utf-8")).hexdigest(),
+        "truncated": bool(result.truncated) if result is not None else False,
+        "reasons": [str(reason) for reason in reasons if str(reason)],
+        "text": str(text),
+        "code": result.code if result is not None else "",
+        "raw_response": dict(result.raw_response) if result is not None else {},
+        "request_parameters": (
+            dict(result.request_parameters) if result is not None else {}
+        ),
+    }
+    if error is not None:
+        record["error_type"] = type(error).__name__
+        record["error"] = _redact(str(error))
+    return record
+
+
+def _request_log_directory(log_root: Path, purpose: str) -> tuple[Path, str]:
+    """Create a collision-free, filesystem-safe directory for one Judge call."""
+
+    safe_purpose = re.sub(r"[^A-Za-z0-9._-]+", "_", str(purpose)).strip("._-")
+    safe_purpose = safe_purpose[:96] or "request"
+    request_id = (
+        f"{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')}"
+        f"-{uuid4().hex[:12]}-{safe_purpose}"
+    )
+    call_dir = log_root / request_id
+    call_dir.mkdir(parents=True, exist_ok=False)
+    return call_dir, request_id
+
+
+def _write_request_json(path: Path, payload: Mapping[str, Any]) -> None:
+    path.write_text(
+        json.dumps(dict(payload), ensure_ascii=False, indent=2, default=str) + "\n",
+        encoding="utf-8",
+    )
+
+
 class OpenAICompatibleChatJudge:
     """Stateless JSON/vision client with exactly one local retry.
 
@@ -479,6 +729,7 @@ class OpenAICompatibleChatJudge:
         attempts: int = 2,
         retry_delays_seconds: Sequence[float] = (2,),
         role: str = "scoring",
+        response_format: Mapping[str, Any] | None = None,
         client: Any | None = None,
     ) -> None:
         if not provider or not model:
@@ -496,6 +747,7 @@ class OpenAICompatibleChatJudge:
         self.attempts = int(attempts)
         self.retry_delays_seconds = tuple(float(value) for value in retry_delays_seconds)
         self.role = str(role)
+        self.response_format = _normalize_response_format(response_format)
         self.log_dir = Path(log_dir).resolve()
         self.log_dir.mkdir(parents=True, exist_ok=True)
         if client is None:
@@ -575,7 +827,9 @@ class OpenAICompatibleChatJudge:
             content.append({"type": "text", "text": _redact(label, [self._api_key])})
             encoded = base64.b64encode(path.read_bytes()).decode("ascii")
             content.append({"type": "image_url", "image_url": {"url": f"data:image/{image_format};base64,{encoded}"}})
+        call_dir, request_id = _request_log_directory(self.log_dir, purpose)
         request_log = {
+            "request_id": request_id,
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
             "purpose": purpose,
             "provider": self.provider,
@@ -585,7 +839,9 @@ class OpenAICompatibleChatJudge:
             "role": self.role,
             "temperature": 0.0,
             "enable_thinking": self.enable_thinking,
+            "response_format": self.response_format,
             "max_output_tokens": self.max_output_tokens,
+            "request_attempt_limit": self.attempts,
             "stateless": True,
             "instructions": safe_instructions,
             "prompt": safe_prompt,
@@ -593,11 +849,13 @@ class OpenAICompatibleChatJudge:
             "credentials_logged": False,
             "authorization_logged": False,
         }
-        (self.log_dir / "raw_input.json").write_text(json.dumps(request_log, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        _write_request_json(call_dir / "raw_input.json", request_log)
         messages: list[dict[str, Any]] = [{"role": "system", "content": safe_instructions}, {"role": "user", "content": content if images else safe_prompt}]
         last: BaseException | None = None
-        usages: list[dict[str, Any]] = []
+        attempt_records: list[dict[str, Any]] = []
         for attempt in range(1, self.attempts + 1):
+            raw_text = ""
+            finish_reason: str | None = None
             try:
                 request_kwargs: dict[str, Any] = {
                     "model": self.model,
@@ -606,6 +864,8 @@ class OpenAICompatibleChatJudge:
                     "temperature": 0.0,
                     "stream": False,
                 }
+                if self.response_format is not None:
+                    request_kwargs["response_format"] = self.response_format
                 if self.provider == DASHSCOPE_PROVIDER:
                     request_kwargs["extra_body"] = {"enable_thinking": self.enable_thinking}
                 response = self.client.chat.completions.create(
@@ -622,25 +882,71 @@ class OpenAICompatibleChatJudge:
                 raw_text = _redact(raw_text, [self._api_key])
                 usage = dumped.get("usage")
                 usage = dict(usage) if isinstance(usage, Mapping) else {}
-                usages.append(usage)
-                (self.log_dir / f"raw_output_attempt_{attempt:03d}.txt").write_text(raw_text, encoding="utf-8")
-                (self.log_dir / f"raw_response_attempt_{attempt:03d}.json").write_text(json.dumps(dumped, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+                finish_reason = _finish_reason(dumped)
+                attempt_records.append(
+                    {
+                        "attempt": attempt,
+                        "usage": usage,
+                        "finish_reason": finish_reason,
+                    }
+                )
+                (call_dir / f"raw_output_attempt_{attempt:03d}.txt").write_text(raw_text, encoding="utf-8")
+                _write_request_json(call_dir / f"raw_response_attempt_{attempt:03d}.json", dumped)
                 parsed = _restore_aliases(parse_json_object(raw_text), aliases)
                 if validator is not None:
                     parsed = validator(parsed)
                 if not isinstance(parsed, dict):
                     raise ValueError("Model response validator must return an object")
                 input_tokens, output_tokens, reasoning_tokens, cached_tokens = _usage_numbers(usage)
-                return ModelResult(parsed, input_tokens, output_tokens, reasoning_tokens, cached_tokens, attempt, {"attempts": usages})
+                _write_request_json(call_dir / "parsed_output.json", parsed)
+                _write_request_json(
+                    call_dir / "request_result.json",
+                    {
+                        "request_id": request_id,
+                        "purpose": purpose,
+                        "status": "completed",
+                        "attempts_made": attempt,
+                        "attempt_limit": self.attempts,
+                        "attempts": attempt_records,
+                        "finish_reason": finish_reason,
+                    },
+                )
+                return ModelResult(parsed, input_tokens, output_tokens, reasoning_tokens, cached_tokens, attempt, {"attempts": attempt_records})
             except BaseException as exc:
                 last = exc
-                failure = {"attempt": attempt, "type": type(exc).__name__, "message": _redact(str(exc), [self._api_key])}
-                (self.log_dir / f"attempt_error_{attempt:03d}.json").write_text(json.dumps(failure, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+                failure = {"attempt": attempt, "type": type(exc).__name__, "message": _redact(str(exc), [self._api_key]), "finish_reason": finish_reason}
+                _write_request_json(call_dir / f"attempt_error_{attempt:03d}.json", failure)
                 retryable_output_error = isinstance(exc, (ValueError, json.JSONDecodeError))
                 retryable_transport_error = _retryable(exc) and not _permanent_judge_configuration_error(exc)
                 if not retryable_output_error and not retryable_transport_error:
+                    _write_request_json(
+                        call_dir / "request_result.json",
+                        {
+                            "request_id": request_id,
+                            "purpose": purpose,
+                            "status": "failed",
+                            "attempts_made": attempt,
+                            "attempt_limit": self.attempts,
+                            "attempts": attempt_records,
+                            "finish_reason": finish_reason,
+                            "error": failure,
+                        },
+                    )
                     raise
                 if attempt >= self.attempts:
+                    _write_request_json(
+                        call_dir / "request_result.json",
+                        {
+                            "request_id": request_id,
+                            "purpose": purpose,
+                            "status": "attempts_exhausted",
+                            "attempts_made": attempt,
+                            "attempt_limit": self.attempts,
+                            "attempts": attempt_records,
+                            "finish_reason": finish_reason,
+                            "error": failure,
+                        },
+                    )
                     raise JudgeAttemptsExhausted(
                         purpose=purpose,
                         attempts=self.attempts,
@@ -658,7 +964,7 @@ class OpenAICompatibleChatJudge:
                         {
                             "role": "assistant",
                             "content": _redact(
-                                str(raw_text) if "raw_text" in locals() else "",
+                                raw_text,
                                 [self._api_key],
                             ),
                         },
@@ -681,6 +987,7 @@ class DashScopeChatJudge(OpenAICompatibleChatJudge):
         attempts: int = 2,
         retry_delays_seconds: Sequence[float] = (2,),
         role: str = "scoring",
+        response_format: Mapping[str, Any] | None = None,
         client: Any | None = None,
         base_url: str | None = None,
     ) -> None:
@@ -698,6 +1005,7 @@ class DashScopeChatJudge(OpenAICompatibleChatJudge):
             attempts=attempts,
             retry_delays_seconds=retry_delays_seconds,
             role=role,
+            response_format=response_format,
             client=client,
         )
 
@@ -715,6 +1023,7 @@ class OpenRouterChatJudge(OpenAICompatibleChatJudge):
         attempts: int = 2,
         retry_delays_seconds: Sequence[float] = (2,),
         role: str = "scoring",
+        response_format: Mapping[str, Any] | None = None,
         client: Any | None = None,
         base_url: str | None = None,
         api_key_env: str = "OPENROUTER_API_KEY",
@@ -731,6 +1040,7 @@ class OpenRouterChatJudge(OpenAICompatibleChatJudge):
             attempts=attempts,
             retry_delays_seconds=retry_delays_seconds,
             role=role,
+            response_format=response_format,
             client=client,
         )
 
@@ -744,10 +1054,11 @@ def create_dashscope_judge(
     attempts: int = 2,
     retry_delays_seconds: Sequence[float] = (2,),
     role: str = "scoring",
+    response_format: Mapping[str, Any] | None = None,
     client: Any | None = None,
     **_ignored: Any,
 ) -> SemanticJudge:
-    return DashScopeChatJudge(log_dir, model=model, max_output_tokens=max_output_tokens, enable_thinking=enable_thinking, attempts=attempts, retry_delays_seconds=retry_delays_seconds, role=role, client=client)
+    return DashScopeChatJudge(log_dir, model=model, max_output_tokens=max_output_tokens, enable_thinking=enable_thinking, attempts=attempts, retry_delays_seconds=retry_delays_seconds, role=role, response_format=response_format, client=client)
 
 
 def create_judge(
@@ -763,6 +1074,7 @@ def create_judge(
     attempts: int = 2,
     retry_delays_seconds: Sequence[float] = (2,),
     role: str = "scoring",
+    response_format: Mapping[str, Any] | None = None,
     client: Any | None = None,
     **_ignored: Any,
 ) -> SemanticJudge:
@@ -775,6 +1087,7 @@ def create_judge(
             attempts=attempts,
             retry_delays_seconds=retry_delays_seconds,
             role=role,
+            response_format=response_format,
             client=client,
             base_url=base_url,
         )
@@ -787,6 +1100,7 @@ def create_judge(
             attempts=attempts,
             retry_delays_seconds=retry_delays_seconds,
             role=role,
+            response_format=response_format,
             client=client,
             base_url=base_url,
             api_key_env=api_key_env or "OPENROUTER_API_KEY",
@@ -801,27 +1115,30 @@ class JudgeRouter:
         self.config = dict(config)
         self.log_root = Path(log_root).resolve()
         self._clients: dict[str, SemanticJudge] = {}
+        self._clients_lock = Lock()
         self._client_factory = client_factory or create_judge
 
     def for_role(self, role: str) -> SemanticJudge:
-        if role in self._clients:
-            return self._clients[role]
-        route = resolve_judge_route(self.config, role)
-        client = self._client_factory(
-            self.log_root / role,
-            provider=str(route["provider"]),
-            model=str(route["model"]),
-            api_style=str(route.get("api_style", "chat_completions")),
-            api_key_env=route.get("api_key_env"),
-            base_url=route.get("base_url"),
-            max_output_tokens=int(route["max_output_tokens"]),
-            enable_thinking=bool(route.get("enable_thinking", False)),
-            attempts=int(self.config.get("attempts", 2)),
-            retry_delays_seconds=self.config.get("retry_delays_seconds", [2]),
-            role=role,
-        )
-        self._clients[role] = client
-        return client
+        with self._clients_lock:
+            if role in self._clients:
+                return self._clients[role]
+            route = resolve_judge_route(self.config, role)
+            client = self._client_factory(
+                self.log_root / role,
+                provider=str(route["provider"]),
+                model=str(route["model"]),
+                api_style=str(route.get("api_style", "chat_completions")),
+                api_key_env=route.get("api_key_env"),
+                base_url=route.get("base_url"),
+                max_output_tokens=int(route["max_output_tokens"]),
+                enable_thinking=bool(route.get("enable_thinking", False)),
+                attempts=int(self.config.get("attempts", 2)),
+                retry_delays_seconds=self.config.get("retry_delays_seconds", [2]),
+                role=role,
+                response_format=route.get("response_format"),
+            )
+            self._clients[role] = client
+            return client
 
     def scoring(self) -> SemanticJudge:
         return RoutedSemanticJudge(self)
@@ -856,7 +1173,7 @@ def resolve_judge_route(config: Mapping[str, Any], role: str) -> dict[str, Any]:
     if profile is not None:
         if not isinstance(profile, Mapping):
             raise ValueError(f"Judge profile {profile_name!r} must be a mapping")
-        for key in ("provider", "model", "api_style", "api_key_env", "base_url"):
+        for key in ("provider", "model", "api_style", "api_key_env", "base_url", "response_format"):
             if key in profile:
                 resolved[key] = profile[key]
     if not resolved.get("provider") or not resolved.get("model"):
@@ -912,6 +1229,8 @@ __all__ = [
     "DASHSCOPE_MODEL",
     "DASHSCOPE_PROVIDER",
     "DashScopeChatJudge",
+    "GenerationNeedsRegeneration",
+    "GenerationOutputInvalid",
     "GenerationResult",
     "JudgeAttemptsExhausted",
     "JudgeRouter",
@@ -928,6 +1247,7 @@ __all__ = [
     "create_judge",
     "create_dashscope_judge",
     "extract_python_code",
+    "generation_output_issues",
     "generate_stage_source",
     "parse_json_object",
     "redact_sensitive_text",

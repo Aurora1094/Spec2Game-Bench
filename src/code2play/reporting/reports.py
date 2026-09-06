@@ -19,7 +19,7 @@ from code2play.execution.safe_artifacts import redact_text, sanitize
 
 
 REPORT_SCHEMA_VERSION = 2
-JUDGE_POLICY = "optimized_qwen_single_pass_v1"
+JUDGE_POLICY = "optimized_qwen_single_pass_v2"
 JUDGE_MODEL = "qwen3.7-plus via Alibaba DashScope"
 JUDGE_MODE = "single_valid_response"
 JUDGE_TEMPERATURE = 0.0

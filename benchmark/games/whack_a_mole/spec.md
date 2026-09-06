@@ -35,6 +35,29 @@
     "protocol_version": 4,
     "seed": 17
   },
+  "d4_operation_policy": {
+    "mode": "target_specific",
+    "identity": "control_plus_target",
+    "operations": [
+      {
+        "id": "click_normal_mole",
+        "control": "left_mouse_button",
+        "target": "normal_mole",
+        "description": "Click a visible Normal Mole with the left mouse button."
+      },
+      {
+        "id": "click_golden_mole",
+        "control": "left_mouse_button",
+        "target": "golden_mole",
+        "description": "Click a visible Golden Mole with the left mouse button."
+      }
+    ],
+    "d43_source_checkpoint_ids": [
+      "whack_a_mole.D2.2.01",
+      "whack_a_mole.D2.2.02",
+      "whack_a_mole.D2.2.03"
+    ]
+  },
   "game_name": "Whack-a-Mole",
   "params": {
     "player_color": "#3D7EFF",

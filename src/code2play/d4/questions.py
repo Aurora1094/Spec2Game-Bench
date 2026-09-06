@@ -25,9 +25,9 @@ from code2play.providers.dashscope import SemanticJudge
 
 
 QUESTION_PACK_SCHEMA_VERSION = 2
-QUESTION_PACK_DESIGN_VERSION = "d4_qwen37_dynamic_fixed_binding_v1"
-QUESTION_REVIEW_POLICY = "single_qwen_generation_with_fixed_local_binding_v3"
-EVIDENCE_SELECTION_POLICY = "deterministic_material_pair_v1"
+QUESTION_PACK_DESIGN_VERSION = "d4_qwen37_dynamic_fixed_binding_target_aware_v3"
+QUESTION_REVIEW_POLICY = "single_qwen_generation_with_fixed_local_binding_target_aware_v5"
+EVIDENCE_SELECTION_POLICY = "deterministic_material_pair_declared_active_target_v3"
 MAX_D43_EVIDENCE_IMAGES = 12
 MIN_REVIEW_CONFIDENCE = 0.7
 _CJK_PATTERN = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
@@ -43,13 +43,17 @@ not provided. The evaluator has already assigned image one to question one and
 image two to question two. Do not select, name, swap, or change evidence.
 Return one JSON object containing exactly two questions. Each question must
 contain options A and B and a correct_choice. Both options must be concrete
-legal physical player operations, and exactly one must be visibly and
-strategically best for the fixed target. Do not use restart, invalid/no-op,
-lifecycle-only, or unavailable operations. Every rationale must be English.
+legal game-level operations, and exactly one must be visibly and strategically
+best for the fixed target. A target-specific contract may distinguish
+operations by target even when they share one physical control; preserve that
+distinction and use the supplied descriptions exactly. A legal target that is
+not currently visible may be used only as a distractor, never as an empty,
+background, waiting, restart, or other no-op action. Do not use lifecycle-only
+or unavailable operations. Every rationale must be English.
 Use the operation strings from the supplied allowed_operations list exactly.
 The two options must be distinct; never repeat the same operation, even when
 the screenshot suggests that one operation is clearly preferable.
-""".strip()
+    """.strip()
 
 
 def _canonical(value: Any) -> bytes:
@@ -111,7 +115,24 @@ def _operation_aliases(
     return aliases, concrete
 
 
-def _question_operations(allowed_operations: Sequence[str]) -> list[str]:
+def _question_operations(
+    allowed_operations: Sequence[str],
+    operation_policy: Mapping[str, Any] | None = None,
+) -> list[str]:
+    if (
+        isinstance(operation_policy, Mapping)
+        and operation_policy.get("mode") == "target_specific"
+    ):
+        policy_operations = operation_policy.get("operations")
+        if isinstance(policy_operations, list):
+            descriptions = [
+                str(item.get("description"))
+                for item in policy_operations
+                if isinstance(item, Mapping)
+                and str(item.get("description") or "").strip()
+            ]
+            if len(descriptions) == len(policy_operations):
+                return descriptions
     _aliases, concrete = _operation_aliases(allowed_operations)
     return concrete or [str(operation) for operation in allowed_operations]
 
@@ -120,13 +141,23 @@ def _normalize_options(
     value: Any,
     label: str,
     allowed_operations: Sequence[str],
+    operation_policy: Mapping[str, Any] | None = None,
 ) -> dict[str, str]:
     if not isinstance(value, Mapping) or list(value) != ["A", "B"]:
         raise ValueError(f"{label} must contain exactly ordered choices A and B")
     options = {key: _english(value[key], f"{label}.{key}") for key in ("A", "B")}
     if options["A"] == options["B"]:
         raise ValueError(f"{label} choices must differ")
-    allowed, _concrete = _operation_aliases(allowed_operations)
+    if (
+        isinstance(operation_policy, Mapping)
+        and operation_policy.get("mode") == "target_specific"
+    ):
+        allowed = {
+            _operation_key(str(operation)): str(operation)
+            for operation in allowed_operations
+        }
+    else:
+        allowed, _concrete = _operation_aliases(allowed_operations)
     normalized: dict[str, str] = {}
     for key, operation in options.items():
         canonical = allowed.get(_operation_key(operation))
@@ -160,6 +191,85 @@ def _public_evidence(item: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
+def _target_specific_target_tokens(
+    operation_policy: Mapping[str, Any] | None,
+) -> list[tuple[str, ...]]:
+    """Return the authored target classes used to recognize live evidence."""
+
+    if not isinstance(operation_policy, Mapping) or operation_policy.get("mode") != "target_specific":
+        return []
+    operations = operation_policy.get("operations")
+    if not isinstance(operations, list):
+        return []
+    targets: list[tuple[str, ...]] = []
+    for operation in operations:
+        if not isinstance(operation, Mapping):
+            continue
+        tokens = tuple(
+            token
+            for token in re.split(r"[^a-z0-9]+", str(operation.get("target", "")).casefold())
+            if token
+        )
+        if tokens and tokens not in targets:
+            targets.append(tokens)
+    return targets
+
+
+def _frame_has_identifiable_active_target(
+    frame: Mapping[str, Any],
+    operation_policy: Mapping[str, Any] | None,
+) -> bool:
+    """Require target-specific question evidence to describe a visible target.
+
+    The D4.2 frame and its snapshot are captured from the same adapter state.
+    For game-authored target-specific policies, a snapshot must therefore name
+    one authoritative target class and indicate that it is live.  This avoids
+    turning empty holes, waiting states, or restart screens into D4.3 prompts
+    without imposing a state schema on other games.
+    """
+
+    targets = _target_specific_target_tokens(operation_policy)
+    if not targets:
+        return True
+    snapshot = frame.get("snapshot")
+    if not isinstance(snapshot, Mapping):
+        return False
+    try:
+        text = json.dumps(snapshot, ensure_ascii=False, sort_keys=True).casefold()
+    except (TypeError, ValueError):
+        return False
+    tokens = set(re.findall(r"[a-z0-9]+", text))
+    has_target = any(all(token in tokens for token in target) for target in targets)
+    if not has_target:
+        return False
+    # Accept common adapter state representations for a currently rendered
+    # target while rejecting explicit inactive or hidden states.
+    inactive = (
+        '"visible": false',
+        '"is_visible": false',
+        '"active": false',
+        '"is_active": false',
+        '"exists": false',
+        '"status": "hidden"',
+        '"status": "inactive"',
+        '"status": "waiting"',
+    )
+    if any(marker in text for marker in inactive):
+        return False
+    live_markers = (
+        '"visible": true',
+        '"is_visible": true',
+        '"active": true',
+        '"is_active": true',
+        '"exists": true',
+        "current_mole",
+        "current_target",
+        "active_mole",
+        "active_target",
+    )
+    return any(marker in text for marker in live_markers)
+
+
 def build_d43_evidence_pool(d4_contract: Mapping[str, Any], sample_manifest: Mapping[str, Any]) -> dict[str, Any]:
     source_slots = list(d4_contract["d4_3"]["source_checkpoint_ids"])
     records = {str(record.get("id")): record for record in sample_manifest.get("d4_2", []) if isinstance(record, Mapping)}
@@ -177,6 +287,24 @@ def build_d43_evidence_pool(d4_contract: Mapping[str, Any], sample_manifest: Map
             if isinstance(frame, Mapping) and isinstance(frame.get("path"), str)
             and isinstance(frame.get("snapshot"), Mapping) and Path(frame["path"]).is_file()
         ]
+        if _target_specific_target_tokens(d4_contract.get("operation_policy")):
+            frames = [
+                frame
+                for frame in frames
+                if _frame_has_identifiable_active_target(
+                    frame,
+                    d4_contract.get("operation_policy"),
+                )
+            ]
+            if not frames:
+                failures.append(
+                    {
+                        "source_checkpoint_id": source_id,
+                        "reason": "no_identifiable_active_target_frame",
+                        "candidate_failure_proven": False,
+                    }
+                )
+                continue
         if record.get("status") != "completed" or not frames:
             failures.append({"source_checkpoint_id": source_id, "reason": str(record.get("status", "no_valid_frames")), "candidate_failure_proven": False})
             continue
@@ -268,7 +396,11 @@ def _question_prompt(d4_contract: Mapping[str, Any], checkpoints: Sequence[Mappi
         source_text.append({"question_number": index + 1, **{key: row[key] for key in ("item", "objective", "initial_state", "trigger", "expected_transition") if key in row}})
     return json.dumps({
         "target": d4_contract["target"],
-        "allowed_operations": _question_operations(d4_contract["allowed_operations"]),
+        "allowed_operations": _question_operations(
+            d4_contract["allowed_operations"],
+            d4_contract.get("operation_policy"),
+        ),
+        "operation_policy": d4_contract.get("operation_policy"),
         "fixed_public_question": D43_QUESTION_TEXT,
         "assigned_source_context": source_text,
         "binding_rule": "The first supplied image is permanently bound to question 1 and the second to question 2.",
@@ -281,6 +413,7 @@ def _normalize_questions(
     selected_evidence: Sequence[Mapping[str, Any]],
     source_slots: Sequence[str],
     allowed_operations: Sequence[str],
+    operation_policy: Mapping[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     if not isinstance(value, Mapping) or not isinstance(value.get("questions"), list) or len(value["questions"]) != D43_QUESTION_COUNT:
         raise ValueError("questions must contain exactly two items")
@@ -292,6 +425,7 @@ def _normalize_questions(
             raw.get("options"),
             f"questions[{index}].options",
             allowed_operations,
+            operation_policy,
         )
         correct = _nonempty(raw.get("correct_choice"), f"questions[{index}].correct_choice").upper()
         if correct not in options:
@@ -354,6 +488,7 @@ def build_d43_question_pack_single_pass(*, d4_contract: Mapping[str, Any], d2_ch
             selected,
             pool["source_checkpoint_ids"],
             d4_contract["allowed_operations"],
+            d4_contract.get("operation_policy"),
         )
         return value
 
@@ -379,6 +514,7 @@ def build_d43_question_pack_single_pass(*, d4_contract: Mapping[str, Any], d2_ch
             selected,
             pool["source_checkpoint_ids"],
             d4_contract["allowed_operations"],
+            d4_contract.get("operation_policy"),
         )
     except Exception as exc:
         pack = {**base, "status": "judge_output_unavailable", "questions": [], "selected_evidence_binding": selection, "candidate_failure_proven": False, "judge_failure": {"failure_origin": "judge_or_transport", "candidate_failure_proven": False, "error_type": type(exc).__name__, "message": redact_text(str(exc)), "retryable_stage": "visual_question_generation"}, "provenance": {"runtime_question_policy": RUNTIME_QUESTION_POLICY, "question_review_policy": QUESTION_REVIEW_POLICY, "generation_status": "judge_output_unavailable", "generator_model": model, "local_validation": True, "semantic_call_count": 1, "technical_attempt_limit": 2}}
@@ -413,6 +549,7 @@ def validate_d43_question_pack(pack: Mapping[str, Any], *, d4_contract: Mapping[
             selection["evidence"],
             pool["source_checkpoint_ids"],
             d4_contract["allowed_operations"],
+            d4_contract.get("operation_policy"),
         )
         if pack.get("questions") != expected:
             raise ValueError("D4.3 questions are not canonical")

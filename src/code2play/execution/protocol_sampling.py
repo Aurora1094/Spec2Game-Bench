@@ -7,12 +7,11 @@ import json
 import os
 from pathlib import Path
 from queue import Empty, Queue
-import re
 import shutil
 import subprocess
 import sys
 from threading import Thread
-from typing import Any, Callable
+from typing import Any, Callable, Mapping
 
 from code2play.execution.candidate_project import (
     CandidateProject,
@@ -37,7 +36,6 @@ from code2play.d4.visual_difference import (
 )
 
 RPC_WORKER_PATH = Path(__file__).with_name("protocol_rpc_worker.py")
-_COMPILER_ATTEMPT_PURPOSE = re.compile(r"^(?P<base>.+)_attempt_\d{2}$")
 VISUAL_DISTINCTNESS_PROBE_DELAYS_SECONDS = (0.15, 0.35, 0.5)
 VISUAL_DISTINCTNESS_POLICY = "deterministic_post_measurement_time_probe_v2"
 
@@ -360,56 +358,60 @@ def _load_validated_compiler_cache(
     if raw_log_dir is None:
         return {}, {}
     log_dir = Path(raw_log_dir).resolve()
-    current_attempt = log_dir.parent
-    evidence_root = current_attempt.parent
-    if (
-        log_dir.name != "compiler_llm_calls"
-        or not current_attempt.name.startswith("sampling_attempt_")
-        or not evidence_root.is_dir()
-    ):
+    if not log_dir.is_dir():
         return {}, {}
 
     cached: dict[str, dict[str, Any]] = {}
     sources: dict[str, str] = {}
-    prior_attempts = sorted(
-        (
-            path
-            for path in evidence_root.glob("sampling_attempt_*")
-            if path.is_dir() and path.resolve() != current_attempt.resolve()
-        ),
-        key=lambda path: path.name,
+
+    def cache_value(purpose: str, value: Any, parsed_path: Path) -> None:
+        if purpose in cached:
+            return
+        normalize = normalizers.get(purpose)
+        if normalize is None:
+            return
+        try:
+            cached[purpose] = normalize(value)
+        except (TypeError, ValueError):
+            return
+        sources[purpose] = str(parsed_path.resolve())
+
+    def cache_batch(value: Any, parsed_path: Path) -> None:
+        if not isinstance(value, Mapping):
+            return
+        rows = value.get("programs")
+        if not isinstance(rows, list):
+            return
+        for row in rows:
+            if not isinstance(row, Mapping):
+                continue
+            checkpoint_id = row.get("checkpoint_id")
+            if isinstance(checkpoint_id, str):
+                cache_value(f"d2_compile_{checkpoint_id}", dict(row), parsed_path)
+
+    candidates = sorted(
+        log_dir.rglob("raw_input.json"),
+        key=lambda path: (path.stat().st_mtime_ns, str(path)),
         reverse=True,
     )
-    for attempt_dir in prior_attempts:
-        calls_dir = attempt_dir / "compiler_llm_calls"
-        if not calls_dir.is_dir():
+    for input_path in candidates:
+        parsed_path = input_path.with_name("parsed_output.json")
+        if not parsed_path.is_file():
             continue
-        call_dirs = sorted(
-            calls_dir.iterdir(),
-            key=lambda path: path.name,
-            reverse=True,
-        )
-        for call_dir in call_dirs:
-            if not call_dir.is_dir():
-                continue
-            input_path = call_dir / "raw_input.json"
-            parsed_path = call_dir / "parsed_output.json"
-            if not input_path.is_file() or not parsed_path.is_file():
-                continue
-            try:
-                request = json.loads(input_path.read_text(encoding="utf-8"))
-                match = _COMPILER_ATTEMPT_PURPOSE.fullmatch(
-                    str(request.get("purpose", ""))
-                )
-                base_purpose = match.group("base") if match else ""
-                normalize = normalizers.get(base_purpose)
-                if normalize is None or base_purpose in cached:
-                    continue
-                parsed = json.loads(parsed_path.read_text(encoding="utf-8"))
-                cached[base_purpose] = normalize(parsed)
-                sources[base_purpose] = str(parsed_path.resolve())
-            except (OSError, TypeError, ValueError, json.JSONDecodeError):
-                continue
+        try:
+            request = json.loads(input_path.read_text(encoding="utf-8"))
+            parsed = json.loads(parsed_path.read_text(encoding="utf-8"))
+        except (OSError, TypeError, ValueError, json.JSONDecodeError):
+            continue
+        purpose = str(request.get("purpose", ""))
+        if purpose.startswith("d2_compile_batch_"):
+            cache_batch(parsed, parsed_path)
+            continue
+        if purpose.startswith("d2_compile_repair_"):
+            checkpoint_id = purpose.removeprefix("d2_compile_repair_")
+            cache_value(f"d2_compile_{checkpoint_id}", parsed, parsed_path)
+            continue
+        cache_value(purpose, parsed, parsed_path)
 
     if cached:
         log_dir.mkdir(parents=True, exist_ok=True)

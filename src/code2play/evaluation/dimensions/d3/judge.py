@@ -29,7 +29,7 @@ JUDGE_RUBRIC = {
     "conformance": 100,
 }
 MAX_EVIDENCE_LINES = 5
-JUDGE_POLICY = "optimized_qwen_single_pass_v1"
+JUDGE_POLICY = "optimized_qwen_single_pass_v2"
 POLICY_METADATA = {
     "schema_version": 6,
     "judge_policy": JUDGE_POLICY,

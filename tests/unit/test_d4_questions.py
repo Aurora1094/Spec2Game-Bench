@@ -63,6 +63,26 @@ class _GroupedKeyQuestionGenerator:
         }
 
 
+class _TargetSpecificQuestionGenerator:
+    def json_vision(self, _instructions, _prompt, _images, _purpose):
+        normal = "Click a visible Normal Mole with the left mouse button."
+        golden = "Click a visible Golden Mole with the left mouse button."
+        return {
+            "questions": [
+                {
+                    "options": {"A": normal, "B": golden},
+                    "correct_choice": "A",
+                    "answer_rationale": "A normal mole is visibly active.",
+                },
+                {
+                    "options": {"A": normal, "B": golden},
+                    "correct_choice": "B",
+                    "answer_rationale": "A golden mole is visibly active.",
+                },
+            ]
+        }
+
+
 def _fixture(tmp_path: Path):
     config = load_config()
     game = game_by_slug(config, "snake")
@@ -160,3 +180,78 @@ def test_grouped_keyboard_operations_accept_concrete_key_choices(tmp_path: Path)
         sample_manifest=sample,
         candidate_project_sha256=candidate_sha,
     )
+
+
+def test_target_specific_questions_require_active_target_evidence(tmp_path: Path) -> None:
+    config = load_config()
+    game = game_by_slug(config, "whack_a_mole")
+    round_dir = tmp_path / "round-whack"
+    build_round_contracts(
+        round_dir,
+        [game],
+        config=config,
+        generator=_mock_contract_generator(config),
+        round_id="round-whack",
+    )
+    import json
+
+    contract = json.loads(
+        (round_dir / "contracts" / "whack_a_mole.json").read_text(encoding="utf-8")
+    )
+    spec = load_spec(game.spec)
+    source_ids = contract["d4_3"]["source_checkpoint_ids"]
+    sample_records = []
+    for index, source_id in enumerate(source_ids):
+        image_path = tmp_path / f"mole-{index}.png"
+        Image.new(
+            "RGB",
+            (64, 64),
+            (255, 210, 0) if index else (120, 70, 30),
+        ).save(image_path)
+        sample_records.append(
+            {
+                "id": source_id,
+                "status": "completed",
+                "frames": [
+                    {
+                        "path": str(image_path),
+                        "snapshot": {
+                            "current_mole": {
+                                "type": "golden" if index else "normal",
+                                "visible": True,
+                            }
+                        },
+                        "case": "active_mole",
+                        "phase": "before",
+                        "offset_seconds": 0.0,
+                    }
+                ],
+            }
+        )
+    sample = {"d4_2": sample_records}
+    candidate_sha = "d" * 64
+    pack = build_d43_question_pack_single_pass(
+        d4_contract=contract,
+        d2_checkpoints=spec["evaluation"]["d2"]["checkpoints"],
+        sample_manifest=sample,
+        candidate_project_sha256=candidate_sha,
+        generator=_TargetSpecificQuestionGenerator(),
+    )
+    assert pack["status"] == "completed"
+    assert [item["source_checkpoint_id"] for item in pack["questions"]] == source_ids
+
+    inactive = {"d4_2": [dict(record) for record in sample_records]}
+    inactive["d4_2"][0]["frames"] = [
+        {
+            **inactive["d4_2"][0]["frames"][0],
+            "snapshot": {"current_mole": None, "waiting": True},
+        }
+    ]
+    unavailable = build_d43_question_pack_single_pass(
+        d4_contract=contract,
+        d2_checkpoints=spec["evaluation"]["d2"]["checkpoints"],
+        sample_manifest=inactive,
+        candidate_project_sha256=candidate_sha,
+        generator=_TargetSpecificQuestionGenerator(),
+    )
+    assert unavailable["status"] == "candidate_evidence_unavailable"

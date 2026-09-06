@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
+import json
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -11,12 +13,15 @@ from code2play.config.project import ModelConfig, game_by_slug, load_config
 from code2play.generation.staged import generate_candidate_project
 from code2play.providers.dashscope import (
     DashScopeChatJudge,
+    GenerationNeedsRegeneration,
     GenerationResult,
     JudgeAttemptsExhausted,
     JudgeRouter,
     OpenRouterChatJudge,
     _model_aliases,
     _restore_aliases,
+    generate_stage_source,
+    generation_output_issues,
 )
 
 
@@ -93,16 +98,44 @@ def main():
 """
 
 
-def test_staged_generation_preserves_four_call_order_and_budgets(tmp_path: Path) -> None:
-    config = load_config()
-    game = game_by_slug(config, "snake")
-    model = ModelConfig(
+def _generation_result(
+    source: str,
+    *,
+    finish_reason: str = "stop",
+    text: str | None = None,
+    request_id: str = "fake-generation",
+) -> GenerationResult:
+    output = text if text is not None else f"```python\n{source}\n```"
+    return GenerationResult(
+        provider="alibaba_dashscope",
+        requested_model="qwen3.7-plus",
+        response_model="qwen3.7-plus",
+        text=output,
+        code=source,
+        usage={"prompt_tokens": 1, "completion_tokens": 1},
+        request_id=request_id,
+        attempts=1,
+        request_parameters={},
+        raw_response={"finish_reason": finish_reason},
+        finish_reason=finish_reason,
+        truncated=finish_reason in {"length", "max_tokens", "max_output_tokens", "incomplete"},
+    )
+
+
+def _generation_model() -> ModelConfig:
+    return ModelConfig(
         id="qwen3_7_plus",
         name="Qwen3.7 Plus",
         provider="alibaba_dashscope",
         model="qwen3.7-plus",
         api_style="chat_completions",
     )
+
+
+def test_staged_generation_preserves_four_call_order_and_budgets(tmp_path: Path) -> None:
+    config = load_config()
+    game = game_by_slug(config, "snake")
+    model = _generation_model()
     sources = [STATE, GAME, RENDERING, MAIN]
     calls: list[tuple[int, int]] = []
 
@@ -139,6 +172,165 @@ def test_staged_generation_preserves_four_call_order_and_budgets(tmp_path: Path)
     assert project.project_sha256()
 
 
+def test_generation_retries_one_truncated_response_then_accepts_complete_code(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[int] = []
+    sleeps: list[float] = []
+    responses = iter(
+        [
+            _generation_result(
+                "class GameState:",
+                finish_reason="length",
+                text="```python\nclass GameState:",
+                request_id="truncated",
+            ),
+            _generation_result(STATE, request_id="complete"),
+        ]
+    )
+
+    def fake_generate_once(*_args, **_kwargs):
+        calls.append(1)
+        return next(responses)
+
+    monkeypatch.setattr(dashscope, "_generate_once", fake_generate_once)
+    monkeypatch.setattr(dashscope.time, "sleep", lambda seconds: sleeps.append(seconds))
+
+    result = generate_stage_source(
+        _generation_model(),
+        "generate state.py",
+        stage="state",
+        max_output_tokens=3000,
+    )
+
+    assert len(calls) == 2
+    assert sleeps == [2.0]
+    assert result.code == STATE
+    assert result.attempts == 2
+    assert [item["finish_reason"] for item in result.attempt_history] == [
+        "length",
+        "stop",
+    ]
+
+
+def test_two_incomplete_generation_outputs_do_not_create_candidate_source(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = load_config()
+    game = game_by_slug(config, "snake")
+    calls: list[int] = []
+    sleeps: list[float] = []
+
+    def fake_generate_once(*_args, **_kwargs):
+        calls.append(1)
+        return _generation_result(
+            "def incomplete(",
+            text="```python\ndef incomplete(",
+            request_id=f"incomplete-{len(calls)}",
+        )
+
+    monkeypatch.setattr(dashscope, "_generate_once", fake_generate_once)
+    monkeypatch.setattr(dashscope.time, "sleep", lambda seconds: sleeps.append(seconds))
+
+    task_dir = tmp_path / "task"
+    with pytest.raises(GenerationNeedsRegeneration) as raised:
+        generate_candidate_project(
+            game=game,
+            model=_generation_model(),
+            task_dir=task_dir,
+            config=config,
+            resume=False,
+            progress=lambda _message: None,
+        )
+
+    assert len(calls) == 2
+    assert sleeps == [2.0]
+    assert not (task_dir / "candidate" / "state.py").exists()
+    assert json.loads((task_dir / "generation_summary.json").read_text(encoding="utf-8"))["status"] == "needs_regeneration"
+    failure = json.loads((task_dir / "generation_failure.json").read_text(encoding="utf-8"))
+    assert failure["failure"]["stage"] == "state"
+    assert len(list((task_dir / "generation" / "stages" / "01_state" / "attempts").rglob("raw_output.txt"))) == 2
+    assert raised.value.to_dict()["attempts_made"] == 2
+
+
+def test_non_eof_syntax_defect_remains_a_candidate_diagnostic() -> None:
+    result = _generation_result("def broken(:\n    pass")
+    assert generation_output_issues(result, stage="state") == []
+
+
+def test_eof_style_indentation_defect_requires_regeneration() -> None:
+    result = _generation_result("class Incomplete:")
+    assert generation_output_issues(result, stage="state") == [
+        "eof_syntax_error:expected an indented block after class definition on line 1"
+    ]
+
+
+def test_generation_resume_only_reopens_the_failed_stage(tmp_path: Path) -> None:
+    config = load_config()
+    game = game_by_slug(config, "snake")
+    calls: list[str] = []
+    sources = {"state": STATE, "game": GAME, "rendering": RENDERING, "main": MAIN}
+    fail_game_once = True
+
+    def fake_generate(_model, _prompt, *, stage, **_kwargs):
+        nonlocal fail_game_once
+        calls.append(stage)
+        if stage == "game" and fail_game_once:
+            fail_game_once = False
+            raise GenerationNeedsRegeneration(
+                stage="game",
+                attempts=2,
+                attempt_history=[
+                    {"attempt": 1, "reasons": ["truncated_finish_reason:length"]},
+                    {"attempt": 2, "reasons": ["unclosed_code_fence"]},
+                ],
+                error=ValueError("incomplete output"),
+            )
+        return _generation_result(sources[stage], request_id=f"{stage}-{len(calls)}")
+
+    task_dir = tmp_path / "task"
+    with pytest.raises(GenerationNeedsRegeneration):
+        generate_candidate_project(
+            game=game,
+            model=_generation_model(),
+            task_dir=task_dir,
+            config=config,
+            resume=False,
+            generate=fake_generate,
+            progress=lambda _message: None,
+        )
+    assert calls == ["state", "game"]
+    assert (task_dir / "candidate" / "state.py").is_file()
+    assert not (task_dir / "candidate" / "game.py").exists()
+
+    with pytest.raises(GenerationNeedsRegeneration):
+        generate_candidate_project(
+            game=game,
+            model=_generation_model(),
+            task_dir=task_dir,
+            config=config,
+            resume=True,
+            resume_generation=False,
+            generate=fake_generate,
+            progress=lambda _message: None,
+        )
+    assert calls == ["state", "game"]
+
+    project = generate_candidate_project(
+        game=game,
+        model=_generation_model(),
+        task_dir=task_dir,
+        config=config,
+        resume=True,
+        resume_generation=True,
+        generate=fake_generate,
+        progress=lambda _message: None,
+    )
+    assert calls == ["state", "game", "game", "rendering", "main"]
+    assert project.validate().valid
+
+
 class _FakeCompletions:
     def create(self, **_kwargs):
         return SimpleNamespace(
@@ -160,7 +352,13 @@ def test_provider_is_qwen_only_and_uses_fake_openai_compatible_client(tmp_path: 
         client=_FakeClient(),
     )
     assert judge.json_text("Return JSON.", "{}", "smoke") == {"ok": True}
-    assert (tmp_path / "raw_input.json").is_file()
+    calls = list(tmp_path.rglob("raw_input.json"))
+    assert len(calls) == 1
+    call_dir = calls[0].parent
+    assert (call_dir / "parsed_output.json").is_file()
+    result = json.loads((call_dir / "request_result.json").read_text(encoding="utf-8"))
+    assert result["status"] == "completed"
+    assert result["attempts_made"] == 1
 
 
 def test_provider_restores_blinded_checkpoint_and_dimension_ids() -> None:
@@ -241,6 +439,11 @@ def test_provider_stops_after_two_invalid_json_attempts(
     correction = client.chat.completions.messages[1][-1]["content"]
     assert "complete minified JSON object" in str(correction)
     assert "JSONDecodeError" in str(correction)
+    result_paths = list(tmp_path.rglob("request_result.json"))
+    assert len(result_paths) == 1
+    result = json.loads(result_paths[0].read_text(encoding="utf-8"))
+    assert result["status"] == "attempts_exhausted"
+    assert result["attempts_made"] == 2
 
 
 def test_judge_router_keeps_two_roles_on_qwen_then_switches_only_vision(tmp_path: Path) -> None:
@@ -258,6 +461,7 @@ def test_judge_router_keeps_two_roles_on_qwen_then_switches_only_vision(tmp_path
         ("alibaba_dashscope", "qwen3.7-plus"),
         ("alibaba_dashscope", "qwen3.7-plus"),
     ]
+    assert all(call["response_format"] == {"type": "json_object"} for call in calls)
 
     mixed_judge = deepcopy(config["judge"])
     mixed_judge["routing"]["roles"]["vision"] = "gemini_openrouter"
@@ -274,6 +478,7 @@ def test_judge_router_keeps_two_roles_on_qwen_then_switches_only_vision(tmp_path
         ("alibaba_dashscope", "qwen3.7-plus"),
         ("openrouter", "google/gemini-3.8-flash"),
     ]
+    assert all(call["response_format"] == {"type": "json_object"} for call in mixed_calls)
 
 
 def test_openrouter_judge_uses_openai_compatible_request_without_dashscope_body(tmp_path: Path) -> None:
@@ -293,8 +498,69 @@ def test_openrouter_judge_uses_openai_compatible_request_without_dashscope_body(
         model="google/gemini-3.8-flash",
         role="dynamic_visual",
         max_output_tokens=64,
+        response_format={"type": "json_object"},
         client=client,
     )
     assert judge.json_text("Return JSON.", "{}", "dynamic_visual") == {"ok": True}
     assert requests[0]["model"] == "google/gemini-3.8-flash"
     assert "extra_body" not in requests[0]
+    assert requests[0]["response_format"] == {"type": "json_object"}
+
+
+def test_dashscope_judge_uses_json_mode_with_thinking_disabled(tmp_path: Path) -> None:
+    requests: list[dict[str, object]] = []
+
+    class Completions:
+        def create(self, **kwargs: object) -> SimpleNamespace:
+            requests.append(kwargs)
+            return SimpleNamespace(
+                choices=[SimpleNamespace(message=SimpleNamespace(content='{"ok": true}'))],
+                usage={"prompt_tokens": 2, "completion_tokens": 3},
+            )
+
+    client = SimpleNamespace(chat=SimpleNamespace(completions=Completions()))
+    judge = DashScopeChatJudge(
+        tmp_path,
+        model="qwen3.7-plus",
+        role="functionality",
+        max_output_tokens=64,
+        response_format={"type": "json_object"},
+        client=client,
+    )
+
+    assert judge.json_text("Return JSON.", "{}", "d2_dimension_D2.1_batch_01") == {"ok": True}
+    assert requests[0]["response_format"] == {"type": "json_object"}
+    assert requests[0]["extra_body"] == {"enable_thinking": False}
+
+
+def test_parallel_judge_calls_write_isolated_request_artifacts(tmp_path: Path) -> None:
+    class Completions:
+        def create(self, **_kwargs: object) -> SimpleNamespace:
+            return SimpleNamespace(
+                choices=[SimpleNamespace(message=SimpleNamespace(content='{"ok": true}'))],
+                usage={"prompt_tokens": 2, "completion_tokens": 3},
+            )
+
+    client = SimpleNamespace(chat=SimpleNamespace(completions=Completions()))
+    judge = DashScopeChatJudge(
+        tmp_path,
+        model="qwen3.7-plus",
+        role="functionality",
+        max_output_tokens=64,
+        response_format={"type": "json_object"},
+        client=client,
+    )
+    purposes = [f"d2_dimension_D2.1_batch_{index:02d}" for index in range(1, 9)]
+
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        list(executor.map(lambda purpose: judge.json_text("Return JSON.", "{}", purpose), purposes))
+
+    inputs = sorted(tmp_path.rglob("raw_input.json"))
+    assert len(inputs) == len(purposes)
+    assert {json.loads(path.read_text(encoding="utf-8"))["purpose"] for path in inputs} == set(purposes)
+    for input_path in inputs:
+        call_dir = input_path.parent
+        assert (call_dir / "raw_output_attempt_001.txt").is_file()
+        assert (call_dir / "raw_response_attempt_001.json").is_file()
+        assert (call_dir / "parsed_output.json").is_file()
+        assert json.loads((call_dir / "request_result.json").read_text(encoding="utf-8"))["status"] == "completed"

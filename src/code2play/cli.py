@@ -88,17 +88,33 @@ def _mock_contract_generator(config: Mapping[str, Any]):
     from code2play.generation.prompt_builder import load_evaluator_checkpoints, load_spec
 
     eligible_by_game: dict[str, list[dict[str, Any]]] = {}
+    operation_policy_by_game: dict[str, dict[str, Any] | None] = {}
     for game in games(config):
         spec = load_spec(game.spec)
+        checkpoints = load_evaluator_checkpoints(spec)
+        from code2play.d4.contracts import normalize_spec_operation_policy
+
+        operation_policy = normalize_spec_operation_policy(
+            spec.get("d4_operation_policy"),
+            checkpoints=checkpoints,
+        )
+        operation_policy_by_game[game.slug] = operation_policy
         eligible_by_game[game.slug] = eligible_d43_checkpoints(
-            load_evaluator_checkpoints(spec)
+            checkpoints,
+            operation_policy,
         )
 
     def generate(slug: str, _prompt: str) -> dict[str, Any]:
         rows = eligible_by_game[slug]
+        operation_policy = operation_policy_by_game[slug]
+        operations = (
+            [item["description"] for item in operation_policy["operations"]]
+            if operation_policy is not None
+            else ["move left", "move right", "press the primary action"]
+        )
         return {
             "target": "complete the current game objective",
-            "allowed_operations": ["move left", "move right", "press the primary action"],
+            "allowed_operations": operations,
             "art_direction": [
                 "use a clear playable scene",
                 "separate interactive objects from the background",
@@ -312,17 +328,17 @@ def cmd_preflight(args: argparse.Namespace) -> int:
     config = _config(args)
     report = validate_benchmark(config)
     report["workspace"] = str(resolve_workspace(args.workspace))
-    report["api_key_configured"] = bool(__import__("os").environ.get("DASHSCOPE_API_KEY"))
+    from code2play.providers.dashscope import JudgeRouter, resolve_judge_route
+
+    preflight_route = resolve_judge_route(config["judge"], "contract_generation")
+    api_key_env = str(preflight_route.get("api_key_env") or "DASHSCOPE_API_KEY")
+    report["api_key_configured"] = bool(__import__("os").environ.get(api_key_env))
     report["live_api_check"] = False
     if args.live:
-        from code2play.providers.dashscope import create_dashscope_judge
-
-        judge = create_dashscope_judge(
+        judge = JudgeRouter(
+            config["judge"],
             resolve_workspace(args.workspace) / "preflight" / "model_calls",
-            model="qwen3.7-plus",
-            max_output_tokens=64,
-            role="contract_generation",
-        )
+        ).for_role("contract_generation")
         judge.json_text(
             "Return one JSON object with an ok boolean.",
             '{"request": "Code2Play-Bench live connectivity check"}',
@@ -367,6 +383,7 @@ def cmd_benchmark(args: argparse.Namespace) -> int:
     result = run_benchmark(
         repetitions=1,
         resume=args.resume,
+        resume_generation=args.resume_generation,
         run_id=args.run_id,
         config_path=args.config_path,
         workspace=resolve_workspace(args.workspace),
@@ -578,7 +595,12 @@ def build_parser() -> argparse.ArgumentParser:
     benchmark.add_argument("--round-id")
     benchmark.add_argument("--game", choices=EXPECTED_SLUGS, help="run one selected game")
     benchmark.add_argument("--no-resume", dest="resume", action="store_false")
-    benchmark.set_defaults(handler=cmd_benchmark, resume=True)
+    benchmark.add_argument(
+        "--resume-generation",
+        action="store_true",
+        help="retry only a generation stage previously marked needs_regeneration",
+    )
+    benchmark.set_defaults(handler=cmd_benchmark, resume=True, resume_generation=False)
 
     evaluate = commands.add_parser("evaluate", help="evaluate one manual five-file candidate")
     _runtime_options(evaluate)

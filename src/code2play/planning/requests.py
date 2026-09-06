@@ -330,18 +330,37 @@ def _compiler_usage(log_root: Path) -> tuple[list[dict[str, Any]], dict[str, int
               "cached_tokens": 0, "attempts": 0}
     for raw_input_path in sorted(log_root.rglob("raw_input.json")):
         raw_input = json.loads(raw_input_path.read_text(encoding="utf-8"))
-        raw_response_path = raw_input_path.with_name("raw_response.json")
-        raw_response = (
-            json.loads(raw_response_path.read_text(encoding="utf-8"))
-            if raw_response_path.is_file() else {}
+        result_path = raw_input_path.with_name("request_result.json")
+        result = (
+            json.loads(result_path.read_text(encoding="utf-8"))
+            if result_path.is_file() else {}
         )
-        final_usage = raw_response.get("usage", {}) if isinstance(raw_response, dict) else {}
-        attempt_usages = raw_input.get("attempt_usages")
-        usages = (
-            [item for item in attempt_usages if isinstance(item, dict)]
-            if isinstance(attempt_usages, list)
-            else [final_usage] if isinstance(final_usage, dict) else []
-        )
+        result_attempts = result.get("attempts") if isinstance(result, dict) else None
+        if isinstance(result_attempts, list):
+            usages = [
+                item["usage"]
+                for item in result_attempts
+                if isinstance(item, dict) and isinstance(item.get("usage"), dict)
+            ]
+            attempts_made = int(result.get("attempts_made") or len(result_attempts))
+        else:
+            # Legacy flat logs remain readable for old artifacts, but cannot be
+            # used as verified compiler cache entries because they lack a parsed
+            # response tied to one logical request.
+            raw_response_path = raw_input_path.with_name("raw_response.json")
+            raw_response = (
+                json.loads(raw_response_path.read_text(encoding="utf-8"))
+                if raw_response_path.is_file() else {}
+            )
+            final_usage = raw_response.get("usage", {}) if isinstance(raw_response, dict) else {}
+            attempt_usages = raw_input.get("attempt_usages")
+            usages = (
+                [item for item in attempt_usages if isinstance(item, dict)]
+                if isinstance(attempt_usages, list)
+                else [final_usage] if isinstance(final_usage, dict) else []
+            )
+            attempts_made = int(raw_input.get("request_attempts") or 1)
+
         def usage_total(*names: str) -> int:
             return sum(
                 int(next((item.get(name) for name in names if item.get(name) is not None), 0) or 0)
@@ -358,7 +377,7 @@ def _compiler_usage(log_root: Path) -> tuple[list[dict[str, Any]], dict[str, int
                 int((item.get("prompt_tokens_details") or {}).get("cached_tokens") or 0)
                 for item in usages if isinstance(item.get("prompt_tokens_details"), dict)
             ),
-            "attempts": int(raw_input.get("request_attempts") or 1),
+            "attempts": attempts_made,
         }
         for key, value in current.items():
             totals[key] += value
@@ -601,7 +620,7 @@ def run_request_plan(
     summary = {
         "schema_version": 1,
         "protocol_version": 4,
-        "protocol": "optimized_qwen_single_pass_v1",
+        "protocol": "optimized_qwen_single_pass_v2",
         "status": "planned_not_scored",
         "game": game.slug,
         "model": "qwen3.7-plus",
@@ -646,7 +665,7 @@ def run_request_plan(
     plan_state = {
         "schema_version": 1,
         "protocol_version": 4,
-        "protocol": "optimized_qwen_single_pass_v1",
+        "protocol": "optimized_qwen_single_pass_v2",
         "status": "planned_not_scored",
         "game": game.slug,
         "run_id": run_id or root.name,

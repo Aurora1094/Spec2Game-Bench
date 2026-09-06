@@ -6,12 +6,38 @@
   "properties": {
     "schema_version": {"const": 1},
     "contract_version": {"const": "round_v1"},
-    "design_version": {"const": "d4_round_contract_qwen37_plus_v1"},
-    "policy": {"const": "qwen37_plus_single_pass_locally_validated"},
+    "design_version": {"const": "d4_round_contract_qwen37_plus_v2"},
+    "policy": {"const": "qwen37_plus_single_pass_target_aware_v1"},
     "round_id": {"type": "string", "minLength": 1},
     "game_slug": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
     "target": {"type": "string", "minLength": 1},
     "allowed_operations": {"type": "array", "minItems": 2, "maxItems": 12, "items": {"type": "string", "minLength": 1}},
+    "operation_policy": {
+      "type": "object",
+      "required": ["mode", "identity", "operation_ids", "operations"],
+      "properties": {
+        "mode": {"const": "target_specific"},
+        "identity": {"const": "control_plus_target"},
+        "operation_ids": {"type": "array", "minItems": 2, "maxItems": 12, "items": {"type": "string", "minLength": 1}},
+        "operations": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 12,
+          "items": {
+            "type": "object",
+            "required": ["id", "control", "target", "description"],
+            "properties": {
+              "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+              "control": {"type": "string", "minLength": 1},
+              "target": {"type": "string", "minLength": 1},
+              "description": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
     "art_direction": {"type": "array", "minItems": 1, "maxItems": 12, "items": {"type": "string", "minLength": 1}},
     "art_sample_size": {"type": "integer", "minimum": 1, "maximum": 12},
     "sample_seed": {"type": "integer", "minimum": 0},
@@ -22,7 +48,7 @@
         "question_count": {"const": 2},
         "fixed_question": {"type": "string", "minLength": 1},
         "source_checkpoint_ids": {"type": "array", "prefixItems": [{"type": "string"}, {"type": "string"}], "minItems": 2, "maxItems": 2},
-        "evidence_source": {"const": "real_d4_2_frames_for_dynamic_d2_2"},
+        "evidence_source": {"const": "real_d4_2_frames_for_declared_dynamic_d2_2_interactions"},
         "requires_distinct_evidence": {"const": true},
         "runtime_question_policy": {"type": "string", "minLength": 1}
       },

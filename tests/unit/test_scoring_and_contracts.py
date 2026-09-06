@@ -11,7 +11,9 @@ from code2play.d4.contracts import (
     D4_CONTRACT_VERSION,
     _normalize_generated_body,
     build_round_contracts,
+    eligible_d43_checkpoints,
     load_round_contract,
+    normalize_spec_operation_policy,
     validate_round_manifest,
 )
 from code2play.evaluation.scoring import assemble_result
@@ -145,3 +147,84 @@ def test_contract_requires_two_distinct_gameplay_operations() -> None:
             game_slug="snake",
             eligible_ids={row["id"] for row in eligible},
         )
+
+
+def test_whack_a_mole_target_policy_uses_two_game_semantic_operations(
+    tmp_path: Path,
+) -> None:
+    config = load_config()
+    game = next(item for item in games(config) if item.slug == "whack_a_mole")
+    from code2play.generation.prompt_builder import load_evaluator_checkpoints, load_spec
+
+    spec = load_spec(game.spec)
+    checkpoints = load_evaluator_checkpoints(spec)
+    raw_policy = spec["d4_operation_policy"]
+    policy = normalize_spec_operation_policy(raw_policy, checkpoints=checkpoints)
+    assert policy is not None
+    assert [item["id"] for item in policy["operations"]] == [
+        "click_normal_mole",
+        "click_golden_mole",
+    ]
+    assert all(item["control"] == "left_mouse_button" for item in policy["operations"])
+
+    eligible = eligible_d43_checkpoints(checkpoints, policy)
+    assert {row["id"] for row in eligible} == set(policy["d43_source_checkpoint_ids"])
+    assert all(".04" not in row["id"] and ".05" not in row["id"] for row in eligible)
+
+    lifecycle_sources = dict(raw_policy)
+    lifecycle_sources["d43_source_checkpoint_ids"] = [
+        "whack_a_mole.D2.2.04",
+        "whack_a_mole.D2.2.05",
+    ]
+    with pytest.raises(ValueError, match="non-interaction checkpoint"):
+        normalize_spec_operation_policy(lifecycle_sources, checkpoints=checkpoints)
+
+    hollow_operation = dict(raw_policy)
+    hollow_operation["operations"] = [
+        raw_policy["operations"][0],
+        {
+            "id": "click_empty_hole",
+            "control": "left_mouse_button",
+            "target": "background",
+            "description": "Click an empty background hole with the left mouse button.",
+        },
+    ]
+    with pytest.raises(ValueError, match="disallowed"):
+        normalize_spec_operation_policy(hollow_operation, checkpoints=checkpoints)
+
+    restart_operation = dict(raw_policy)
+    restart_operation["operations"] = [
+        raw_policy["operations"][0],
+        {
+            "id": "restart_round",
+            "control": "R",
+            "target": "game",
+            "description": "Restart the game with the R key.",
+        },
+    ]
+    with pytest.raises(ValueError, match="disallowed"):
+        normalize_spec_operation_policy(restart_operation, checkpoints=checkpoints)
+
+    round_dir = tmp_path / "round"
+    build_round_contracts(
+        round_dir,
+        [game],
+        config=config,
+        generator=_mock_contract_generator(config),
+        round_id="round",
+    )
+    contract = json.loads(
+        (round_dir / "contracts" / "whack_a_mole.json").read_text(encoding="utf-8")
+    )
+    assert contract["allowed_operations"] == [
+        "Click a visible Normal Mole with the left mouse button.",
+        "Click a visible Golden Mole with the left mouse button.",
+    ]
+    assert contract["operation_policy"]["identity"] == "control_plus_target"
+    assert contract["operation_policy"]["operation_ids"] == [
+        "click_normal_mole",
+        "click_golden_mole",
+    ]
+    assert set(contract["d4_3"]["source_checkpoint_ids"]).issubset(
+        set(policy["d43_source_checkpoint_ids"])
+    )

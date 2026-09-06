@@ -108,7 +108,7 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
         "temperature": 0.2,
         "attempts": 2,
         "retry_delays_seconds": [2],
-        "stop_on_truncation": False,
+        "stop_on_truncation": True,
         "semantic_retries": 0,
         "total_max_output_tokens": 16000,
         "stages": [
@@ -126,8 +126,8 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
     if not isinstance(judge, Mapping):
         errors.append("judge configuration must be a mapping")
     else:
-        if judge.get("policy") != "optimized_qwen_single_pass_v1":
-            errors.append("judge policy must be optimized_qwen_single_pass_v1")
+        if judge.get("policy") != "optimized_qwen_single_pass_v2":
+            errors.append("judge policy must be optimized_qwen_single_pass_v2")
         if judge.get("attempts") != 2 or judge.get("retry_delays_seconds") != [2]:
             errors.append("judge retry policy must be two attempts with one 2-second delay")
         if judge.get("scoring_repetitions") != 1:
@@ -167,6 +167,7 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
                     "model": "qwen3.7-plus",
                     "api_style": "chat_completions",
                     "api_key_env": "DASHSCOPE_API_KEY",
+                    "response_format": {"type": "json_object"},
                 }.items()
             ):
                 errors.append("judge routing must define the qwen profile")
@@ -176,9 +177,10 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
                 not isinstance(profiles.get(roles.get(modality)), Mapping)
                 or profiles[roles.get(modality)].get("provider") not in {"alibaba_dashscope", "openrouter"}
                 or not profiles[roles.get(modality)].get("model")
+                or profiles[roles.get(modality)].get("response_format") != {"type": "json_object"}
                 for modality in ("text", "vision")
             ):
-                errors.append("active judge profiles must use a supported provider and model")
+                errors.append("active judge profiles must use a supported provider, model, and JSON mode")
             if not isinstance(role_modalities, Mapping) or any(
                 role_modalities.get(role) != modality
                 for role, modality in expected_modalities.items()

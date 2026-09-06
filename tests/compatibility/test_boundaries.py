@@ -117,8 +117,8 @@ def test_current_report_preserves_official_score_and_uses_current_names(
         d4_detail={"score_normalized": 0.80, "status": "completed"},
     )
     result["evaluation_policy"] = {
-        "judge_policy": "optimized_qwen_single_pass_v1",
-        "judge": {"policy": "optimized_qwen_single_pass_v1"},
+        "judge_policy": "optimized_qwen_single_pass_v2",
+        "judge": {"policy": "optimized_qwen_single_pass_v2"},
         "d4_contract": None,
     }
     paths = write_task_reports(tmp_path / "task", result)

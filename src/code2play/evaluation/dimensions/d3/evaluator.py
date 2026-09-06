@@ -108,7 +108,7 @@ def load_d3_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
         raise ValueError("D3 score_max must be 100")
     judge = value.get("semantic_judge", {})
     fixed_judge_contract = {
-        "policy": "optimized_qwen_single_pass_v1",
+        "policy": "optimized_qwen_single_pass_v2",
         "region": "us-east-1",
         "stateless": True,
         "max_output_tokens": 1200,
