@@ -133,8 +133,7 @@ def _question_operations(
             ]
             if len(descriptions) == len(policy_operations):
                 return descriptions
-    _aliases, concrete = _operation_aliases(allowed_operations)
-    return concrete or [str(operation) for operation in allowed_operations]
+    return [str(operation) for operation in allowed_operations]
 
 
 def _normalize_options(
