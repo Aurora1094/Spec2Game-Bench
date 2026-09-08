@@ -136,6 +136,7 @@ def _run_stage(
             "judge_output_unavailable",
             "completed_with_judge_gap",
             "needs_rescore",
+            "incomplete_judge",
         }:
             return existing
 
@@ -185,6 +186,7 @@ def _run_stage(
         "judge_output_unavailable",
         "completed_with_judge_gap",
         "needs_rescore",
+        "incomplete_judge",
     }
     record.update(
         {
@@ -219,7 +221,10 @@ def _d3_call(
     if "semantic_judge" in inspect.signature(evaluate_d3).parameters:
         kwargs["semantic_judge"] = judge
     result, tools = evaluate_d3(**kwargs)
-    return {"result": result, "tools": tools}
+    payload: dict[str, Any] = {"result": result, "tools": tools}
+    if isinstance(result, dict) and result.get("status") == "incomplete_judge":
+        payload["status"] = "incomplete_judge"
+    return payload
 
 
 def evaluate_candidate(

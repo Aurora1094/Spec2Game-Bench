@@ -564,3 +564,25 @@ def test_parallel_judge_calls_write_isolated_request_artifacts(tmp_path: Path) -
         assert (call_dir / "raw_response_attempt_001.json").is_file()
         assert (call_dir / "parsed_output.json").is_file()
         assert json.loads((call_dir / "request_result.json").read_text(encoding="utf-8"))["status"] == "completed"
+
+
+def test_retryable_recognizes_remote_protocol_errors() -> None:
+    class RemoteProtocolError(Exception):
+        pass
+
+    class IncompleteRead(Exception):
+        pass
+
+    class BadRequestError(Exception):
+        pass
+
+    class ArrearageError(Exception):
+        def __init__(self) -> None:
+            self.status_code = 400
+            super().__init__("Arrearage")
+
+    assert dashscope._retryable(RemoteProtocolError("server disconnected")) is True
+    assert dashscope._retryable(IncompleteRead("incomplete chunked read")) is True
+    assert dashscope._retryable(Exception("peer sent incomplete chunked read")) is True
+    assert dashscope._retryable(BadRequestError("invalid request")) is False
+    assert dashscope._retryable(ArrearageError()) is False

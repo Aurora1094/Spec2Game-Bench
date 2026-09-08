@@ -65,6 +65,23 @@ def test_judge_gap_has_no_official_total_even_when_d1_gate_fails() -> None:
     assert result["official_total"] is None
 
 
+def test_d3_incomplete_judge_has_no_official_total() -> None:
+    result = assemble_result(
+        game="snake",
+        model="qwen3_7_plus",
+        repetition=1,
+        candidate_project_sha256="a" * 64,
+        d4_configured=True,
+        d1_detail={"score": 80, "gate_pass": True},
+        d2_detail={"score": 0.60, "status": "completed"},
+        d3_detail={"score": None, "max_score": 100, "status": "incomplete_judge"},
+        d4_detail={"score_normalized": 0.80, "status": "completed"},
+    )
+    assert result["status"] == "needs_rescore"
+    assert result["official_total"] is None
+    assert result["dimensions"]["D3"]["status"] == "incomplete_judge"
+
+
 def test_round_contracts_are_generated_once_and_hash_locked(tmp_path: Path) -> None:
     config = load_config()
     round_dir = tmp_path / "round-001"

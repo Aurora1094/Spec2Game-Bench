@@ -430,6 +430,26 @@ def _load_validated_compiler_cache(
     return cached, sources
 
 
+def _is_truncated_compiler_batch_error(exc: JudgeAttemptsExhausted) -> bool:
+    error_type = exc.error_type
+    message = exc.error_message.lower()
+    if error_type == "JSONDecodeError":
+        return True
+    if error_type != "ValueError":
+        return False
+    return any(
+        token in message
+        for token in (
+            "json",
+            "truncat",
+            "unclosed",
+            "expecting",
+            "unterminated",
+            "malformed",
+        )
+    )
+
+
 def _compile_checkpoint_programs(
     *,
     checkpoints: list[dict[str, Any]],
@@ -492,7 +512,15 @@ def _compile_checkpoint_programs(
                 batch_id, rows = futures[future]
                 try:
                     valid, repair_ids = future.result()
-                except JudgeAttemptsExhausted:
+                except JudgeAttemptsExhausted as exc:
+                    if _is_truncated_compiler_batch_error(exc):
+                        repair_rows.extend(
+                            (index, checkpoint) for index, checkpoint in rows
+                        )
+                        batch_failures.append(
+                            {"batch_id": batch_id, "error_type": exc.error_type}
+                        )
+                        continue
                     for pending in futures:
                         pending.cancel()
                     raise

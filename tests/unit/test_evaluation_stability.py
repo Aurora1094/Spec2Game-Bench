@@ -300,3 +300,30 @@ def test_rescore_stage_state_retains_judge_failure_metadata(tmp_path: Path) -> N
     )
     assert state["stages"]["D2"]["status"] == "needs_rescore"
     assert state["stages"]["D2"]["judge_failure"] == judge_failure
+
+
+def test_incomplete_judge_stage_is_rerun_instead_of_skipped(tmp_path: Path) -> None:
+    state_path = tmp_path / "stage_state.json"
+    state = {
+        "status": "needs_rescore",
+        "active_stage": None,
+        "stages": {"D3": {"status": "completed"}},
+    }
+    (tmp_path / "d3.json").write_text(
+        '{"status":"incomplete_judge","result":{"status":"incomplete_judge"}}',
+        encoding="utf-8",
+    )
+    calls: list[str] = []
+
+    payload = _run_stage(
+        name="D3",
+        state=state,
+        state_path=state_path,
+        output_path=tmp_path / "d3.json",
+        operation=lambda _attempt: calls.append("D3")
+        or {"status": "incomplete_judge", "result": {"status": "incomplete_judge"}},
+    )
+
+    assert calls == ["D3"]
+    assert payload["status"] == "incomplete_judge"
+    assert state["stages"]["D3"]["status"] == "needs_rescore"
