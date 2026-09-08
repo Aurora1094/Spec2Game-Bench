@@ -374,7 +374,19 @@ def _retryable(exc: BaseException) -> bool:
     if isinstance(status, int):
         return status in {401, 408, 409, 429} or status >= 500
     name = type(exc).__name__.lower()
-    return any(value in name for value in ("timeout", "connection", "proxy", "ssl", "throttl"))
+    message = str(exc).lower()
+    return any(
+        value in name
+        for value in (
+            "timeout",
+            "connection",
+            "proxy",
+            "ssl",
+            "throttl",
+            "protocol",
+            "incompleteread",
+        )
+    ) or "incomplete chunked" in message
 
 
 def _permanent_judge_configuration_error(exc: BaseException) -> bool:

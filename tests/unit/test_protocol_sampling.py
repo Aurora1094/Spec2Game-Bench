@@ -11,6 +11,10 @@ from code2play.evaluation.checkpoint_compiler import compile_checkpoint_program_
 from code2play.providers.dashscope import JudgeAttemptsExhausted
 
 
+class _RemoteProtocolError(Exception):
+    pass
+
+
 class _BatchFailureCompiler:
     def __init__(self) -> None:
         self.purposes: list[str] = []
@@ -72,13 +76,21 @@ def test_batch_compiler_failure_falls_back_to_single_checkpoint() -> None:
 class _ExhaustedCompiler:
     def __init__(self) -> None:
         self.calls = 0
+        self.purposes: list[str] = []
 
-    def json_text_validated(self, *_args, **_kwargs):
+    def json_text_validated(
+        self,
+        _instructions: str,
+        _prompt: str,
+        purpose: str,
+        validator: Any,
+    ) -> dict[str, Any]:
         self.calls += 1
+        self.purposes.append(purpose)
         raise JudgeAttemptsExhausted(
-            purpose="d2_compile_repair_snake.D2.1.01",
+            purpose=purpose,
             attempts=2,
-            error=ValueError("truncated JSON"),
+            error=_RemoteProtocolError("peer closed connection"),
         )
 
 
@@ -101,6 +113,68 @@ def test_compiler_attempt_exhaustion_propagates_for_rescore_handling() -> None:
         )
 
     assert compiler.calls == 1
+
+
+class _JsonTruncationBatchCompiler:
+    def __init__(self) -> None:
+        self.purposes: list[str] = []
+
+    def json_text_validated(
+        self,
+        _instructions: str,
+        _prompt: str,
+        purpose: str,
+        validator: Any,
+    ) -> dict[str, Any]:
+        self.purposes.append(purpose)
+        if purpose.startswith("d2_compile_batch_"):
+            raise JudgeAttemptsExhausted(
+                purpose=purpose,
+                attempts=2,
+                error=json.JSONDecodeError("Expecting ',' delimiter", "", 0),
+            )
+        return validator(
+            {
+                "checkpoint_id": "snake.D2.1.01",
+                "cases": [
+                    {
+                        "name": "move_right",
+                        "actions": [
+                            {"command": {"keys_down": ["right"], "dt": 0.1}}
+                        ],
+                    }
+                ],
+            }
+        )
+
+
+def test_compiler_batch_json_truncation_falls_back_to_single_checkpoint() -> None:
+    compiler = _JsonTruncationBatchCompiler()
+    checkpoints = [
+        {"id": "snake.D2.1.01", "dimension": "D2.1", "kind": "dynamic"}
+    ]
+
+    programs, report = _compile_checkpoint_programs(
+        checkpoints=checkpoints,
+        game_description="A small snake game.",
+        functional_requirements=[],
+        candidate_source="class GameState: pass",
+        initial_snapshot={},
+        initial_schema={},
+        compiler=compiler,
+        max_workers=1,
+    )
+
+    assert programs[0]["checkpoint_id"] == "snake.D2.1.01"
+    assert report["batch_failure_count"] == 1
+    assert report["batch_failures"] == [
+        {"batch_id": "D2.1_01", "error_type": "JSONDecodeError"}
+    ]
+    assert report["repair_count"] == 1
+    assert compiler.purposes == [
+        "d2_compile_batch_D2.1_01",
+        "d2_compile_repair_snake.D2.1.01",
+    ]
 
 
 def _dynamic_checkpoint(checkpoint_id: str, dimension: str) -> dict[str, str]:
@@ -199,7 +273,7 @@ class _RescoreCompiler:
             raise JudgeAttemptsExhausted(
                 purpose=purpose,
                 attempts=2,
-                error=ValueError("truncated JSON"),
+                error=_RemoteProtocolError("peer closed connection"),
             )
         payload = json.loads(prompt.split("Input:", 1)[1])
         rows = [_program(item["id"]) for item in payload["textual_checkpoints"]]

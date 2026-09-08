@@ -2,11 +2,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 from PIL import Image
 
 from code2play.config.project import game_by_slug, load_config
 from code2play.d4.contracts import build_round_contracts
 from code2play.d4.questions import (
+    _normalize_options,
+    _question_operations,
     build_d43_question_pack_single_pass,
     validate_d43_question_pack,
 )
@@ -255,3 +258,35 @@ def test_target_specific_questions_require_active_target_evidence(tmp_path: Path
         generator=_TargetSpecificQuestionGenerator(),
     )
     assert unavailable["status"] == "candidate_evidence_unavailable"
+
+
+_PIPE_CLICK = (
+    "Left-click a Straight Pipe, Corner Pipe, or T Pipe to rotate it 90° clockwise"
+)
+_PIPE_SPACE = (
+    "Press Space to submit the current configuration and run a complete water-flow check"
+)
+_FARM_PRESS_1 = "press 1 to select Carrot seed"
+_FARM_CLICK = "left-click a plot to use the selected tool or seed"
+
+
+def test_question_menu_keeps_locked_contract_operations() -> None:
+    pipe = [_PIPE_CLICK, _PIPE_SPACE]
+    farming = [_FARM_PRESS_1, _FARM_CLICK]
+    assert _question_operations(pipe) == pipe
+    assert _question_operations(farming) == farming
+
+
+def test_question_option_aliases_map_to_locked_operations() -> None:
+    allowed = [_PIPE_CLICK, _PIPE_SPACE]
+    assert _normalize_options(
+        {"A": "press Space", "B": _PIPE_CLICK},
+        "questions[0].options",
+        allowed,
+    ) == {"A": "press Space", "B": _PIPE_CLICK}
+    with pytest.raises(ValueError, match="not one of the contract operations"):
+        _normalize_options(
+            {"A": "press Space", "B": "press R"},
+            "questions[0].options",
+            allowed,
+        )

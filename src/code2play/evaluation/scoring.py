@@ -7,7 +7,12 @@ from typing import Any
 
 WEIGHTS = {"D1": 0.20, "D2": 0.50, "D3": 0.15, "D4": 0.15}
 RESCORE_STATUSES = frozenset(
-    {"judge_output_unavailable", "completed_with_judge_gap", "needs_rescore"}
+    {
+        "judge_output_unavailable",
+        "completed_with_judge_gap",
+        "needs_rescore",
+        "incomplete_judge",
+    }
 )
 
 
@@ -57,6 +62,7 @@ def assemble_result(
         d2_status = "incomplete"
 
     d3 = _d3_score(d3_detail)
+    d3_status = str(d3_detail.get("status") or "incomplete")
     diagnostic = _number(d3_detail.get("diagnostic_score"))
     if diagnostic is None:
         diagnostic = _number(d3_detail.get("tool_diagnostic_score"))
@@ -91,7 +97,11 @@ def assemble_result(
         ),
     }
 
-    has_rescore_gap = d2_status in RESCORE_STATUSES or d4_status in RESCORE_STATUSES
+    has_rescore_gap = (
+        d2_status in RESCORE_STATUSES
+        or d4_status in RESCORE_STATUSES
+        or d3_status == "incomplete_judge"
+    )
     if has_rescore_gap:
         official_total: float | None = None
     elif not d4_configured:
@@ -138,7 +148,7 @@ def assemble_result(
                 "detail": d2_detail,
             },
             "D3": {
-                "status": str(d3_detail.get("status") or "incomplete"),
+                "status": d3_status,
                 "score": d3,
                 "diagnostic_score": diagnostic,
                 **(

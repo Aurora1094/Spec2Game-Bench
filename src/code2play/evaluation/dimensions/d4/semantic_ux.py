@@ -706,6 +706,23 @@ def _evaluate_d43(
     }
 
 
+def _subdimension_normalized_score(detail: Mapping[str, Any] | None) -> float | None:
+    if not isinstance(detail, Mapping):
+        return None
+    try:
+        score = float(detail["score"])
+        maximum = float(detail["max_score"])
+    except (KeyError, TypeError, ValueError):
+        return None
+    return score / maximum if maximum > 0 else None
+
+
+def _reusable_subscore(detail: Any) -> dict[str, Any] | None:
+    if _subdimension_normalized_score(detail) is None:
+        return None
+    return dict(detail)
+
+
 def evaluate_dimension4_semantic(
     spec_path: Path | str,
     d4_contract: dict[str, Any],
@@ -763,22 +780,34 @@ def evaluate_dimension4_semantic(
         candidate_project_sha256=candidate_project_sha256,
     )
     sample_manifest_sha256 = _payload_sha256(sample_manifest)
-    can_reuse_previous = (
+    previous_compatible = (
         isinstance(previous_detail, Mapping)
         and previous_detail.get("status") == "completed_with_judge_gap"
         and previous_detail.get("contract_sha256") == contract["contract_sha256"]
         and previous_detail.get("sample_manifest_sha256") == sample_manifest_sha256
-        and isinstance(previous_detail.get("d4_1_artistic_visual_quality"), Mapping)
-        and isinstance(previous_detail.get("d4_2_feedback_fidelity"), Mapping)
     )
-    if can_reuse_previous:
-        d41 = dict(previous_detail["d4_1_artistic_visual_quality"])
-        d42 = dict(previous_detail["d4_2_feedback_fidelity"])
+    reusable_d41 = (
+        _reusable_subscore(previous_detail.get("d4_1_artistic_visual_quality"))
+        if previous_compatible
+        else None
+    )
+    reusable_d42 = (
+        _reusable_subscore(previous_detail.get("d4_2_feedback_fidelity"))
+        if previous_compatible
+        else None
+    )
+    reused_d41 = reusable_d41 is not None
+    reused_d42 = reusable_d42 is not None
+    if reused_d41:
+        d41 = reusable_d41
     else:
         try:
             d41 = _evaluate_d41(contract, sample_manifest, judge)
         except Exception as exc:
             d41 = _judge_output_unavailable("D4.1", exc)
+    if reused_d42:
+        d42 = reusable_d42
+    else:
         try:
             d42 = _evaluate_d42(
                 list(evaluation["d2"]["checkpoints"]),
@@ -792,18 +821,10 @@ def evaluate_dimension4_semantic(
     except Exception as exc:
         d43 = _judge_output_unavailable("D4.3", exc)
 
-    def normalized_score(detail: Mapping[str, Any]) -> float | None:
-        try:
-            score = float(detail["score"])
-            maximum = float(detail["max_score"])
-        except (KeyError, TypeError, ValueError):
-            return None
-        return score / maximum if maximum > 0 else None
-
     normalized_scores = {
-        "D4.1": normalized_score(d41),
-        "D4.2": normalized_score(d42),
-        "D4.3": normalized_score(d43),
+        "D4.1": _subdimension_normalized_score(d41),
+        "D4.2": _subdimension_normalized_score(d42),
+        "D4.3": _subdimension_normalized_score(d43),
     }
     judge_gap_stages = [
         stage for stage, score in normalized_scores.items() if score is None
@@ -837,5 +858,5 @@ def evaluate_dimension4_semantic(
         "contract_manifest_sha256": sample_manifest.get("d4_contract_manifest_sha256"),
         "question_pack_sha256": question_pack["question_pack_sha256"],
         "judge_gap_stages": judge_gap_stages,
-        "reused_previous_non_question_scores": can_reuse_previous,
+        "reused_previous_non_question_scores": reused_d41 and reused_d42,
     }
