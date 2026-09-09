@@ -33,6 +33,7 @@ from code2play.providers.dashscope import (
     OPENROUTER_KIMI_REASONING,
     OPENROUTER_PROVIDER,
     OPENROUTER_QWEN_MODEL,
+    OPENROUTER_QWEN_VL_MODEL,
     OPENROUTER_QWEN_JUDGE_REASONING,
     OpenRouterChatJudge,
     _model_aliases,
@@ -592,7 +593,7 @@ def test_default_judge_router_splits_all_text_and_vision_roles(tmp_path: Path) -
         assert call["model"] == (
             OPENROUTER_QWEN_MODEL
             if role in text_roles
-            else "google/gemini-3.8-flash"
+            else OPENROUTER_QWEN_VL_MODEL
         )
         assert call["api_key_env"] == OPENROUTER_API_KEY_ENV
         assert call["base_url"] == OPENROUTER_BASE_URL

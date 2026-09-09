@@ -30,6 +30,7 @@ OPENROUTER_PROVIDER = "openrouter"
 OPENROUTER_MODEL = "google/gemini-3.8-flash"
 OPENROUTER_API_STYLE = "chat_completions"
 OPENROUTER_QWEN_MODEL = "qwen/qwen3.7-plus"
+OPENROUTER_QWEN_VL_MODEL = "qwen/qwen3-vl-235b-a22b-instruct"
 OPENROUTER_KIMI_CODE_MODEL = "moonshotai/kimi-k2.7-code"
 OPENROUTER_KIMI_REASONING = {"effort": "minimal", "exclude": True}
 OPENROUTER_GPT56_TERRA_MODEL = "openai/gpt-5.6-terra"
@@ -1525,6 +1526,7 @@ __all__ = [
     "OPENROUTER_MODEL",
     "OPENROUTER_PROVIDER",
     "OPENROUTER_QWEN_MODEL",
+    "OPENROUTER_QWEN_VL_MODEL",
     "OPENROUTER_QWEN_JUDGE_REASONING",
     "OpenAICompatibleChatJudge",
     "OpenRouterChatJudge",

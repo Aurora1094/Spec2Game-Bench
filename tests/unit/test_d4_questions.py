@@ -15,6 +15,7 @@ from code2play.d4.questions import (
 )
 from code2play.cli import _mock_contract_generator
 from code2play.generation.prompt_builder import load_spec
+from code2play.providers.dashscope import OPENROUTER_QWEN_VL_MODEL
 
 
 class _QuestionGenerator:
@@ -158,6 +159,29 @@ def test_dynamic_questions_bind_real_images_deterministically(tmp_path: Path) ->
     )
     assert failed["status"] == "judge_output_unavailable"
     assert failed["candidate_failure_proven"] is False
+
+
+def test_dynamic_questions_accept_configured_qwen_vl_judge(tmp_path: Path) -> None:
+    contract, spec, sample, _manifest = _fixture(tmp_path)
+    candidate_sha = "e" * 64
+
+    pack = build_d43_question_pack_single_pass(
+        d4_contract=contract,
+        d2_checkpoints=spec["evaluation"]["d2"]["checkpoints"],
+        sample_manifest=sample,
+        candidate_project_sha256=candidate_sha,
+        generator=_ValidatedQuestionGenerator(),
+        model=OPENROUTER_QWEN_VL_MODEL,
+    )
+
+    assert pack["status"] == "completed"
+    assert pack["provenance"]["generator_model"] == OPENROUTER_QWEN_VL_MODEL
+    validate_d43_question_pack(
+        pack,
+        d4_contract=contract,
+        sample_manifest=sample,
+        candidate_project_sha256=candidate_sha,
+    )
 
 
 def test_grouped_keyboard_operations_accept_concrete_key_choices(tmp_path: Path) -> None:

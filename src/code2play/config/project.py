@@ -136,6 +136,14 @@ _GEMINI_OPENROUTER_JUDGE_PROFILE = {
     "base_url": "https://openrouter.ai/api/v1",
     "response_format": {"type": "json_object"},
 }
+_QWEN_VL_OPENROUTER_JUDGE_PROFILE = {
+    "provider": "openrouter",
+    "model": "qwen/qwen3-vl-235b-a22b-instruct",
+    "api_style": "chat_completions",
+    "api_key_env": "OPENROUTER_API_KEY",
+    "base_url": "https://openrouter.ai/api/v1",
+    "response_format": {"type": "json_object"},
+}
 _LINK_SOL_JUDGE_PROFILE = {
     "provider": "link_openai",
     "model": "gpt-5.6-sol",
@@ -148,6 +156,7 @@ _LOCKED_JUDGE_PROFILES = (
     _QWEN_JUDGE_PROFILE,
     _OPENROUTER_QWEN_JUDGE_PROFILE,
     _GEMINI_OPENROUTER_JUDGE_PROFILE,
+    _QWEN_VL_OPENROUTER_JUDGE_PROFILE,
     _LINK_SOL_JUDGE_PROFILE,
 )
 
@@ -321,6 +330,34 @@ def _locked_execution_bundle(policy: str) -> dict[str, Any] | None:
                 }
             ],
         }
+    if policy == "openrouter_gpt56_terra_qwenvl_judge_v1":
+        return {
+            "judge_identity": _provider_identity(_OPENROUTER_QWEN_JUDGE_PROFILE),
+            "route_identities": {
+                "text": _provider_identity(_OPENROUTER_QWEN_JUDGE_PROFILE),
+                "vision": _provider_identity(_QWEN_VL_OPENROUTER_JUDGE_PROFILE),
+            },
+            "required_profiles": {
+                "text": "qwen_openrouter",
+                "vision": "qwen_vl_openrouter",
+            },
+            "profile_specs": {
+                "text": _OPENROUTER_QWEN_JUDGE_PROFILE,
+                "vision": _QWEN_VL_OPENROUTER_JUDGE_PROFILE,
+            },
+            "models": [
+                {
+                    "id": "gpt_5_6_terra",
+                    "name": "GPT-5.6 Terra",
+                    "provider": "openrouter",
+                    "model": "openai/gpt-5.6-terra",
+                    "api_style": "chat_completions",
+                    "api_key_env": "OPENROUTER_API_KEY",
+                    "base_url": "https://openrouter.ai/api/v1",
+                    "reasoning": {"effort": "none"},
+                }
+            ],
+        }
     if policy == "link_sol_single_pass_v1":
         return {
             "judge_identity": _provider_identity(_LINK_SOL_JUDGE_PROFILE),
@@ -381,7 +418,8 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
                 "judge policy must be optimized_qwen_single_pass_v2, "
                 "openrouter_qwen_gemini_judge_v1/v2, "
                 "openrouter_kimi27_candidate_judge_v1/v2, "
-                "openrouter_gpt56_terra_candidate_judge_v1, or link_sol_single_pass_v1"
+                "openrouter_gpt56_terra_candidate_judge_v1, "
+                "openrouter_gpt56_terra_qwenvl_judge_v1, or link_sol_single_pass_v1"
             )
         else:
             if not _matches_mapping(judge, bundle["judge_identity"]):

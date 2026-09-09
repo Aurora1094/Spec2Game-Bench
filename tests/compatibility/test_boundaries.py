@@ -230,7 +230,7 @@ def test_current_batch_matrix_can_be_combined_without_score_regression(
     assert combined["matrix"][0]["final_score"] == 68.5
 
 
-def test_default_openrouter_terra_generation_and_dual_judge_routes() -> None:
+def test_default_openrouter_terra_generation_and_qwenvl_judge_routes() -> None:
     config = load_config()
     configured_models = models(config)
     assert len(configured_models) == 1
@@ -242,10 +242,10 @@ def test_default_openrouter_terra_generation_and_dual_judge_routes() -> None:
     assert configured_models[0].api_key_env == "OPENROUTER_API_KEY"
     assert configured_models[0].base_url == "https://openrouter.ai/api/v1"
     assert configured_models[0].reasoning == {"effort": "none"}
-    assert config["judge"]["policy"] == "openrouter_gpt56_terra_candidate_judge_v1"
+    assert config["judge"]["policy"] == "openrouter_gpt56_terra_qwenvl_judge_v1"
     assert config["judge"]["routing"]["roles"] == {
         "text": "qwen_openrouter",
-        "vision": "gemini_openrouter",
+        "vision": "qwen_vl_openrouter",
     }
     text_roles = {
         "action_compiler",
@@ -258,7 +258,7 @@ def test_default_openrouter_terra_generation_and_dual_judge_routes() -> None:
         expected_model = (
             "qwen/qwen3.7-plus"
             if role in text_roles
-            else "google/gemini-3.8-flash"
+            else "qwen/qwen3-vl-235b-a22b-instruct"
         )
         assert route == {
             "provider": "openrouter",
@@ -273,7 +273,7 @@ def test_default_openrouter_terra_generation_and_dual_judge_routes() -> None:
     assert config["judge"]["routing"]["profiles"]["qwen_openrouter"]["reasoning"] == {
         "effort": "none",
     }
-    assert "reasoning" not in config["judge"]["routing"]["profiles"]["gemini_openrouter"]
+    assert "reasoning" not in config["judge"]["routing"]["profiles"]["qwen_vl_openrouter"]
     assert not hasattr(dashscope, "create_compiler_judge")
     assert not hasattr(dashscope, "create_scoring_judge")
 

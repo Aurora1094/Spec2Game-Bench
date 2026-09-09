@@ -19,8 +19,8 @@ from code2play.execution.safe_artifacts import redact_text, sanitize
 
 
 REPORT_SCHEMA_VERSION = 2
-JUDGE_POLICY = "openrouter_gpt56_terra_candidate_judge_v1"
-JUDGE_MODEL = "qwen/qwen3.7-plus via OpenRouter"
+JUDGE_POLICY = "openrouter_gpt56_terra_qwenvl_judge_v1"
+JUDGE_MODEL = "qwen/qwen3.7-plus + qwen/qwen3-vl-235b-a22b-instruct via OpenRouter"
 JUDGE_MODE = "single_valid_response"
 JUDGE_TEMPERATURE = 0.0
 CSV_FIELDS = (

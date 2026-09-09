@@ -51,7 +51,7 @@
     ]
   },
   "semantic_judge": {
-    "policy": "openrouter_gpt56_terra_candidate_judge_v1",
+    "policy": "openrouter_gpt56_terra_qwenvl_judge_v1",
     "region": "us-east-1",
     "stateless": true,
     "max_output_tokens": 1200,
