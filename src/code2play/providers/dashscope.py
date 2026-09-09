@@ -29,11 +29,27 @@ DASHSCOPE_API_STYLE = "chat_completions"
 OPENROUTER_PROVIDER = "openrouter"
 OPENROUTER_MODEL = "google/gemini-3.8-flash"
 OPENROUTER_API_STYLE = "chat_completions"
+OPENROUTER_QWEN_MODEL = "qwen/qwen3.7-plus"
+OPENROUTER_KIMI_CODE_MODEL = "moonshotai/kimi-k2.7-code"
+OPENROUTER_KIMI_REASONING = {"effort": "minimal", "exclude": True}
+OPENROUTER_GPT56_TERRA_MODEL = "openai/gpt-5.6-terra"
+OPENROUTER_GPT56_TERRA_REASONING = {"effort": "none"}
+# Qwen3.7 Plus enables reasoning by default on OpenRouter.  ``exclude`` only
+# hides that output; it does not preserve the completion budget for JSON.
+OPENROUTER_QWEN_JUDGE_REASONING = {"effort": "none"}
+_LEGACY_OPENROUTER_QWEN_JUDGE_REASONING = {"effort": "minimal", "exclude": True}
+OPENROUTER_API_KEY_ENV = "OPENROUTER_API_KEY"
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+LINK_OPENAI_PROVIDER = "link_openai"
+LINK_OPENAI_MODEL = "gpt-5.6-sol"
+LINK_OPENAI_API_STYLE = "chat_completions"
+LINK_OPENAI_API_KEY_ENV = "LINK_API_KEY"
+LINK_OPENAI_BASE_URL = "https://ai.klinkw.com/v1"
 MAX_JUDGE_OUTPUT_TOKENS = 6000
 JUDGE_TEMPERATURE = 0.0
 PANEL_POLICY = "single_qwen37_plus_stateless"
 
-_SECRET_ENV_NAMES = ("DASHSCOPE_API_KEY", "OPENROUTER_API_KEY")
+_SECRET_ENV_NAMES = ("DASHSCOPE_API_KEY", "OPENROUTER_API_KEY", LINK_OPENAI_API_KEY_ENV)
 _DIMENSION_NAMES = {
     "D2.1": "game element modeling",
     "D2.2": "interaction modeling",
@@ -374,8 +390,8 @@ def _retryable(exc: BaseException) -> bool:
     if isinstance(status, int):
         return status in {401, 408, 409, 429} or status >= 500
     name = type(exc).__name__.lower()
-    message = str(exc).lower()
-    return any(
+    message = str(exc).casefold()
+    if any(
         value in name
         for value in (
             "timeout",
@@ -386,7 +402,25 @@ def _retryable(exc: BaseException) -> bool:
             "protocol",
             "incompleteread",
         )
-    ) or "incomplete chunked" in message
+    ):
+        return True
+    # Some OpenAI-compatible relays return transient capacity errors as a
+    # generic APIError without exposing an HTTP status code.
+    return any(
+        value in message
+        for value in (
+            "incomplete chunked",
+            "overloaded",
+            "temporarily unavailable",
+            "try again later",
+            "service unavailable",
+            "server is busy",
+            "server busy",
+            "capacity",
+            "too many requests",
+            "rate limit",
+        )
+    )
 
 
 def _permanent_judge_configuration_error(exc: BaseException) -> bool:
@@ -396,16 +430,135 @@ def _permanent_judge_configuration_error(exc: BaseException) -> bool:
     return isinstance(status, int) and status in {400, 401, 403, 404, 422}
 
 
-def _chat_client() -> tuple[Any, str, str]:
-    key = os.getenv("DASHSCOPE_API_KEY")
+def candidate_generation_settings(model: Any) -> dict[str, Any]:
+    """Resolve one explicitly supported candidate-generation endpoint."""
+
+    provider = str(getattr(model, "provider", ""))
+    requested_model = str(getattr(model, "model", ""))
+    api_style = str(getattr(model, "api_style", "chat_completions"))
+    configured_key_env = getattr(model, "api_key_env", None)
+    configured_base_url = getattr(model, "base_url", None)
+    if api_style != "chat_completions":
+        raise ValueError(f"Unsupported candidate-generation API style: {api_style!r}")
+    if (provider, requested_model) == (DASHSCOPE_PROVIDER, DASHSCOPE_MODEL):
+        return {
+            "provider": provider,
+            "model": requested_model,
+            "api_style": api_style,
+            "api_key_env": str(configured_key_env or "DASHSCOPE_API_KEY"),
+            "base_url": str(
+                configured_base_url
+                or os.getenv(
+                    "DASHSCOPE_BASE_URL",
+                    "https://dashscope.aliyuncs.com/compatible-mode/v1",
+                )
+            ),
+            "enable_thinking": True,
+        }
+    if (provider, requested_model) == (OPENROUTER_PROVIDER, OPENROUTER_QWEN_MODEL):
+        return {
+            "provider": provider,
+            "model": requested_model,
+            "api_style": api_style,
+            "api_key_env": str(configured_key_env or OPENROUTER_API_KEY_ENV),
+            "base_url": str(
+                configured_base_url
+                or os.getenv("OPENROUTER_BASE_URL", OPENROUTER_BASE_URL)
+            ),
+            "enable_thinking": False,
+        }
+    if (provider, requested_model) == (OPENROUTER_PROVIDER, OPENROUTER_KIMI_CODE_MODEL):
+        configured_reasoning = getattr(model, "reasoning", None)
+        reasoning = (
+            dict(configured_reasoning)
+            if isinstance(configured_reasoning, Mapping)
+            else dict(OPENROUTER_KIMI_REASONING)
+        )
+        if reasoning != OPENROUTER_KIMI_REASONING:
+            raise ValueError(
+                "Kimi K2.7 Code candidate reasoning must use minimal effort "
+                "with reasoning output excluded"
+            )
+        return {
+            "provider": provider,
+            "model": requested_model,
+            "api_style": api_style,
+            "api_key_env": str(configured_key_env or OPENROUTER_API_KEY_ENV),
+            "base_url": str(
+                configured_base_url
+                or os.getenv("OPENROUTER_BASE_URL", OPENROUTER_BASE_URL)
+            ),
+            "enable_thinking": False,
+            "reasoning": reasoning,
+        }
+    if (provider, requested_model) == (OPENROUTER_PROVIDER, OPENROUTER_GPT56_TERRA_MODEL):
+        configured_reasoning = getattr(model, "reasoning", None)
+        reasoning = (
+            dict(configured_reasoning)
+            if isinstance(configured_reasoning, Mapping)
+            else dict(OPENROUTER_GPT56_TERRA_REASONING)
+        )
+        if reasoning != OPENROUTER_GPT56_TERRA_REASONING:
+            raise ValueError(
+                "GPT-5.6 Terra candidate reasoning must be disabled with "
+                "{'effort': 'none'}"
+            )
+        return {
+            "provider": provider,
+            "model": requested_model,
+            "api_style": api_style,
+            "api_key_env": str(configured_key_env or OPENROUTER_API_KEY_ENV),
+            "base_url": str(
+                configured_base_url
+                or os.getenv("OPENROUTER_BASE_URL", OPENROUTER_BASE_URL)
+            ),
+            "enable_thinking": False,
+            "reasoning": reasoning,
+        }
+    if (provider, requested_model) == (LINK_OPENAI_PROVIDER, LINK_OPENAI_MODEL):
+        return {
+            "provider": provider,
+            "model": requested_model,
+            "api_style": api_style,
+            "api_key_env": str(configured_key_env or LINK_OPENAI_API_KEY_ENV),
+            "base_url": str(
+                configured_base_url
+                or os.getenv("LINK_OPENAI_BASE_URL", LINK_OPENAI_BASE_URL)
+            ),
+            "enable_thinking": False,
+        }
+    raise ValueError(
+        "Candidate generation only supports "
+        "alibaba_dashscope/qwen3.7-plus, openrouter/qwen/qwen3.7-plus, "
+        "openrouter/moonshotai/kimi-k2.7-code, openrouter/openai/gpt-5.6-terra, "
+        "or link_openai/gpt-5.6-sol"
+    )
+
+
+def candidate_api_key_env(model: Any) -> str:
+    return str(candidate_generation_settings(model)["api_key_env"])
+
+
+def _chat_client(model: Any) -> tuple[Any, str, dict[str, Any]]:
+    settings = candidate_generation_settings(model)
+    key_env = str(settings["api_key_env"])
+    key = os.getenv(key_env)
     if not key:
-        raise ValueError("DASHSCOPE_API_KEY is not set")
+        raise ValueError(f"{key_env} is not set")
     try:
         from openai import OpenAI
     except ImportError as exc:
-        raise RuntimeError("Install the openai-compatible SDK to use DashScope") from exc
-    base_url = os.getenv("DASHSCOPE_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1")
-    return OpenAI(api_key=key, base_url=base_url, timeout=300.0, max_retries=0), key, base_url
+        raise RuntimeError("Install the openai-compatible SDK to use candidate generation") from exc
+    return (
+        OpenAI(
+            api_key=key,
+            base_url=str(settings["base_url"]),
+            timeout=300.0,
+            max_retries=0,
+        ),
+        key,
+        settings,
+    )
 
 
 def _generate_once(
@@ -415,19 +568,24 @@ def _generate_once(
     max_output_tokens: int,
     temperature: float,
 ) -> GenerationResult:
-    client, key, base_url = _chat_client()
-    response = client.chat.completions.create(
-        model=model.model,
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=max_output_tokens,
-        temperature=temperature,
-        extra_body={"enable_thinking": True},
-        stream=True,
-        stream_options={"include_usage": True},
-    )
+    client, key, settings = _chat_client(model)
+    request_kwargs: dict[str, Any] = {
+        "model": str(settings["model"]),
+        "messages": [{"role": "user", "content": prompt}],
+        "max_tokens": max_output_tokens,
+        "temperature": temperature,
+        "stream": True,
+        "stream_options": {"include_usage": True},
+    }
+    reasoning = settings.get("reasoning")
+    if isinstance(reasoning, Mapping):
+        request_kwargs["extra_body"] = {"reasoning": dict(reasoning)}
+    elif settings["provider"] == DASHSCOPE_PROVIDER:
+        request_kwargs["extra_body"] = {"enable_thinking": True}
+    response = client.chat.completions.create(**request_kwargs)
     parts: list[str] = []
     usage: dict[str, Any] | None = None
-    response_model = model.model
+    response_model = str(settings["model"])
     request_id: str | None = None
     finish_reason: str | None = None
     chunks = 0
@@ -452,27 +610,30 @@ def _generate_once(
             parts.append(content)
     text = "".join(parts)
     if not text:
-        raise ValueError("DashScope returned no text content")
+        raise ValueError(f"{settings['provider']} returned no text content")
+    request_parameters = {
+        "max_output_tokens": max_output_tokens,
+        "temperature": temperature,
+        "provider": settings["provider"],
+        "model": settings["model"],
+        "api_style": settings["api_style"],
+        "enable_thinking": settings["enable_thinking"],
+        "stream": True,
+        "stream_options": {"include_usage": True},
+        "base_url": settings["base_url"],
+    }
+    if isinstance(reasoning, Mapping):
+        request_parameters["reasoning"] = dict(reasoning)
     return GenerationResult(
-        provider=DASHSCOPE_PROVIDER,
-        requested_model=model.model,
+        provider=str(settings["provider"]),
+        requested_model=str(settings["model"]),
         response_model=response_model,
         text=text,
         code=extract_python_code(text),
         usage=usage,
         request_id=request_id,
         attempts=1,
-        request_parameters={
-            "max_output_tokens": max_output_tokens,
-            "temperature": temperature,
-            "provider": DASHSCOPE_PROVIDER,
-            "model": DASHSCOPE_MODEL,
-            "api_style": DASHSCOPE_API_STYLE,
-            "enable_thinking": True,
-            "stream": True,
-            "stream_options": {"include_usage": True},
-            "base_url": base_url,
-        },
+        request_parameters=request_parameters,
         raw_response={
             "id": request_id,
             "model": response_model,
@@ -503,8 +664,7 @@ def generate_stage_source(
     result_validator: Callable[[GenerationResult], Sequence[str] | None] | None = None,
 ) -> GenerationResult:
     del region
-    if getattr(model, "provider", None) != DASHSCOPE_PROVIDER or getattr(model, "model", None) != DASHSCOPE_MODEL:
-        raise ValueError("Candidate generation only supports alibaba_dashscope/qwen3.7-plus")
+    candidate_generation_settings(model)
     delays = retry_delays_seconds or [2.0]
     if int(attempts) != 2 or tuple(float(delay) for delay in delays) != (2.0,):
         raise ValueError(
@@ -610,6 +770,27 @@ def _normalize_response_format(value: Mapping[str, Any] | None) -> dict[str, Any
     normalized = dict(value)
     if normalized != {"type": "json_object"}:
         raise ValueError("judge response_format must be exactly {'type': 'json_object'}")
+    return normalized
+
+
+def _normalize_openrouter_reasoning(
+    value: Mapping[str, Any] | None,
+) -> dict[str, Any] | None:
+    """Validate an approved policy-specific reasoning setting for OpenRouter."""
+
+    if value is None:
+        return None
+    if not isinstance(value, Mapping):
+        raise ValueError("judge reasoning must be an object when configured")
+    normalized = dict(value)
+    if normalized not in (
+        OPENROUTER_QWEN_JUDGE_REASONING,
+        _LEGACY_OPENROUTER_QWEN_JUDGE_REASONING,
+    ):
+        raise ValueError(
+            "judge reasoning must be exactly {'effort': 'none'} or the "
+            "legacy {'effort': 'minimal', 'exclude': True'} setting"
+        )
     return normalized
 
 
@@ -742,6 +923,7 @@ class OpenAICompatibleChatJudge:
         retry_delays_seconds: Sequence[float] = (2,),
         role: str = "scoring",
         response_format: Mapping[str, Any] | None = None,
+        reasoning: Mapping[str, Any] | None = None,
         client: Any | None = None,
     ) -> None:
         if not provider or not model:
@@ -760,6 +942,9 @@ class OpenAICompatibleChatJudge:
         self.retry_delays_seconds = tuple(float(value) for value in retry_delays_seconds)
         self.role = str(role)
         self.response_format = _normalize_response_format(response_format)
+        if self.provider != OPENROUTER_PROVIDER and reasoning is not None:
+            raise ValueError("judge reasoning is supported only for OpenRouter routes")
+        self.reasoning = _normalize_openrouter_reasoning(reasoning)
         self.log_dir = Path(log_dir).resolve()
         self.log_dir.mkdir(parents=True, exist_ok=True)
         if client is None:
@@ -852,6 +1037,7 @@ class OpenAICompatibleChatJudge:
             "temperature": 0.0,
             "enable_thinking": self.enable_thinking,
             "response_format": self.response_format,
+            "reasoning": self.reasoning,
             "max_output_tokens": self.max_output_tokens,
             "request_attempt_limit": self.attempts,
             "stateless": True,
@@ -878,22 +1064,16 @@ class OpenAICompatibleChatJudge:
                 }
                 if self.response_format is not None:
                     request_kwargs["response_format"] = self.response_format
-                if self.provider == DASHSCOPE_PROVIDER:
+                if self.provider == OPENROUTER_PROVIDER and self.reasoning is not None:
+                    request_kwargs["extra_body"] = {"reasoning": dict(self.reasoning)}
+                elif self.provider == DASHSCOPE_PROVIDER:
                     request_kwargs["extra_body"] = {"enable_thinking": self.enable_thinking}
                 response = self.client.chat.completions.create(
                     **request_kwargs,
                 )
                 dumped = _dump(response)
-                choices = _get(response, "choices", [])
-                if not choices:
-                    raise ValueError(f"{self.provider} judge returned no choices")
-                message = _get(choices[0], "message")
-                raw_text = _get(message, "content")
-                if not isinstance(raw_text, str):
-                    raise ValueError(f"{self.provider} judge returned no text content")
-                raw_text = _redact(raw_text, [self._api_key])
-                usage = dumped.get("usage")
-                usage = dict(usage) if isinstance(usage, Mapping) else {}
+                usage_value = dumped.get("usage")
+                usage = dict(usage_value) if isinstance(usage_value, Mapping) else {}
                 finish_reason = _finish_reason(dumped)
                 attempt_records.append(
                     {
@@ -902,8 +1082,24 @@ class OpenAICompatibleChatJudge:
                         "finish_reason": finish_reason,
                     }
                 )
-                (call_dir / f"raw_output_attempt_{attempt:03d}.txt").write_text(raw_text, encoding="utf-8")
                 _write_request_json(call_dir / f"raw_response_attempt_{attempt:03d}.json", dumped)
+                choices = _get(response, "choices", [])
+                if not choices:
+                    (call_dir / f"raw_output_attempt_{attempt:03d}.txt").write_text(
+                        "",
+                        encoding="utf-8",
+                    )
+                    raise ValueError(f"{self.provider} judge returned no choices")
+                message = _get(choices[0], "message")
+                response_text = _get(message, "content")
+                if isinstance(response_text, str):
+                    raw_text = _redact(response_text, [self._api_key])
+                (call_dir / f"raw_output_attempt_{attempt:03d}.txt").write_text(
+                    raw_text,
+                    encoding="utf-8",
+                )
+                if not isinstance(response_text, str):
+                    raise ValueError(f"{self.provider} judge returned no text content")
                 parsed = _restore_aliases(parse_json_object(raw_text), aliases)
                 if validator is not None:
                     parsed = validator(parsed)
@@ -1036,9 +1232,10 @@ class OpenRouterChatJudge(OpenAICompatibleChatJudge):
         retry_delays_seconds: Sequence[float] = (2,),
         role: str = "scoring",
         response_format: Mapping[str, Any] | None = None,
+        reasoning: Mapping[str, Any] | None = None,
         client: Any | None = None,
         base_url: str | None = None,
-        api_key_env: str = "OPENROUTER_API_KEY",
+        api_key_env: str = OPENROUTER_API_KEY_ENV,
     ) -> None:
         super().__init__(
             log_dir,
@@ -1046,7 +1243,45 @@ class OpenRouterChatJudge(OpenAICompatibleChatJudge):
             model=model,
             api_style=OPENROUTER_API_STYLE,
             api_key_env=api_key_env,
-            base_url=base_url or os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
+            base_url=base_url or os.getenv("OPENROUTER_BASE_URL", OPENROUTER_BASE_URL),
+            max_output_tokens=max_output_tokens,
+            enable_thinking=enable_thinking,
+            attempts=attempts,
+            retry_delays_seconds=retry_delays_seconds,
+            role=role,
+            response_format=response_format,
+            reasoning=reasoning,
+            client=client,
+        )
+
+
+class LinkOpenAIChatJudge(OpenAICompatibleChatJudge):
+    """Link's OpenAI-compatible endpoint for the fixed GPT-5.6 Sol trial."""
+
+    def __init__(
+        self,
+        log_dir: Path,
+        *,
+        model: str = LINK_OPENAI_MODEL,
+        max_output_tokens: int = MAX_JUDGE_OUTPUT_TOKENS,
+        enable_thinking: bool = False,
+        attempts: int = 2,
+        retry_delays_seconds: Sequence[float] = (2,),
+        role: str = "scoring",
+        response_format: Mapping[str, Any] | None = None,
+        client: Any | None = None,
+        base_url: str | None = None,
+        api_key_env: str = LINK_OPENAI_API_KEY_ENV,
+    ) -> None:
+        if model != LINK_OPENAI_MODEL:
+            raise ValueError("Link judge only supports gpt-5.6-sol")
+        super().__init__(
+            log_dir,
+            provider=LINK_OPENAI_PROVIDER,
+            model=model,
+            api_style=LINK_OPENAI_API_STYLE,
+            api_key_env=api_key_env,
+            base_url=base_url or os.getenv("LINK_OPENAI_BASE_URL", LINK_OPENAI_BASE_URL),
             max_output_tokens=max_output_tokens,
             enable_thinking=enable_thinking,
             attempts=attempts,
@@ -1087,6 +1322,7 @@ def create_judge(
     retry_delays_seconds: Sequence[float] = (2,),
     role: str = "scoring",
     response_format: Mapping[str, Any] | None = None,
+    reasoning: Mapping[str, Any] | None = None,
     client: Any | None = None,
     **_ignored: Any,
 ) -> SemanticJudge:
@@ -1113,9 +1349,24 @@ def create_judge(
             retry_delays_seconds=retry_delays_seconds,
             role=role,
             response_format=response_format,
+            reasoning=reasoning,
             client=client,
             base_url=base_url,
-            api_key_env=api_key_env or "OPENROUTER_API_KEY",
+            api_key_env=api_key_env or OPENROUTER_API_KEY_ENV,
+        )
+    if provider == LINK_OPENAI_PROVIDER:
+        return LinkOpenAIChatJudge(
+            log_dir,
+            model=model,
+            max_output_tokens=max_output_tokens,
+            enable_thinking=enable_thinking,
+            attempts=attempts,
+            retry_delays_seconds=retry_delays_seconds,
+            role=role,
+            response_format=response_format,
+            client=client,
+            base_url=base_url,
+            api_key_env=api_key_env or LINK_OPENAI_API_KEY_ENV,
         )
     raise ValueError(f"Unsupported judge provider: {provider!r}")
 
@@ -1148,6 +1399,7 @@ class JudgeRouter:
                 retry_delays_seconds=self.config.get("retry_delays_seconds", [2]),
                 role=role,
                 response_format=route.get("response_format"),
+                reasoning=route.get("reasoning"),
             )
             self._clients[role] = client
             return client
@@ -1185,7 +1437,15 @@ def resolve_judge_route(config: Mapping[str, Any], role: str) -> dict[str, Any]:
     if profile is not None:
         if not isinstance(profile, Mapping):
             raise ValueError(f"Judge profile {profile_name!r} must be a mapping")
-        for key in ("provider", "model", "api_style", "api_key_env", "base_url", "response_format"):
+        for key in (
+            "provider",
+            "model",
+            "api_style",
+            "api_key_env",
+            "base_url",
+            "response_format",
+            "reasoning",
+        ):
             if key in profile:
                 resolved[key] = profile[key]
     if not resolved.get("provider") or not resolved.get("model"):
@@ -1247,17 +1507,33 @@ __all__ = [
     "JudgeAttemptsExhausted",
     "JudgeRouter",
     "MAX_JUDGE_OUTPUT_TOKENS",
+    "LINK_OPENAI_API_KEY_ENV",
+    "LINK_OPENAI_API_STYLE",
+    "LINK_OPENAI_BASE_URL",
+    "LINK_OPENAI_MODEL",
+    "LINK_OPENAI_PROVIDER",
+    "LinkOpenAIChatJudge",
     "ModelRequest",
     "ModelResult",
     "OPENROUTER_API_STYLE",
+    "OPENROUTER_API_KEY_ENV",
+    "OPENROUTER_BASE_URL",
+    "OPENROUTER_GPT56_TERRA_MODEL",
+    "OPENROUTER_GPT56_TERRA_REASONING",
+    "OPENROUTER_KIMI_CODE_MODEL",
+    "OPENROUTER_KIMI_REASONING",
     "OPENROUTER_MODEL",
     "OPENROUTER_PROVIDER",
+    "OPENROUTER_QWEN_MODEL",
+    "OPENROUTER_QWEN_JUDGE_REASONING",
     "OpenAICompatibleChatJudge",
     "OpenRouterChatJudge",
     "RoutedSemanticJudge",
     "SemanticJudge",
     "create_judge",
     "create_dashscope_judge",
+    "candidate_api_key_env",
+    "candidate_generation_settings",
     "extract_python_code",
     "generation_output_issues",
     "generate_stage_source",

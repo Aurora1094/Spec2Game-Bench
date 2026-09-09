@@ -10,7 +10,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 from statistics import mean
-from typing import Any
+from typing import Any, Mapping
 
 from code2play.execution.candidate_project import CandidateProject, GENERATED_FILES
 
@@ -68,6 +68,121 @@ def _json_hash(value: Any) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
+_SEMANTIC_JUDGE_CONTRACTS = {
+    "optimized_qwen_single_pass_v2": {
+        "policy": "optimized_qwen_single_pass_v2",
+        "region": "us-east-1",
+        "stateless": True,
+        "max_output_tokens": 1200,
+        "temperature": 0.0,
+        "provider": "alibaba_dashscope",
+        "model": "qwen3.7-plus",
+        "api": "chat_completions",
+        "enable_thinking": False,
+        "criterion_scale_max": 100,
+        "repetitions": 1,
+        "aggregation": "single_valid_response",
+    },
+    "openrouter_qwen_gemini_judge_v1": {
+        "policy": "openrouter_qwen_gemini_judge_v1",
+        "region": "us-east-1",
+        "stateless": True,
+        "max_output_tokens": 1200,
+        "temperature": 0.0,
+        "provider": "openrouter",
+        "model": "qwen/qwen3.7-plus",
+        "api": "chat_completions",
+        "enable_thinking": False,
+        "reasoning": {"effort": "minimal", "exclude": True},
+        "criterion_scale_max": 100,
+        "repetitions": 1,
+        "aggregation": "single_valid_response",
+    },
+    "openrouter_qwen_gemini_judge_v2": {
+        "policy": "openrouter_qwen_gemini_judge_v2",
+        "region": "us-east-1",
+        "stateless": True,
+        "max_output_tokens": 1200,
+        "temperature": 0.0,
+        "provider": "openrouter",
+        "model": "qwen/qwen3.7-plus",
+        "api": "chat_completions",
+        "enable_thinking": False,
+        "reasoning": {"effort": "none"},
+        "criterion_scale_max": 100,
+        "repetitions": 1,
+        "aggregation": "single_valid_response",
+    },
+    "openrouter_kimi27_candidate_judge_v1": {
+        "policy": "openrouter_kimi27_candidate_judge_v1",
+        "region": "us-east-1",
+        "stateless": True,
+        "max_output_tokens": 1200,
+        "temperature": 0.0,
+        "provider": "openrouter",
+        "model": "qwen/qwen3.7-plus",
+        "api": "chat_completions",
+        "enable_thinking": False,
+        "reasoning": {"effort": "minimal", "exclude": True},
+        "criterion_scale_max": 100,
+        "repetitions": 1,
+        "aggregation": "single_valid_response",
+    },
+    "openrouter_kimi27_candidate_judge_v2": {
+        "policy": "openrouter_kimi27_candidate_judge_v2",
+        "region": "us-east-1",
+        "stateless": True,
+        "max_output_tokens": 1200,
+        "temperature": 0.0,
+        "provider": "openrouter",
+        "model": "qwen/qwen3.7-plus",
+        "api": "chat_completions",
+        "enable_thinking": False,
+        "reasoning": {"effort": "none"},
+        "criterion_scale_max": 100,
+        "repetitions": 1,
+        "aggregation": "single_valid_response",
+    },
+    "openrouter_gpt56_terra_candidate_judge_v1": {
+        "policy": "openrouter_gpt56_terra_candidate_judge_v1",
+        "region": "us-east-1",
+        "stateless": True,
+        "max_output_tokens": 1200,
+        "temperature": 0.0,
+        "provider": "openrouter",
+        "model": "qwen/qwen3.7-plus",
+        "api": "chat_completions",
+        "enable_thinking": False,
+        "reasoning": {"effort": "none"},
+        "criterion_scale_max": 100,
+        "repetitions": 1,
+        "aggregation": "single_valid_response",
+    },
+    "link_sol_single_pass_v1": {
+        "policy": "link_sol_single_pass_v1",
+        "region": "us-east-1",
+        "stateless": True,
+        "max_output_tokens": 1200,
+        "temperature": 0.0,
+        "provider": "link_openai",
+        "model": "gpt-5.6-sol",
+        "api": "chat_completions",
+        "enable_thinking": False,
+        "criterion_scale_max": 100,
+        "repetitions": 1,
+        "aggregation": "single_valid_response",
+    },
+}
+
+
+def validate_semantic_judge_config(value: Mapping[str, Any]) -> dict[str, Any]:
+    policy = str(value.get("policy") or "")
+    expected = _SEMANTIC_JUDGE_CONTRACTS.get(policy)
+    if expected is None or dict(value) != expected:
+        raise ValueError("D3 semantic_judge differs from an approved single-pass policy")
+    return dict(expected)
+
+
 def load_d3_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
     value = json.loads(path.read_text(encoding="utf-8"))
     if value.get("schema_version") != 6:
@@ -107,24 +222,9 @@ def load_d3_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
     if float(value.get("score_max", 0)) != 100:
         raise ValueError("D3 score_max must be 100")
     judge = value.get("semantic_judge", {})
-    fixed_judge_contract = {
-        "policy": "optimized_qwen_single_pass_v2",
-        "region": "us-east-1",
-        "stateless": True,
-        "max_output_tokens": 1200,
-        "temperature": 0.0,
-        "provider": "alibaba_dashscope",
-        "model": "qwen3.7-plus",
-        "api": "chat_completions",
-        "enable_thinking": False,
-        "criterion_scale_max": 100,
-        "repetitions": 1,
-        "aggregation": "single_valid_response",
-    }
-    if judge != fixed_judge_contract:
-        raise ValueError(
-            "D3 semantic_judge must use the optimized Qwen single-pass policy"
-        )
+    if not isinstance(judge, Mapping):
+        raise ValueError("D3 semantic_judge must be a mapping")
+    validate_semantic_judge_config(judge)
     return value
 
 

@@ -27,11 +27,12 @@ from code2play.providers.dashscope import (
     JudgeRouter,
     ModelRequest,
     RoutedSemanticJudge,
+    candidate_generation_settings,
     resolve_judge_route,
     _model_visible_texts,
 )
 from code2play.execution.protocol_sampling import sample_evaluation_protocol
-from code2play.config.project import GameConfig, normalized_policy_sha256
+from code2play.config.project import GameConfig, models, normalized_policy_sha256
 from code2play.generation.prompt_builder import build_stage_prompt, load_spec
 from code2play.execution.safe_artifacts import redact_text, write_json
 
@@ -287,6 +288,10 @@ def _generation_requests(
     candidate: CandidateProject,
     config: Mapping[str, Any],
 ) -> list[dict[str, Any]]:
+    configured_models = models(config)
+    if len(configured_models) != 1:
+        raise ValueError("request planning requires exactly one configured candidate model")
+    candidate_settings = candidate_generation_settings(configured_models[0])
     stage_limits = {
         item["id"]: int(item["max_output_tokens"])
         for item in config["generation"]["stages"]
@@ -311,15 +316,17 @@ def _generation_requests(
         )
         row = asdict(request)
         row.update({
-            "model": "qwen3.7-plus",
-            "provider": "alibaba_dashscope",
-            "enable_thinking": True,
+            "model": candidate_settings["model"],
+            "provider": candidate_settings["provider"],
+            "enable_thinking": candidate_settings["enable_thinking"],
             "send": False,
             "status": "reconstructed_for_budget_only",
             "prompt_sha256": built.sha256,
             "estimated_text_input_tokens": _estimate_text_tokens(built.text),
             "estimated_image_input_tokens": 0,
         })
+        if "reasoning" in candidate_settings:
+            row["reasoning"] = dict(candidate_settings["reasoning"])
         requests.append(row)
     return requests
 
@@ -433,6 +440,10 @@ def run_request_plan(
     """Send only compilation requests; sample reality; plan all later calls."""
 
     root = Path(run_dir).resolve()
+    configured_models = models(config)
+    if len(configured_models) != 1:
+        raise ValueError("request planning requires exactly one configured candidate model")
+    candidate_model = configured_models[0]
     evidence_dir = root / "evidence"
     router = JudgeRouter(config["judge"], root / "model_calls")
     locked_round_dir = (
@@ -538,6 +549,12 @@ def run_request_plan(
             sample_manifest=visual_manifest,
             candidate_project_sha256=candidate.project_sha256(),
             generator=planner,
+            model=str(
+                resolve_judge_route(
+                    config["judge"],
+                    "question_generation",
+                )["model"]
+            ),
         )
         _evaluate_d43(contract, question_pack, planner)
     except (StopIteration, ValueError, KeyError):
@@ -620,10 +637,10 @@ def run_request_plan(
     summary = {
         "schema_version": 1,
         "protocol_version": 4,
-        "protocol": "optimized_qwen_single_pass_v2",
+        "protocol": config["judge"]["policy"],
         "status": "planned_not_scored",
         "game": game.slug,
-        "model": "qwen3.7-plus",
+        "model": candidate_model.model,
         "candidate_project_sha256": candidate.project_sha256(),
         "normalized_config_sha256": normalized_policy_sha256(config),
         "official_total_present": False,
@@ -665,7 +682,7 @@ def run_request_plan(
     plan_state = {
         "schema_version": 1,
         "protocol_version": 4,
-        "protocol": "optimized_qwen_single_pass_v2",
+        "protocol": config["judge"]["policy"],
         "status": "planned_not_scored",
         "game": game.slug,
         "run_id": run_id or root.name,

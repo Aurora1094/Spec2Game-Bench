@@ -1,4 +1,4 @@
-"""Sequential single-Qwen benchmark runner with immutable generation artifacts."""
+"""Sequential benchmark runner with immutable generation artifacts."""
 
 from __future__ import annotations
 
@@ -30,6 +30,7 @@ from code2play.config.project import (
 )
 from code2play.providers.dashscope import (
     GenerationNeedsRegeneration,
+    candidate_api_key_env,
     resolve_judge_route,
 )
 from code2play.execution.protocol_policy import (
@@ -482,8 +483,9 @@ def run_task(
     round_manifest = validate_round_manifest(
         _read_json(round_dir / "contracts" / "manifest.json"),
         round_dir=round_dir,
-        expected_slugs=[item.slug for item in games(config)],
     )
+    if game.slug not in round_manifest["games"]:
+        raise ValueError(f"D4 round contract manifest does not contain {game.slug}")
     if round_manifest.get("round_id") != round_id or round_manifest.get("manifest_sha256") != contract_manifest_sha256:
         raise ValueError("D4 round contract manifest hash drifted before candidate execution")
     task_policy_descriptor = _task_policy_descriptor(
@@ -774,13 +776,11 @@ def run_benchmark(
     if existing_batch_state is not None:
         validate_batch_state(existing_batch_state)
     required_api_keys = {
-        str(resolve_judge_route(config["judge"], role).get("api_key_env") or (
-            "DASHSCOPE_API_KEY"
-            if resolve_judge_route(config["judge"], role).get("provider") == "alibaba_dashscope"
-            else "OPENROUTER_API_KEY"
-        ))
+        str(resolve_judge_route(config["judge"], role).get("api_key_env") or "")
         for role in config["judge"]["routes"]
     }
+    required_api_keys.update(candidate_api_key_env(model) for model in models(config))
+    required_api_keys.discard("")
     missing_api_keys = sorted(name for name in required_api_keys if not os.getenv(name))
     if missing_api_keys:
         raise ValueError("Missing judge API key environment variable(s): " + ", ".join(missing_api_keys))
@@ -788,7 +788,7 @@ def run_benchmark(
     round_dir = workspace_round_dir(workspace_root, active_round_id)
     round_manifest = build_round_contracts(
         round_dir,
-        configured_games,
+        selected_games,
         config=config,
         round_id=active_round_id,
     )

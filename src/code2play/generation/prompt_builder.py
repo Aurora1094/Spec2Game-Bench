@@ -46,7 +46,11 @@ MODEL_VISIBLE_DIMENSION_PATTERN = re.compile(
     r"(?<![A-Za-z0-9_])D[1-4](?:[._][1-9][0-9]*)?(?![A-Za-z0-9_])",
     re.IGNORECASE,
 )
-SPEC_SECTION_PATTERN = re.compile(r"(?m)^#\s+([1-7])(?:\.\s*|\s+)")
+# Section 8 is a legacy/empty checkpoint placeholder in the source specs.  It
+# must be recognized as its own section so it cannot be absorbed into section
+# 7 and accidentally copied into model-facing prompts.
+SPEC_SECTION_PATTERN = re.compile(r"(?m)^#\s+([1-8])(?:\.\s*|\s+)")
+SPEC_HEADING_NUMBER_PATTERN = re.compile(r"(?m)^(#{1,6})\s+\d+(?:\.\d+)*\.?\s+")
 STAGE_SPEC_SECTIONS = {
     "state": (1, 3, 6),
     "game": (1, 3, 4, 5, 6, 7),
@@ -96,8 +100,10 @@ def get_spec_path(game_slug: str) -> Path:
 def split_public_spec_sections(spec_body: str) -> dict[int, str]:
     matches = list(SPEC_SECTION_PATTERN.finditer(spec_body))
     numbers = [int(match.group(1)) for match in matches]
-    if numbers != list(range(1, 8)):
-        raise PromptBuildError(f"public game specification must contain ordered sections 1-7, got {numbers}")
+    if numbers not in (list(range(1, 8)), list(range(1, 9))):
+        raise PromptBuildError(
+            f"public game specification must contain ordered sections 1-7 (with optional 8), got {numbers}"
+        )
     result: dict[int, str] = {}
     for index, match in enumerate(matches):
         end = matches[index + 1].start() if index + 1 < len(matches) else len(spec_body)
@@ -487,7 +493,12 @@ def _group_rendered_requirements(rows: list[dict[str, Any]]) -> dict[str, str]:
 
 
 def _join_sections(sections: Mapping[int, str], numbers: tuple[int, ...]) -> str:
-    return "\n\n".join(sections[number] for number in numbers).strip()
+    joined = "\n\n".join(sections[number] for number in numbers)
+    # The stage-specific section selection intentionally omits some source
+    # sections.  Remove source numbering from the retained headings so the
+    # resulting prompt does not suggest that sections were accidentally lost
+    # (for example, "1" followed by "3").
+    return SPEC_HEADING_NUMBER_PATTERN.sub(r"\1 ", joined).strip()
 
 
 def _render_behavior_requirement(row: Mapping[str, Any], ordinal: int) -> str:

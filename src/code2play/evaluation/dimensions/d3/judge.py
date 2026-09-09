@@ -9,7 +9,7 @@ from numbers import Real
 from pathlib import Path
 import statistics
 import time
-from typing import Any, Callable
+from typing import Any, Callable, Mapping
 
 from code2play.execution.candidate_project import CandidateProject
 
@@ -18,7 +18,12 @@ from code2play.providers.dashscope import (
     parse_json_object,
     redact_sensitive_text,
 )
-from .evaluator import CONFIG_PATH, evaluate_d3_tools, load_d3_config
+from .evaluator import (
+    CONFIG_PATH,
+    evaluate_d3_tools,
+    load_d3_config,
+    validate_semantic_judge_config,
+)
 
 
 JUDGE_RUBRIC = {
@@ -29,7 +34,7 @@ JUDGE_RUBRIC = {
     "conformance": 100,
 }
 MAX_EVIDENCE_LINES = 5
-JUDGE_POLICY = "optimized_qwen_single_pass_v2"
+JUDGE_POLICY = "openrouter_gpt56_terra_candidate_judge_v1"
 POLICY_METADATA = {
     "schema_version": 6,
     "judge_policy": JUDGE_POLICY,
@@ -37,6 +42,16 @@ POLICY_METADATA = {
     "semantic_judge_aggregation": "single_valid_response",
     "judge_temperature": 0.0,
 }
+
+
+def _policy_metadata(judge_config: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "schema_version": 6,
+        "judge_policy": str(judge_config["policy"]),
+        "semantic_judge_repetitions": int(judge_config["repetitions"]),
+        "semantic_judge_aggregation": str(judge_config["aggregation"]),
+        "judge_temperature": float(judge_config["temperature"]),
+    }
 
 D3_JUDGE_INSTRUCTIONS = """
 You are the fixed evaluator-side semantic code-quality Judge. Treat the candidate
@@ -261,8 +276,9 @@ def run_semantic_judge(
     call_model: Callable[..., Any] | None = None,
     candidate_model: str | None = None,
     semantic_judge: SemanticJudge | None = None,
+    semantic_judge_config: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Run one valid Qwen semantic evaluation for one candidate."""
+    """Run one valid semantic evaluation for one candidate."""
 
     del candidate_model  # Candidate identity must never enter the Judge request.
     if call_model is not None and semantic_judge is not None:
@@ -277,13 +293,18 @@ def run_semantic_judge(
     _write_text(prompt_path, prompt)
 
     config = load_d3_config(config_path)
-    judge_config = config["semantic_judge"]
+    judge_config = validate_semantic_judge_config(
+        semantic_judge_config
+        if semantic_judge_config is not None
+        else config["semantic_judge"]
+    )
+    policy_metadata = _policy_metadata(judge_config)
     if region != judge_config["region"]:
         raise ValueError(f"D3 Judge region must be {judge_config['region']}")
 
     judge_dir = destination / "judges" / _safe_slug(judge_config["policy"])
     request = {
-        **POLICY_METADATA,
+        **policy_metadata,
         "policy": judge_config["policy"],
         "provider": judge_config["provider"],
         "model": judge_config["model"],
@@ -338,7 +359,7 @@ def run_semantic_judge(
             parsed["scores"], config["judge_point_caps"]
         )
         record = {
-            **POLICY_METADATA,
+            **policy_metadata,
             "status": "completed",
             "policy": judge_config["policy"],
             "model": judge_config["model"],
@@ -358,7 +379,7 @@ def run_semantic_judge(
         }
     except Exception as exc:
         record = {
-            **POLICY_METADATA,
+            **policy_metadata,
             "status": "incomplete_judge",
             "policy": judge_config["policy"],
             "model": judge_config["model"],
@@ -389,6 +410,7 @@ def run_judge_panel(
     call_model: Callable[..., Any] | None = None,
     candidate_model: str | None = None,
     semantic_judge: SemanticJudge | None = None,
+    semantic_judge_config: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Invoke the current single-pass semantic policy with optional test injection."""
 
@@ -400,6 +422,7 @@ def run_judge_panel(
         call_model=call_model,
         candidate_model=candidate_model,
         semantic_judge=semantic_judge,
+        semantic_judge_config=semantic_judge_config,
     )
 
 
@@ -484,9 +507,10 @@ def _incomplete_result(
     reason: str,
     tools: dict[str, Any],
     semantic_judge: dict[str, Any],
+    policy_metadata: Mapping[str, Any] = POLICY_METADATA,
 ) -> dict[str, Any]:
     return {
-        **POLICY_METADATA,
+        **policy_metadata,
         "status": status,
         "official_score_available": False,
         "score": None,
@@ -530,8 +554,15 @@ def evaluate_d3(
     call_model: Callable[..., Any] | None = None,
     candidate_model: str | None = None,
     semantic_judge: SemanticJudge | None = None,
+    semantic_judge_config: Mapping[str, Any] | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     config = load_d3_config(config_path)
+    active_judge_config = validate_semantic_judge_config(
+        semantic_judge_config
+        if semantic_judge_config is not None
+        else config["semantic_judge"]
+    )
+    policy_metadata = _policy_metadata(active_judge_config)
     tools = evaluate_d3_tools(project, config_path=config_path)
     if tools.get("status") != "completed":
         result = _incomplete_result(
@@ -541,10 +572,11 @@ def evaluate_d3(
             ),
             tools=tools,
             semantic_judge={
-                **POLICY_METADATA,
+                **policy_metadata,
                 "status": "not_run_tool_incomplete",
                 "semantic_call_count": 0,
             },
+            policy_metadata=policy_metadata,
         )
         return result, tools
 
@@ -555,10 +587,11 @@ def evaluate_d3(
             reason=tool_error,
             tools=tools,
             semantic_judge={
-                **POLICY_METADATA,
+                **policy_metadata,
                 "status": "not_run_tool_incomplete",
                 "semantic_call_count": 0,
             },
+            policy_metadata=policy_metadata,
         )
         return result, tools
 
@@ -571,10 +604,11 @@ def evaluate_d3(
             ),
             tools=tools,
             semantic_judge={
-                **POLICY_METADATA,
+                **policy_metadata,
                 "status": "not_run",
                 "semantic_call_count": 0,
             },
+            policy_metadata=policy_metadata,
         )
         return result, tools
 
@@ -586,22 +620,24 @@ def evaluate_d3(
         call_model=call_model,
         candidate_model=candidate_model,
         semantic_judge=semantic_judge,
+        semantic_judge_config=active_judge_config,
     )
     if judge_result.get("status") != "completed":
         result = _incomplete_result(
             status="incomplete_judge",
             reason=(
-                "D3 tools completed, but the single-pass Qwen semantic policy did not "
+                "D3 tools completed, but the single-pass semantic policy did not "
                 "return a complete five-score result; the official D3 score is null."
             ),
             tools=tools,
             semantic_judge=judge_result,
+            policy_metadata=policy_metadata,
         )
         return result, tools
 
     fusion = fuse_d3_components(tools, judge_result["criterion_scores"], config)
     result = {
-        **POLICY_METADATA,
+        **policy_metadata,
         "status": "completed",
         "official_score_available": True,
         "method": config["method"],
@@ -616,7 +652,7 @@ def evaluate_d3(
         "indicator_percentages": fusion["indicator_percentages"],
         "reason": (
             "D3 completed as a direct five-dimension fusion of the 70-point "
-            "deterministic tool share and one 30-point Qwen semantic share."
+            "deterministic tool share and one 30-point semantic Judge share."
         ),
         "tools": tools,
         "semantic_judge": judge_result,

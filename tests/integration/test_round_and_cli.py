@@ -198,7 +198,7 @@ def test_benchmark_binds_every_task_to_one_locked_round(
         )
         return {"status": "completed", "official_total": 68.5}
 
-    monkeypatch.setenv("DASHSCOPE_API_KEY", "integration-test-key")
+    monkeypatch.setenv("OPENROUTER_API_KEY", "integration-test-key")
     monkeypatch.setattr(benchmark_module, "build_round_contracts", build_mock_round)
     monkeypatch.setattr(benchmark_module, "run_task", complete_task)
     state = benchmark_module.run_benchmark(
@@ -254,7 +254,7 @@ def test_benchmark_can_run_one_selected_game(
         observed.append(game.slug)  # type: ignore[union-attr]
         return {"status": "completed", "official_total": 68.5}
 
-    monkeypatch.setenv("DASHSCOPE_API_KEY", "integration-test-key")
+    monkeypatch.setenv("OPENROUTER_API_KEY", "integration-test-key")
     monkeypatch.setattr(benchmark_module, "build_round_contracts", build_mock_round)
     monkeypatch.setattr(benchmark_module, "run_task", complete_task)
     state = benchmark_module.run_benchmark(
@@ -268,6 +268,91 @@ def test_benchmark_can_run_one_selected_game(
     assert observed == ["snake"]
     assert [record["game"] for record in state["matrix"]] == ["snake"]
     assert state["policy_descriptor"]["selected_game_slugs"] == ["snake"]
+
+
+def test_selected_benchmark_reuses_a_full_round_manifest(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    workspace = tmp_path / "external benchmark workspace"
+    round_dir = _build_local_round(workspace / "rounds", "round-full")
+    manifest = json.loads(
+        (round_dir / "contracts" / "manifest.json").read_text(encoding="utf-8")
+    )
+    observed: list[str] = []
+
+    def complete_task(**kwargs: object) -> dict[str, object]:
+        game = kwargs["game"]
+        observed.append(game.slug)  # type: ignore[union-attr]
+        return {"status": "completed", "official_total": 68.5}
+
+    monkeypatch.setenv("OPENROUTER_API_KEY", "integration-test-key")
+    monkeypatch.setattr(benchmark_module, "run_task", complete_task)
+    state = benchmark_module.run_benchmark(
+        workspace=workspace,
+        run_id="snake-full-round-run-001",
+        round_id="round-full",
+        game_slug="snake",
+        progress=lambda _message: None,
+    )
+
+    assert observed == ["snake"]
+    assert state["contract_manifest_sha256"] == manifest["manifest_sha256"]
+    assert [record["game"] for record in state["matrix"]] == ["snake"]
+
+
+def test_selected_game_task_validates_locked_manifest_without_selected_scope(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = load_config()
+    game = game_by_slug(config, "snake")
+    model = models(config)[0]
+    round_dir = tmp_path / "rounds" / "round-snake"
+    build_round_contracts(
+        round_dir,
+        [game],
+        config=config,
+        generator=_mock_contract_generator(config),
+        round_id="round-snake",
+        timestamp="2026-08-28T00:00:00+00:00",
+    )
+    manifest = json.loads(
+        (round_dir / "contracts" / "manifest.json").read_text(encoding="utf-8")
+    )
+    observed: list[object | None] = []
+
+    def stop_after_validation(
+        value: object,
+        *,
+        round_dir: object,
+        expected_slugs: object | None = None,
+        **_kwargs: object,
+    ) -> dict[str, object]:
+        observed.append(expected_slugs)
+        raise RuntimeError("stop after manifest validation")
+
+    monkeypatch.setattr(
+        benchmark_module,
+        "validate_round_manifest",
+        stop_after_validation,
+    )
+    with pytest.raises(RuntimeError, match="stop after manifest validation"):
+        benchmark_module.run_task(
+            run_dir=tmp_path / "runs" / "run-snake",
+            game=game,
+            model=model,
+            repetition=1,
+            config=config,
+            round_id="round-snake",
+            round_dir=round_dir,
+            contract_manifest_sha256=str(manifest["manifest_sha256"]),
+            resume=True,
+            selected_game_slugs=["snake"],
+            progress=lambda _message: None,
+        )
+
+    assert observed == [None]
 
 
 def test_generation_gap_skips_generation_and_evaluation_until_explicit_resume(

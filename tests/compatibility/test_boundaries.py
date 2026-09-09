@@ -230,21 +230,50 @@ def test_current_batch_matrix_can_be_combined_without_score_regression(
     assert combined["matrix"][0]["final_score"] == 68.5
 
 
-def test_only_qwen_route_remains_and_openai_is_transport_only() -> None:
+def test_default_openrouter_terra_generation_and_dual_judge_routes() -> None:
     config = load_config()
     configured_models = models(config)
     assert len(configured_models) == 1
-    assert configured_models[0].provider == "alibaba_dashscope"
-    assert configured_models[0].model == "qwen3.7-plus"
+    assert configured_models[0].id == "gpt_5_6_terra"
+    assert configured_models[0].name == "GPT-5.6 Terra"
+    assert configured_models[0].provider == "openrouter"
+    assert configured_models[0].model == "openai/gpt-5.6-terra"
     assert configured_models[0].api_style == "chat_completions"
-    for route in config["judge"]["routes"].values():
+    assert configured_models[0].api_key_env == "OPENROUTER_API_KEY"
+    assert configured_models[0].base_url == "https://openrouter.ai/api/v1"
+    assert configured_models[0].reasoning == {"effort": "none"}
+    assert config["judge"]["policy"] == "openrouter_gpt56_terra_candidate_judge_v1"
+    assert config["judge"]["routing"]["roles"] == {
+        "text": "qwen_openrouter",
+        "vision": "gemini_openrouter",
+    }
+    text_roles = {
+        "action_compiler",
+        "functionality",
+        "specification_deviation",
+        "code_quality",
+        "contract_generation",
+    }
+    for role, route in config["judge"]["routes"].items():
+        expected_model = (
+            "qwen/qwen3.7-plus"
+            if role in text_roles
+            else "google/gemini-3.8-flash"
+        )
         assert route == {
-            "provider": "alibaba_dashscope",
-            "model": "qwen3.7-plus",
+            "provider": "openrouter",
+            "model": expected_model,
             "api_style": "chat_completions",
             "enable_thinking": False,
             "max_output_tokens": route["max_output_tokens"],
         }
+    for profile in config["judge"]["routing"]["profiles"].values():
+        assert profile["api_key_env"] == "OPENROUTER_API_KEY"
+        assert profile["response_format"] == {"type": "json_object"}
+    assert config["judge"]["routing"]["profiles"]["qwen_openrouter"]["reasoning"] == {
+        "effort": "none",
+    }
+    assert "reasoning" not in config["judge"]["routing"]["profiles"]["gemini_openrouter"]
     assert not hasattr(dashscope, "create_compiler_judge")
     assert not hasattr(dashscope, "create_scoring_judge")
 

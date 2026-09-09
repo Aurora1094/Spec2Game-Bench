@@ -27,7 +27,11 @@ from code2play.d4.questions import (
     QUESTION_REVIEW_POLICY,
     build_d43_question_pack_single_pass,
 )
-from code2play.providers.dashscope import JudgeAttemptsExhausted, JudgeRouter
+from code2play.providers.dashscope import (
+    JudgeAttemptsExhausted,
+    JudgeRouter,
+    resolve_judge_route,
+)
 from code2play.execution.protocol_sampling import sample_evaluation_protocol
 from code2play.config.project import GameConfig, load_config, normalized_policy_sha256
 from code2play.generation.prompt_builder import load_spec
@@ -211,6 +215,7 @@ def _d3_call(
     judge_config: dict[str, Any],
     judge: Any,
 ) -> dict[str, Any]:
+    route = resolve_judge_route(judge_config, "code_quality")
     kwargs: dict[str, Any] = {
         "project": project,
         "run_dir": evidence_dir,
@@ -218,6 +223,24 @@ def _d3_call(
         "config_path": DEFAULT_D3_CONFIG,
         "include_judges": True,
     }
+    if "semantic_judge_config" in inspect.signature(evaluate_d3).parameters:
+        semantic_judge_config = {
+            "policy": judge_config["policy"],
+            "region": region,
+            "stateless": True,
+            "max_output_tokens": int(route["max_output_tokens"]),
+            "temperature": 0.0,
+            "provider": route["provider"],
+            "model": route["model"],
+            "api": route.get("api_style", "chat_completions"),
+            "enable_thinking": bool(route.get("enable_thinking", False)),
+            "criterion_scale_max": 100,
+            "repetitions": 1,
+            "aggregation": "single_valid_response",
+        }
+        if "reasoning" in route:
+            semantic_judge_config["reasoning"] = route["reasoning"]
+        kwargs["semantic_judge_config"] = semantic_judge_config
     if "semantic_judge" in inspect.signature(evaluate_d3).parameters:
         kwargs["semantic_judge"] = judge
     result, tools = evaluate_d3(**kwargs)
@@ -280,7 +303,7 @@ def evaluate_candidate(
         d4_contract_path = Path(round_dir).resolve() / "contracts" / f"{game.slug}.json"
     evaluation_policy = {
         "judge": active_judge_config,
-        "judge_policy": "optimized_qwen_single_pass_v2",
+        "judge_policy": active_judge_config["policy"],
         "d1_gate_mode": "contribution_only",
         "protocol_version": 4,
         "runtime_protocol": active_runtime_protocol,
@@ -477,6 +500,12 @@ def evaluate_candidate(
                     sample_manifest=d4_sample_manifest,
                     candidate_project_sha256=project_hash,
                     generator=router.for_role("question_generation"),
+                    model=str(
+                        resolve_judge_route(
+                            config["judge"],
+                            "question_generation",
+                        )["model"]
+                    ),
                 )
 
             d4_question_pack = _run_stage(

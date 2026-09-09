@@ -8,8 +8,10 @@ smoke checks use deterministic data by default.
 from __future__ import annotations
 
 import argparse
+import base64
 from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
 import re
 import tempfile
@@ -26,6 +28,7 @@ from code2play.config.project import (
     games,
     load_catalog,
     load_config,
+    models,
     normalized_policy_sha256,
     require_locked_runtime_policy,
     resolve_workspace,
@@ -332,20 +335,65 @@ def cmd_preflight(args: argparse.Namespace) -> int:
     report["workspace"] = str(resolve_workspace(args.workspace))
     from code2play.providers.dashscope import JudgeRouter, resolve_judge_route
 
-    preflight_route = resolve_judge_route(config["judge"], "contract_generation")
-    api_key_env = str(preflight_route.get("api_key_env") or "DASHSCOPE_API_KEY")
-    report["api_key_configured"] = bool(__import__("os").environ.get(api_key_env))
+    roles = ("contract_generation", "artistic_visual")
+    routes = {
+        role: resolve_judge_route(config["judge"], role)
+        for role in roles
+    }
+    api_key_envs = sorted(
+        {
+            str(route.get("api_key_env") or "")
+            for route in routes.values()
+            if str(route.get("api_key_env") or "")
+        }
+    )
+    missing_api_key_envs = [name for name in api_key_envs if not os.environ.get(name)]
+    report["api_key_configured"] = not missing_api_key_envs
+    report["api_key_envs"] = api_key_envs
+    report["judge_routes"] = {
+        role: {
+            "provider": route["provider"],
+            "model": route["model"],
+            "api_style": route.get("api_style", "chat_completions"),
+        }
+        for role, route in routes.items()
+    }
     report["live_api_check"] = False
     if args.live:
-        judge = JudgeRouter(
+        if missing_api_key_envs:
+            raise ValueError(
+                "Missing Judge API key environment variable(s): "
+                + ", ".join(missing_api_key_envs)
+            )
+        router = JudgeRouter(
             config["judge"],
             resolve_workspace(args.workspace) / "preflight" / "model_calls",
-        ).for_role("contract_generation")
-        judge.json_text(
+        )
+        router.for_role("contract_generation").json_text(
             "Return one JSON object with an ok boolean.",
             '{"request": "Code2Play-Bench live connectivity check"}',
             "d4_contract_preflight",
         )
+        with tempfile.NamedTemporaryFile(
+            prefix="code2play-openrouter-vision-",
+            suffix=".png",
+            delete=False,
+        ) as handle:
+            probe_path = Path(handle.name)
+            handle.write(
+                base64.b64decode(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5sXcAAAAASUVORK5CYII="
+                )
+            )
+        try:
+            router.for_role("artistic_visual").json_vision(
+                "Return one JSON object with an ok boolean.",
+                '{"request": "Code2Play-Bench visual live connectivity check"}',
+                [(probe_path, "one-pixel preflight image")],
+                "d4_1_artistic_visual_quality",
+            )
+        finally:
+            probe_path.unlink(missing_ok=True)
         report["live_api_check"] = True
     _json(report)
     return 0 if report["status"] == "passed" else 1
@@ -422,12 +470,16 @@ def cmd_evaluate(args: argparse.Namespace) -> int:
 
     round_dir, manifest = _ensure_round(args, config)
     run_dir = workspace_run_dir(resolve_workspace(args.workspace), args.run_id)
-    task_dir = run_dir / "tasks" / f"{args.game}__qwen3_7_plus__r01"
+    configured_models = models(config)
+    if len(configured_models) != 1:
+        raise ValueError("manual evaluation requires exactly one configured candidate model")
+    candidate_model = configured_models[0]
+    task_dir = run_dir / "tasks" / f"{args.game}__{candidate_model.id}__r01"
     candidate = prepare_manual_project(args.candidate, task_dir)
     game = game_by_slug(config, args.game)
     result = evaluate_candidate(
         game=game,
-        model_id="qwen3_7_plus",
+        model_id=candidate_model.id,
         repetition=1,
         project=candidate,
         task_dir=task_dir,
@@ -449,10 +501,14 @@ def _static_plan(config: Mapping[str, Any], game_slugs: list[str]) -> dict[str, 
     routes = config["judge"]["routes"]
     from code2play.providers.dashscope import resolve_judge_route
 
+    configured_models = models(config)
+    if len(configured_models) != 1:
+        raise ValueError("the locked plan requires exactly one candidate model")
+    candidate_model = configured_models[0]
     return {
         "schema_version": 1,
         "status": "planned_not_sent",
-        "model": "qwen3.7-plus",
+        "model": candidate_model.model,
         "games": game_slugs,
         "generation": {
             "stage_order": ["state", "game", "rendering", "main"],
@@ -473,7 +529,7 @@ def _static_plan(config: Mapping[str, Any], game_slugs: list[str]) -> dict[str, 
         },
         "notes": [
             "This logical plan sends no request and computes no score.",
-            "A live plan with --candidate also samples the candidate and requires DASHSCOPE_API_KEY.",
+            "A live plan with --candidate also samples the candidate and requires the configured provider key.",
         ],
     }
 
@@ -578,9 +634,9 @@ def build_parser() -> argparse.ArgumentParser:
     _runtime_options(validate)
     validate.set_defaults(handler=cmd_validate)
 
-    preflight = commands.add_parser("preflight", help="run local checks; --live performs one paid Qwen check")
+    preflight = commands.add_parser("preflight", help="run local checks; --live performs one paid Judge check")
     _runtime_options(preflight)
-    preflight.add_argument("--live", action="store_true", help="perform an explicit live DashScope request")
+    preflight.add_argument("--live", action="store_true", help="perform an explicit live Judge request")
     preflight.set_defaults(handler=cmd_preflight)
 
     contract = commands.add_parser("contract", help="round-scoped D4 contract commands")

@@ -37,6 +37,9 @@ class ModelConfig:
     provider: str
     model: str
     api_style: str = "chat_completions"
+    api_key_env: str | None = None
+    base_url: str | None = None
+    reasoning: dict[str, Any] | None = None
 
 
 def load_catalog(path: str | Path | None = None) -> dict[str, Any]:
@@ -99,8 +102,254 @@ def workspace_run_dir(workspace: str | Path, run_id: str) -> Path:
     return Path(workspace).expanduser().resolve() / "runs" / run_id
 
 
+_QWEN_JUDGE_PROFILE = {
+    "provider": "alibaba_dashscope",
+    "model": "qwen3.7-plus",
+    "api_style": "chat_completions",
+    "api_key_env": "DASHSCOPE_API_KEY",
+    "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    "response_format": {"type": "json_object"},
+}
+_OPENROUTER_QWEN_JUDGE_PROFILE_V1 = {
+    "provider": "openrouter",
+    "model": "qwen/qwen3.7-plus",
+    "api_style": "chat_completions",
+    "api_key_env": "OPENROUTER_API_KEY",
+    "base_url": "https://openrouter.ai/api/v1",
+    "response_format": {"type": "json_object"},
+    "reasoning": {"effort": "minimal", "exclude": True},
+}
+_OPENROUTER_QWEN_JUDGE_PROFILE = {
+    "provider": "openrouter",
+    "model": "qwen/qwen3.7-plus",
+    "api_style": "chat_completions",
+    "api_key_env": "OPENROUTER_API_KEY",
+    "base_url": "https://openrouter.ai/api/v1",
+    "response_format": {"type": "json_object"},
+    "reasoning": {"effort": "none"},
+}
+_GEMINI_OPENROUTER_JUDGE_PROFILE = {
+    "provider": "openrouter",
+    "model": "google/gemini-3.8-flash",
+    "api_style": "chat_completions",
+    "api_key_env": "OPENROUTER_API_KEY",
+    "base_url": "https://openrouter.ai/api/v1",
+    "response_format": {"type": "json_object"},
+}
+_LINK_SOL_JUDGE_PROFILE = {
+    "provider": "link_openai",
+    "model": "gpt-5.6-sol",
+    "api_style": "chat_completions",
+    "api_key_env": "LINK_API_KEY",
+    "base_url": "https://ai.klinkw.com/v1",
+    "response_format": {"type": "json_object"},
+}
+_LOCKED_JUDGE_PROFILES = (
+    _QWEN_JUDGE_PROFILE,
+    _OPENROUTER_QWEN_JUDGE_PROFILE,
+    _GEMINI_OPENROUTER_JUDGE_PROFILE,
+    _LINK_SOL_JUDGE_PROFILE,
+)
+
+
+def _matches_mapping(value: Any, expected: Mapping[str, Any]) -> bool:
+    return isinstance(value, Mapping) and all(value.get(key) == item for key, item in expected.items())
+
+
+def _provider_identity(profile: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        key: profile[key]
+        for key in ("provider", "model", "api_style")
+    }
+
+
+def _locked_execution_bundle(policy: str) -> dict[str, Any] | None:
+    if policy == "optimized_qwen_single_pass_v2":
+        return {
+            "judge_identity": _provider_identity(_QWEN_JUDGE_PROFILE),
+            "route_identities": {
+                "text": _provider_identity(_QWEN_JUDGE_PROFILE),
+                "vision": _provider_identity(_QWEN_JUDGE_PROFILE),
+            },
+            "required_profiles": {"text": "qwen", "vision": "qwen"},
+            "profile_specs": {"text": _QWEN_JUDGE_PROFILE, "vision": _QWEN_JUDGE_PROFILE},
+            "models": [
+                {
+                    "id": "qwen3_7_plus",
+                    "name": "Qwen3.7 Plus",
+                    "provider": "alibaba_dashscope",
+                    "model": "qwen3.7-plus",
+                    "api_style": "chat_completions",
+                }
+            ],
+        }
+    if policy == "openrouter_qwen_gemini_judge_v1":
+        return {
+            "judge_identity": _provider_identity(_OPENROUTER_QWEN_JUDGE_PROFILE_V1),
+            "route_identities": {
+                "text": _provider_identity(_OPENROUTER_QWEN_JUDGE_PROFILE_V1),
+                "vision": _provider_identity(_GEMINI_OPENROUTER_JUDGE_PROFILE),
+            },
+            "required_profiles": {
+                "text": "qwen_openrouter",
+                "vision": "gemini_openrouter",
+            },
+            "profile_specs": {
+                "text": _OPENROUTER_QWEN_JUDGE_PROFILE_V1,
+                "vision": _GEMINI_OPENROUTER_JUDGE_PROFILE,
+            },
+            "models": [
+                {
+                    "id": "qwen3_7_plus",
+                    "name": "Qwen3.7 Plus",
+                    "provider": "openrouter",
+                    "model": "qwen/qwen3.7-plus",
+                    "api_style": "chat_completions",
+                    "api_key_env": "OPENROUTER_API_KEY",
+                    "base_url": "https://openrouter.ai/api/v1",
+                }
+            ],
+        }
+    if policy == "openrouter_qwen_gemini_judge_v2":
+        return {
+            "judge_identity": _provider_identity(_OPENROUTER_QWEN_JUDGE_PROFILE),
+            "route_identities": {
+                "text": _provider_identity(_OPENROUTER_QWEN_JUDGE_PROFILE),
+                "vision": _provider_identity(_GEMINI_OPENROUTER_JUDGE_PROFILE),
+            },
+            "required_profiles": {
+                "text": "qwen_openrouter",
+                "vision": "gemini_openrouter",
+            },
+            "profile_specs": {
+                "text": _OPENROUTER_QWEN_JUDGE_PROFILE,
+                "vision": _GEMINI_OPENROUTER_JUDGE_PROFILE,
+            },
+            "models": [
+                {
+                    "id": "qwen3_7_plus",
+                    "name": "Qwen3.7 Plus",
+                    "provider": "openrouter",
+                    "model": "qwen/qwen3.7-plus",
+                    "api_style": "chat_completions",
+                    "api_key_env": "OPENROUTER_API_KEY",
+                    "base_url": "https://openrouter.ai/api/v1",
+                }
+            ],
+        }
+    if policy == "openrouter_kimi27_candidate_judge_v1":
+        return {
+            "judge_identity": _provider_identity(_OPENROUTER_QWEN_JUDGE_PROFILE_V1),
+            "route_identities": {
+                "text": _provider_identity(_OPENROUTER_QWEN_JUDGE_PROFILE_V1),
+                "vision": _provider_identity(_GEMINI_OPENROUTER_JUDGE_PROFILE),
+            },
+            "required_profiles": {
+                "text": "qwen_openrouter",
+                "vision": "gemini_openrouter",
+            },
+            "profile_specs": {
+                "text": _OPENROUTER_QWEN_JUDGE_PROFILE_V1,
+                "vision": _GEMINI_OPENROUTER_JUDGE_PROFILE,
+            },
+            "models": [
+                {
+                    "id": "kimi_k2_7_code",
+                    "name": "Kimi K2.7 Code",
+                    "provider": "openrouter",
+                    "model": "moonshotai/kimi-k2.7-code",
+                    "api_style": "chat_completions",
+                    "api_key_env": "OPENROUTER_API_KEY",
+                    "base_url": "https://openrouter.ai/api/v1",
+                    "reasoning": {"effort": "minimal", "exclude": True},
+                }
+            ],
+        }
+    if policy == "openrouter_kimi27_candidate_judge_v2":
+        return {
+            "judge_identity": _provider_identity(_OPENROUTER_QWEN_JUDGE_PROFILE),
+            "route_identities": {
+                "text": _provider_identity(_OPENROUTER_QWEN_JUDGE_PROFILE),
+                "vision": _provider_identity(_GEMINI_OPENROUTER_JUDGE_PROFILE),
+            },
+            "required_profiles": {
+                "text": "qwen_openrouter",
+                "vision": "gemini_openrouter",
+            },
+            "profile_specs": {
+                "text": _OPENROUTER_QWEN_JUDGE_PROFILE,
+                "vision": _GEMINI_OPENROUTER_JUDGE_PROFILE,
+            },
+            "models": [
+                {
+                    "id": "kimi_k2_7_code",
+                    "name": "Kimi K2.7 Code",
+                    "provider": "openrouter",
+                    "model": "moonshotai/kimi-k2.7-code",
+                    "api_style": "chat_completions",
+                    "api_key_env": "OPENROUTER_API_KEY",
+                    "base_url": "https://openrouter.ai/api/v1",
+                    "reasoning": {"effort": "minimal", "exclude": True},
+                }
+            ],
+        }
+    if policy == "openrouter_gpt56_terra_candidate_judge_v1":
+        return {
+            "judge_identity": _provider_identity(_OPENROUTER_QWEN_JUDGE_PROFILE),
+            "route_identities": {
+                "text": _provider_identity(_OPENROUTER_QWEN_JUDGE_PROFILE),
+                "vision": _provider_identity(_GEMINI_OPENROUTER_JUDGE_PROFILE),
+            },
+            "required_profiles": {
+                "text": "qwen_openrouter",
+                "vision": "gemini_openrouter",
+            },
+            "profile_specs": {
+                "text": _OPENROUTER_QWEN_JUDGE_PROFILE,
+                "vision": _GEMINI_OPENROUTER_JUDGE_PROFILE,
+            },
+            "models": [
+                {
+                    "id": "gpt_5_6_terra",
+                    "name": "GPT-5.6 Terra",
+                    "provider": "openrouter",
+                    "model": "openai/gpt-5.6-terra",
+                    "api_style": "chat_completions",
+                    "api_key_env": "OPENROUTER_API_KEY",
+                    "base_url": "https://openrouter.ai/api/v1",
+                    "reasoning": {"effort": "none"},
+                }
+            ],
+        }
+    if policy == "link_sol_single_pass_v1":
+        return {
+            "judge_identity": _provider_identity(_LINK_SOL_JUDGE_PROFILE),
+            "route_identities": {
+                "text": _provider_identity(_LINK_SOL_JUDGE_PROFILE),
+                "vision": _provider_identity(_LINK_SOL_JUDGE_PROFILE),
+            },
+            "required_profiles": {"text": "link_sol", "vision": "link_sol"},
+            "profile_specs": {
+                "text": _LINK_SOL_JUDGE_PROFILE,
+                "vision": _LINK_SOL_JUDGE_PROFILE,
+            },
+            "models": [
+                {
+                    "id": "gpt_5_6_sol",
+                    "name": "GPT-5.6 Sol",
+                    "provider": "link_openai",
+                    "model": "gpt-5.6-sol",
+                    "api_style": "chat_completions",
+                    "api_key_env": "LINK_API_KEY",
+                    "base_url": "https://ai.klinkw.com/v1",
+                }
+            ],
+        }
+    return None
+
+
 def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
-    """Validate the immutable benchmark semantics and Qwen-only route."""
+    """Validate immutable evaluation semantics and one approved provider bundle."""
 
     errors: list[str] = []
     expected_generation = {
@@ -126,8 +375,17 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
     if not isinstance(judge, Mapping):
         errors.append("judge configuration must be a mapping")
     else:
-        if judge.get("policy") != "optimized_qwen_single_pass_v2":
-            errors.append("judge policy must be optimized_qwen_single_pass_v2")
+        bundle = _locked_execution_bundle(str(judge.get("policy") or ""))
+        if bundle is None:
+            errors.append(
+                "judge policy must be optimized_qwen_single_pass_v2, "
+                "openrouter_qwen_gemini_judge_v1/v2, "
+                "openrouter_kimi27_candidate_judge_v1/v2, "
+                "openrouter_gpt56_terra_candidate_judge_v1, or link_sol_single_pass_v1"
+            )
+        else:
+            if not _matches_mapping(judge, bundle["judge_identity"]):
+                errors.append("judge provider, model, or API style differs from the selected policy")
         if judge.get("attempts") != 2 or judge.get("retry_delays_seconds") != [2]:
             errors.append("judge retry policy must be two attempts with one 2-second delay")
         if judge.get("scoring_repetitions") != 1:
@@ -136,6 +394,10 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
             errors.append("judge aggregation must be single_valid_response")
         if judge.get("temperature") != 0.0 or judge.get("stateless") is not True:
             errors.append("judge requests must be stateless at temperature zero")
+        if judge.get("enable_thinking") is not False:
+            errors.append("judge thinking mode must be disabled")
+        if judge.get("compiler") != {"max_checkpoints_per_batch": 8}:
+            errors.append("action compiler batch size must remain eight checkpoints")
         if judge.get("visual") != {
             "max_transitions_per_batch": 4,
             "max_images_per_batch": 12,
@@ -159,28 +421,20 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
             profiles = routing.get("profiles", {})
             roles = routing.get("roles", {})
             role_modalities = routing.get("role_modalities", {})
-            qwen = profiles.get("qwen") if isinstance(profiles, Mapping) else None
-            if not isinstance(qwen, Mapping) or any(
-                qwen.get(key) != value
-                for key, value in {
-                    "provider": "alibaba_dashscope",
-                    "model": "qwen3.7-plus",
-                    "api_style": "chat_completions",
-                    "api_key_env": "DASHSCOPE_API_KEY",
-                    "response_format": {"type": "json_object"},
-                }.items()
-            ):
-                errors.append("judge routing must define the qwen profile")
             if not isinstance(roles, Mapping) or not roles.get("text") or not roles.get("vision"):
                 errors.append("active text and vision judge profiles must be configured")
-            elif not isinstance(profiles, Mapping) or any(
-                not isinstance(profiles.get(roles.get(modality)), Mapping)
-                or profiles[roles.get(modality)].get("provider") not in {"alibaba_dashscope", "openrouter"}
-                or not profiles[roles.get(modality)].get("model")
-                or profiles[roles.get(modality)].get("response_format") != {"type": "json_object"}
-                for modality in ("text", "vision")
-            ):
-                errors.append("active judge profiles must use a supported provider, model, and JSON mode")
+            elif bundle is not None and dict(roles) != bundle["required_profiles"]:
+                errors.append("judge role profiles differ from the selected policy")
+            elif not isinstance(profiles, Mapping):
+                errors.append("judge routing profiles must be a mapping")
+            elif bundle is not None:
+                for modality in ("text", "vision"):
+                    profile_name = bundle["required_profiles"][modality]
+                    expected_profile = bundle["profile_specs"][modality]
+                    if not _matches_mapping(profiles.get(profile_name), expected_profile):
+                        errors.append(
+                            f"judge routing must define the {profile_name} {modality} profile"
+                        )
             if not isinstance(role_modalities, Mapping) or any(
                 role_modalities.get(role) != modality
                 for role, modality in expected_modalities.items()
@@ -200,28 +454,19 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
         }
         for role, output_limit in expected_limits.items():
             route = routes.get(role) if isinstance(routes, Mapping) else None
-            if not isinstance(route, Mapping) or any(
-                route.get(key) != value
-                for key, value in {
-                    "provider": "alibaba_dashscope",
-                    "model": "qwen3.7-plus",
-                    "api_style": "chat_completions",
-                    "enable_thinking": False,
-                    "max_output_tokens": output_limit,
-                }.items()
-            ):
-                errors.append(f"judge route {role} differs from the Qwen single-pass policy")
-    expected_models = [
-        {
-            "id": "qwen3_7_plus",
-            "name": "Qwen3.7 Plus",
-            "provider": "alibaba_dashscope",
-            "model": "qwen3.7-plus",
-            "api_style": "chat_completions",
-        }
-    ]
-    if config.get("models") != expected_models:
-        errors.append("candidate model matrix must contain only qwen3.7-plus")
+            modality = expected_modalities[role]
+            expected_route = {
+                **(bundle["route_identities"][modality] if bundle is not None else {}),
+                "enable_thinking": False,
+                "max_output_tokens": output_limit,
+            }
+            if not _matches_mapping(route, expected_route):
+                errors.append(f"judge route {role} differs from the selected single-pass policy")
+    bundle_for_models = _locked_execution_bundle(
+        str(judge.get("policy") or "") if isinstance(judge, Mapping) else ""
+    )
+    if bundle_for_models is None or config.get("models") != bundle_for_models["models"]:
+        errors.append("candidate model matrix differs from the selected policy")
     evaluation = config.get("evaluation", {})
     if evaluation.get("d1_gate_mode") != "contribution_only":
         errors.append("D1 gate must control contributions only, not D2-D4 measurement")

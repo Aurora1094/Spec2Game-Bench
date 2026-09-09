@@ -145,6 +145,40 @@ def test_legacy_contract_fields_are_normalized_to_the_locked_schema() -> None:
     assert normalized["d4_3"]["source_checkpoint_ids"] == [eligible[0]["id"], eligible[1]["id"]]
 
 
+def test_contract_generation_rejects_verbose_art_direction_before_persisting() -> None:
+    config = load_config()
+    game = next(item for item in games(config) if item.slug == "snake")
+    from code2play.generation.prompt_builder import load_evaluator_checkpoints, load_spec
+
+    checkpoints = load_evaluator_checkpoints(load_spec(game.spec))
+    eligible = eligible_d43_checkpoints(checkpoints)
+    base = {
+        "target": "Collect food and survive as long as possible.",
+        "allowed_operations": ["Press W to move up.", "Press A to move left."],
+        "d4_3_source_checkpoint_ids": [eligible[0]["id"], eligible[1]["id"]],
+    }
+
+    with pytest.raises(ValueError, match="1 through 6"):
+        _normalize_generated_body(
+            {
+                **base,
+                "art_direction": [f"Readable visual requirement {index}." for index in range(7)],
+            },
+            game_slug="snake",
+            eligible_ids={row["id"] for row in eligible},
+        )
+
+    with pytest.raises(ValueError, match="at most 180 characters"):
+        _normalize_generated_body(
+            {
+                **base,
+                "art_direction": ["x" * 181],
+            },
+            game_slug="snake",
+            eligible_ids={row["id"] for row in eligible},
+        )
+
+
 def test_contract_requires_two_distinct_gameplay_operations() -> None:
     config = load_config()
     game = next(item for item in games(config) if item.slug == "snake")

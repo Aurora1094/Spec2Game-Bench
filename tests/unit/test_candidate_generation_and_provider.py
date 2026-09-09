@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
-from copy import deepcopy
 import json
 from pathlib import Path
 from types import SimpleNamespace
@@ -9,7 +8,13 @@ from types import SimpleNamespace
 import pytest
 
 import code2play.providers.dashscope as dashscope
-from code2play.config.project import ModelConfig, game_by_slug, load_config
+from code2play.config.project import (
+    ModelConfig,
+    game_by_slug,
+    load_config,
+    models,
+    require_locked_runtime_policy,
+)
 from code2play.generation.staged import generate_candidate_project
 from code2play.providers.dashscope import (
     DashScopeChatJudge,
@@ -17,9 +22,22 @@ from code2play.providers.dashscope import (
     GenerationResult,
     JudgeAttemptsExhausted,
     JudgeRouter,
+    LINK_OPENAI_MODEL,
+    LINK_OPENAI_PROVIDER,
+    LinkOpenAIChatJudge,
+    OPENROUTER_API_KEY_ENV,
+    OPENROUTER_BASE_URL,
+    OPENROUTER_GPT56_TERRA_MODEL,
+    OPENROUTER_GPT56_TERRA_REASONING,
+    OPENROUTER_KIMI_CODE_MODEL,
+    OPENROUTER_KIMI_REASONING,
+    OPENROUTER_PROVIDER,
+    OPENROUTER_QWEN_MODEL,
+    OPENROUTER_QWEN_JUDGE_REASONING,
     OpenRouterChatJudge,
     _model_aliases,
     _restore_aliases,
+    candidate_generation_settings,
     generate_stage_source,
     generation_output_issues,
 )
@@ -211,6 +229,37 @@ def test_generation_retries_one_truncated_response_then_accepts_complete_code(
         "length",
         "stop",
     ]
+
+
+def test_generation_retries_generic_api_error_when_relay_reports_overload(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[int] = []
+    sleeps: list[float] = []
+
+    class APIError(RuntimeError):
+        pass
+
+    def fake_generate_once(*_args, **_kwargs):
+        calls.append(1)
+        if len(calls) == 1:
+            raise APIError("Our servers are currently overloaded. Please try again later.")
+        return _generation_result(STATE, request_id="after-overload")
+
+    monkeypatch.setattr(dashscope, "_generate_once", fake_generate_once)
+    monkeypatch.setattr(dashscope.time, "sleep", lambda seconds: sleeps.append(seconds))
+
+    result = generate_stage_source(
+        _generation_model(),
+        "generate state.py",
+        stage="state",
+        max_output_tokens=3000,
+    )
+
+    assert len(calls) == 2
+    assert sleeps == [2.0]
+    assert result.code == STATE
+    assert result.attempts == 2
 
 
 def test_two_incomplete_generation_outputs_do_not_create_candidate_source(
@@ -446,7 +495,79 @@ def test_provider_stops_after_two_invalid_json_attempts(
     assert result["attempts_made"] == 2
 
 
-def test_judge_router_keeps_two_roles_on_qwen_then_switches_only_vision(tmp_path: Path) -> None:
+def test_provider_records_usage_when_a_judge_returns_no_text(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class Completions:
+        def __init__(self) -> None:
+            self.calls = 0
+
+        def create(self, **_kwargs: object) -> dict[str, object]:
+            self.calls += 1
+            return {
+                "choices": [
+                    {
+                        "finish_reason": "length",
+                        "message": {"content": None},
+                    }
+                ],
+                "usage": {
+                    "prompt_tokens": 2,
+                    "completion_tokens": 64,
+                    "completion_tokens_details": {"reasoning_tokens": 60},
+                },
+            }
+
+    completions = Completions()
+    client = SimpleNamespace(chat=SimpleNamespace(completions=completions))
+    sleeps: list[float] = []
+    monkeypatch.setattr(dashscope.time, "sleep", lambda seconds: sleeps.append(seconds))
+    judge = DashScopeChatJudge(
+        tmp_path,
+        model="qwen3.7-plus",
+        role="smoke",
+        max_output_tokens=64,
+        client=client,
+    )
+
+    with pytest.raises(JudgeAttemptsExhausted):
+        judge.json_text("Return JSON.", "{}", "no_text_test")
+
+    assert completions.calls == 2
+    assert sleeps == [2.0]
+    call_dir = next(tmp_path.rglob("request_result.json")).parent
+    result = json.loads((call_dir / "request_result.json").read_text(encoding="utf-8"))
+    assert result["status"] == "attempts_exhausted"
+    assert result["finish_reason"] == "length"
+    assert result["attempts"] == [
+        {
+            "attempt": 1,
+            "usage": {
+                "prompt_tokens": 2,
+                "completion_tokens": 64,
+                "completion_tokens_details": {"reasoning_tokens": 60},
+            },
+            "finish_reason": "length",
+        },
+        {
+            "attempt": 2,
+            "usage": {
+                "prompt_tokens": 2,
+                "completion_tokens": 64,
+                "completion_tokens_details": {"reasoning_tokens": 60},
+            },
+            "finish_reason": "length",
+        },
+    ]
+    for attempt in (1, 2):
+        assert (call_dir / f"raw_response_attempt_{attempt:03d}.json").is_file()
+        assert (call_dir / f"raw_output_attempt_{attempt:03d}.txt").read_text(
+            encoding="utf-8"
+        ) == ""
+
+
+def test_default_judge_router_splits_all_text_and_vision_roles(tmp_path: Path) -> None:
     config = load_config()
     calls: list[dict[str, object]] = []
 
@@ -454,31 +575,150 @@ def test_judge_router_keeps_two_roles_on_qwen_then_switches_only_vision(tmp_path
         calls.append(kwargs)
         return object()
 
-    router = JudgeRouter(config["judge"], tmp_path / "qwen", client_factory=factory)
-    router.for_role("functionality")
-    router.for_role("dynamic_visual")
-    assert [(call["provider"], call["model"]) for call in calls] == [
-        ("alibaba_dashscope", "qwen3.7-plus"),
-        ("alibaba_dashscope", "qwen3.7-plus"),
-    ]
-    assert all(call["response_format"] == {"type": "json_object"} for call in calls)
+    router = JudgeRouter(config["judge"], tmp_path / "openrouter", client_factory=factory)
+    for role in config["judge"]["routes"]:
+        router.for_role(role)
 
-    mixed_judge = deepcopy(config["judge"])
-    mixed_judge["routing"]["roles"]["vision"] = "gemini_openrouter"
-    mixed_calls: list[dict[str, object]] = []
+    text_roles = {
+        "action_compiler",
+        "functionality",
+        "specification_deviation",
+        "code_quality",
+        "contract_generation",
+    }
+    assert len(calls) == len(config["judge"]["routes"])
+    for role, call in zip(config["judge"]["routes"], calls, strict=True):
+        assert call["provider"] == OPENROUTER_PROVIDER
+        assert call["model"] == (
+            OPENROUTER_QWEN_MODEL
+            if role in text_roles
+            else "google/gemini-3.8-flash"
+        )
+        assert call["api_key_env"] == OPENROUTER_API_KEY_ENV
+        assert call["base_url"] == OPENROUTER_BASE_URL
+        assert call["enable_thinking"] is False
+        assert call["response_format"] == {"type": "json_object"}
+        assert call["reasoning"] == (
+            OPENROUTER_QWEN_JUDGE_REASONING if role in text_roles else None
+        )
 
-    def mixed_factory(_log_dir: Path, **kwargs: object) -> object:
-        mixed_calls.append(kwargs)
-        return object()
 
-    mixed_router = JudgeRouter(mixed_judge, tmp_path / "mixed", client_factory=mixed_factory)
-    mixed_router.for_role("functionality")
-    mixed_router.for_role("dynamic_visual")
-    assert [(call["provider"], call["model"]) for call in mixed_calls] == [
-        ("alibaba_dashscope", "qwen3.7-plus"),
-        ("openrouter", "google/gemini-3.8-flash"),
-    ]
-    assert all(call["response_format"] == {"type": "json_object"} for call in mixed_calls)
+def test_default_openrouter_terra_candidate_generation_disables_reasoning(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = load_config()
+    model = models(config)[0]
+    settings = candidate_generation_settings(model)
+    assert settings == {
+        "provider": OPENROUTER_PROVIDER,
+        "model": OPENROUTER_GPT56_TERRA_MODEL,
+        "api_style": "chat_completions",
+        "api_key_env": OPENROUTER_API_KEY_ENV,
+        "base_url": OPENROUTER_BASE_URL,
+        "enable_thinking": False,
+        "reasoning": OPENROUTER_GPT56_TERRA_REASONING,
+    }
+
+    requests: list[dict[str, object]] = []
+
+    class Completions:
+        def create(self, **kwargs: object) -> list[dict[str, object]]:
+            requests.append(kwargs)
+            return [
+                {
+                    "id": "openrouter-generation",
+                    "model": OPENROUTER_GPT56_TERRA_MODEL,
+                    "usage": {"prompt_tokens": 2, "completion_tokens": 3},
+                    "choices": [
+                        {
+                            "finish_reason": "stop",
+                            "delta": {"content": "```python\\npass\\n```"},
+                        }
+                    ],
+                }
+            ]
+
+    client = SimpleNamespace(chat=SimpleNamespace(completions=Completions()))
+    monkeypatch.setattr(
+        dashscope,
+        "_chat_client",
+        lambda _model: (client, "test-key", settings),
+    )
+
+    result = dashscope._generate_once(
+        model,
+        "Generate code.",
+        max_output_tokens=3000,
+        temperature=0.2,
+    )
+
+    assert result.provider == OPENROUTER_PROVIDER
+    assert result.requested_model == OPENROUTER_GPT56_TERRA_MODEL
+    assert requests[0]["model"] == OPENROUTER_GPT56_TERRA_MODEL
+    assert requests[0]["stream"] is True
+    assert requests[0]["extra_body"] == {"reasoning": OPENROUTER_GPT56_TERRA_REASONING}
+    assert result.request_parameters["reasoning"] == OPENROUTER_GPT56_TERRA_REASONING
+
+
+def test_legacy_openrouter_kimi_candidate_keeps_mandatory_reasoning() -> None:
+    model = ModelConfig(
+        id="kimi_k2_7_code",
+        name="Kimi K2.7 Code",
+        provider=OPENROUTER_PROVIDER,
+        model=OPENROUTER_KIMI_CODE_MODEL,
+        api_key_env=OPENROUTER_API_KEY_ENV,
+        base_url=OPENROUTER_BASE_URL,
+        reasoning=OPENROUTER_KIMI_REASONING,
+    )
+
+    assert candidate_generation_settings(model)["reasoning"] == OPENROUTER_KIMI_REASONING
+
+
+def test_legacy_openrouter_qwen_candidate_omits_provider_specific_body(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    model = ModelConfig(
+        id="qwen3_7_plus",
+        name="Qwen3.7 Plus",
+        provider=OPENROUTER_PROVIDER,
+        model=OPENROUTER_QWEN_MODEL,
+        api_key_env=OPENROUTER_API_KEY_ENV,
+        base_url=OPENROUTER_BASE_URL,
+    )
+    settings = candidate_generation_settings(model)
+    requests: list[dict[str, object]] = []
+
+    class Completions:
+        def create(self, **kwargs: object) -> list[dict[str, object]]:
+            requests.append(kwargs)
+            return [
+                {
+                    "id": "legacy-openrouter-generation",
+                    "model": OPENROUTER_QWEN_MODEL,
+                    "usage": {"prompt_tokens": 2, "completion_tokens": 3},
+                    "choices": [
+                        {
+                            "finish_reason": "stop",
+                            "delta": {"content": "```python\\npass\\n```"},
+                        }
+                    ],
+                }
+            ]
+
+    client = SimpleNamespace(chat=SimpleNamespace(completions=Completions()))
+    monkeypatch.setattr(
+        dashscope,
+        "_chat_client",
+        lambda _model: (client, "test-key", settings),
+    )
+    dashscope._generate_once(
+        model,
+        "Generate code.",
+        max_output_tokens=3000,
+        temperature=0.2,
+    )
+
+    assert "extra_body" not in requests[0]
 
 
 def test_openrouter_judge_uses_openai_compatible_request_without_dashscope_body(tmp_path: Path) -> None:
@@ -505,6 +745,96 @@ def test_openrouter_judge_uses_openai_compatible_request_without_dashscope_body(
     assert requests[0]["model"] == "google/gemini-3.8-flash"
     assert "extra_body" not in requests[0]
     assert requests[0]["response_format"] == {"type": "json_object"}
+
+
+def test_openrouter_qwen_judge_disables_reasoning(tmp_path: Path) -> None:
+    requests: list[dict[str, object]] = []
+
+    class Completions:
+        def create(self, **kwargs: object) -> SimpleNamespace:
+            requests.append(kwargs)
+            return SimpleNamespace(
+                choices=[SimpleNamespace(message=SimpleNamespace(content='{"ok": true}'))],
+                usage={"prompt_tokens": 2, "completion_tokens": 3},
+            )
+
+    client = SimpleNamespace(chat=SimpleNamespace(completions=Completions()))
+    judge = OpenRouterChatJudge(
+        tmp_path,
+        model=OPENROUTER_QWEN_MODEL,
+        role="contract_generation",
+        max_output_tokens=64,
+        response_format={"type": "json_object"},
+        reasoning=OPENROUTER_QWEN_JUDGE_REASONING,
+        client=client,
+    )
+
+    assert judge.json_text("Return JSON.", "{}", "d4_contract_generation_snake") == {"ok": True}
+    assert requests[0]["extra_body"] == {
+        "reasoning": OPENROUTER_QWEN_JUDGE_REASONING
+    }
+    request_log = json.loads(next(tmp_path.rglob("raw_input.json")).read_text(encoding="utf-8"))
+    assert request_log["reasoning"] == OPENROUTER_QWEN_JUDGE_REASONING
+
+
+def test_link_sol_profile_routes_candidate_generation_and_both_judge_modalities(
+    tmp_path: Path,
+) -> None:
+    config = load_config(
+        Path(__file__).resolve().parents[2] / "configs" / "examples" / "link_sol_main.yaml"
+    )
+    require_locked_runtime_policy(config)
+    model = models(config)[0]
+    assert candidate_generation_settings(model) == {
+        "provider": LINK_OPENAI_PROVIDER,
+        "model": LINK_OPENAI_MODEL,
+        "api_style": "chat_completions",
+        "api_key_env": "LINK_API_KEY",
+        "base_url": "https://ai.klinkw.com/v1",
+        "enable_thinking": False,
+    }
+
+    calls: list[dict[str, object]] = []
+
+    def factory(_log_dir: Path, **kwargs: object) -> object:
+        calls.append(kwargs)
+        return object()
+
+    router = JudgeRouter(config["judge"], tmp_path / "link", client_factory=factory)
+    router.for_role("functionality")
+    router.for_role("dynamic_visual")
+    assert [(call["provider"], call["model"]) for call in calls] == [
+        (LINK_OPENAI_PROVIDER, LINK_OPENAI_MODEL),
+        (LINK_OPENAI_PROVIDER, LINK_OPENAI_MODEL),
+    ]
+    assert all(call["response_format"] == {"type": "json_object"} for call in calls)
+
+
+def test_link_sol_judge_uses_openai_compatible_json_mode_without_dashscope_body(
+    tmp_path: Path,
+) -> None:
+    requests: list[dict[str, object]] = []
+
+    class Completions:
+        def create(self, **kwargs: object) -> SimpleNamespace:
+            requests.append(kwargs)
+            return SimpleNamespace(
+                choices=[SimpleNamespace(message=SimpleNamespace(content='{"ok": true}'))],
+                usage={"prompt_tokens": 2, "completion_tokens": 3},
+            )
+
+    client = SimpleNamespace(chat=SimpleNamespace(completions=Completions()))
+    judge = LinkOpenAIChatJudge(
+        tmp_path,
+        role="functionality",
+        max_output_tokens=64,
+        response_format={"type": "json_object"},
+        client=client,
+    )
+    assert judge.json_text("Return JSON.", "{}", "link_sol_test") == {"ok": True}
+    assert requests[0]["model"] == LINK_OPENAI_MODEL
+    assert requests[0]["response_format"] == {"type": "json_object"}
+    assert "extra_body" not in requests[0]
 
 
 def test_dashscope_judge_uses_json_mode_with_thinking_disabled(tmp_path: Path) -> None:

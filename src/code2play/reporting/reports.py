@@ -19,8 +19,8 @@ from code2play.execution.safe_artifacts import redact_text, sanitize
 
 
 REPORT_SCHEMA_VERSION = 2
-JUDGE_POLICY = "optimized_qwen_single_pass_v2"
-JUDGE_MODEL = "qwen3.7-plus via Alibaba DashScope"
+JUDGE_POLICY = "openrouter_gpt56_terra_candidate_judge_v1"
+JUDGE_MODEL = "qwen/qwen3.7-plus via OpenRouter"
 JUDGE_MODE = "single_valid_response"
 JUDGE_TEMPERATURE = 0.0
 CSV_FIELDS = (
@@ -817,6 +817,16 @@ def write_batch_reports(run_dir: Path | str, task_records: Sequence[Mapping[str,
     destination = Path(run_dir)
     destination.mkdir(parents=True, exist_ok=True)
     normalized = [_task_record(record, destination) for record in task_records]
+    batch_judge = (
+        _judge_provenance(normalized[0]["result"])
+        if normalized
+        else {
+            "policy": JUDGE_POLICY,
+            "model": JUDGE_MODEL,
+            "mode": JUDGE_MODE,
+            "temperature": JUDGE_TEMPERATURE,
+        }
+    )
     matrix_json = destination / "matrix.json"
     matrix_csv = destination / "matrix.csv"
     matrix_md = destination / "matrix.md"
@@ -834,10 +844,10 @@ def write_batch_reports(run_dir: Path | str, task_records: Sequence[Mapping[str,
     }
     payload = {
         "schema_version": REPORT_SCHEMA_VERSION,
-        "judge_policy": JUDGE_POLICY,
-        "judge_model": JUDGE_MODEL,
-        "judge_mode": JUDGE_MODE,
-        "judge_temperature": JUDGE_TEMPERATURE,
+        "judge_policy": batch_judge["policy"],
+        "judge_model": batch_judge["model"],
+        "judge_mode": batch_judge["mode"],
+        "judge_temperature": batch_judge["temperature"],
         "d4_contracts": contracts,
         "task_count": len(normalized),
         "completed_count": sum(1 for item in normalized if item["flat"].get("status") == "completed"),
@@ -856,10 +866,10 @@ def write_batch_reports(run_dir: Path | str, task_records: Sequence[Mapping[str,
     lines = [
         "# Code2Play-Bench matrix",
         "",
-        f"- Judge policy: {JUDGE_POLICY}",
-        f"- Judge model: {JUDGE_MODEL}",
-        f"- Judge mode: {JUDGE_MODE}",
-        f"- Judge temperature: {JUDGE_TEMPERATURE}",
+        f"- Judge policy: {batch_judge['policy']}",
+        f"- Judge model: {batch_judge['model']}",
+        f"- Judge mode: {batch_judge['mode']}",
+        f"- Judge temperature: {batch_judge['temperature']}",
         f"- Round-locked D4 contracts: {len(contracts)} game assets",
         "",
         "A dash means unavailable; all 15 current games use the contract locked for their round.",
@@ -904,13 +914,13 @@ def _add_statistics(
     row[f"{field}_max"] = round(max(values), 6) if values else None
 
 
-def _panel_records(value: Any) -> list[dict[str, Any]]:
+def _panel_records(value: Any, *, policy: str | None = None) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
 
     def visit(item: Any) -> None:
         if isinstance(item, Mapping):
             if (
-                item.get("policy") == JUDGE_POLICY
+                (policy is None or item.get("policy") == policy)
                 and isinstance(item.get("purpose"), str)
                 and isinstance(item.get("decision"), str)
             ):
@@ -1071,7 +1081,8 @@ def write_multi_run_reports(
         combined_rows.extend(run_rows)
         for row in run_rows:
             summary = _load_task_summary(run_dir, row)
-            for panel in _panel_records(summary):
+            summary_policy = str(_judge_provenance(summary)["policy"] or "")
+            for panel in _panel_records(summary, policy=summary_policy or None):
                 panel_records.append(
                     {
                         "run_id": run_dir.name,
@@ -1202,6 +1213,20 @@ def write_multi_run_reports(
             )
         )
 
+    active_policies = sorted(
+        {
+            str(row.get("judge_policy"))
+            for row in combined_rows
+            if isinstance(row.get("judge_policy"), str) and row["judge_policy"].strip()
+        }
+    )
+    combined_policy = (
+        active_policies[0]
+        if len(active_policies) == 1
+        else "mixed: " + ", ".join(active_policies)
+        if active_policies
+        else JUDGE_POLICY
+    )
     combined_json = destination / "combined_runs.json"
     combined_csv = destination / "combined_matrix.csv"
     aggregate_csv = destination / "aggregate.csv"
@@ -1213,7 +1238,8 @@ def write_multi_run_reports(
         combined_json,
         {
             "schema_version": 2,
-            "judge_policy": JUDGE_POLICY,
+            "judge_policy": combined_policy,
+            "judge_policies": active_policies,
             "run_count": len(run_summaries),
             "task_count": len(combined_rows),
             "runs": run_summaries,
@@ -1273,7 +1299,7 @@ def write_multi_run_reports(
     lines = [
         "# Code2Play-Bench multi-run aggregate",
         "",
-        f"- Judge policy: {JUDGE_POLICY}",
+        f"- Judge policy: {combined_policy}",
         f"- Independent runs: {len(run_summaries)}",
         f"- Matrix records: {len(combined_rows)}",
         "",
@@ -1304,7 +1330,7 @@ def write_multi_run_reports(
     summary_lines = [
         "# Code2Play-Bench multi-run summary",
         "",
-        f"- Judge policy: {JUDGE_POLICY}",
+        f"- Judge policy: {combined_policy}",
         f"- Independent runs: {len(run_summaries)}",
         f"- Completed matrix records: "
         f"{sum(row.get('status') == 'completed' for row in combined_rows)}"

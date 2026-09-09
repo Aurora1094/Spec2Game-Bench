@@ -25,7 +25,7 @@ from code2play.providers.dashscope import SemanticJudge
 
 
 QUESTION_PACK_SCHEMA_VERSION = 2
-QUESTION_PACK_DESIGN_VERSION = "d4_qwen37_dynamic_fixed_binding_target_aware_v3"
+QUESTION_PACK_DESIGN_VERSION = "d4_qwen37_dynamic_fixed_binding_target_aware_v4"
 QUESTION_REVIEW_POLICY = "single_qwen_generation_with_fixed_local_binding_target_aware_v5"
 EVIDENCE_SELECTION_POLICY = "deterministic_material_pair_declared_active_target_v3"
 MAX_D43_EVIDENCE_IMAGES = 12
@@ -460,22 +460,29 @@ def _base_pack(contract: Mapping[str, Any], sample_manifest: Mapping[str, Any], 
     }
 
 
-def build_d43_question_pack_single_pass(*, d4_contract: Mapping[str, Any], d2_checkpoints: Sequence[Mapping[str, Any]], sample_manifest: Mapping[str, Any], candidate_project_sha256: str, generator: SemanticJudge, model: str = CONTRACT_GENERATOR_MODEL) -> dict[str, Any]:
+def build_d43_question_pack_single_pass(*, d4_contract: Mapping[str, Any], d2_checkpoints: Sequence[Mapping[str, Any]], sample_manifest: Mapping[str, Any], candidate_project_sha256: str, generator: SemanticJudge, model: str | None = None) -> dict[str, Any]:
     if not re.fullmatch(r"[0-9a-f]{64}", candidate_project_sha256):
         raise ValueError("candidate_project_sha256 must be a SHA256")
-    if model != CONTRACT_GENERATOR_MODEL:
-        raise ValueError("D4.3 question generation must use qwen3.7-plus")
+    contract_generator = d4_contract.get("generator")
+    contract_model = (
+        contract_generator.get("model")
+        if isinstance(contract_generator, Mapping)
+        else None
+    )
+    generator_model = str(model or contract_model or CONTRACT_GENERATOR_MODEL)
+    if generator_model not in CONTRACT_VALIDATOR_MODELS:
+        raise ValueError("D4.3 question generation uses an unsupported Judge model")
     if not isinstance(d4_contract.get("allowed_operations"), list):
         raise ValueError("D4.3 question generation requires contract operations")
     pool = build_d43_evidence_pool(d4_contract, sample_manifest)
     base = _base_pack(d4_contract, sample_manifest, candidate_project_sha256, pool)
     if pool["status"] != "usable":
-        pack = {**base, "status": "candidate_evidence_unavailable", "questions": [], "provenance": {"runtime_question_policy": RUNTIME_QUESTION_POLICY, "question_review_policy": QUESTION_REVIEW_POLICY, "generation_status": "not_run_candidate_evidence_unavailable", "generator_model": model, "local_validation": True, "semantic_call_count": 0}, "candidate_failure_proven": False}
+        pack = {**base, "status": "candidate_evidence_unavailable", "questions": [], "provenance": {"runtime_question_policy": RUNTIME_QUESTION_POLICY, "question_review_policy": QUESTION_REVIEW_POLICY, "generation_status": "not_run_candidate_evidence_unavailable", "generator_model": generator_model, "local_validation": True, "semantic_call_count": 0}, "candidate_failure_proven": False}
         pack["question_pack_sha256"] = question_pack_sha256(pack)
         return pack
     selection = select_best_material_pair(pool)
     if selection is None:
-        pack = {**base, "status": "candidate_evidence_unavailable", "questions": [], "candidate_failure_proven": False, "provenance": {"runtime_question_policy": RUNTIME_QUESTION_POLICY, "question_review_policy": QUESTION_REVIEW_POLICY, "generation_status": "not_run_deterministic_pair_unavailable", "generator_model": model, "local_validation": True, "semantic_call_count": 0}}
+        pack = {**base, "status": "candidate_evidence_unavailable", "questions": [], "candidate_failure_proven": False, "provenance": {"runtime_question_policy": RUNTIME_QUESTION_POLICY, "question_review_policy": QUESTION_REVIEW_POLICY, "generation_status": "not_run_deterministic_pair_unavailable", "generator_model": generator_model, "local_validation": True, "semantic_call_count": 0}}
         pack["question_pack_sha256"] = question_pack_sha256(pack)
         return pack
     selected = selection["evidence"]
@@ -516,10 +523,10 @@ def build_d43_question_pack_single_pass(*, d4_contract: Mapping[str, Any], d2_ch
             d4_contract.get("operation_policy"),
         )
     except Exception as exc:
-        pack = {**base, "status": "judge_output_unavailable", "questions": [], "selected_evidence_binding": selection, "candidate_failure_proven": False, "judge_failure": {"failure_origin": "judge_or_transport", "candidate_failure_proven": False, "error_type": type(exc).__name__, "message": redact_text(str(exc)), "retryable_stage": "visual_question_generation"}, "provenance": {"runtime_question_policy": RUNTIME_QUESTION_POLICY, "question_review_policy": QUESTION_REVIEW_POLICY, "generation_status": "judge_output_unavailable", "generator_model": model, "local_validation": True, "semantic_call_count": 1, "technical_attempt_limit": 2}}
+        pack = {**base, "status": "judge_output_unavailable", "questions": [], "selected_evidence_binding": selection, "candidate_failure_proven": False, "judge_failure": {"failure_origin": "judge_or_transport", "candidate_failure_proven": False, "error_type": type(exc).__name__, "message": redact_text(str(exc)), "retryable_stage": "visual_question_generation"}, "provenance": {"runtime_question_policy": RUNTIME_QUESTION_POLICY, "question_review_policy": QUESTION_REVIEW_POLICY, "generation_status": "judge_output_unavailable", "generator_model": generator_model, "local_validation": True, "semantic_call_count": 1, "technical_attempt_limit": 2}}
         pack["question_pack_sha256"] = question_pack_sha256(pack)
         return pack
-    pack = {**base, "status": "completed", "questions": questions, "selected_evidence_binding": selection, "candidate_failure_proven": False, "provenance": {"runtime_question_policy": RUNTIME_QUESTION_POLICY, "question_review_policy": QUESTION_REVIEW_POLICY, "generation_status": "accepted_by_local_validation", "generator_model": model, "local_validation": True, "semantic_call_count": 1, "valid_result_count": 1, "technical_attempt_limit": 2, "model_selected_evidence": False, "input_image_count": 2}}
+    pack = {**base, "status": "completed", "questions": questions, "selected_evidence_binding": selection, "candidate_failure_proven": False, "provenance": {"runtime_question_policy": RUNTIME_QUESTION_POLICY, "question_review_policy": QUESTION_REVIEW_POLICY, "generation_status": "accepted_by_local_validation", "generator_model": generator_model, "local_validation": True, "semantic_call_count": 1, "valid_result_count": 1, "technical_attempt_limit": 2, "model_selected_evidence": False, "input_image_count": 2}}
     pack["question_pack_sha256"] = question_pack_sha256(pack)
     return pack
 
@@ -553,8 +560,8 @@ def validate_d43_question_pack(pack: Mapping[str, Any], *, d4_contract: Mapping[
         if pack.get("questions") != expected:
             raise ValueError("D4.3 questions are not canonical")
         provenance = pack.get("provenance")
-        if not isinstance(provenance, Mapping) or provenance.get("generator_model") != CONTRACT_GENERATOR_MODEL or provenance.get("generation_status") != "accepted_by_local_validation" or provenance.get("local_validation") is not True or provenance.get("semantic_call_count") != 1:
-            raise ValueError("D4.3 provenance is not the Qwen local-validation policy")
+        if not isinstance(provenance, Mapping) or provenance.get("generator_model") not in CONTRACT_VALIDATOR_MODELS or provenance.get("generation_status") != "accepted_by_local_validation" or provenance.get("local_validation") is not True or provenance.get("semantic_call_count") != 1:
+            raise ValueError("D4.3 provenance is not an approved local-validation policy")
     elif status == "judge_output_unavailable":
         if pool["status"] != "usable" or pack.get("questions") != [] or pack.get("candidate_failure_proven") is not False:
             raise ValueError("invalid judge-output-unavailable pack")
