@@ -57,7 +57,7 @@ STAGE_SPEC_SECTIONS = {
     "rendering": (1, 2, 7),
     "main": (4,),
 }
-DEFAULT_STAGE_BUDGETS = {"state": 3000, "game": 7000, "rendering": 4000, "main": 2000}
+DEFAULT_STAGE_BUDGETS = {"state": 4000, "game": 7000, "rendering": 5000, "main": 2000}
 FORBIDDEN_CANDIDATE_LITERALS = (
     "Checkpoint ID",
     "Detection Method",

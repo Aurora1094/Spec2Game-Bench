@@ -396,11 +396,11 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
         "retry_delays_seconds": [2],
         "stop_on_truncation": True,
         "semantic_retries": 0,
-        "total_max_output_tokens": 16000,
+        "total_max_output_tokens": 18000,
         "stages": [
-            {"id": "state", "target": "state.py", "max_output_tokens": 3000},
+            {"id": "state", "target": "state.py", "max_output_tokens": 4000},
             {"id": "game", "target": "game.py", "max_output_tokens": 7000},
-            {"id": "rendering", "target": "rendering.py", "max_output_tokens": 4000},
+            {"id": "rendering", "target": "rendering.py", "max_output_tokens": 5000},
             {"id": "main", "target": "main.py", "max_output_tokens": 2000},
         ],
     }

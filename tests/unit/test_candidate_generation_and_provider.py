@@ -186,7 +186,7 @@ def test_staged_generation_preserves_four_call_order_and_budgets(tmp_path: Path)
         generate=fake_generate,
         progress=lambda _message: None,
     )
-    assert calls == [(0, 3000), (1, 7000), (2, 4000), (3, 2000)]
+    assert calls == [(0, 4000), (1, 7000), (2, 5000), (3, 2000)]
     assert project.validate().valid
     assert project.project_sha256()
 
