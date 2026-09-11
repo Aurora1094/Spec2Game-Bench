@@ -27,7 +27,7 @@ def test_tracks_select_models_independently_of_judge_and_preserve_resume_identit
     full = select_run_config(original, track="full150")
     assert len(core["games"]) == 15 and len(full["games"]) == 150
     assert Counter(item["family_slug"] for item in full["games"]) == {item["slug"]: 10 for item in core["games"]}
-    second = {**original["models"][0], "id": "other_candidate", "model": "qwen/qwen3.7-plus", "reasoning": {"enabled": False}}
+    second = {**original["models"][0], "id": "other_candidate"}
     original["models"].append(second)
     with pytest.raises(ValueError, match="explicitly"):
         select_run_config(original)

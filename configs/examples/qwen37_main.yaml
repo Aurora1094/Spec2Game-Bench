@@ -26,7 +26,7 @@ generation:
       max_output_tokens: 2000
 
 judge:
-  policy: openrouter_qwen_vl_judge
+  policy: openrouter_gpt56_terra_candidate_judge_v1
   provider: openrouter
   model: qwen/qwen3.7-plus
   api_style: chat_completions
@@ -41,7 +41,7 @@ judge:
     strategy: role_profile_v1
     roles:
       text: qwen_openrouter
-      vision: qwen_vl_openrouter
+      vision: gemini_openrouter
     role_modalities:
       action_compiler: text
       functionality: text
@@ -66,14 +66,6 @@ judge:
       gemini_openrouter:
         provider: openrouter
         model: google/gemini-3.8-flash
-        api_style: chat_completions
-        api_key_env: OPENROUTER_API_KEY
-        base_url: https://openrouter.ai/api/v1
-        response_format:
-          type: json_object
-      qwen_vl_openrouter:
-        provider: openrouter
-        model: qwen/qwen3-vl-235b-a22b-instruct
         api_style: chat_completions
         api_key_env: OPENROUTER_API_KEY
         base_url: https://openrouter.ai/api/v1
@@ -111,25 +103,25 @@ judge:
       max_output_tokens: 1200
     artistic_visual:
       provider: openrouter
-      model: qwen/qwen3-vl-235b-a22b-instruct
+      model: google/gemini-3.8-flash
       api_style: chat_completions
       enable_thinking: false
       max_output_tokens: 800
     dynamic_visual:
       provider: openrouter
-      model: qwen/qwen3-vl-235b-a22b-instruct
+      model: google/gemini-3.8-flash
       api_style: chat_completions
       enable_thinking: false
       max_output_tokens: 2000
     question_generation:
       provider: openrouter
-      model: qwen/qwen3-vl-235b-a22b-instruct
+      model: google/gemini-3.8-flash
       api_style: chat_completions
       enable_thinking: false
       max_output_tokens: 1000
     question_answering:
       provider: openrouter
-      model: qwen/qwen3-vl-235b-a22b-instruct
+      model: google/gemini-3.8-flash
       api_style: chat_completions
       enable_thinking: false
       max_output_tokens: 500

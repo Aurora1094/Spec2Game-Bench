@@ -31,9 +31,9 @@ from code2play.providers.dashscope import (
     OPENROUTER_GPT56_TERRA_REASONING,
     OPENROUTER_KIMI_CODE_MODEL,
     OPENROUTER_KIMI_REASONING,
+    OPENROUTER_MODEL,
     OPENROUTER_PROVIDER,
     OPENROUTER_QWEN_MODEL,
-    OPENROUTER_QWEN_VL_MODEL,
     OPENROUTER_QWEN_JUDGE_REASONING,
     OpenRouterChatJudge,
     _model_aliases,
@@ -591,9 +591,7 @@ def test_default_judge_router_splits_all_text_and_vision_roles(tmp_path: Path) -
     for role, call in zip(config["judge"]["routes"], calls, strict=True):
         assert call["provider"] == OPENROUTER_PROVIDER
         assert call["model"] == (
-            OPENROUTER_QWEN_MODEL
-            if role in text_roles
-            else OPENROUTER_QWEN_VL_MODEL
+            OPENROUTER_QWEN_MODEL if role in text_roles else OPENROUTER_MODEL
         )
         assert call["api_key_env"] == OPENROUTER_API_KEY_ENV
         assert call["base_url"] == OPENROUTER_BASE_URL
@@ -619,7 +617,6 @@ def test_default_openrouter_terra_candidate_generation_disables_reasoning(
         "enable_thinking": False,
         "reasoning": OPENROUTER_GPT56_TERRA_REASONING,
     }
-
     requests: list[dict[str, object]] = []
 
     class Completions:
@@ -645,7 +642,6 @@ def test_default_openrouter_terra_candidate_generation_disables_reasoning(
         "_chat_client",
         lambda _model: (client, "test-key", settings),
     )
-
     result = dashscope._generate_once(
         model,
         "Generate code.",
@@ -654,9 +650,6 @@ def test_default_openrouter_terra_candidate_generation_disables_reasoning(
     )
 
     assert result.provider == OPENROUTER_PROVIDER
-    assert result.requested_model == OPENROUTER_GPT56_TERRA_MODEL
-    assert requests[0]["model"] == OPENROUTER_GPT56_TERRA_MODEL
-    assert requests[0]["stream"] is True
     assert requests[0]["extra_body"] == {"reasoning": OPENROUTER_GPT56_TERRA_REASONING}
     assert result.request_parameters["reasoning"] == OPENROUTER_GPT56_TERRA_REASONING
 

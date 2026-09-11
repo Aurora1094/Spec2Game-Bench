@@ -67,7 +67,7 @@ def test_live_preflight_checks_openrouter_text_and_vision_routes(
     payload = json.loads(capsys.readouterr().out)
     assert payload["api_key_envs"] == ["OPENROUTER_API_KEY"]
     assert payload["judge_routes"]["contract_generation"]["model"] == "qwen/qwen3.7-plus"
-    assert payload["judge_routes"]["artistic_visual"]["model"] == "qwen/qwen3-vl-235b-a22b-instruct"
+    assert payload["judge_routes"]["artistic_visual"]["model"] == "google/gemini-3.8-flash"
     assert payload["live_api_check"] is True
     assert calls == [
         ("contract_generation", "d4_contract_preflight"),

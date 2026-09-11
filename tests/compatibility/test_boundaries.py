@@ -76,7 +76,7 @@ def test_benchmark_entry_rejects_old_batch_state_before_api_access(
     (run_dir / "run_state.json").write_text(
         json.dumps({"schema_version": 2}), encoding="utf-8"
     )
-    monkeypatch.delenv("DASHSCOPE_API_KEY", raising=False)
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
     with pytest.raises(ValueError, match="schema_version"):
         run_benchmark(workspace=run_dir.parents[1], run_id="old-run", resume=True)
 
@@ -230,7 +230,7 @@ def test_current_batch_matrix_can_be_combined_without_score_regression(
     assert combined["matrix"][0]["final_score"] == 68.5
 
 
-def test_default_openrouter_terra_generation_and_qwenvl_judge_routes() -> None:
+def test_default_openrouter_terra_generation_and_judge_routes() -> None:
     config = load_config()
     configured_models = models(config)
     assert len(configured_models) == 1
@@ -242,23 +242,15 @@ def test_default_openrouter_terra_generation_and_qwenvl_judge_routes() -> None:
     assert configured_models[0].api_key_env == "OPENROUTER_API_KEY"
     assert configured_models[0].base_url == "https://openrouter.ai/api/v1"
     assert configured_models[0].reasoning == {"effort": "none"}
-    assert config["judge"]["policy"] == "openrouter_qwen_vl_judge"
+    assert config["judge"]["policy"] == "openrouter_gpt56_terra_candidate_judge_v1"
     assert config["judge"]["routing"]["roles"] == {
         "text": "qwen_openrouter",
-        "vision": "qwen_vl_openrouter",
-    }
-    text_roles = {
-        "action_compiler",
-        "functionality",
-        "specification_deviation",
-        "code_quality",
-        "contract_generation",
+        "vision": "gemini_openrouter",
     }
     for role, route in config["judge"]["routes"].items():
+        modality = config["judge"]["routing"]["role_modalities"][role]
         expected_model = (
-            "qwen/qwen3.7-plus"
-            if role in text_roles
-            else "qwen/qwen3-vl-235b-a22b-instruct"
+            "qwen/qwen3.7-plus" if modality == "text" else "google/gemini-3.8-flash"
         )
         assert route == {
             "provider": "openrouter",
@@ -273,7 +265,7 @@ def test_default_openrouter_terra_generation_and_qwenvl_judge_routes() -> None:
     assert config["judge"]["routing"]["profiles"]["qwen_openrouter"]["reasoning"] == {
         "effort": "none",
     }
-    assert "reasoning" not in config["judge"]["routing"]["profiles"]["qwen_vl_openrouter"]
+    assert "reasoning" not in config["judge"]["routing"]["profiles"]["gemini_openrouter"]
     assert not hasattr(dashscope, "create_compiler_judge")
     assert not hasattr(dashscope, "create_scoring_judge")
 
@@ -303,10 +295,13 @@ def test_old_cli_and_repository_runtime_boundaries_are_absent() -> None:
         "candidates",
         "questionnaires",
     }
+    skipped_parts = {".venv", ".git", "__pycache__", ".pytest_cache", "node_modules"}
     found = [
         path
         for path in PROJECT_ROOT.rglob("*")
-        if path.is_dir() and path.name in forbidden_dir_names
+        if path.is_dir()
+        and path.name in forbidden_dir_names
+        and not any(part in skipped_parts for part in path.parts)
     ]
     assert not found
     assert not (PROJECT_ROOT / "contracts").exists()
