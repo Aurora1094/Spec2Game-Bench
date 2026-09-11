@@ -1,0 +1,36 @@
+{
+  "instance_id": "snake_var02",
+  "family_slug": "snake",
+  "variant_id": "var02",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/1_easy_Snake/1_easy_Snake_V3.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "The snake moves at a fixed speed of 8 steps per second. Each movement step advances the snake head exactly one grid cell."
+      ],
+      "after": [
+        "The snake moves at a fixed speed of 10 steps per second. Each movement step advances the snake head exactly one grid cell."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "While `playing`, the program continuously processes directional input and updates the snake at a fixed rate of 8 movement steps per second."
+      ],
+      "after": [
+        "While `playing`, the program continuously processes directional input and updates the snake at a fixed rate of 10 movement steps per second."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "snake_var02.D2.4.01"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "c774c0fc0b96c633aa1e7103fbc3d2e9fdf4b008561d785560907ca5b0ba250d",
+  "checkpoints_sha256": "8724b66a22b0cdc2c2692d3fe48d6420ff96add407110fbd55da9171e5304736"
+}

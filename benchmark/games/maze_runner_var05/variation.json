@@ -1,0 +1,94 @@
+{
+  "instance_id": "maze_runner_var05",
+  "family_slug": "maze_runner",
+  "variant_id": "var05",
+  "variation_types": [
+    "map"
+  ],
+  "source_path": "游戏规格说明（英文）/5_easy_Maze Runner/5_easy_Maze Runner_V6.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "#P    #       #",
+        "### # # ##### #",
+        "#   # #     # #",
+        "# ### ##### # #",
+        "# #     #   # #"
+      ],
+      "after": [
+        "#P# #         #",
+        "# # # ####### #",
+        "# # #   #     #"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "#   # # #     #",
+        "##### # ##### #",
+        "#     #     # #",
+        "# ######### # #",
+        "#       #   # #",
+        "# ##### # ### #",
+        "#     #     E #"
+      ],
+      "after": [
+        "# #     # # # #",
+        "# # ##### # # #",
+        "# #   #   # # #",
+        "# ### # ### # #",
+        "# #   # #     #",
+        "# ##### #######",
+        "# #   #       #",
+        "# # # ####### #",
+        "#   #        E#"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "The exit is located at `(row=13, col=12)`, corresponding to cell center `(500, 640)`."
+      ],
+      "after": [
+        "The exit is located at `(row=13, col=13)`, corresponding to cell center `(540, 640)`."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "The exit is fixed at `(row=13, col=12)` and is an enterable cell."
+      ],
+      "after": [
+        "The exit is fixed at `(row=13, col=13)` and is an enterable cell."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Exit: `(row=13, col=12)`"
+      ],
+      "after": [
+        "- Exit: `(row=13, col=13)`"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "The maze layout, total duration of 30 seconds, movement-repeat interval of 0.15 seconds, player starting position, and exit position remain fixed for every run."
+      ],
+      "after": [
+        "The maze layout, total duration of 30 seconds, movement-repeat interval of 0.15 seconds, player starting position `(row=1, col=1)`, and exit position `(row=13, col=13)` remain fixed for every run."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "maze_runner_var05.D2.1.01",
+    "maze_runner_var05.D2.1.03",
+    "maze_runner_var05.D2.5.02"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "665c6469f0a0a37ce038210a1cd05a3b62cec36bc61457f8e0906eea00c906eb",
+  "checkpoints_sha256": "6e86b352a8cb5dba5831481486657a3d220f09be27bab9fef298ef1dcfb162c1"
+}

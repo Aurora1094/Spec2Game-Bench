@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "slug": "asteroids_var04",
+  "name": "Asteroids",
+  "difficulty": "easy",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [],
+  "window_size": [
+    600,
+    800
+  ],
+  "source_audit": {
+    "docx_sha256": "ca91c26bdac796fad657829e6de83090c43e8235cc1328b38d7b705b9611c804",
+    "base_checkpoints_sha256": "d50b680470c3c8924a22f5c3a03e1ceb524a55e81af4465fc04666d60d2662fc",
+    "checkpoint_count": 34
+  },
+  "family_slug": "asteroids",
+  "variant_id": "var04",
+  "variation_types": [
+    "rule"
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "instance_id": "dodge_blocks_var06",
+  "family_slug": "dodge_blocks",
+  "variant_id": "var06",
+  "variation_types": [
+    "object_count"
+  ],
+  "source_path": "游戏规格说明（英文）/2_easy_Dodge Blocks/2_easy_Dodge Blocks_V7.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "At each obstacle spawn event, exactly two obstacles are created simultaneously. Their initial rectangles must not overlap each other."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [],
+      "after": [
+        "Exactly two obstacles are created during each obstacle spawn event.",
+        "For each pair:",
+        "- Both obstacles have top-left y-coordinate y = 100.",
+        "- Each obstacle independently uses a random integer top-left x-coordinate from 0 to 560 inclusive.",
+        "- The two initial obstacle rectangles must not overlap.",
+        "If a randomly selected x-coordinate would cause the second obstacle to overlap the first obstacle at spawn time, another x-coordinate must be selected until a non-overlapping placement is obtained."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "Exactly one new obstacle is spawned every 1 second while the game state is `playing`.",
+        "At spawn time:"
+      ],
+      "after": [
+        "Exactly two new obstacles are spawned simultaneously every 1 second while the game state is `playing`.",
+        "For each obstacle:"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [],
+      "after": [
+        "The two obstacles generated during the same spawn event must not overlap each other at spawn time.",
+        "Their horizontal positions are otherwise selected independently."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "The obstacle spawn timer advances continuously. Exactly one obstacle is created whenever the fixed 1-second spawn interval is reached, and each active obstacle moves downward at 200 px/s."
+      ],
+      "after": [
+        "The obstacle spawn timer advances continuously. Exactly two non-overlapping obstacles are created simultaneously whenever the fixed 1-second spawn interval is reached, and each active obstacle moves downward at 200 px/s."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [],
+      "after": [
+        "- Obstacles per spawn event: 2"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "dodge_blocks_var06.D2.3.01",
+    "dodge_blocks_var06.D2.4.03",
+    "dodge_blocks_var06.D2.3.07"
+  ],
+  "added_checkpoint_ids": [
+    "dodge_blocks_var06.D2.3.07"
+  ],
+  "base_checkpoints_sha256": "49ce18ae41ba1d7c6ead6d9e52bdbc10b7447961c50d8924076bc487b8706308",
+  "checkpoints_sha256": "486709efb09bd73a1bfc8b45eb000b61a4b430c348841f8754dc0f050fd9b000"
+}

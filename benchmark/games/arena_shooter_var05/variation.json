@@ -1,0 +1,102 @@
+{
+  "instance_id": "arena_shooter_var05",
+  "family_slug": "arena_shooter",
+  "variant_id": "var05",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/14_hard_Top-down Arena Shooter/14_hard_Top-down Arena Shooter_V6.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Chasers continuously move toward the player and deal damage through body contact."
+      ],
+      "after": [
+        "Chasers continuously move toward the player at 150 px/s and deal damage through body contact."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "`WASD: Move    Mouse: Aim    Left Click: Shoot`",
+        "`R: Reload    Defeat all enemies`"
+      ],
+      "after": [
+        "`WASD: Move Mouse: Aim Left Click: Shoot`",
+        "`R: Reload Defeat all enemies`"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- Movement speed: 120 px/s"
+      ],
+      "after": [
+        "- Movement speed: 150 px/s"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "`120 px/s`"
+      ],
+      "after": [
+        "`150 px/s`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "The increased movement speed does not change the Chaser collision radius, contact threshold, damage value, or movement algorithm."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "- Chasers: 3, each at 2 HP",
+        "- Shooters: 3, each at 3 HP"
+      ],
+      "after": [
+        "- Chasers: 3, each at 2 HP and 150 px/s movement speed",
+        "- Shooters: 3, each at 3 HP and 90 px/s movement speed"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "3. Update surviving Chaser and Shooter movement, Shooter firing timers, line-of-sight checks, and enemy-bullet spawning."
+      ],
+      "after": [
+        "3. Update surviving Chaser movement at 150 px/s and Shooter movement at 90 px/s, Shooter firing timers, line-of-sight checks, and enemy-bullet spawning."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- All Chaser positions and HP.",
+        "- All Shooter positions, HP, and firing timers."
+      ],
+      "after": [
+        "- All Chaser positions, HP, and movement speed of 150 px/s.",
+        "- All Shooter positions, HP, movement speed, and firing timers."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "Chasers move toward the player's current position at 150 px/s."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "arena_shooter_var05.D2.3.06",
+    "arena_shooter_var05.D2.5.05"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "6e07bdccd4ca0e0e9a26c2ca4a10d9fda3f5d4dec89e9acbde374c292b6151e4",
+  "checkpoints_sha256": "a10c0d4c5782bc0cb758ba3f55d47e8889a9d420fd476a8488c2df3a832279b5"
+}

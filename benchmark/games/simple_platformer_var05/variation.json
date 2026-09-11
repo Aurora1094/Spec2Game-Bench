@@ -1,0 +1,65 @@
+{
+  "instance_id": "simple_platformer_var05",
+  "family_slug": "simple_platformer",
+  "variant_id": "var05",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/7_medium_Simple Platformer/7_medium_Simple Platformer_V6.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "- Horizontal movement range: x = 260–430"
+      ],
+      "after": [
+        "- Horizontal movement range: x = 220–470"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "The moving platform moves horizontally at 80 px/s between x = 260 and x = 430 while remaining at y = 315."
+      ],
+      "after": [
+        "The moving platform moves horizontally at 80 px/s between x = 220 and x = 470 while remaining at y = 315."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- At `x >= 430`, change direction to left.",
+        "- At `x <= 260`, change direction to right."
+      ],
+      "after": [
+        "- At `x >= 470`, change direction to left.",
+        "- At `x <= 220`, change direction to right."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "3. Update the moving platform and determine its horizontal displacement."
+      ],
+      "after": [
+        "3. Update the moving platform within x = 220–470 and determine its horizontal displacement."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Moving platform range: x = 260–430"
+      ],
+      "after": [
+        "- Moving platform range: x = 220–470"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "simple_platformer_var05.D2.3.06"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "4fa5974d0ef7ecb0bbcc914ed389e18e591a5da6fe64f3a9eec6440f604b89c9",
+  "checkpoints_sha256": "d7d9d05ca3deb6879ba2e024835e9f4155c1020b8cbdef806059525cd75619a5"
+}

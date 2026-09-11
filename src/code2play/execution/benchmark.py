@@ -317,6 +317,11 @@ def _batch_policy_descriptor(
     }
     locked["d4_contracts"] = _d4_contract_policy(config, manifest)
     locked["runtime_protocol"] = runtime_protocol_descriptor()
+    locked["selection"] = config.get("selection")
+    locked["instance_data"] = {
+        game.slug: {"spec": sha256_file(game.spec), "checkpoints": sha256_file(game.checkpoints)}
+        for game in games(config)
+    }
     descriptor: dict[str, Any] = {
         "schema_version": 1,
         "locked_policy": locked,
@@ -394,6 +399,9 @@ def _initial_task_state(
         "schema_version": 3,
         "task": {
             "game": game.slug,
+            "instance_id": game.slug,
+            "family_slug": game.family_slug or game.slug,
+            "variant_id": game.variant_id,
             "game_name": game.name,
             "model_id": model.id,
             "model_name": model.name,
@@ -477,7 +485,9 @@ def run_task(
     selected_game_slugs: list[str] | None = None,
 ) -> dict[str, Any]:
     task_id = f"{game.slug}__{model.id}__r{repetition:02d}"
-    task_dir = run_dir / "tasks" / task_id
+    from code2play.config.project import task_storage_dir
+
+    task_dir = task_storage_dir(run_dir, task_id)
     task_dir.mkdir(parents=True, exist_ok=True)
     state_path = task_dir / "run_state.json"
     round_manifest = validate_round_manifest(
@@ -643,6 +653,9 @@ def run_task(
         _set_stage(state, state_path, "reporting", "running")
         from code2play.reporting.reports import write_task_reports
 
+        result.setdefault("task", {}).update(instance_id=game.slug, family_slug=game.family_slug or game.slug,
+                                              variant_id=game.variant_id,
+                                              track=(config.get("selection") or {}).get("track"))
         write_task_reports(task_dir, result)
         _set_stage(state, state_path, "reporting", "completed")
         state.update(
@@ -752,9 +765,16 @@ def run_benchmark(
     workspace: str | Path | None = None,
     round_id: str | None = None,
     game_slug: str | None = None,
+    track: str = "core15",
+    model_id: str | None = None,
+    variant_id: str | None = None,
     progress: Callable[[str], None] = print,
 ) -> dict[str, Any]:
     config = load_config(config_path) if config_path else load_config()
+    from code2play.config.project import select_run_config, task_storage_dir
+
+    config = select_run_config(config, track=track, model_id=model_id,
+                               game_slug=game_slug, variant_id=variant_id)
     if repetitions != 1:
         raise ValueError("This locked benchmark requires exactly one repetition")
     require_locked_runtime_policy(config)
@@ -762,11 +782,9 @@ def run_benchmark(
     run_dir = workspace_run_dir(workspace_root, run_id)
     run_dir.mkdir(parents=True, exist_ok=True)
     configured_games = games(config)
+    if (run_dir / "manual_evaluation.json").exists():
+        raise ValueError("A manual evaluation already uses this run ID; choose a new run ID")
     selected_games = configured_games
-    if game_slug is not None:
-        selected_games = [game for game in configured_games if game.slug == game_slug]
-        if not selected_games:
-            raise ValueError(f"Unknown configured game: {game_slug}")
     existing_batch_state_path = run_dir / "run_state.json"
     existing_batch_state = (
         _read_json(existing_batch_state_path)
@@ -775,6 +793,14 @@ def run_benchmark(
     )
     if existing_batch_state is not None:
         validate_batch_state(existing_batch_state)
+        if round_id and existing_batch_state.get("round_id") != round_id:
+            raise ValueError("Existing run belongs to another round; use a new run ID")
+        if existing_batch_state.get("normalized_config_sha256") != normalized_policy_sha256(config):
+            raise ValueError("Existing run configuration changed; use a new run ID")
+        if existing_batch_state.get("selection") != config["selection"]:
+            raise ValueError("Existing run instance selection changed; use a new run ID")
+    elif not resume and existing_batch_state_path.exists():
+        raise ValueError("A fresh generation requires a new run ID")
     required_api_keys = {
         str(resolve_judge_route(config["judge"], role).get("api_key_env") or "")
         for role in config["judge"]["routes"]
@@ -805,9 +831,15 @@ def run_benchmark(
     matrix = [
         {
             "game": game.slug,
+            "instance_id": game.slug,
+            "family_slug": game.family_slug or game.slug,
+            "variant_id": game.variant_id,
+            "variation_types": list(game.variation_types),
+            "track": track,
             "model": model.id,
             "repetition": repetition,
             "task_id": f"{game.slug}__{model.id}__r{repetition:02d}",
+            "task_dir": str(task_storage_dir(run_dir, f"{game.slug}__{model.id}__r{repetition:02d}")),
             "status": "pending",
             "round_id": active_round_id,
             "contract_manifest_sha256": contract_manifest_sha256,
@@ -834,6 +866,8 @@ def run_benchmark(
             "policy_descriptor": batch_policy_descriptor,
             "d4_contracts": _d4_contract_policy(config, round_manifest),
             "matrix": matrix,
+            "selection": config["selection"],
+            "selected_model": config["models"][0],
         }
     )
     validate_batch_state(batch_state)
@@ -883,7 +917,8 @@ def run_benchmark(
                     continue
                 _clear_failure_metadata(record)
                 _clear_terminal_failure_metadata(record)
-                record.update({"status": "running", "started_at": _now()})
+                record["status"] = "running"
+                record.setdefault("started_at", _now())
                 _save_state(batch_state_path, batch_state)
                 try:
                     result = run_task(
@@ -904,10 +939,12 @@ def run_benchmark(
                             else None
                         ),
                     )
+                    saved_task_state = task_storage_dir(run_dir, task_id) / "run_state.json"
+                    task_finished_at = _read_json(saved_task_state).get("finished_at") if saved_task_state.is_file() else None
                     record.update(
                         {
                             "status": result.get("status", "completed"),
-                            "finished_at": _now(),
+                            "finished_at": task_finished_at or _now(),
                             "official_total": result.get("official_total"),
                         }
                     )
@@ -932,7 +969,7 @@ def run_benchmark(
                             "generation_failed_stage": str(exc.stage),
                         }
                     )
-                except BaseException as exc:
+                except Exception as exc:
                     terminal_failure = _is_terminal_candidate_failure(exc)
                     record.update(
                         {
@@ -946,6 +983,14 @@ def run_benchmark(
                             ),
                         }
                     )
+                    from code2play.providers.dashscope import _permanent_judge_configuration_error
+                    cause = exc
+                    while cause.__cause__ is not None:
+                        cause = cause.__cause__
+                    if _permanent_judge_configuration_error(cause):
+                        batch_state.update(status="failed", finished_at=_now())
+                        _save_state(batch_state_path, batch_state)
+                        raise
                 _save_state(batch_state_path, batch_state)
 
     needs_regeneration_count = sum(
@@ -959,9 +1004,12 @@ def run_benchmark(
         if needs_regeneration_count
         else "completed_with_judge_gaps"
         if needs_rescore_count
+        else "completed_with_failures"
+        if any(item["status"] == "failed" for item in batch_state["matrix"])
         else "completed"
     )
-    batch_state["finished_at"] = _now()
+    finishes = [item["finished_at"] for item in batch_state["matrix"] if item.get("finished_at")]
+    batch_state["finished_at"] = max(finishes, key=datetime.fromisoformat) if finishes else _now()
     batch_state["completed_count"] = sum(item["status"] == "completed" for item in batch_state["matrix"])
     batch_state["failed_count"] = sum(item["status"] == "failed" for item in batch_state["matrix"])
     batch_state["needs_rescore_count"] = needs_rescore_count
@@ -971,6 +1019,8 @@ def run_benchmark(
 
     write_failure_reports(run_dir, batch_state["matrix"])
     write_batch_reports(run_dir, batch_state["matrix"])
+    from code2play.reporting.tracks import write_track_report
+    write_track_report(run_dir, batch_state)
     leaks = scan_for_secret_leaks(run_dir)
     write_json(run_dir / "secret_scan.json", {"status": "passed" if not leaks else "failed", "hits": leaks})
     if leaks:

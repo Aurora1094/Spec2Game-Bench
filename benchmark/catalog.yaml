@@ -23,11 +23,23 @@
       "name": "Snake",
       "path": "games/snake",
       "slug": "snake",
-      "variants": [],
+      "variants": [
+        "snake_var01",
+        "snake_var02",
+        "snake_var03",
+        "snake_var04",
+        "snake_var05",
+        "snake_var06",
+        "snake_var07",
+        "snake_var08",
+        "snake_var09"
+      ],
       "window_size": [
         600,
         800
-      ]
+      ],
+      "family_slug": "snake",
+      "variant_id": "base"
     },
     {
       "checkpoint_count": 32,
@@ -42,11 +54,23 @@
       "name": "Dodge Blocks",
       "path": "games/dodge_blocks",
       "slug": "dodge_blocks",
-      "variants": [],
+      "variants": [
+        "dodge_blocks_var01",
+        "dodge_blocks_var02",
+        "dodge_blocks_var03",
+        "dodge_blocks_var04",
+        "dodge_blocks_var05",
+        "dodge_blocks_var06",
+        "dodge_blocks_var07",
+        "dodge_blocks_var08",
+        "dodge_blocks_var09"
+      ],
       "window_size": [
         600,
         800
-      ]
+      ],
+      "family_slug": "dodge_blocks",
+      "variant_id": "base"
     },
     {
       "checkpoint_count": 34,
@@ -61,11 +85,23 @@
       "name": "Whack-a-Mole",
       "path": "games/whack_a_mole",
       "slug": "whack_a_mole",
-      "variants": [],
+      "variants": [
+        "whack_a_mole_var01",
+        "whack_a_mole_var02",
+        "whack_a_mole_var03",
+        "whack_a_mole_var04",
+        "whack_a_mole_var05",
+        "whack_a_mole_var06",
+        "whack_a_mole_var07",
+        "whack_a_mole_var08",
+        "whack_a_mole_var09"
+      ],
       "window_size": [
         600,
         800
-      ]
+      ],
+      "family_slug": "whack_a_mole",
+      "variant_id": "base"
     },
     {
       "checkpoint_count": 33,
@@ -80,11 +116,23 @@
       "name": "Asteroids",
       "path": "games/asteroids",
       "slug": "asteroids",
-      "variants": [],
+      "variants": [
+        "asteroids_var01",
+        "asteroids_var02",
+        "asteroids_var03",
+        "asteroids_var04",
+        "asteroids_var05",
+        "asteroids_var06",
+        "asteroids_var07",
+        "asteroids_var08",
+        "asteroids_var09"
+      ],
       "window_size": [
         600,
         800
-      ]
+      ],
+      "family_slug": "asteroids",
+      "variant_id": "base"
     },
     {
       "checkpoint_count": 27,
@@ -99,11 +147,23 @@
       "name": "Maze Runner",
       "path": "games/maze_runner",
       "slug": "maze_runner",
-      "variants": [],
+      "variants": [
+        "maze_runner_var01",
+        "maze_runner_var02",
+        "maze_runner_var03",
+        "maze_runner_var04",
+        "maze_runner_var05",
+        "maze_runner_var06",
+        "maze_runner_var07",
+        "maze_runner_var08",
+        "maze_runner_var09"
+      ],
       "window_size": [
         600,
         800
-      ]
+      ],
+      "family_slug": "maze_runner",
+      "variant_id": "base"
     },
     {
       "checkpoint_count": 30,
@@ -118,11 +178,23 @@
       "name": "Space Invaders",
       "path": "games/space_invaders",
       "slug": "space_invaders",
-      "variants": [],
+      "variants": [
+        "space_invaders_var01",
+        "space_invaders_var02",
+        "space_invaders_var03",
+        "space_invaders_var04",
+        "space_invaders_var05",
+        "space_invaders_var06",
+        "space_invaders_var07",
+        "space_invaders_var08",
+        "space_invaders_var09"
+      ],
       "window_size": [
         800,
         600
-      ]
+      ],
+      "family_slug": "space_invaders",
+      "variant_id": "base"
     },
     {
       "checkpoint_count": 30,
@@ -137,11 +209,23 @@
       "name": "Simple Platformer",
       "path": "games/simple_platformer",
       "slug": "simple_platformer",
-      "variants": [],
+      "variants": [
+        "simple_platformer_var01",
+        "simple_platformer_var02",
+        "simple_platformer_var03",
+        "simple_platformer_var04",
+        "simple_platformer_var05",
+        "simple_platformer_var06",
+        "simple_platformer_var07",
+        "simple_platformer_var08",
+        "simple_platformer_var09"
+      ],
       "window_size": [
         800,
         600
-      ]
+      ],
+      "family_slug": "simple_platformer",
+      "variant_id": "base"
     },
     {
       "checkpoint_count": 32,
@@ -156,11 +240,23 @@
       "name": "Tetris",
       "path": "games/tetris",
       "slug": "tetris",
-      "variants": [],
+      "variants": [
+        "tetris_var01",
+        "tetris_var02",
+        "tetris_var03",
+        "tetris_var04",
+        "tetris_var05",
+        "tetris_var06",
+        "tetris_var07",
+        "tetris_var08",
+        "tetris_var09"
+      ],
       "window_size": [
         600,
         800
-      ]
+      ],
+      "family_slug": "tetris",
+      "variant_id": "base"
     },
     {
       "checkpoint_count": 32,
@@ -175,11 +271,23 @@
       "name": "Match-3",
       "path": "games/match3",
       "slug": "match3",
-      "variants": [],
+      "variants": [
+        "match3_var01",
+        "match3_var02",
+        "match3_var03",
+        "match3_var04",
+        "match3_var05",
+        "match3_var06",
+        "match3_var07",
+        "match3_var08",
+        "match3_var09"
+      ],
       "window_size": [
         600,
         800
-      ]
+      ],
+      "family_slug": "match3",
+      "variant_id": "base"
     },
     {
       "checkpoint_count": 41,
@@ -194,11 +302,23 @@
       "name": "Simple Shop Management",
       "path": "games/simple_shop",
       "slug": "simple_shop",
-      "variants": [],
+      "variants": [
+        "simple_shop_var01",
+        "simple_shop_var02",
+        "simple_shop_var03",
+        "simple_shop_var04",
+        "simple_shop_var05",
+        "simple_shop_var06",
+        "simple_shop_var07",
+        "simple_shop_var08",
+        "simple_shop_var09"
+      ],
       "window_size": [
         600,
         800
-      ]
+      ],
+      "family_slug": "simple_shop",
+      "variant_id": "base"
     },
     {
       "checkpoint_count": 39,
@@ -213,11 +333,23 @@
       "name": "Carrot Defense-like",
       "path": "games/carrot_defense",
       "slug": "carrot_defense",
-      "variants": [],
+      "variants": [
+        "carrot_defense_var01",
+        "carrot_defense_var02",
+        "carrot_defense_var03",
+        "carrot_defense_var04",
+        "carrot_defense_var05",
+        "carrot_defense_var06",
+        "carrot_defense_var07",
+        "carrot_defense_var08",
+        "carrot_defense_var09"
+      ],
       "window_size": [
         800,
         600
-      ]
+      ],
+      "family_slug": "carrot_defense",
+      "variant_id": "base"
     },
     {
       "checkpoint_count": 33,
@@ -232,11 +364,23 @@
       "name": "Farming-lite",
       "path": "games/farming_lite",
       "slug": "farming_lite",
-      "variants": [],
+      "variants": [
+        "farming_lite_var01",
+        "farming_lite_var02",
+        "farming_lite_var03",
+        "farming_lite_var04",
+        "farming_lite_var05",
+        "farming_lite_var06",
+        "farming_lite_var07",
+        "farming_lite_var08",
+        "farming_lite_var09"
+      ],
       "window_size": [
         800,
         600
-      ]
+      ],
+      "family_slug": "farming_lite",
+      "variant_id": "base"
     },
     {
       "checkpoint_count": 36,
@@ -251,11 +395,23 @@
       "name": "Pipe Connection Puzzle",
       "path": "games/pipe_connection",
       "slug": "pipe_connection",
-      "variants": [],
+      "variants": [
+        "pipe_connection_var01",
+        "pipe_connection_var02",
+        "pipe_connection_var03",
+        "pipe_connection_var04",
+        "pipe_connection_var05",
+        "pipe_connection_var06",
+        "pipe_connection_var07",
+        "pipe_connection_var08",
+        "pipe_connection_var09"
+      ],
       "window_size": [
         600,
         800
-      ]
+      ],
+      "family_slug": "pipe_connection",
+      "variant_id": "base"
     },
     {
       "checkpoint_count": 51,
@@ -270,11 +426,23 @@
       "name": "Top-down Arena Shooter",
       "path": "games/arena_shooter",
       "slug": "arena_shooter",
-      "variants": [],
+      "variants": [
+        "arena_shooter_var01",
+        "arena_shooter_var02",
+        "arena_shooter_var03",
+        "arena_shooter_var04",
+        "arena_shooter_var05",
+        "arena_shooter_var06",
+        "arena_shooter_var07",
+        "arena_shooter_var08",
+        "arena_shooter_var09"
+      ],
       "window_size": [
         800,
         700
-      ]
+      ],
+      "family_slug": "arena_shooter",
+      "variant_id": "base"
     },
     {
       "checkpoint_count": 58,
@@ -289,12 +457,3323 @@
       "name": "Mini Zelda-like Room Adventure",
       "path": "games/mini_zelda",
       "slug": "mini_zelda",
+      "variants": [
+        "mini_zelda_var01",
+        "mini_zelda_var02",
+        "mini_zelda_var03",
+        "mini_zelda_var04",
+        "mini_zelda_var05",
+        "mini_zelda_var06",
+        "mini_zelda_var07",
+        "mini_zelda_var08",
+        "mini_zelda_var09"
+      ],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "mini_zelda",
+      "variant_id": "base"
+    }
+  ],
+  "schema_version": 1,
+  "variant_instances": [
+    {
+      "checkpoint_count": 29,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 3,
+        "D2.3": 10,
+        "D2.4": 3,
+        "D2.5": 8
+      },
+      "name": "Snake",
+      "path": "games/snake_var01",
+      "slug": "snake_var01",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "snake",
+      "variant_id": "var01",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 29,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 3,
+        "D2.3": 10,
+        "D2.4": 3,
+        "D2.5": 8
+      },
+      "name": "Snake",
+      "path": "games/snake_var02",
+      "slug": "snake_var02",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "snake",
+      "variant_id": "var02",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 3,
+        "D2.3": 11,
+        "D2.4": 3,
+        "D2.5": 9
+      },
+      "name": "Snake",
+      "path": "games/snake_var03",
+      "slug": "snake_var03",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "snake",
+      "variant_id": "var03",
+      "variation_types": [
+        "object_count",
+        "map",
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 30,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 3,
+        "D2.3": 11,
+        "D2.4": 3,
+        "D2.5": 8
+      },
+      "name": "Snake",
+      "path": "games/snake_var04",
+      "slug": "snake_var04",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "snake",
+      "variant_id": "var04",
+      "variation_types": [
+        "object_count"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 3,
+        "D2.3": 11,
+        "D2.4": 3,
+        "D2.5": 9
+      },
+      "name": "Snake",
+      "path": "games/snake_var05",
+      "slug": "snake_var05",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "snake",
+      "variant_id": "var05",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 29,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 3,
+        "D2.3": 10,
+        "D2.4": 3,
+        "D2.5": 8
+      },
+      "name": "Snake",
+      "path": "games/snake_var06",
+      "slug": "snake_var06",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "snake",
+      "variant_id": "var06",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 3,
+        "D2.3": 11,
+        "D2.4": 3,
+        "D2.5": 9
+      },
+      "name": "Snake",
+      "path": "games/snake_var07",
+      "slug": "snake_var07",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "snake",
+      "variant_id": "var07",
+      "variation_types": [
+        "object_count",
+        "map",
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 31,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 3,
+        "D2.3": 11,
+        "D2.4": 3,
+        "D2.5": 8
+      },
+      "name": "Snake",
+      "path": "games/snake_var08",
+      "slug": "snake_var08",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "snake",
+      "variant_id": "var08",
+      "variation_types": [
+        "object_type",
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 3,
+        "D2.3": 12,
+        "D2.4": 3,
+        "D2.5": 9
+      },
+      "name": "Snake",
+      "path": "games/snake_var09",
+      "slug": "snake_var09",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "snake",
+      "variant_id": "var09",
+      "variation_types": [
+        "object_count",
+        "map",
+        "rule",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 6,
+        "D2.4": 5,
+        "D2.5": 10
+      },
+      "name": "Dodge Blocks",
+      "path": "games/dodge_blocks_var01",
+      "slug": "dodge_blocks_var01",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "dodge_blocks",
+      "variant_id": "var01",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 6,
+        "D2.4": 5,
+        "D2.5": 10
+      },
+      "name": "Dodge Blocks",
+      "path": "games/dodge_blocks_var02",
+      "slug": "dodge_blocks_var02",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "dodge_blocks",
+      "variant_id": "var02",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 6,
+        "D2.4": 5,
+        "D2.5": 10
+      },
+      "name": "Dodge Blocks",
+      "path": "games/dodge_blocks_var03",
+      "slug": "dodge_blocks_var03",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "dodge_blocks",
+      "variant_id": "var03",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 6,
+        "D2.4": 5,
+        "D2.5": 10
+      },
+      "name": "Dodge Blocks",
+      "path": "games/dodge_blocks_var04",
+      "slug": "dodge_blocks_var04",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "dodge_blocks",
+      "variant_id": "var04",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 6,
+        "D2.4": 5,
+        "D2.5": 10
+      },
+      "name": "Dodge Blocks",
+      "path": "games/dodge_blocks_var05",
+      "slug": "dodge_blocks_var05",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "dodge_blocks",
+      "variant_id": "var05",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 7,
+        "D2.4": 5,
+        "D2.5": 10
+      },
+      "name": "Dodge Blocks",
+      "path": "games/dodge_blocks_var06",
+      "slug": "dodge_blocks_var06",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "dodge_blocks",
+      "variant_id": "var06",
+      "variation_types": [
+        "object_count"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 7,
+        "D2.4": 5,
+        "D2.5": 10
+      },
+      "name": "Dodge Blocks",
+      "path": "games/dodge_blocks_var07",
+      "slug": "dodge_blocks_var07",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "dodge_blocks",
+      "variant_id": "var07",
+      "variation_types": [
+        "object_type",
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 7,
+        "D2.4": 5,
+        "D2.5": 10
+      },
+      "name": "Dodge Blocks",
+      "path": "games/dodge_blocks_var08",
+      "slug": "dodge_blocks_var08",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "dodge_blocks",
+      "variant_id": "var08",
+      "variation_types": [
+        "object_type",
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 7,
+        "D2.4": 5,
+        "D2.5": 10
+      },
+      "name": "Dodge Blocks",
+      "path": "games/dodge_blocks_var09",
+      "slug": "dodge_blocks_var09",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "dodge_blocks",
+      "variant_id": "var09",
+      "variation_types": [
+        "object_count",
+        "parameter",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 34,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 7,
+        "D2.3": 10,
+        "D2.4": 4,
+        "D2.5": 8
+      },
+      "name": "Whack-a-Mole",
+      "path": "games/whack_a_mole_var01",
+      "slug": "whack_a_mole_var01",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "whack_a_mole",
+      "variant_id": "var01",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 34,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 7,
+        "D2.3": 10,
+        "D2.4": 4,
+        "D2.5": 8
+      },
+      "name": "Whack-a-Mole",
+      "path": "games/whack_a_mole_var02",
+      "slug": "whack_a_mole_var02",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "whack_a_mole",
+      "variant_id": "var02",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 34,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 7,
+        "D2.3": 10,
+        "D2.4": 4,
+        "D2.5": 8
+      },
+      "name": "Whack-a-Mole",
+      "path": "games/whack_a_mole_var03",
+      "slug": "whack_a_mole_var03",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "whack_a_mole",
+      "variant_id": "var03",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 34,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 7,
+        "D2.3": 10,
+        "D2.4": 4,
+        "D2.5": 8
+      },
+      "name": "Whack-a-Mole",
+      "path": "games/whack_a_mole_var04",
+      "slug": "whack_a_mole_var04",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "whack_a_mole",
+      "variant_id": "var04",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 35,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 7,
+        "D2.3": 10,
+        "D2.4": 4,
+        "D2.5": 8
+      },
+      "name": "Whack-a-Mole",
+      "path": "games/whack_a_mole_var05",
+      "slug": "whack_a_mole_var05",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "whack_a_mole",
+      "variant_id": "var05",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 35,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 7,
+        "D2.3": 11,
+        "D2.4": 4,
+        "D2.5": 8
+      },
+      "name": "Whack-a-Mole",
+      "path": "games/whack_a_mole_var06",
+      "slug": "whack_a_mole_var06",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "whack_a_mole",
+      "variant_id": "var06",
+      "variation_types": [
+        "object_count",
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 36,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 7,
+        "D2.3": 10,
+        "D2.4": 4,
+        "D2.5": 10
+      },
+      "name": "Whack-a-Mole",
+      "path": "games/whack_a_mole_var07",
+      "slug": "whack_a_mole_var07",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "whack_a_mole",
+      "variant_id": "var07",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 36,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 7,
+        "D2.3": 11,
+        "D2.4": 4,
+        "D2.5": 9
+      },
+      "name": "Whack-a-Mole",
+      "path": "games/whack_a_mole_var08",
+      "slug": "whack_a_mole_var08",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "whack_a_mole",
+      "variant_id": "var08",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 35,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 7,
+        "D2.3": 11,
+        "D2.4": 4,
+        "D2.5": 8
+      },
+      "name": "Whack-a-Mole",
+      "path": "games/whack_a_mole_var09",
+      "slug": "whack_a_mole_var09",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "whack_a_mole",
+      "variant_id": "var09",
+      "variation_types": [
+        "object_count",
+        "rule",
+        "parameter",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 10,
+        "D2.4": 3,
+        "D2.5": 9
+      },
+      "name": "Asteroids",
+      "path": "games/asteroids_var01",
+      "slug": "asteroids_var01",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "asteroids",
+      "variant_id": "var01",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 10,
+        "D2.4": 3,
+        "D2.5": 9
+      },
+      "name": "Asteroids",
+      "path": "games/asteroids_var02",
+      "slug": "asteroids_var02",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "asteroids",
+      "variant_id": "var02",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 10,
+        "D2.4": 3,
+        "D2.5": 9
+      },
+      "name": "Asteroids",
+      "path": "games/asteroids_var03",
+      "slug": "asteroids_var03",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "asteroids",
+      "variant_id": "var03",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 34,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 7,
+        "D2.3": 10,
+        "D2.4": 3,
+        "D2.5": 9
+      },
+      "name": "Asteroids",
+      "path": "games/asteroids_var04",
+      "slug": "asteroids_var04",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "asteroids",
+      "variant_id": "var04",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 10,
+        "D2.4": 3,
+        "D2.5": 9
+      },
+      "name": "Asteroids",
+      "path": "games/asteroids_var05",
+      "slug": "asteroids_var05",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "asteroids",
+      "variant_id": "var05",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 10,
+        "D2.4": 3,
+        "D2.5": 9
+      },
+      "name": "Asteroids",
+      "path": "games/asteroids_var06",
+      "slug": "asteroids_var06",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "asteroids",
+      "variant_id": "var06",
+      "variation_types": [
+        "object_count"
+      ]
+    },
+    {
+      "checkpoint_count": 35,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 6,
+        "D2.3": 11,
+        "D2.4": 3,
+        "D2.5": 9
+      },
+      "name": "Asteroids",
+      "path": "games/asteroids_var07",
+      "slug": "asteroids_var07",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "asteroids",
+      "variant_id": "var07",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 35,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 6,
+        "D2.3": 11,
+        "D2.4": 3,
+        "D2.5": 9
+      },
+      "name": "Asteroids",
+      "path": "games/asteroids_var08",
+      "slug": "asteroids_var08",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "asteroids",
+      "variant_id": "var08",
+      "variation_types": [
+        "object_type",
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 6,
+        "D2.3": 10,
+        "D2.4": 3,
+        "D2.5": 9
+      },
+      "name": "Asteroids",
+      "path": "games/asteroids_var09",
+      "slug": "asteroids_var09",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "asteroids",
+      "variant_id": "var09",
+      "variation_types": [
+        "parameter",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 27,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 7,
+        "D2.3": 4,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Maze Runner",
+      "path": "games/maze_runner_var01",
+      "slug": "maze_runner_var01",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "maze_runner",
+      "variant_id": "var01",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 27,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 7,
+        "D2.3": 4,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Maze Runner",
+      "path": "games/maze_runner_var02",
+      "slug": "maze_runner_var02",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "maze_runner",
+      "variant_id": "var02",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 28,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 7,
+        "D2.3": 4,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Maze Runner",
+      "path": "games/maze_runner_var03",
+      "slug": "maze_runner_var03",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "maze_runner",
+      "variant_id": "var03",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 27,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 7,
+        "D2.3": 4,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Maze Runner",
+      "path": "games/maze_runner_var04",
+      "slug": "maze_runner_var04",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "maze_runner",
+      "variant_id": "var04",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 27,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 7,
+        "D2.3": 4,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Maze Runner",
+      "path": "games/maze_runner_var05",
+      "slug": "maze_runner_var05",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "maze_runner",
+      "variant_id": "var05",
+      "variation_types": [
+        "map"
+      ]
+    },
+    {
+      "checkpoint_count": 30,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 7,
+        "D2.3": 4,
+        "D2.4": 5,
+        "D2.5": 7
+      },
+      "name": "Maze Runner",
+      "path": "games/maze_runner_var06",
+      "slug": "maze_runner_var06",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "maze_runner",
+      "variant_id": "var06",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 29,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 7,
+        "D2.3": 4,
+        "D2.4": 6,
+        "D2.5": 6
+      },
+      "name": "Maze Runner",
+      "path": "games/maze_runner_var07",
+      "slug": "maze_runner_var07",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "maze_runner",
+      "variant_id": "var07",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 27,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 7,
+        "D2.3": 4,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Maze Runner",
+      "path": "games/maze_runner_var08",
+      "slug": "maze_runner_var08",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "maze_runner",
+      "variant_id": "var08",
+      "variation_types": [
+        "object_count"
+      ]
+    },
+    {
+      "checkpoint_count": 27,
+      "difficulty": "easy",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 7,
+        "D2.3": 4,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Maze Runner",
+      "path": "games/maze_runner_var09",
+      "slug": "maze_runner_var09",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "maze_runner",
+      "variant_id": "var09",
+      "variation_types": [
+        "map",
+        "parameter",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 30,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 3,
+        "D2.3": 10,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "name": "Space Invaders",
+      "path": "games/space_invaders_var01",
+      "slug": "space_invaders_var01",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "space_invaders",
+      "variant_id": "var01",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 30,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 3,
+        "D2.3": 10,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "name": "Space Invaders",
+      "path": "games/space_invaders_var02",
+      "slug": "space_invaders_var02",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "space_invaders",
+      "variant_id": "var02",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 30,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 3,
+        "D2.3": 10,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "name": "Space Invaders",
+      "path": "games/space_invaders_var03",
+      "slug": "space_invaders_var03",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "space_invaders",
+      "variant_id": "var03",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 31,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 3,
+        "D2.3": 10,
+        "D2.4": 3,
+        "D2.5": 10
+      },
+      "name": "Space Invaders",
+      "path": "games/space_invaders_var04",
+      "slug": "space_invaders_var04",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "space_invaders",
+      "variant_id": "var04",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 30,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 3,
+        "D2.3": 10,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "name": "Space Invaders",
+      "path": "games/space_invaders_var05",
+      "slug": "space_invaders_var05",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "space_invaders",
+      "variant_id": "var05",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 31,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 3,
+        "D2.3": 10,
+        "D2.4": 2,
+        "D2.5": 11
+      },
+      "name": "Space Invaders",
+      "path": "games/space_invaders_var06",
+      "slug": "space_invaders_var06",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "space_invaders",
+      "variant_id": "var06",
+      "variation_types": [
+        "object_count",
+        "map"
+      ]
+    },
+    {
+      "checkpoint_count": 30,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 3,
+        "D2.3": 10,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "name": "Space Invaders",
+      "path": "games/space_invaders_var07",
+      "slug": "space_invaders_var07",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "space_invaders",
+      "variant_id": "var07",
+      "variation_types": [
+        "object_count"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 3,
+        "D2.3": 11,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "name": "Space Invaders",
+      "path": "games/space_invaders_var08",
+      "slug": "space_invaders_var08",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "space_invaders",
+      "variant_id": "var08",
+      "variation_types": [
+        "object_type",
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 31,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 3,
+        "D2.3": 10,
+        "D2.4": 3,
+        "D2.5": 10
+      },
+      "name": "Space Invaders",
+      "path": "games/space_invaders_var09",
+      "slug": "space_invaders_var09",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "space_invaders",
+      "variant_id": "var09",
+      "variation_types": [
+        "parameter",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 30,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 5,
+        "D2.3": 6,
+        "D2.4": 2,
+        "D2.5": 12
+      },
+      "name": "Simple Platformer",
+      "path": "games/simple_platformer_var01",
+      "slug": "simple_platformer_var01",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "simple_platformer",
+      "variant_id": "var01",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 30,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 5,
+        "D2.3": 6,
+        "D2.4": 2,
+        "D2.5": 12
+      },
+      "name": "Simple Platformer",
+      "path": "games/simple_platformer_var02",
+      "slug": "simple_platformer_var02",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "simple_platformer",
+      "variant_id": "var02",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 30,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 5,
+        "D2.3": 6,
+        "D2.4": 2,
+        "D2.5": 12
+      },
+      "name": "Simple Platformer",
+      "path": "games/simple_platformer_var03",
+      "slug": "simple_platformer_var03",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "simple_platformer",
+      "variant_id": "var03",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 30,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 5,
+        "D2.3": 6,
+        "D2.4": 2,
+        "D2.5": 12
+      },
+      "name": "Simple Platformer",
+      "path": "games/simple_platformer_var04",
+      "slug": "simple_platformer_var04",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "simple_platformer",
+      "variant_id": "var04",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 30,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 5,
+        "D2.3": 6,
+        "D2.4": 2,
+        "D2.5": 12
+      },
+      "name": "Simple Platformer",
+      "path": "games/simple_platformer_var05",
+      "slug": "simple_platformer_var05",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "simple_platformer",
+      "variant_id": "var05",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 5,
+        "D2.3": 6,
+        "D2.4": 2,
+        "D2.5": 13
+      },
+      "name": "Simple Platformer",
+      "path": "games/simple_platformer_var06",
+      "slug": "simple_platformer_var06",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "simple_platformer",
+      "variant_id": "var06",
+      "variation_types": [
+        "object_count",
+        "map"
+      ]
+    },
+    {
+      "checkpoint_count": 31,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 5,
+        "D2.3": 7,
+        "D2.4": 2,
+        "D2.5": 12
+      },
+      "name": "Simple Platformer",
+      "path": "games/simple_platformer_var07",
+      "slug": "simple_platformer_var07",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "simple_platformer",
+      "variant_id": "var07",
+      "variation_types": [
+        "object_count",
+        "map"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 6,
+        "D2.3": 6,
+        "D2.4": 2,
+        "D2.5": 13
+      },
+      "name": "Simple Platformer",
+      "path": "games/simple_platformer_var08",
+      "slug": "simple_platformer_var08",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "simple_platformer",
+      "variant_id": "var08",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 30,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 5,
+        "D2.2": 5,
+        "D2.3": 6,
+        "D2.4": 2,
+        "D2.5": 12
+      },
+      "name": "Simple Platformer",
+      "path": "games/simple_platformer_var09",
+      "slug": "simple_platformer_var09",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "simple_platformer",
+      "variant_id": "var09",
+      "variation_types": [
+        "parameter",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 6,
+        "D2.3": 8,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "name": "Tetris",
+      "path": "games/tetris_var01",
+      "slug": "tetris_var01",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "tetris",
+      "variant_id": "var01",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 6,
+        "D2.3": 8,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "name": "Tetris",
+      "path": "games/tetris_var02",
+      "slug": "tetris_var02",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "tetris",
+      "variant_id": "var02",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 6,
+        "D2.3": 8,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "name": "Tetris",
+      "path": "games/tetris_var03",
+      "slug": "tetris_var03",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "tetris",
+      "variant_id": "var03",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 7,
+        "D2.3": 8,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "name": "Tetris",
+      "path": "games/tetris_var04",
+      "slug": "tetris_var04",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "tetris",
+      "variant_id": "var04",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 6,
+        "D2.3": 8,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "name": "Tetris",
+      "path": "games/tetris_var05",
+      "slug": "tetris_var05",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "tetris",
+      "variant_id": "var05",
+      "variation_types": [
+        "interface"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 6,
+        "D2.3": 9,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "name": "Tetris",
+      "path": "games/tetris_var06",
+      "slug": "tetris_var06",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "tetris",
+      "variant_id": "var06",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 6,
+        "D2.3": 8,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "name": "Tetris",
+      "path": "games/tetris_var07",
+      "slug": "tetris_var07",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "tetris",
+      "variant_id": "var07",
+      "variation_types": [
+        "object_count",
+        "interface"
+      ]
+    },
+    {
+      "checkpoint_count": 35,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 7,
+        "D2.3": 9,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "name": "Tetris",
+      "path": "games/tetris_var08",
+      "slug": "tetris_var08",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "tetris",
+      "variant_id": "var08",
+      "variation_types": [
+        "rule",
+        "interface"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 6,
+        "D2.3": 8,
+        "D2.4": 2,
+        "D2.5": 10
+      },
+      "name": "Tetris",
+      "path": "games/tetris_var09",
+      "slug": "tetris_var09",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "tetris",
+      "variant_id": "var09",
+      "variation_types": [
+        "parameter",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 5,
+        "D2.3": 10,
+        "D2.4": 5,
+        "D2.5": 6
+      },
+      "name": "Match-3",
+      "path": "games/match3_var01",
+      "slug": "match3_var01",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "match3",
+      "variant_id": "var01",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 5,
+        "D2.3": 10,
+        "D2.4": 5,
+        "D2.5": 6
+      },
+      "name": "Match-3",
+      "path": "games/match3_var02",
+      "slug": "match3_var02",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "match3",
+      "variant_id": "var02",
+      "variation_types": [
+        "object_type"
+      ]
+    },
+    {
+      "checkpoint_count": 32,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 5,
+        "D2.3": 10,
+        "D2.4": 5,
+        "D2.5": 6
+      },
+      "name": "Match-3",
+      "path": "games/match3_var03",
+      "slug": "match3_var03",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "match3",
+      "variant_id": "var03",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 5,
+        "D2.3": 11,
+        "D2.4": 5,
+        "D2.5": 6
+      },
+      "name": "Match-3",
+      "path": "games/match3_var04",
+      "slug": "match3_var04",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "match3",
+      "variant_id": "var04",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 5,
+        "D2.3": 11,
+        "D2.4": 5,
+        "D2.5": 6
+      },
+      "name": "Match-3",
+      "path": "games/match3_var05",
+      "slug": "match3_var05",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "match3",
+      "variant_id": "var05",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 34,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 5,
+        "D2.3": 11,
+        "D2.4": 5,
+        "D2.5": 6
+      },
+      "name": "Match-3",
+      "path": "games/match3_var06",
+      "slug": "match3_var06",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "match3",
+      "variant_id": "var06",
+      "variation_types": [
+        "interface"
+      ]
+    },
+    {
+      "checkpoint_count": 34,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 5,
+        "D2.3": 11,
+        "D2.4": 5,
+        "D2.5": 6
+      },
+      "name": "Match-3",
+      "path": "games/match3_var07",
+      "slug": "match3_var07",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "match3",
+      "variant_id": "var07",
+      "variation_types": [
+        "interface"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 6,
+        "D2.3": 10,
+        "D2.4": 5,
+        "D2.5": 6
+      },
+      "name": "Match-3",
+      "path": "games/match3_var08",
+      "slug": "match3_var08",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "match3",
+      "variant_id": "var08",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 5,
+        "D2.3": 11,
+        "D2.4": 5,
+        "D2.5": 6
+      },
+      "name": "Match-3",
+      "path": "games/match3_var09",
+      "slug": "match3_var09",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "match3",
+      "variant_id": "var09",
+      "variation_types": [
+        "rule",
+        "object_type",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 43,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 8,
+        "D2.2": 10,
+        "D2.3": 12,
+        "D2.4": 6,
+        "D2.5": 7
+      },
+      "name": "Simple Shop Management",
+      "path": "games/simple_shop_var01",
+      "slug": "simple_shop_var01",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "simple_shop",
+      "variant_id": "var01",
+      "variation_types": [
+        "object_type",
+        "interface"
+      ]
+    },
+    {
+      "checkpoint_count": 43,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 8,
+        "D2.2": 10,
+        "D2.3": 12,
+        "D2.4": 6,
+        "D2.5": 7
+      },
+      "name": "Simple Shop Management",
+      "path": "games/simple_shop_var02",
+      "slug": "simple_shop_var02",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "simple_shop",
+      "variant_id": "var02",
+      "variation_types": [
+        "object_type"
+      ]
+    },
+    {
+      "checkpoint_count": 41,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 12,
+        "D2.4": 6,
+        "D2.5": 7
+      },
+      "name": "Simple Shop Management",
+      "path": "games/simple_shop_var03",
+      "slug": "simple_shop_var03",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "simple_shop",
+      "variant_id": "var03",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 41,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 12,
+        "D2.4": 6,
+        "D2.5": 7
+      },
+      "name": "Simple Shop Management",
+      "path": "games/simple_shop_var04",
+      "slug": "simple_shop_var04",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "simple_shop",
+      "variant_id": "var04",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 41,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 12,
+        "D2.4": 6,
+        "D2.5": 7
+      },
+      "name": "Simple Shop Management",
+      "path": "games/simple_shop_var05",
+      "slug": "simple_shop_var05",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "simple_shop",
+      "variant_id": "var05",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 41,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 12,
+        "D2.4": 6,
+        "D2.5": 7
+      },
+      "name": "Simple Shop Management",
+      "path": "games/simple_shop_var06",
+      "slug": "simple_shop_var06",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "simple_shop",
+      "variant_id": "var06",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 41,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 12,
+        "D2.4": 6,
+        "D2.5": 7
+      },
+      "name": "Simple Shop Management",
+      "path": "games/simple_shop_var07",
+      "slug": "simple_shop_var07",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "simple_shop",
+      "variant_id": "var07",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 41,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 12,
+        "D2.4": 6,
+        "D2.5": 7
+      },
+      "name": "Simple Shop Management",
+      "path": "games/simple_shop_var08",
+      "slug": "simple_shop_var08",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "simple_shop",
+      "variant_id": "var08",
+      "variation_types": [
+        "parameter",
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 41,
+      "difficulty": "medium",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 12,
+        "D2.4": 6,
+        "D2.5": 7
+      },
+      "name": "Simple Shop Management",
+      "path": "games/simple_shop_var09",
+      "slug": "simple_shop_var09",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "simple_shop",
+      "variant_id": "var09",
+      "variation_types": [
+        "parameter",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 39,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 11,
+        "D2.4": 6,
+        "D2.5": 6
+      },
+      "name": "Carrot Defense-like",
+      "path": "games/carrot_defense_var01",
+      "slug": "carrot_defense_var01",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "carrot_defense",
+      "variant_id": "var01",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 40,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 8,
+        "D2.2": 9,
+        "D2.3": 11,
+        "D2.4": 6,
+        "D2.5": 6
+      },
+      "name": "Carrot Defense-like",
+      "path": "games/carrot_defense_var02",
+      "slug": "carrot_defense_var02",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "carrot_defense",
+      "variant_id": "var02",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 40,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 11,
+        "D2.4": 7,
+        "D2.5": 6
+      },
+      "name": "Carrot Defense-like",
+      "path": "games/carrot_defense_var03",
+      "slug": "carrot_defense_var03",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "carrot_defense",
+      "variant_id": "var03",
+      "variation_types": [
+        "object_count",
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 41,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 11,
+        "D2.4": 7,
+        "D2.5": 7
+      },
+      "name": "Carrot Defense-like",
+      "path": "games/carrot_defense_var04",
+      "slug": "carrot_defense_var04",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "carrot_defense",
+      "variant_id": "var04",
+      "variation_types": [
+        "map",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 41,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 11,
+        "D2.4": 7,
+        "D2.5": 7
+      },
+      "name": "Carrot Defense-like",
+      "path": "games/carrot_defense_var05",
+      "slug": "carrot_defense_var05",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "carrot_defense",
+      "variant_id": "var05",
+      "variation_types": [
+        "map",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 42,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 12,
+        "D2.4": 7,
+        "D2.5": 7
+      },
+      "name": "Carrot Defense-like",
+      "path": "games/carrot_defense_var06",
+      "slug": "carrot_defense_var06",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "carrot_defense",
+      "variant_id": "var06",
+      "variation_types": [
+        "map",
+        "object_count",
+        "rule",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 42,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 11,
+        "D2.4": 8,
+        "D2.5": 7
+      },
+      "name": "Carrot Defense-like",
+      "path": "games/carrot_defense_var07",
+      "slug": "carrot_defense_var07",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "carrot_defense",
+      "variant_id": "var07",
+      "variation_types": [
+        "map",
+        "rule",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 39,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 11,
+        "D2.4": 6,
+        "D2.5": 6
+      },
+      "name": "Carrot Defense-like",
+      "path": "games/carrot_defense_var08",
+      "slug": "carrot_defense_var08",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "carrot_defense",
+      "variant_id": "var08",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 39,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 9,
+        "D2.3": 11,
+        "D2.4": 6,
+        "D2.5": 6
+      },
+      "name": "Carrot Defense-like",
+      "path": "games/carrot_defense_var09",
+      "slug": "carrot_defense_var09",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "carrot_defense",
+      "variant_id": "var09",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 3,
+        "D2.3": 9,
+        "D2.4": 6,
+        "D2.5": 9
+      },
+      "name": "Farming-lite",
+      "path": "games/farming_lite_var01",
+      "slug": "farming_lite_var01",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "farming_lite",
+      "variant_id": "var01",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 3,
+        "D2.3": 9,
+        "D2.4": 6,
+        "D2.5": 9
+      },
+      "name": "Farming-lite",
+      "path": "games/farming_lite_var02",
+      "slug": "farming_lite_var02",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "farming_lite",
+      "variant_id": "var02",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 33,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 3,
+        "D2.3": 9,
+        "D2.4": 6,
+        "D2.5": 9
+      },
+      "name": "Farming-lite",
+      "path": "games/farming_lite_var03",
+      "slug": "farming_lite_var03",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "farming_lite",
+      "variant_id": "var03",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 34,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 3,
+        "D2.3": 9,
+        "D2.4": 7,
+        "D2.5": 9
+      },
+      "name": "Farming-lite",
+      "path": "games/farming_lite_var04",
+      "slug": "farming_lite_var04",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "farming_lite",
+      "variant_id": "var04",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 34,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 3,
+        "D2.3": 10,
+        "D2.4": 6,
+        "D2.5": 9
+      },
+      "name": "Farming-lite",
+      "path": "games/farming_lite_var05",
+      "slug": "farming_lite_var05",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "farming_lite",
+      "variant_id": "var05",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 34,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 3,
+        "D2.3": 9,
+        "D2.4": 7,
+        "D2.5": 9
+      },
+      "name": "Farming-lite",
+      "path": "games/farming_lite_var06",
+      "slug": "farming_lite_var06",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "farming_lite",
+      "variant_id": "var06",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 34,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 3,
+        "D2.3": 10,
+        "D2.4": 6,
+        "D2.5": 9
+      },
+      "name": "Farming-lite",
+      "path": "games/farming_lite_var07",
+      "slug": "farming_lite_var07",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "farming_lite",
+      "variant_id": "var07",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 34,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 7,
+        "D2.2": 3,
+        "D2.3": 9,
+        "D2.4": 6,
+        "D2.5": 9
+      },
+      "name": "Farming-lite",
+      "path": "games/farming_lite_var08",
+      "slug": "farming_lite_var08",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "farming_lite",
+      "variant_id": "var08",
+      "variation_types": [
+        "object_type"
+      ]
+    },
+    {
+      "checkpoint_count": 34,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 6,
+        "D2.2": 3,
+        "D2.3": 9,
+        "D2.4": 6,
+        "D2.5": 10
+      },
+      "name": "Farming-lite",
+      "path": "games/farming_lite_var09",
+      "slug": "farming_lite_var09",
+      "variants": [],
+      "window_size": [
+        800,
+        600
+      ],
+      "family_slug": "farming_lite",
+      "variant_id": "var09",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 36,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 8,
+        "D2.2": 8,
+        "D2.3": 10,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Pipe Connection Puzzle",
+      "path": "games/pipe_connection_var01",
+      "slug": "pipe_connection_var01",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "pipe_connection",
+      "variant_id": "var01",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 37,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 8,
+        "D2.2": 9,
+        "D2.3": 10,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Pipe Connection Puzzle",
+      "path": "games/pipe_connection_var02",
+      "slug": "pipe_connection_var02",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "pipe_connection",
+      "variant_id": "var02",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 38,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 8,
+        "D2.2": 10,
+        "D2.3": 10,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Pipe Connection Puzzle",
+      "path": "games/pipe_connection_var03",
+      "slug": "pipe_connection_var03",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "pipe_connection",
+      "variant_id": "var03",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 36,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 8,
+        "D2.2": 8,
+        "D2.3": 10,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Pipe Connection Puzzle",
+      "path": "games/pipe_connection_var04",
+      "slug": "pipe_connection_var04",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "pipe_connection",
+      "variant_id": "var04",
+      "variation_types": [
+        "map",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 36,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 8,
+        "D2.2": 8,
+        "D2.3": 10,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Pipe Connection Puzzle",
+      "path": "games/pipe_connection_var05",
+      "slug": "pipe_connection_var05",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "pipe_connection",
+      "variant_id": "var05",
+      "variation_types": [
+        "map",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 37,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 8,
+        "D2.2": 9,
+        "D2.3": 10,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Pipe Connection Puzzle",
+      "path": "games/pipe_connection_var06",
+      "slug": "pipe_connection_var06",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "pipe_connection",
+      "variant_id": "var06",
+      "variation_types": [
+        "map",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 36,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 8,
+        "D2.2": 8,
+        "D2.3": 10,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Pipe Connection Puzzle",
+      "path": "games/pipe_connection_var07",
+      "slug": "pipe_connection_var07",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "pipe_connection",
+      "variant_id": "var07",
+      "variation_types": [
+        "map",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 38,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 8,
+        "D2.2": 9,
+        "D2.3": 11,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Pipe Connection Puzzle",
+      "path": "games/pipe_connection_var08",
+      "slug": "pipe_connection_var08",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "pipe_connection",
+      "variant_id": "var08",
+      "variation_types": [
+        "map",
+        "object_type",
+        "combination"
+      ]
+    },
+    {
+      "checkpoint_count": 37,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 8,
+        "D2.2": 8,
+        "D2.3": 11,
+        "D2.4": 5,
+        "D2.5": 5
+      },
+      "name": "Pipe Connection Puzzle",
+      "path": "games/pipe_connection_var09",
+      "slug": "pipe_connection_var09",
+      "variants": [],
+      "window_size": [
+        600,
+        800
+      ],
+      "family_slug": "pipe_connection",
+      "variant_id": "var09",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 51,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 9,
+        "D2.2": 8,
+        "D2.3": 14,
+        "D2.4": 5,
+        "D2.5": 15
+      },
+      "name": "Top-down Arena Shooter",
+      "path": "games/arena_shooter_var01",
+      "slug": "arena_shooter_var01",
       "variants": [],
       "window_size": [
         800,
         700
+      ],
+      "family_slug": "arena_shooter",
+      "variant_id": "var01",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 51,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 9,
+        "D2.2": 8,
+        "D2.3": 14,
+        "D2.4": 5,
+        "D2.5": 15
+      },
+      "name": "Top-down Arena Shooter",
+      "path": "games/arena_shooter_var02",
+      "slug": "arena_shooter_var02",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "arena_shooter",
+      "variant_id": "var02",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 51,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 9,
+        "D2.2": 8,
+        "D2.3": 14,
+        "D2.4": 5,
+        "D2.5": 15
+      },
+      "name": "Top-down Arena Shooter",
+      "path": "games/arena_shooter_var03",
+      "slug": "arena_shooter_var03",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "arena_shooter",
+      "variant_id": "var03",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 51,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 9,
+        "D2.2": 8,
+        "D2.3": 14,
+        "D2.4": 5,
+        "D2.5": 15
+      },
+      "name": "Top-down Arena Shooter",
+      "path": "games/arena_shooter_var04",
+      "slug": "arena_shooter_var04",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "arena_shooter",
+      "variant_id": "var04",
+      "variation_types": [
+        "object_count"
+      ]
+    },
+    {
+      "checkpoint_count": 51,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 9,
+        "D2.2": 8,
+        "D2.3": 14,
+        "D2.4": 5,
+        "D2.5": 15
+      },
+      "name": "Top-down Arena Shooter",
+      "path": "games/arena_shooter_var05",
+      "slug": "arena_shooter_var05",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "arena_shooter",
+      "variant_id": "var05",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 52,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 9,
+        "D2.2": 8,
+        "D2.3": 15,
+        "D2.4": 5,
+        "D2.5": 15
+      },
+      "name": "Top-down Arena Shooter",
+      "path": "games/arena_shooter_var06",
+      "slug": "arena_shooter_var06",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "arena_shooter",
+      "variant_id": "var06",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 52,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 9,
+        "D2.2": 8,
+        "D2.3": 15,
+        "D2.4": 5,
+        "D2.5": 15
+      },
+      "name": "Top-down Arena Shooter",
+      "path": "games/arena_shooter_var07",
+      "slug": "arena_shooter_var07",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "arena_shooter",
+      "variant_id": "var07",
+      "variation_types": [
+        "map"
+      ]
+    },
+    {
+      "checkpoint_count": 52,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 9,
+        "D2.2": 8,
+        "D2.3": 15,
+        "D2.4": 5,
+        "D2.5": 15
+      },
+      "name": "Top-down Arena Shooter",
+      "path": "games/arena_shooter_var08",
+      "slug": "arena_shooter_var08",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "arena_shooter",
+      "variant_id": "var08",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 52,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 9,
+        "D2.2": 8,
+        "D2.3": 14,
+        "D2.4": 5,
+        "D2.5": 16
+      },
+      "name": "Top-down Arena Shooter",
+      "path": "games/arena_shooter_var09",
+      "slug": "arena_shooter_var09",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "arena_shooter",
+      "variant_id": "var09",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 58,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 12,
+        "D2.2": 9,
+        "D2.3": 20,
+        "D2.4": 7,
+        "D2.5": 10
+      },
+      "name": "Mini Zelda-like Room Adventure",
+      "path": "games/mini_zelda_var01",
+      "slug": "mini_zelda_var01",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "mini_zelda",
+      "variant_id": "var01",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 58,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 12,
+        "D2.2": 9,
+        "D2.3": 20,
+        "D2.4": 7,
+        "D2.5": 10
+      },
+      "name": "Mini Zelda-like Room Adventure",
+      "path": "games/mini_zelda_var02",
+      "slug": "mini_zelda_var02",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "mini_zelda",
+      "variant_id": "var02",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 59,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 12,
+        "D2.2": 9,
+        "D2.3": 21,
+        "D2.4": 7,
+        "D2.5": 10
+      },
+      "name": "Mini Zelda-like Room Adventure",
+      "path": "games/mini_zelda_var03",
+      "slug": "mini_zelda_var03",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "mini_zelda",
+      "variant_id": "var03",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 59,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 12,
+        "D2.2": 9,
+        "D2.3": 20,
+        "D2.4": 8,
+        "D2.5": 10
+      },
+      "name": "Mini Zelda-like Room Adventure",
+      "path": "games/mini_zelda_var04",
+      "slug": "mini_zelda_var04",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "mini_zelda",
+      "variant_id": "var04",
+      "variation_types": [
+        "object_type"
+      ]
+    },
+    {
+      "checkpoint_count": 59,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 12,
+        "D2.2": 9,
+        "D2.3": 21,
+        "D2.4": 7,
+        "D2.5": 10
+      },
+      "name": "Mini Zelda-like Room Adventure",
+      "path": "games/mini_zelda_var05",
+      "slug": "mini_zelda_var05",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "mini_zelda",
+      "variant_id": "var05",
+      "variation_types": [
+        "parameter"
+      ]
+    },
+    {
+      "checkpoint_count": 59,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 12,
+        "D2.2": 9,
+        "D2.3": 21,
+        "D2.4": 7,
+        "D2.5": 10
+      },
+      "name": "Mini Zelda-like Room Adventure",
+      "path": "games/mini_zelda_var06",
+      "slug": "mini_zelda_var06",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "mini_zelda",
+      "variant_id": "var06",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 60,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 13,
+        "D2.2": 9,
+        "D2.3": 21,
+        "D2.4": 7,
+        "D2.5": 10
+      },
+      "name": "Mini Zelda-like Room Adventure",
+      "path": "games/mini_zelda_var07",
+      "slug": "mini_zelda_var07",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "mini_zelda",
+      "variant_id": "var07",
+      "variation_types": [
+        "map"
+      ]
+    },
+    {
+      "checkpoint_count": 59,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 12,
+        "D2.2": 9,
+        "D2.3": 21,
+        "D2.4": 7,
+        "D2.5": 10
+      },
+      "name": "Mini Zelda-like Room Adventure",
+      "path": "games/mini_zelda_var08",
+      "slug": "mini_zelda_var08",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "mini_zelda",
+      "variant_id": "var08",
+      "variation_types": [
+        "rule"
+      ]
+    },
+    {
+      "checkpoint_count": 60,
+      "difficulty": "hard",
+      "dimension_counts": {
+        "D2.1": 12,
+        "D2.2": 9,
+        "D2.3": 22,
+        "D2.4": 7,
+        "D2.5": 10
+      },
+      "name": "Mini Zelda-like Room Adventure",
+      "path": "games/mini_zelda_var09",
+      "slug": "mini_zelda_var09",
+      "variants": [],
+      "window_size": [
+        800,
+        700
+      ],
+      "family_slug": "mini_zelda",
+      "variant_id": "var09",
+      "variation_types": [
+        "rule"
       ]
     }
   ],
-  "schema_version": 1
+  "instance_count": 150,
+  "full_checkpoint_count": 5475,
+  "full_dimensions": {
+    "D2.1": 992,
+    "D2.2": 952,
+    "D2.3": 1540,
+    "D2.4": 672,
+    "D2.5": 1319
+  }
 }

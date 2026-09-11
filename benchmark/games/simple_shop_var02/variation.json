@@ -1,0 +1,132 @@
+{
+  "instance_id": "simple_shop_var02",
+  "family_slug": "simple_shop",
+  "variant_id": "var02",
+  "variation_types": [
+    "object_type"
+  ],
+  "source_path": "游戏规格说明（英文）/10_medium_Simple Shop Management/10_medium_Simple Shop Management_V3.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Simple Shop Management is a simplified resource-management and shop-operation game. The player runs a small shop and manages Money, Time, Missed customers, and the inventory of three products: Apple, Bread, and Milk."
+      ],
+      "after": [
+        "Simple Shop Management is a simplified resource-management and shop-operation game. The player runs a small shop and manages Money, Time, Missed customers, and the inventory of three products: Apple, Bread, and Orange."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "| Milk Shelf | `(400, 140)` | `140 × 120 px` | Milk icon, `Milk`, `Stock: X` |"
+      ],
+      "after": [
+        "| Orange Shelf | `(400, 140)` | `140 × 120 px` | Orange icon, `Orange`, `Stock: X` |"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- Milk: white or light blue-and-white carton or bottle with a blue element near the top."
+      ],
+      "after": [
+        "- Orange: orange-colored round fruit with a small green leaf."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- `Wants: Milk`"
+      ],
+      "after": [
+        "- `Wants: Orange`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "| Restock Milk | `(400, 630)` | `160 × 60 px` | Milk icon, `Restock Milk`, `Cost: 12` |"
+      ],
+      "after": [
+        "| Restock Orange | `(400, 630)` | `160 × 60 px` | Orange icon, `Restock Orange`, `Cost: 12` |"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "| Milk | 3 | 9 | +3 | 12 | 8 |"
+      ],
+      "after": [
+        "| Orange | 3 | 9 | +3 | 12 | 8 |"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Milk: 3"
+      ],
+      "after": [
+        "- Orange: 3"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- Milk: 1/3"
+      ],
+      "after": [
+        "- Orange: 1/3"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- Milk Stock = 3"
+      ],
+      "after": [
+        "- Orange Stock = 3"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- Milk: 12"
+      ],
+      "after": [
+        "- Orange: 12"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "- Milk: 8"
+      ],
+      "after": [
+        "- Orange: 8"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "- Milk Stock: 3"
+      ],
+      "after": [
+        "- Orange Stock: 3"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "simple_shop_var02.D2.1.01",
+    "simple_shop_var02.D2.3.02",
+    "simple_shop_var02.D2.1.08",
+    "simple_shop_var02.D2.2.10"
+  ],
+  "added_checkpoint_ids": [
+    "simple_shop_var02.D2.1.08",
+    "simple_shop_var02.D2.2.10"
+  ],
+  "base_checkpoints_sha256": "92690470632ad35064fdea71202df38a8d1a3a60254bb79bf23c97bab356f2f3",
+  "checkpoints_sha256": "2ebe73574f62734f11ee9c0fa31b2f286abee22bc2a2095523b3f578d99b7e7f"
+}

@@ -1,0 +1,285 @@
+{
+  "instance_id": "maze_runner_var07",
+  "family_slug": "maze_runner",
+  "variant_id": "var07",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/5_easy_Maze Runner/5_easy_Maze Runner_V8.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "- If the target cell is a wall or outside the map boundary, the player remains in the current cell."
+      ],
+      "after": [
+        "- If the target cell is a wall or outside the map boundary, the player remains in the current cell and Time is reduced by an additional 1 second."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "`Reach the exit before time runs out    Restart: R`"
+      ],
+      "after": [
+        "`Invalid move: -1s    Restart: R`"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "The countdown continues regardless of whether the player moves successfully, remains still, or repeatedly attempts to move into a wall."
+      ],
+      "after": [
+        "In addition to the normal countdown, each movement attempt into a wall or outside the map immediately reduces Time by an additional 1 second."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [],
+      "after": [
+        "If an invalid movement penalty reduces Time to 0 or below, displayed Time is set to 0 and the game immediately enters `lost`."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "Steps is informational only and does not affect victory or failure."
+      ],
+      "after": [
+        "Invalid movement penalties affect Time only and never increase Steps.",
+        "Steps is informational only and does not otherwise affect victory or failure."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "In `lost`, Time has reached 0 before a successful exit movement was completed; movement stops, Time remains 0, and Steps no longer changes."
+      ],
+      "after": [
+        "In `lost`, Time has reached 0 either through the normal countdown or an invalid-movement penalty before a successful exit movement was completed. Movement stops, Time remains 0, and Steps no longer changes."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "5. If invalid, leave the player in the current cell."
+      ],
+      "after": [
+        "5. If invalid, leave the player in the current cell and reduce Time by 1 second."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "Every repeated attempt independently checks whether the target cell is enterable. Holding a direction against a wall therefore produces repeated failed attempts without moving the player or increasing Steps."
+      ],
+      "after": [
+        "Every repeated attempt independently checks whether the target cell is enterable.",
+        "Therefore, holding a direction against a wall produces repeated failed movement attempts at 0.15-second intervals. Each failed attempt leaves the player in place, does not increase Steps, and reduces Time by an additional 1 second."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- No additional Time is deducted beyond the normal countdown."
+      ],
+      "after": [
+        "- Time is immediately reduced by an additional 1 second."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- The game does not end."
+      ],
+      "after": [
+        "If Time remains above 0 after the penalty, the game continues.",
+        "If the penalty causes Time to reach 0 or below:",
+        "- Set displayed Time to 0.",
+        "- Immediately enter `lost`.",
+        "- Do not process any further movement outcome during that update."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "The maze contains 15 × 15 cells. Each movement attempt changes the player's position by exactly one adjacent cell."
+      ],
+      "after": [
+        "The maze contains 15 × 15 cells. Each movement attempt changes the player's position by exactly one adjacent cell if the target is valid."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "Every non-enterable target causes the invalid-movement penalty defined in Section 5.5."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [],
+      "after": [
+        "Each repeated attempt is treated as a separate movement attempt. Therefore, every repeated invalid attempt independently applies the 1-second Time penalty."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "## 5.5 Countdown"
+      ],
+      "after": [
+        "## 5.5 Countdown & Invalid-Movement Penalty"
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "The countdown is independent of movement success or failure.",
+        "The displayed Time is clamped to a minimum of 0."
+      ],
+      "after": [
+        "In addition, every invalid movement attempt causes:",
+        "`Time -= 1 second`",
+        "An invalid movement attempt is any attempt whose target:",
+        "- Contains `#`, or",
+        "- Lies outside the 15 × 15 grid.",
+        "The penalty is applied once per invalid movement attempt.",
+        "After applying the penalty:",
+        "- If Time > 0, gameplay continues.",
+        "- If Time ≤ 0, set displayed Time to 0 and immediately enter `lost`.",
+        "The displayed Time is always clamped to a minimum of 0."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "Time expiration has priority over new movement outcomes in the frame in which the countdown reaches 0.",
+        "At the beginning of each gameplay update, the countdown is advanced. If Time reaches 0 during that update:"
+      ],
+      "after": [
+        "Normal countdown expiration has priority over new movement outcomes in the frame in which the countdown reaches 0.",
+        "At the beginning of each gameplay update, the normal countdown is advanced. If Time reaches 0 during that update:"
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "Victory therefore requires the player to have successfully entered `E` while Time was still above 0.",
+        "If Time reaches 0 and an exit movement would otherwise occur during the same frame, the result is `lost`."
+      ],
+      "after": [
+        "If Time remains above 0, movement input may be processed.",
+        "For an invalid movement attempt:",
+        "1. Leave the player in the current cell.",
+        "2. Leave Steps unchanged.",
+        "3. Reduce Time by 1 second.",
+        "4. If Time reaches 0, immediately enter `lost`.",
+        "For a successful movement:",
+        "1. Move the player into the target cell.",
+        "2. Increase Steps by 1.",
+        "3. If the target is `E` and Time remains above 0, immediately enter `won`."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "If Time remains above 0, the game processes newly pressed arrow keys and held-key repeats. For each movement attempt, it calculates the target cell, checks map boundaries and cell validity, and moves only if the target is enterable.",
+        "Each successful movement increases Steps by 1. After a successful movement, if the player has entered `E`, the game immediately enters `won`."
+      ],
+      "after": [
+        "If Time remains above 0, the game processes newly pressed arrow keys and held-key repeats.",
+        "For each movement attempt, it calculates the target cell and checks map boundaries and cell validity.",
+        "If the target is valid:",
+        "- The player moves into the target cell.",
+        "- Steps increases by 1.",
+        "- If the target is `E`, the game immediately enters `won`.",
+        "If the target is invalid:",
+        "- The player remains in place.",
+        "- Steps does not increase.",
+        "- Time is reduced by 1 second.",
+        "- If Time reaches 0, the game immediately enters `lost`."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "The maze layout, total duration of 30 seconds, movement-repeat interval of 0.15 seconds, player starting position, and exit position remain fixed for every run."
+      ],
+      "after": [
+        "The maze layout, initial duration of 30 seconds, invalid-movement penalty of 1 second, movement-repeat interval of 0.15 seconds, player starting position, and exit position remain fixed for every run."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "The player's only objective is to move from the starting position to the exit before the 30-second countdown expires."
+      ],
+      "after": [
+        "The player's only objective is to move from the starting position to the exit before Time reaches 0."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "Time starts at 30, decreases according to actual elapsed time, and never displays below 0. Steps starts at 0 and increases only after successful movement."
+      ],
+      "after": [
+        "Time starts at 30, decreases according to actual elapsed time, loses an additional 1 second after every invalid movement attempt, and never displays below 0.",
+        "Steps starts at 0 and increases only after successful movement."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "- Wall → player remains in place and Steps does not change.",
+        "- Outside map → player remains in place and Steps does not change."
+      ],
+      "after": [
+        "- Wall → player remains in place, Steps does not change, and Time decreases by 1 second.",
+        "- Outside map → player remains in place, Steps does not change, and Time decreases by 1 second."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "`Reach the exit before time runs out    Restart: R`"
+      ],
+      "after": [
+        "`Invalid move: -1s    Restart: R`"
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "Failure occurs when Time reaches 0 before the player has successfully reached the exit. The game enters `lost` and displays:"
+      ],
+      "after": [
+        "Failure occurs when Time reaches 0 either through the normal countdown or an invalid-movement penalty. The game enters `lost` and displays:"
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [
+        "If Time reaches 0 in the same frame in which an exit movement would otherwise be processed, Failure takes priority and the exit movement is not accepted."
+      ],
+      "after": [
+        "Normal countdown expiration is checked before new movement outcomes in each update."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "maze_runner_var07.D2.3.04",
+    "maze_runner_var07.D2.5.02",
+    "maze_runner_var07.D2.4.06",
+    "maze_runner_var07.D2.5.06"
+  ],
+  "added_checkpoint_ids": [
+    "maze_runner_var07.D2.4.06",
+    "maze_runner_var07.D2.5.06"
+  ],
+  "base_checkpoints_sha256": "665c6469f0a0a37ce038210a1cd05a3b62cec36bc61457f8e0906eea00c906eb",
+  "checkpoints_sha256": "02f0771a5e9ad47f09dd6a7dd5abd2e2a5c1bfb4c439ecda122cb648167c2610"
+}

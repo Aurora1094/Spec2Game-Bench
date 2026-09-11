@@ -1,0 +1,435 @@
+{
+  "instance_id": "farming_lite_var08",
+  "family_slug": "farming_lite",
+  "variant_id": "var08",
+  "variation_types": [
+    "object_type"
+  ],
+  "source_path": "游戏规格说明（英文）/12_hard_Farming-lite/12_hard_Farming-lite_V9.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Farming-lite is a simplified farming management game with a fixed 8-day operating cycle. The player buys seeds, plants crops, waters them, waits for them to grow, harvests mature crops, and earns Gold."
+      ],
+      "after": [
+        "Farming-lite is a simplified farming management game with a fixed 8-day operating cycle.",
+        "The player buys seeds, plants crops, waters them, waits for them to grow, harvests mature crops, and earns Gold."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "After Day 8 ends, the game enters a settlement state and displays the final Gold amount together with the total numbers of Carrots and Pumpkins harvested."
+      ],
+      "after": [
+        "After Day 8 ends, the game enters a settlement state and displays the final Gold amount together with the total numbers of Carrots and Corn harvested."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- Pumpkin: more expensive, matures more slowly, higher harvest value."
+      ],
+      "after": [
+        "- Corn: more expensive than Carrot, has a medium growth cycle, and provides a higher harvest value."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "Pumpkin has 5 stages:"
+      ],
+      "after": [
+        "Corn has 4 stages:"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Stage 1: short vine with a small number of leaves.",
+        "- Stage 2: longer vine with more leaves.",
+        "- Stage 3: small orange Pumpkin fruit appears beside the vine.",
+        "- Stage 4: mature; large orange Pumpkin with darker curved lines or stripes."
+      ],
+      "after": [
+        "- Stage 1: taller green stalk with several leaves.",
+        "- Stage 2: a small yellow Corn cob begins to appear on the stalk.",
+        "- Stage 3: mature; a clearly visible yellow Corn cob with green husk."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "- Pumpkin seed icon + `2` + `18`"
+      ],
+      "after": [
+        "- Corn seed icon + `2` + `14`"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [],
+      "after": [
+        "The Corn seed icon should use a yellow-and-green Corn-style appearance clearly distinguishable from the Carrot icon."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "`Left Click: Use    Right Click: Cancel`"
+      ],
+      "after": [
+        "`Left Click: Use Right Click: Cancel`"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "| Pumpkin | 18 Gold | 4 | Stage 4 | 50 Gold |"
+      ],
+      "after": [
+        "| Corn | 14 Gold | 3 | Stage 3 | 36 Gold |"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "A Pumpkin becomes mature at Stage 4."
+      ],
+      "after": [
+        "Corn becomes mature at Stage 3.",
+        "Growth stages never increase beyond the crop's mature stage."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "- Plant Pumpkin: -18"
+      ],
+      "after": [
+        "- Plant Corn: -14"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "- Harvest mature Pumpkin: +50"
+      ],
+      "after": [
+        "- Harvest mature Corn: +36"
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "- `pumpkin_seed`"
+      ],
+      "after": [
+        "- `corn_seed`"
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "- Pumpkins harvested"
+      ],
+      "after": [
+        "- Corn harvested"
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "The final settlement displays separate Carrot and Pumpkin counts."
+      ],
+      "after": [
+        "The final settlement displays separate Carrot and Corn counts."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "- `2`: select Pumpkin seed"
+      ],
+      "after": [
+        "- `2`: select Corn seed"
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "- Pumpkin → `Harvested Pumpkin +50`"
+      ],
+      "after": [
+        "- Corn → `Harvested Corn +36`"
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "- Pumpkin harvested count to 0"
+      ],
+      "after": [
+        "- Corn harvested count to 0"
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [],
+      "after": [
+        "After Restart, the available crop types are again Carrot and Corn.",
+        "No crop or harvest state from the previous run continues."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [],
+      "after": [
+        "Carrot progression is:",
+        "`Stage 0 → Stage 1 → Stage 2 (Mature)`",
+        "Corn progression is:",
+        "`Stage 0 → Stage 1 → Stage 2 → Stage 3 (Mature)`",
+        "Therefore:",
+        "- Carrot requires exactly 2 effective growth events to mature.",
+        "- Corn requires exactly 3 effective growth events to mature."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [],
+      "after": [
+        "Once a crop reaches its mature stage, its stage no longer changes."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "4. Mark crops that have reached their mature stage as mature.",
+        "5. Clear the watered state of every plot.",
+        "6. If the current Day is Day 1–7, increase Day by 1 and reset Time to 30 seconds.",
+        "7. If the current Day is Day 8, proceed directly to final settlement."
+      ],
+      "after": [
+        "4. Mark Carrots reaching Stage 2 as mature.",
+        "5. Mark Corn reaching Stage 3 as mature.",
+        "6. Clear the watered state of every plot.",
+        "7. If the current Day is Day 1–7, increase Day by 1 and reset Time to 30 seconds.",
+        "8. If the current Day is Day 8, proceed directly to final settlement."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "2. Identify all crops that are mature after that growth settlement.",
+        "3. Automatically harvest all mature crops.",
+        "4. Add each harvested crop's normal value to Gold.",
+        "5. Increase total harvested count.",
+        "6. Increase the corresponding Carrot or Pumpkin count.",
+        "7. Clear all automatically harvested plots.",
+        "8. Leave immature crops without final earnings.",
+        "9. Enter `settlement`.",
+        "Therefore, a crop that becomes mature during the Day 8 growth settlement is included in the automatic final harvest."
+      ],
+      "after": [
+        "2. Mark Carrots reaching Stage 2 as mature.",
+        "3. Mark Corn reaching Stage 3 as mature.",
+        "4. Identify all crops that are mature after that growth settlement.",
+        "5. Automatically harvest all mature crops.",
+        "6. Add each harvested crop's normal value to Gold.",
+        "7. Increase total harvested count.",
+        "8. Increase the corresponding Carrot or Corn count.",
+        "9. Clear all automatically harvested plots.",
+        "10. Leave immature crops without final earnings.",
+        "11. Enter `settlement`.",
+        "Therefore:",
+        "- A Carrot that changes from Stage 1 to Stage 2 during Day 8 settlement is automatically harvested.",
+        "- Corn that changes from Stage 2 to Stage 3 during Day 8 settlement is automatically harvested."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "- Pumpkin: 18 Gold"
+      ],
+      "after": [
+        "- Corn: 14 Gold"
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [],
+      "after": [
+        "A newly planted Carrot requires 2 effective growth events to mature.",
+        "Newly planted Corn requires 3 effective growth events to mature."
+      ]
+    },
+    {
+      "id": "change26",
+      "before": [],
+      "after": [
+        "A Carrot is mature at Stage 2.",
+        "Corn is mature at Stage 3."
+      ]
+    },
+    {
+      "id": "change27",
+      "before": [
+        "- Mature Pumpkin: 50 Gold"
+      ],
+      "after": [
+        "- Mature Corn: 36 Gold"
+      ]
+    },
+    {
+      "id": "change28",
+      "before": [
+        "Pumpkin graphic + `B`"
+      ],
+      "after": [
+        "Corn graphic + `B`"
+      ]
+    },
+    {
+      "id": "change29",
+      "before": [
+        "- B = total Pumpkins harvested"
+      ],
+      "after": [
+        "- B = total Corn harvested"
+      ]
+    },
+    {
+      "id": "change30",
+      "before": [
+        "- Carrot and Pumpkin counts: 28 px"
+      ],
+      "after": [
+        "- Carrot and Corn counts: 28 px"
+      ]
+    },
+    {
+      "id": "change31",
+      "before": [
+        "- Pumpkins harvested: 0"
+      ],
+      "after": [
+        "- Corn harvested: 0"
+      ]
+    },
+    {
+      "id": "change32",
+      "before": [
+        "Planting deducts Gold and creates a Stage 0 crop."
+      ],
+      "after": [
+        "Planting deducts Gold and creates a Stage 0 Carrot or Corn crop."
+      ]
+    },
+    {
+      "id": "change33",
+      "before": [
+        "Harvesting a mature crop adds Gold, updates harvest statistics, and clears the plot."
+      ],
+      "after": [
+        "At end-of-day settlement:",
+        "- A watered immature crop advances exactly one stage.",
+        "- A Carrot becomes mature at Stage 2.",
+        "- Corn becomes mature at Stage 3.",
+        "Harvesting a mature crop adds its corresponding Gold value, updates harvest statistics, and clears the plot."
+      ]
+    },
+    {
+      "id": "change34",
+      "before": [
+        "3. Clear all watered states."
+      ],
+      "after": [
+        "3. Update crop maturity.",
+        "4. Clear all watered states."
+      ]
+    },
+    {
+      "id": "change35",
+      "before": [
+        "- Automatically harvest all crops that are mature after that settlement."
+      ],
+      "after": [
+        "- Automatically harvest all Carrots and Corn that are mature after that settlement."
+      ]
+    },
+    {
+      "id": "change36",
+      "before": [
+        "Pumpkin graphic + `B`"
+      ],
+      "after": [
+        "Corn graphic + `B`"
+      ]
+    },
+    {
+      "id": "change37",
+      "before": [
+        "The player's goal is to manage the 8-day farming cycle effectively by purchasing seeds, planting crops, watering them, and harvesting mature crops to accumulate Gold and increase crop harvest counts."
+      ],
+      "after": [
+        "The player's goal is to manage the 8-day farming cycle effectively by purchasing Carrot and Corn seeds, planting crops, watering them, and harvesting mature crops to accumulate Gold and increase crop harvest counts."
+      ]
+    },
+    {
+      "id": "change38",
+      "before": [
+        "- Planted crops"
+      ],
+      "after": [
+        "- Planted Carrots",
+        "- Planted Corn"
+      ]
+    },
+    {
+      "id": "change39",
+      "before": [
+        "`Left Click: Use    Right Click: Cancel`"
+      ],
+      "after": [
+        "`Left Click: Use Right Click: Cancel`"
+      ]
+    },
+    {
+      "id": "change40",
+      "before": [
+        "- `Harvested Pumpkin +50`"
+      ],
+      "after": [
+        "- `Harvested Corn +36`"
+      ]
+    },
+    {
+      "id": "change41",
+      "before": [
+        "3. All crops mature at that point are automatically harvested."
+      ],
+      "after": [
+        "3. All Carrots and Corn mature at that point are automatically harvested."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "farming_lite_var08.D2.3.01",
+    "farming_lite_var08.D2.3.06",
+    "farming_lite_var08.D2.3.07",
+    "farming_lite_var08.D2.3.08",
+    "farming_lite_var08.D2.3.09",
+    "farming_lite_var08.D2.4.04",
+    "farming_lite_var08.D2.4.05",
+    "farming_lite_var08.D2.4.06",
+    "farming_lite_var08.D2.5.02",
+    "farming_lite_var08.D2.1.07"
+  ],
+  "added_checkpoint_ids": [
+    "farming_lite_var08.D2.1.07"
+  ],
+  "base_checkpoints_sha256": "216ba3d8ea18719c2a19c1a40d9e1f270ce4c0ab2c6a8a8ac2e1e38ea0061256",
+  "checkpoints_sha256": "0fe2a8086b38cef98abd35e5babb5b55443a02f12f3cc9e6bfdfa09f69823b61"
+}

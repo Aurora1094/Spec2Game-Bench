@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "slug": "dodge_blocks_var05",
+  "name": "Dodge Blocks",
+  "difficulty": "easy",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [],
+  "window_size": [
+    600,
+    800
+  ],
+  "source_audit": {
+    "docx_sha256": "b6765228e23dd206162e8bb2e7afe035044b4220bdc44d513998e95f676d0df2",
+    "base_checkpoints_sha256": "49ce18ae41ba1d7c6ead6d9e52bdbc10b7447961c50d8924076bc487b8706308",
+    "checkpoint_count": 32
+  },
+  "family_slug": "dodge_blocks",
+  "variant_id": "var05",
+  "variation_types": [
+    "parameter"
+  ]
+}

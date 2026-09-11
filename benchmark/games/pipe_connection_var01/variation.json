@@ -1,0 +1,173 @@
+{
+  "instance_id": "pipe_connection_var01",
+  "family_slug": "pipe_connection",
+  "variant_id": "var01",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/13_hard_Pipe Connection Puzzle/13_hard_Pipe Connection Puzzle_V2.docx",
+  "corrections": [
+    "Final DOCX takes precedence over spreadsheet draft differences."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "The player may perform at most 30 successful pipe rotations. Each valid rotation increases Moves by 1."
+      ],
+      "after": [
+        "The player may perform at most 24 successful pipe rotations. Each valid rotation increases Moves by 1."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "Reaching 30 Moves does not automatically cause Failure. It only prevents further pipe rotation. The player may still press Space to submit the current configuration."
+      ],
+      "after": [
+        "Reaching 24 Moves does not automatically cause Failure. It only prevents further pipe rotation. The player may still press Space to submit the current configuration."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- `Moves: X/30` at `(30, 35)`"
+      ],
+      "after": [
+        "- `Moves: X/24` at `(30, 35)`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "`Moves: 0/30`"
+      ],
+      "after": [
+        "`Moves: 0/24`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "`Click pipe to rotate    Press Space to run water`",
+        "`Connect source to all sinks    Restart: R`"
+      ],
+      "after": [
+        "`Click pipe to rotate Press Space to run water`",
+        "`Connect source to all sinks Restart: R`"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "`Moves = 30`",
+        "When Moves reaches 30:"
+      ],
+      "after": [
+        "`Moves = 24`",
+        "When Moves reaches 24:"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "During `editing`, the player may rotate eligible pipes while Moves < 30 and may press Space to submit."
+      ],
+      "after": [
+        "During `editing`, the player may rotate eligible pipes while Moves < 24 and may press Space to submit."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "While the game is `editing` and Moves < 30, left-clicking a Straight Pipe, Corner Pipe, or T Pipe rotates it 90° clockwise."
+      ],
+      "after": [
+        "While the game is `editing` and Moves < 24, left-clicking a Straight Pipe, Corner Pipe, or T Pipe rotates it 90° clockwise."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "When Moves reaches 30, clicking rotatable pipes has no effect and Moves remains `30/30`."
+      ],
+      "after": [
+        "When Moves reaches 24, clicking rotatable pipes has no effect and Moves remains `24/24`."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "Row 0: SRC-E | SV   | SV   | TNES | SV   | SNK-W",
+        "Row 1: BLK   | CNE  | TESW | SH   | BLK  | CES",
+        "Row 2: CSW   | BLK  | CNE  | SH   | TWNE | BLK",
+        "Row 3: BLK   | SV   | LEK  | SH   | CNE  | SV",
+        "Row 4: TESW  | BLK  | CES  | CES  | CWN  | BLK",
+        "Row 5: SH    | CNE  | BLK  | BLK  | CES  | SNK-W"
+      ],
+      "after": [
+        "Row 0: SRC-E | SV | SV | TNES | SV | SNK-W",
+        "Row 1: BLK | CNE | TESW | SH | BLK | CES",
+        "Row 2: CSW | BLK | CNE | SH | TWNE | BLK",
+        "Row 3: BLK | SV | LEK | SH | CNE | SV",
+        "Row 4: TESW | BLK | CES | CES | CWN | BLK",
+        "Row 5: SH | CNE | BLK | BLK | CES | SNK-W"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "During `editing`, the player may rotate any eligible pipe while Moves < 30."
+      ],
+      "after": [
+        "During `editing`, the player may rotate any eligible pipe while Moves < 24."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "If Moves reaches 30:"
+      ],
+      "after": [
+        "If Moves reaches 24:"
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "The player's goal is to configure the fixed pipe network within at most 30 successful rotations so that Source water reaches both Sinks without producing any invalid Source-reachable outlet."
+      ],
+      "after": [
+        "The player's goal is to configure the fixed pipe network within at most 24 successful rotations so that Source water reaches both Sinks without producing any invalid Source-reachable outlet."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "Clicking a non-rotatable object or attempting another rotation after Moves reaches 30 does not change the board or Moves."
+      ],
+      "after": [
+        "Clicking a non-rotatable object or attempting another rotation after Moves reaches 24 does not change the board or Moves."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "Moves reaching 30 is not itself a Failure condition."
+      ],
+      "after": [
+        "Moves reaching 24 is not itself a Failure condition."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "pipe_connection_var01.D2.1.05",
+    "pipe_connection_var01.D2.2.01",
+    "pipe_connection_var01.D2.2.02",
+    "pipe_connection_var01.D2.2.03",
+    "pipe_connection_var01.D2.2.04"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "81842a961e20164b1af130002c9a8ab35beeedb93f7f148ef4bbafae418571f6",
+  "checkpoints_sha256": "6bc1d2613f468d86f27bc00fcfd41b62cfd066f48f6e81fa21439953edb9281e"
+}

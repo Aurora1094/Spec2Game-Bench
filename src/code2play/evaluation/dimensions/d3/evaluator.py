@@ -190,6 +190,12 @@ _SEMANTIC_JUDGE_CONTRACTS = {
 }
 
 
+_SEMANTIC_JUDGE_CONTRACTS["openrouter_qwen_vl_judge"] = {
+    **_SEMANTIC_JUDGE_CONTRACTS["openrouter_gpt56_terra_qwenvl_judge_v1"],
+    "policy": "openrouter_qwen_vl_judge",
+}
+
+
 def validate_semantic_judge_config(value: Mapping[str, Any]) -> dict[str, Any]:
     policy = str(value.get("policy") or "")
     expected = _SEMANTIC_JUDGE_CONTRACTS.get(policy)

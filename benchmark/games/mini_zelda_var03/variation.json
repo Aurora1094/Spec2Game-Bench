@@ -1,0 +1,144 @@
+{
+  "instance_id": "mini_zelda_var03",
+  "family_slug": "mini_zelda",
+  "variant_id": "var03",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/15_hard_Mini Zelda-like Room Adventure/15_hard_Mini Zelda-like Room Adventure_V4.docx",
+  "corrections": [
+    "Final DOCX takes precedence over spreadsheet draft differences."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "The sword attack extends 54 px forward from the edge of the player's circular collision shape and has a width of 34 px."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "A custom rule is the sequential dependency between Key 1 and Key 2. The player must first clear Room B to obtain Key 1 and unlock Room D, then clear Room D to obtain Key 2 and unlock Room E."
+      ],
+      "after": [
+        "Key 1 and Key 2 form a sequential dependency. The player must first clear Room B to obtain Key 1 and unlock Room D, then clear Room D to obtain Key 2 and unlock Room E."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`WASD: Move    Space: Attack`"
+      ],
+      "after": [
+        "`WASD: Move Space: Attack`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "          Room B",
+        "            |"
+      ],
+      "after": [
+        "       Room B",
+        "         |"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "            |",
+        "          Room E"
+      ],
+      "after": [
+        "         |",
+        "       Room E"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "- Length along attack direction: 42 px"
+      ],
+      "after": [
+        "- Length along attack direction: 54 px"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "The rectangle begins at the edge of the player's circular collision shape and extends forward."
+      ],
+      "after": [
+        "The rectangle begins at the edge of the player's circular collision shape and extends 54 px forward."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [],
+      "after": [
+        "- Use the 54 × 34 px logical attack dimensions before clipping."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "For the locked attack direction, the effective attack area is clipped at the nearest blocking wall or fixed obstacle boundary."
+      ],
+      "after": [
+        "For the locked attack direction, the 54 px forward attack area is clipped at the nearest blocking wall or fixed obstacle boundary."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "The actual room transition is still performed during the unified room-transition stage."
+      ],
+      "after": [
+        "The actual room transition is performed during the unified room-transition stage."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "- Right-side door → message appears to the left",
+        "- Bottom-side door → message appears above"
+      ],
+      "after": [
+        "- Right-side door message appears to the left.",
+        "- Bottom-side door message appears above."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "5. If the attack remains active, update the attack area and process enemy hits, HP reduction, and deaths."
+      ],
+      "after": [
+        "5. If the attack remains active, calculate the 54 × 34 px logical attack area from the player's current position, clip it against blocking room walls and fixed obstacles, and process enemy hits, HP reduction, and deaths."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [],
+      "after": [
+        "The sword attack area has:",
+        "- Forward length: 54 px",
+        "- Width: 34 px",
+        "- Attack duration: 0.20 seconds",
+        "Room walls and fixed obstacles clip the logical attack area."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "mini_zelda_var03.D2.5.02",
+    "mini_zelda_var03.D2.3.21"
+  ],
+  "added_checkpoint_ids": [
+    "mini_zelda_var03.D2.3.21"
+  ],
+  "base_checkpoints_sha256": "1e56b3ca7b602293b90ac54d2ecebc5f7a4483be506870a833a77652c49dc967",
+  "checkpoints_sha256": "55381f9f90cec8be6dc6cda5f745e0b56ad148d5ff10205be8856c44a3a1f8e7"
+}

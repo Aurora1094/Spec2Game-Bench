@@ -1,0 +1,178 @@
+{
+  "instance_id": "carrot_defense_var08",
+  "family_slug": "carrot_defense",
+  "variant_id": "var08",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/11_hard_Carrot Defense-like/11_hard_Carrot Defense-like_V9.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "The player can spend Gold to build Basic Towers and Freeze Towers. Basic Towers provide primary damage, while Freeze Towers deal lower damage and apply a temporary slowing effect."
+      ],
+      "after": [
+        "The player can spend Gold to build Basic Towers and Freeze Towers. Basic Towers provide primary damage and have an attack range of 140 px. Freeze Towers deal lower damage and reduce enemy movement speed to 50% of the original speed for 1.5 seconds."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "(0,2) → (1,2) → (2,2) → (3,2) → (4,2) → (5,2)",
+        "                                             ↓",
+        "                                           (5,3)",
+        "                                             ↓",
+        "                                           (5,4)",
+        "                                             ↓",
+        "                                           (5,5)",
+        "                                             ↓",
+        "(6,5) → (7,5) → (8,5) → (9,5)"
+      ],
+      "after": [
+        "(0,2) (1,2) (2,2) (3,2) (4,2) (5,2)"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "                            (9,4)"
+      ],
+      "after": [
+        "                            (5,3)"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "                            (9,3)"
+      ],
+      "after": [
+        "                            (5,4)"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "                          (10,3) → (11,3)"
+      ],
+      "after": [
+        "                            (5,5)",
+        "                              ↓",
+        "(6,5) (7,5) (8,5) (9,5)",
+        "                  ↑",
+        "                (9,4)",
+        "                  ↑",
+        "                (9,3) (10,3) (11,3)"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "| Basic Tower | 50 | 120 px | 20 | 0.8 s | None |",
+        "| Freeze Tower | 70 | 110 px | 8 | 1.2 s | 40% slow for 2 s |"
+      ],
+      "after": [
+        "| Basic Tower | 50 | 140 px | 20 | 0.8 s | None |",
+        "| Freeze Tower | 70 | 110 px | 8 | 1.2 s | 50% movement speed for 1.5 s |"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Enemy movement speed becomes 60% of its original speed.",
+        "- Slow duration is 2 seconds."
+      ],
+      "after": [
+        "- Enemy movement speed becomes 50% of its original speed.",
+        "- Slow duration is 1.5 seconds."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- A new Freeze hit while already slowed resets the remaining duration to 2 seconds."
+      ],
+      "after": [
+        "- A new Freeze hit while already slowed resets the remaining duration to 1.5 seconds."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "Tower attributes after Restart remain:",
+        "- Basic Tower range: 140 px",
+        "- Freeze Tower movement multiplier: 50%",
+        "- Freeze Tower slow duration: 1.5 seconds"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "When an enemy is affected by a Freeze Tower, its movement speed becomes 50% of its original speed for 1.5 seconds."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "- Range: 140 px"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "- Range: 110 px"
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "- Applies or refreshes the 2-second slow effect"
+      ],
+      "after": [
+        "- Reduces movement speed to 50% of original speed for 1.5 seconds",
+        "- A repeated hit refreshes the remaining slow duration to 1.5 seconds"
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "If carrot HP reaches 0 or below, however, Failure occurs immediately and no subsequent wave-end settlement is processed."
+      ],
+      "after": [
+        "If carrot HP reaches 0 or below, Failure occurs immediately and no subsequent wave-end settlement is processed."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "- Towers automatically attack according to their cooldowns."
+      ],
+      "after": [
+        "- Towers automatically attack according to their cooldowns and updated attributes."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "Tower attacks display brief attack feedback, enemy HP bars decrease with damage, and slowed enemies display a light-blue visual indicator."
+      ],
+      "after": [
+        "Tower attacks display brief attack feedback, enemy HP bars decrease with damage, and slowed enemies display a light-blue visual indicator for the 1.5-second slow duration."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "carrot_defense_var08.D2.3.05",
+    "carrot_defense_var08.D2.3.06",
+    "carrot_defense_var08.D2.3.07"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "763a94a35ba4ffa1473059ff4dc233b43d72a986810cc0d7664282192c535c37",
+  "checkpoints_sha256": "8e9b6fc34ea7ee6408d633a4837e7fe41415f7fd1029da18124cc843c0629813"
+}

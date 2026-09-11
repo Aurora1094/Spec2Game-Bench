@@ -1,0 +1,157 @@
+{
+  "instance_id": "carrot_defense_var01",
+  "family_slug": "carrot_defense",
+  "variant_id": "var01",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/11_hard_Carrot Defense-like/11_hard_Carrot Defense-like_V2.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Carrot Defense-like"
+      ],
+      "after": [
+        "Carrot Defense-like_V2"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "The player can spend Gold to build Basic Towers and Freeze Towers. Basic Towers provide primary damage, while Freeze Towers deal lower damage and apply a temporary slowing effect."
+      ],
+      "after": [
+        "The player starts with 150 Gold and can spend Gold to build Basic Towers and Freeze Towers. Basic Towers provide primary damage, while Freeze Towers deal lower damage and apply a temporary slowing effect."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "(0,2) → (1,2) → (2,2) → (3,2) → (4,2) → (5,2)",
+        "                                             ↓",
+        "                                           (5,3)",
+        "                                             ↓",
+        "                                           (5,4)",
+        "                                             ↓",
+        "                                           (5,5)",
+        "                                             ↓",
+        "(6,5) → (7,5) → (8,5) → (9,5)"
+      ],
+      "after": [
+        "(0,2) (1,2) (2,2) (3,2) (4,2) (5,2)"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "                            (9,4)"
+      ],
+      "after": [
+        "                            (5,3)"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "                            (9,3)"
+      ],
+      "after": [
+        "                            (5,4)"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "                          (10,3) → (11,3)"
+      ],
+      "after": [
+        "                            (5,5)",
+        "                              ↓",
+        "(6,5) (7,5) (8,5) (9,5)",
+        "                  ↑",
+        "                (9,4)",
+        "                  ↑",
+        "                (9,3) (10,3) (11,3)"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Basic Tower icon + `1` + `50`",
+        "- Freeze Tower icon + `2` + `70`"
+      ],
+      "after": [
+        "- Basic Tower icon + `1` + `60`",
+        "- Freeze Tower icon + `2` + `80`"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "`120`"
+      ],
+      "after": [
+        "`150`"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- Basic Tower: 50",
+        "- Freeze Tower: 70"
+      ],
+      "after": [
+        "- Basic Tower: 60",
+        "- Freeze Tower: 80"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "| Basic Tower | 50 | 120 px | 20 | 0.8 s | None |",
+        "| Freeze Tower | 70 | 110 px | 8 | 1.2 s | 40% slow for 2 s |"
+      ],
+      "after": [
+        "| Basic Tower | 60 | 120 px | 20 | 0.8 s | None |",
+        "| Freeze Tower | 80 | 110 px | 8 | 1.2 s | 40% slow for 2 s |"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "- Gold to 120"
+      ],
+      "after": [
+        "- Gold to 150"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "- Gold: 120"
+      ],
+      "after": [
+        "- Gold: 150"
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "R fully restores Gold, carrot HP, Waves, towers, enemies, timers, selection state, and all other gameplay state."
+      ],
+      "after": [
+        "R fully restores Gold to 150, carrot HP, Waves, towers, enemies, timers, selection state, and all other gameplay state."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "carrot_defense_var01.D2.1.02",
+    "carrot_defense_var01.D2.2.04",
+    "carrot_defense_var01.D2.3.01"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "763a94a35ba4ffa1473059ff4dc233b43d72a986810cc0d7664282192c535c37",
+  "checkpoints_sha256": "9cb94362bb2b006a72b5fdc3750f5b9df475e5aac6ec93d672b5296ae43fd01f"
+}

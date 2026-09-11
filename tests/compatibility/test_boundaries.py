@@ -242,7 +242,7 @@ def test_default_openrouter_terra_generation_and_qwenvl_judge_routes() -> None:
     assert configured_models[0].api_key_env == "OPENROUTER_API_KEY"
     assert configured_models[0].base_url == "https://openrouter.ai/api/v1"
     assert configured_models[0].reasoning == {"effort": "none"}
-    assert config["judge"]["policy"] == "openrouter_gpt56_terra_qwenvl_judge_v1"
+    assert config["judge"]["policy"] == "openrouter_qwen_vl_judge"
     assert config["judge"]["routing"]["roles"] == {
         "text": "qwen_openrouter",
         "vision": "qwen_vl_openrouter",

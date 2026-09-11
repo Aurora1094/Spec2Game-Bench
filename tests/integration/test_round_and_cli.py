@@ -93,7 +93,7 @@ def test_contract_cli_locks_external_round_with_spaces_and_reuses_it(
     assert len(canonical_manifest["games"]) == 15
     contract_files = [
         path for path in (round_dir / "contracts").glob("*.json")
-        if path.name != "manifest.json"
+        if path.name in {entry["path"] for entry in canonical_manifest["contracts"].values()}
     ]
     assert len(contract_files) == 15
 

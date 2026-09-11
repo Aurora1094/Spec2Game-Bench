@@ -1,0 +1,143 @@
+{
+  "instance_id": "mini_zelda_var05",
+  "family_slug": "mini_zelda",
+  "variant_id": "var05",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/15_hard_Mini Zelda-like Room Adventure/15_hard_Mini Zelda-like Room Adventure_V6.docx",
+  "corrections": [
+    "Final DOCX takes precedence over spreadsheet draft differences."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "- Guard: initially patrols along a fixed vertical route and permanently enters chase once the player comes within range."
+      ],
+      "after": [
+        "- Guard: initially patrols along a fixed vertical route and permanently enters chase when the player comes within 220 px."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "A custom rule is the sequential dependency between Key 1 and Key 2. The player must first clear Room B to obtain Key 1 and unlock Room D, then clear Room D to obtain Key 2 and unlock Room E."
+      ],
+      "after": [
+        "Key 1 and Key 2 form a sequential dependency. The player must first clear Room B to obtain Key 1 and unlock Room D, then clear Room D to obtain Key 2 and unlock Room E."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`WASD: Move    Space: Attack`"
+      ],
+      "after": [
+        "`WASD: Move Space: Attack`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "          Room B",
+        "            |"
+      ],
+      "after": [
+        "       Room B",
+        "         |"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "            |",
+        "          Room E"
+      ],
+      "after": [
+        "         |",
+        "       Room E"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "`distance(guard_center, player_center) ≤ 180 px`"
+      ],
+      "after": [
+        "`distance(guard_center, player_center) ≤ 220 px`"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [],
+      "after": [
+        "At exactly 220 px, the Guard enters `chase`."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "The actual room transition is still performed during the unified room-transition stage."
+      ],
+      "after": [
+        "The actual room transition is performed during the unified room-transition stage."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- Right-side door → message appears to the left",
+        "- Bottom-side door → message appears above"
+      ],
+      "after": [
+        "- Right-side door message appears to the left.",
+        "- Bottom-side door message appears above."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "A Guard that has entered `chase` remains in `chase` after the player leaves and later re-enters Room D."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "8. Update AI and movement for surviving enemies in the current room."
+      ],
+      "after": [
+        "8. Update AI and movement for surviving enemies in the current room:",
+        "   - A Guard in `patrol` enters `chase` when its center is within or exactly 220 px of the player's center.",
+        "   - Once `chase` begins, it remains active until Restart."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "Guard behavior:",
+        "- Guards begin in `patrol`.",
+        "- A Guard enters `chase` when the distance to the player is 220 px or less.",
+        "- Chase is permanent once triggered.",
+        "- Patrol speed is 70 px/s.",
+        "- Chase speed is 110 px/s."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "mini_zelda_var05.D2.3.04",
+    "mini_zelda_var05.D2.3.05",
+    "mini_zelda_var05.D2.3.06",
+    "mini_zelda_var05.D2.3.07",
+    "mini_zelda_var05.D2.3.08",
+    "mini_zelda_var05.D2.5.02",
+    "mini_zelda_var05.D2.3.21"
+  ],
+  "added_checkpoint_ids": [
+    "mini_zelda_var05.D2.3.21"
+  ],
+  "base_checkpoints_sha256": "1e56b3ca7b602293b90ac54d2ecebc5f7a4483be506870a833a77652c49dc967",
+  "checkpoints_sha256": "969540d3a709a0549c053d0ef25cca1f04d6f9fdec6932fe90b02869c33fa4cc"
+}

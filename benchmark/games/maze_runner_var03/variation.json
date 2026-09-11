@@ -1,0 +1,86 @@
+{
+  "instance_id": "maze_runner_var03",
+  "family_slug": "maze_runner",
+  "variant_id": "var03",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/5_easy_Maze Runner/5_easy_Maze Runner_V4.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "#P    #       #"
+      ],
+      "after": [
+        "#     #       #"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "# #     #   # #"
+      ],
+      "after": [
+        "#P#     #   # #"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "The player's initial grid position is `(row=1, col=1)`, corresponding to cell center `(60, 160)`."
+      ],
+      "after": [
+        "The player's initial grid position is `(row=5, col=1)`, corresponding to cell center `(60, 320)`."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- Starts at `(row=1, col=1)`."
+      ],
+      "after": [
+        "- Starts at `(row=5, col=1)`."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Player returns to `(row=1, col=1)`."
+      ],
+      "after": [
+        "- Player returns to `(row=5, col=1)`."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "- Player: `(row=1, col=1)`"
+      ],
+      "after": [
+        "- Player: `(row=5, col=1)`"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "The maze layout, total duration of 30 seconds, movement-repeat interval of 0.15 seconds, player starting position, and exit position remain fixed for every run."
+      ],
+      "after": [
+        "The maze layout, total duration of 30 seconds, movement-repeat interval of 0.15 seconds, player starting position `(row=5, col=1)`, and exit position `(row=13, col=12)` remain fixed for every run."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "maze_runner_var03.D2.1.02",
+    "maze_runner_var03.D2.2.03",
+    "maze_runner_var03.D2.5.02",
+    "maze_runner_var03.D2.1.07"
+  ],
+  "added_checkpoint_ids": [
+    "maze_runner_var03.D2.1.07"
+  ],
+  "base_checkpoints_sha256": "665c6469f0a0a37ce038210a1cd05a3b62cec36bc61457f8e0906eea00c906eb",
+  "checkpoints_sha256": "52104cd2b08882797960204a05de73fd734882a02a2145ad7caca6e24422dcbe"
+}

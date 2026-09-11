@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "slug": "mini_zelda_var04",
+  "name": "Mini Zelda-like Room Adventure",
+  "difficulty": "hard",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [],
+  "window_size": [
+    800,
+    700
+  ],
+  "source_audit": {
+    "docx_sha256": "b90300622f64c473ebca8763a670c509f4e04b29234d0b33e12549893de70f01",
+    "base_checkpoints_sha256": "1e56b3ca7b602293b90ac54d2ecebc5f7a4483be506870a833a77652c49dc967",
+    "checkpoint_count": 59
+  },
+  "family_slug": "mini_zelda",
+  "variant_id": "var04",
+  "variation_types": [
+    "object_type"
+  ]
+}

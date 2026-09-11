@@ -1,0 +1,153 @@
+{
+  "instance_id": "snake_var05",
+  "family_slug": "snake",
+  "variant_id": "var05",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/1_easy_Snake/1_easy_Snake_V6.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Each time the snake collects food, its length increases by 1, the score increases by 1, and a new food item is randomly spawned on an unoccupied grid cell."
+      ],
+      "after": [
+        "Each time the snake collects food, its length increases by 2, the score increases by 1, and a new food item is randomly spawned on an unoccupied grid cell."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "If food is collected, the snake's length increases by 1."
+      ],
+      "after": [
+        "If food is collected, the snake's length increases by 2."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "If the snake collects food, the tail is retained, causing the snake's length to increase by 1."
+      ],
+      "after": [
+        "If the snake collects food, the snake grows by 2 cells in total:",
+        "- The tail is retained during the current movement update, producing the first growth cell.",
+        "- During the next movement update in which no food is collected, the tail is retained once more, producing the second growth cell.",
+        "- After this additional growth has been applied, normal tail removal resumes on later non-food movement updates.",
+        "If another food item is collected before pending growth has been fully applied, add 2 additional growth cells to the remaining pending growth."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- Snake length increases by 1."
+      ],
+      "after": [
+        "- Add 2 cells to the snake's total required growth."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "Each collected food therefore increases the snake's final length by exactly 2."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "If the current movement does not collect food, the final tail cell is removed during the same update. That cell is therefore excluded from self-collision detection, and the snake head may move into it without causing Game Over.",
+        "If the current movement collects food, the tail is retained. The current tail cell therefore remains occupied and is included in self-collision detection."
+      ],
+      "after": [
+        "If no growth is applied during the current movement update, the final tail cell is removed during the same update. That cell is therefore excluded from self-collision detection, and the snake head may move into it without causing Game Over.",
+        "If growth is applied during the current movement update, the tail is retained. The current tail cell therefore remains occupied and is included in self-collision detection."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "5. Determine which body cells remain occupied after the movement:",
+        "   - If food is collected, retain the tail."
+      ],
+      "after": [
+        "5. Determine whether growth must be applied during this movement:",
+        "   - If food is collected, add 2 cells of required growth.",
+        "   - If required growth is greater than 0, retain the tail for this movement update and reduce required growth by 1."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "If a terminal collision occurs during Step 3 or Step 6, no food collection, score increase, growth, or new food spawning is processed for that movement step."
+      ],
+      "after": [
+        "If a terminal collision occurs during Step 3 or Step 6, no food collection, score increase, new growth, or new food spawning is processed for that movement step."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "- Pending growth: 0"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "Each movement update follows the boundary, food-collection, self-collision, and body-update rules defined in Section 5.",
+        "When the snake collects food, the score and snake length each increase by 1 and a new food item is spawned."
+      ],
+      "after": [
+        "Each movement update follows the boundary, food-collection, growth, self-collision, and body-update rules defined in Section 5.",
+        "When the snake collects food, the score increases by 1 and the snake gains exactly 2 cells of total length through the growth process defined in Section 5."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "- Pending growth no longer updates."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "Each valid food collection increases the snake's total length by exactly 2 through the growth process defined in Section 5."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [],
+      "after": [
+        "If the tail is retained because growth is being applied during the current movement update, that tail cell remains occupied and can cause self-collision."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "After `game_over`, pressing R restores the snake to its initial length and configuration, resets the direction to right and score to 0, generates one new valid food item, restores the normal gameplay instructions, and returns the game state to `playing`."
+      ],
+      "after": [
+        "After `game_over`, pressing R restores the snake to its initial length and configuration, resets pending growth to 0, resets the direction to right and score to 0, generates one new valid food item, restores the normal gameplay instructions, and returns the game state to `playing`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "snake_var05.D2.3.03",
+    "snake_var05.D2.3.04",
+    "snake_var05.D2.1.06",
+    "snake_var05.D2.3.11",
+    "snake_var05.D2.5.09"
+  ],
+  "added_checkpoint_ids": [
+    "snake_var05.D2.1.06",
+    "snake_var05.D2.3.11",
+    "snake_var05.D2.5.09"
+  ],
+  "base_checkpoints_sha256": "c774c0fc0b96c633aa1e7103fbc3d2e9fdf4b008561d785560907ca5b0ba250d",
+  "checkpoints_sha256": "0df4de0eaaa630aadb6d9fb1e0fec3a515118cdce667838ca8829bec27f6474b"
+}

@@ -1,0 +1,54 @@
+{
+  "instance_id": "simple_platformer_var04",
+  "family_slug": "simple_platformer",
+  "variant_id": "var04",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/7_medium_Simple Platformer/7_medium_Simple Platformer_V5.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "- Speed: 80 px/s"
+      ],
+      "after": [
+        "- Speed: 120 px/s"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "The moving platform moves horizontally at 80 px/s between x = 260 and x = 430 while remaining at y = 315."
+      ],
+      "after": [
+        "The moving platform moves horizontally at 120 px/s between x = 260 and x = 430 while remaining at y = 315."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "3. Update the moving platform and determine its horizontal displacement."
+      ],
+      "after": [
+        "3. Update the moving platform at 120 px/s and determine its horizontal displacement."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- Moving platform speed: 80 px/s"
+      ],
+      "after": [
+        "- Moving platform speed: 120 px/s"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "simple_platformer_var04.D2.3.06"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "4fa5974d0ef7ecb0bbcc914ed389e18e591a5da6fe64f3a9eec6440f604b89c9",
+  "checkpoints_sha256": "c581fd0d61cb75e25475f483e2f15b2e1d97694c70bcb34253c1d3ac3986a9f0"
+}

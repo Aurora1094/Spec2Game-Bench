@@ -1,0 +1,65 @@
+{
+  "instance_id": "dodge_blocks_var04",
+  "family_slug": "dodge_blocks",
+  "variant_id": "var04",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/2_easy_Dodge Blocks/2_easy_Dodge Blocks_V5.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "A custom mechanic in this game is the horizontal dash. While holding either the left or right arrow key, the player can press Space to instantly move 80 px in the corresponding horizontal direction."
+      ],
+      "after": [
+        "A custom mechanic in this game is the horizontal dash. While holding either the left or right arrow key, the player can press Space to instantly move 120 px in the corresponding horizontal direction."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "If the left arrow key is held, pressing Space instantly moves the player 80 px to the left.",
+        "If the right arrow key is held, pressing Space instantly moves the player 80 px to the right."
+      ],
+      "after": [
+        "If the left arrow key is held, pressing Space instantly moves the player 120 px to the left.",
+        "If the right arrow key is held, pressing Space instantly moves the player 120 px to the right."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "A successful dash instantly moves the player 80 px in the currently held horizontal direction."
+      ],
+      "after": [
+        "A successful dash instantly moves the player 120 px in the currently held horizontal direction."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "1. Apply the 80 px horizontal displacement."
+      ],
+      "after": [
+        "1. Apply the 120 px horizontal displacement."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Dash distance: 80 px"
+      ],
+      "after": [
+        "- Dash distance: 120 px"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "dodge_blocks_var04.D2.2.04"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "49ce18ae41ba1d7c6ead6d9e52bdbc10b7447961c50d8924076bc487b8706308",
+  "checkpoints_sha256": "496bbcc66e5bae0ec34de3e28b2c2bbd67aef73c6faacca0a60117b5c65e1d12"
+}

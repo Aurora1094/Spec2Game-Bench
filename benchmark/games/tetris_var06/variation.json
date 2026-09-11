@@ -1,0 +1,181 @@
+{
+  "instance_id": "tetris_var06",
+  "family_slug": "tetris",
+  "variant_id": "var06",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/8_medium_tetris/8_medium_Tetris_V7.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Whenever an entire row is filled, that row is cleared, all rows above it move downward, and the player earns points."
+      ],
+      "after": [
+        "Whenever one or more entire rows are filled, those rows are cleared simultaneously, all rows above them move downward, and the player earns points according to the number of rows cleared in that single row-clearing event."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "Each cleared row increases Score by 100."
+      ],
+      "after": [
+        "Score is awarded according to the number of rows cleared simultaneously in one row-clearing event:",
+        "| Rows Cleared Simultaneously | Score Increase |",
+        "|---:|---:|",
+        "| 0 | +0 |",
+        "| 1 | +100 |",
+        "| 2 | +250 |",
+        "| 3 | +450 |",
+        "| 4 | +700 |",
+        "A tetromino contains exactly 4 blocks, so a single locking event cannot clear more than 4 rows.",
+        "The scoring award is applied once per row-clearing event according to the total number of rows cleared by that lock."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- 1 cleared row: +100",
+        "- 2 cleared rows: +200",
+        "- 4 cleared rows: +400",
+        "If multiple rows are cleared simultaneously, Score increases according to the actual number of cleared rows.",
+        "Soft drop, horizontal movement, rotation, and locking a piece do not directly increase Score."
+      ],
+      "after": [
+        "- Clear 1 row: +100",
+        "- Clear 2 rows simultaneously: +250",
+        "- Clear 3 rows simultaneously: +450",
+        "- Clear 4 rows simultaneously: +700",
+        "Soft drop, horizontal movement, rotation, and locking a piece without clearing a row do not directly increase Score."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "If multiple rows are cleared simultaneously, Lines increases by the number of rows actually cleared."
+      ],
+      "after": [
+        "If multiple rows are cleared simultaneously, Lines increases by the actual number of rows cleared.",
+        "Examples:",
+        "- Clear 1 row: Lines +1",
+        "- Clear 2 rows simultaneously: Lines +2",
+        "- Clear 4 rows simultaneously: Lines +4"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "4. Move all rows above them downward by the corresponding number of cleared rows.",
+        "5. Insert the same number of empty rows at the top.",
+        "6. Update Score and Lines.",
+        "For each cleared row:",
+        "- Score += 100",
+        "- Lines += 1",
+        "If multiple rows are cleared at once, all are processed together."
+      ],
+      "after": [
+        "4. Count the total number of rows cleared in that event.",
+        "5. Move all rows above the cleared rows downward by the corresponding number of cleared rows.",
+        "6. Insert the same number of empty rows at the top.",
+        "7. Update Score according to the simultaneous-clear scoring table.",
+        "8. Increase Lines by the number of rows actually cleared.",
+        "Score update:",
+        "- 0 rows: +0",
+        "- 1 row: +100",
+        "- 2 rows: +250",
+        "- 3 rows: +450",
+        "- 4 rows: +700",
+        "Lines update:",
+        "`Lines += number of rows cleared`",
+        "All rows cleared by the same locked piece are treated as one scoring event."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "4. Detect and clear all full rows.",
+        "5. Update Score and Lines.",
+        "6. Promote `next_piece` to `current_piece`.",
+        "7. Spawn the new current piece at the fixed spawn position.",
+        "8. Generate a new `next_piece`.",
+        "9. Update the Next preview.",
+        "10. Check the new current piece for visible-cell overlap with fixed blocks.",
+        "11. If such an overlap exists, enter `game_over`."
+      ],
+      "after": [
+        "4. Detect and clear all full rows simultaneously.",
+        "5. Count the number of rows cleared.",
+        "6. Update Score using the simultaneous-clear scoring table.",
+        "7. Increase Lines by the number of rows cleared.",
+        "8. Promote `next_piece` to `current_piece`.",
+        "9. Spawn the new current piece at the fixed spawn position.",
+        "10. Generate a new `next_piece`.",
+        "11. Update the Next preview.",
+        "12. Check the new current piece for visible-cell overlap with fixed blocks.",
+        "13. If such an overlap exists, enter `game_over`."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "Board dimensions, cell size, tetromino types and colors, spawn position, rotation rule, row-clearing rule, and failure conditions remain fixed."
+      ],
+      "after": [
+        "Board dimensions, cell size, tetromino types and colors, spawn position, rotation rule, row-clearing geometry, Lines rule, and failure conditions remain fixed."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "Score starts at 0 and increases by 100 for each cleared row.",
+        "Lines starts at 0 and increases by 1 for each cleared row."
+      ],
+      "after": [
+        "Score starts at 0.",
+        "For one row-clearing event:",
+        "- 1 cleared row: +100 Score",
+        "- 2 cleared rows: +250 Score",
+        "- 3 cleared rows: +450 Score",
+        "- 4 cleared rows: +700 Score",
+        "Lines starts at 0 and always increases by the actual number of rows cleared."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- ←: attempt to move 1 cell left.",
+        "- →: attempt to move 1 cell right.",
+        "- ↑: attempt to rotate 90° clockwise.",
+        "- ↓: attempt one additional downward movement."
+      ],
+      "after": [
+        "- `←`: attempt to move 1 cell left.",
+        "- `→`: attempt to move 1 cell right.",
+        "- `↑`: attempt to rotate 90° clockwise.",
+        "- `↓`: attempt one additional downward movement."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "When one or more full rows are cleared, those rows disappear, rows above move downward, empty rows are inserted at the top, and Score and Lines update immediately."
+      ],
+      "after": [
+        "When one or more full rows are cleared, those rows disappear simultaneously, rows above move downward, empty rows are inserted at the top, Score updates according to the number of simultaneously cleared rows, and Lines increases by that same number."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "tetris_var06.D2.3.05",
+    "tetris_var06.D2.3.06",
+    "tetris_var06.D2.3.09"
+  ],
+  "added_checkpoint_ids": [
+    "tetris_var06.D2.3.09"
+  ],
+  "base_checkpoints_sha256": "9b869e2c2acb9eecb215d5d29bf1b3c0bfe88e8f64288d28331d5a79e22d62f0",
+  "checkpoints_sha256": "3c15bd711ca641320a1581c229529d73692b388167bd93efe933696a7a4c2ea5"
+}

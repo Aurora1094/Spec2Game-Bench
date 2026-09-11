@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from copy import deepcopy
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -28,6 +30,13 @@ class GameConfig:
     window_size: tuple[int, int] = (600, 800)
     variants: tuple[str, ...] = field(default_factory=tuple)
     d4_configured: bool = True
+    family_slug: str = ""
+    variant_id: str = "base"
+    variation_types: tuple[str, ...] = field(default_factory=tuple)
+
+    @property
+    def instance_id(self) -> str:
+        return self.slug
 
 
 @dataclass(frozen=True)
@@ -59,9 +68,12 @@ def load_config(path: str | Path = DEFAULT_CONFIG) -> dict[str, Any]:
     catalog_path = project_root / str(data.get("catalog_path", "benchmark/catalog.yaml"))
     catalog = load_catalog(catalog_path)
     data = dict(data)
-    data["games"] = [
-        {
+    def entry(item: Mapping[str, Any]) -> dict[str, Any]:
+        return {
             "slug": item["slug"],
+            "family_slug": item.get("family_slug", item["slug"]),
+            "variant_id": item.get("variant_id", "base"),
+            "variation_types": item.get("variation_types", []),
             "name": item["name"],
             "difficulty": item.get("difficulty", ""),
             "spec": f"benchmark/{item['path']}/spec.md",
@@ -70,13 +82,65 @@ def load_config(path: str | Path = DEFAULT_CONFIG) -> dict[str, Any]:
             "variants": item.get("variants", []),
             "d4_configured": True,
         }
-        for item in catalog["games"]
+
+    data["games"] = [entry(item) for item in catalog["games"]]
+    variants = {item["slug"]: item for item in catalog.get("variant_instances", [])}
+    data["instances"] = [
+        entry(instance)
+        for family in catalog["games"]
+        for instance in [family, *(variants[slug] for slug in family.get("variants", []))]
     ]
     data["catalog"] = catalog
     data["_config_path"] = str(config_path)
     data["_project_root"] = str(project_root)
     data["_catalog_path"] = str(catalog_path)
     return data
+
+
+def select_run_config(
+    config: Mapping[str, Any], *, track: str = "core15", model_id: str | None = None,
+    game_slug: str | None = None, variant_id: str | None = None,
+    require_model: bool = True,
+) -> dict[str, Any]:
+    """Resolve one model and an ordered instance subset before any paid request."""
+    if track not in {"core15", "full150"}:
+        raise ValueError("track must be core15 or full150")
+    if variant_id is not None and game_slug is None:
+        raise ValueError("--variant requires --game")
+    if track == "core15" and variant_id not in {None, "base"}:
+        raise ValueError("Core-15 only contains base instances")
+    result = deepcopy(dict(config))
+    registry = list(config.get("instances", config.get("games", [])))
+    scope = [item for item in registry if track == "full150" or item.get("variant_id", "base") == "base"]
+    expected = 150 if track == "full150" else 15
+    if len(scope) != expected:
+        raise ValueError(f"{track} requires {expected} instances; catalog contains {len(scope)}")
+    selected = [
+        item for item in scope
+        if (game_slug is None or item.get("family_slug", item["slug"]) == game_slug)
+        and (variant_id is None or item.get("variant_id", "base") == variant_id)
+    ]
+    if not selected:
+        raise ValueError(f"No instance matches track={track}, game={game_slug}, variant={variant_id}")
+    configured_models = models(config)
+    if require_model or model_id is not None:
+        if model_id is None:
+            if len(configured_models) != 1:
+                raise ValueError("Configure one candidate or select one explicitly with --model ID")
+            selected_model = configured_models[0]
+        else:
+            selected_model = model_by_id(config, model_id)
+        result["models"] = [dict(item) for item in config["models"] if item["id"] == selected_model.id]
+    result["games"] = selected
+    result["selection"] = {
+        "track": track,
+        "scope": "complete" if len(selected) == expected else "subset",
+        "expected_count": expected,
+        "selected_count": len(selected),
+        "instance_ids": [item["slug"] for item in selected],
+        "suite_instance_ids": [item["slug"] for item in scope],
+    }
+    return result
 
 
 def resolve_workspace(explicit: str | Path | None = None) -> Path:
@@ -100,6 +164,16 @@ def workspace_run_dir(workspace: str | Path, run_id: str) -> Path:
     if not run_id or Path(run_id).name != run_id or run_id in {".", ".."}:
         raise ValueError(f"Invalid run id: {run_id!r}")
     return Path(workspace).expanduser().resolve() / "runs" / run_id
+
+
+def task_storage_dir(run_dir: str | Path, task_id: str) -> Path:
+    """Resolve historical names for readers; new tasks use bounded names."""
+    if not re.fullmatch(r"[A-Za-z0-9_-]+", task_id):
+        raise ValueError("Invalid task identity")
+    root = Path(run_dir) / "tasks"
+    legacy = root / task_id
+    short = root / ("t" + hashlib.sha256(task_id.encode("utf-8")).hexdigest()[:16])
+    return legacy if legacy.is_dir() and not short.exists() else short
 
 
 _QWEN_JUDGE_PROFILE = {
@@ -330,7 +404,7 @@ def _locked_execution_bundle(policy: str) -> dict[str, Any] | None:
                 }
             ],
         }
-    if policy == "openrouter_gpt56_terra_qwenvl_judge_v1":
+    if policy in {"openrouter_gpt56_terra_qwenvl_judge_v1", "openrouter_qwen_vl_judge"}:
         return {
             "judge_identity": _provider_identity(_OPENROUTER_QWEN_JUDGE_PROFILE),
             "route_identities": {
@@ -500,11 +574,20 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
             }
             if not _matches_mapping(route, expected_route):
                 errors.append(f"judge route {role} differs from the selected single-pass policy")
-    bundle_for_models = _locked_execution_bundle(
-        str(judge.get("policy") or "") if isinstance(judge, Mapping) else ""
-    )
-    if bundle_for_models is None or config.get("models") != bundle_for_models["models"]:
-        errors.append("candidate model matrix differs from the selected policy")
+    try:
+        from code2play.providers.dashscope import candidate_generation_settings
+
+        candidates = models(config)
+        if not candidates:
+            errors.append("at least one candidate model must be configured")
+        seen_models: set[str] = set()
+        for candidate in candidates:
+            if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*", candidate.id) or candidate.id in seen_models:
+                errors.append(f"invalid or duplicate candidate model ID: {candidate.id}")
+            seen_models.add(candidate.id)
+            candidate_generation_settings(candidate)
+    except (ValueError, TypeError, KeyError) as exc:
+        errors.append(f"invalid candidate configuration: {exc}")
     evaluation = config.get("evaluation", {})
     if evaluation.get("d1_gate_mode") != "contribution_only":
         errors.append("D1 gate must control contributions only, not D2-D4 measurement")
@@ -551,6 +634,9 @@ def games(config: Mapping[str, Any]) -> list[GameConfig]:
                 window_size=(int(size[0]), int(size[1])),
                 variants=tuple(str(value) for value in item.get("variants", [])),
                 d4_configured=bool(item.get("d4_configured", True)),
+                family_slug=str(item.get("family_slug", item["slug"])),
+                variant_id=str(item.get("variant_id", "base")),
+                variation_types=tuple(item.get("variation_types", [])),
             )
         )
     return result
@@ -560,8 +646,12 @@ def models(config: Mapping[str, Any]) -> list[ModelConfig]:
     return [ModelConfig(**dict(item)) for item in config.get("models", [])]
 
 
+def all_instances(config: Mapping[str, Any]) -> list[GameConfig]:
+    return games({**config, "games": config.get("instances", config.get("games", []))})
+
+
 def game_by_slug(config: Mapping[str, Any], slug: str) -> GameConfig:
-    for item in games(config):
+    for item in all_instances(config):
         if item.slug == slug:
             return item
     raise KeyError(f"Unknown game slug: {slug}")
@@ -581,6 +671,9 @@ __all__ = [
     "PROJECT_ROOT",
     "ROOT",
     "game_by_slug",
+    "all_instances",
+    "select_run_config",
+    "task_storage_dir",
     "games",
     "load_catalog",
     "load_config",

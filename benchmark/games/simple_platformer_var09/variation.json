@@ -1,0 +1,85 @@
+{
+  "instance_id": "simple_platformer_var09",
+  "family_slug": "simple_platformer",
+  "variant_id": "var09",
+  "variation_types": [
+    "parameter",
+    "combination"
+  ],
+  "source_path": "游戏规格说明（英文）/7_medium_Simple Platformer/7_medium_Simple Platformer_V10.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "- Speed: 80 px/s"
+      ],
+      "after": [
+        "- Speed: 120 px/s"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "- Set `vy = -420 px/s`."
+      ],
+      "after": [
+        "- Set `vy = -500 px/s`."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- Initial jump velocity: -420 px/s"
+      ],
+      "after": [
+        "- Initial jump velocity: -500 px/s"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "The moving platform moves horizontally at 80 px/s between x = 260 and x = 430 while remaining at y = 315."
+      ],
+      "after": [
+        "The moving platform moves horizontally at 120 px/s between x = 260 and x = 430 while remaining at y = 315."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "2. Start a jump if Space was newly pressed while `on_ground = true`.",
+        "3. Update the moving platform and determine its horizontal displacement."
+      ],
+      "after": [
+        "2. Start a jump with `vy = -500 px/s` if Space was newly pressed while `on_ground = true`.",
+        "3. Update the moving platform at 120 px/s and determine its horizontal displacement."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "- Jump velocity: -420 px/s"
+      ],
+      "after": [
+        "- Jump velocity: -500 px/s"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Moving platform speed: 80 px/s"
+      ],
+      "after": [
+        "- Moving platform speed: 120 px/s"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "simple_platformer_var09.D2.2.04",
+    "simple_platformer_var09.D2.3.06"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "4fa5974d0ef7ecb0bbcc914ed389e18e591a5da6fe64f3a9eec6440f604b89c9",
+  "checkpoints_sha256": "057ecc4e371f67513a5666ffc1879c5190c8d1b368aeacd8b2f2756a38438550"
+}

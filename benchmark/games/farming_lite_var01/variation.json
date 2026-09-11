@@ -1,0 +1,143 @@
+{
+  "instance_id": "farming_lite_var01",
+  "family_slug": "farming_lite",
+  "variant_id": "var01",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/12_hard_Farming-lite/12_hard_Farming-lite_V2.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Farming-lite is a simplified farming management game with a fixed 8-day operating cycle. The player buys seeds, plants crops, waters them, waits for them to grow, harvests mature crops, and earns Gold."
+      ],
+      "after": [
+        "Farming-lite is a simplified farming management game with a fixed 8-day operating cycle.",
+        "The player buys seeds, plants crops, waters them, waits for them to grow, harvests mature crops, and earns Gold."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [],
+      "after": [
+        "The player starts with 100 Gold.",
+        "Carrot seeds cost 10 Gold and Pumpkin seeds cost 22 Gold."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- Carrot seed icon + `1` + `8`",
+        "- Pumpkin seed icon + `2` + `18`"
+      ],
+      "after": [
+        "- Carrot seed icon + `1` + `10`",
+        "- Pumpkin seed icon + `2` + `22`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "`Left Click: Use    Right Click: Cancel`"
+      ],
+      "after": [
+        "`Left Click: Use Right Click: Cancel`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "| Carrot | 8 Gold | 2 | Stage 2 | 18 Gold |",
+        "| Pumpkin | 18 Gold | 4 | Stage 4 | 50 Gold |"
+      ],
+      "after": [
+        "| Carrot | 10 Gold | 2 | Stage 2 | 18 Gold |",
+        "| Pumpkin | 22 Gold | 4 | Stage 4 | 50 Gold |"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "`Gold = 80`"
+      ],
+      "after": [
+        "`Gold = 100`"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Plant Carrot: -8",
+        "- Plant Pumpkin: -18"
+      ],
+      "after": [
+        "- Plant Carrot: -10",
+        "- Plant Pumpkin: -22"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- Gold to 80"
+      ],
+      "after": [
+        "- Gold to 100"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- Carrot: 8 Gold",
+        "- Pumpkin: 18 Gold"
+      ],
+      "after": [
+        "- Carrot: 10 Gold",
+        "- Pumpkin: 22 Gold"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- Gold: 80"
+      ],
+      "after": [
+        "- Gold: 100"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "Planting deducts Gold and creates a Stage 0 crop."
+      ],
+      "after": [
+        "Planting deducts the corresponding seed price and creates a Stage 0 crop."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "The player begins each session with 100 Gold."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "`Left Click: Use    Right Click: Cancel`"
+      ],
+      "after": [
+        "`Left Click: Use Right Click: Cancel`"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "farming_lite_var01.D2.1.02",
+    "farming_lite_var01.D2.3.01",
+    "farming_lite_var01.D2.5.06"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "216ba3d8ea18719c2a19c1a40d9e1f270ce4c0ab2c6a8a8ac2e1e38ea0061256",
+  "checkpoints_sha256": "d60a061f0f9ad0c0144599c210718ad5a32962ca430d87e50b9ab0e9560176c5"
+}

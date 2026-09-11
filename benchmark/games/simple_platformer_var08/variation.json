@@ -1,0 +1,334 @@
+{
+  "instance_id": "simple_platformer_var08",
+  "family_slug": "simple_platformer",
+  "variant_id": "var08",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/7_medium_Simple Platformer/7_medium_Simple Platformer_V9.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "The player may perform at most 8 successful jumps during one run. A successful jump is counted only when a new Space key-down event occurs while `on_ground = true` and actually starts a jump.",
+        "After 8 successful jumps have been used, additional Space key presses do not start another jump.",
+        "Reaching the jump limit does not by itself cause Failure."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "The left side displays one of:",
+        "- `Status: Playing`",
+        "- `Status: Won`",
+        "- `Status: Lost`",
+        "The right side displays:",
+        "`Goal: Reach the Flag`"
+      ],
+      "after": [
+        "It displays:",
+        "- Left: one of `Status: Playing`, `Status: Won`, or `Status: Lost`",
+        "- Center: `Jumps: X/8`",
+        "- Right: `Goal: Reach the Flag`",
+        "where X is the number of successful jumps already used."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [],
+      "after": [
+        "`Jumps: 0/8`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "The information text uses a font size of 32 px. The left-side and right-side text must not overlap."
+      ],
+      "after": [
+        "The information text uses a font size of 32 px. The three text elements must be positioned with sufficient spacing so that they do not overlap."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "`Reach the flag    Restart: R`"
+      ],
+      "after": [
+        "`Reach the flag within 8 jumps    Restart: R`"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [],
+      "after": [
+        "- Jumps used: 0"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "The main game objects and state variables include the player, fixed platforms, moving platform, spikes, goal flag, movement state, and game state."
+      ],
+      "after": [
+        "The main game objects and state variables include the player, fixed platforms, moving platform, spikes, goal flag, movement state, jump counter, and game state."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "## 3.6 Game State"
+      ],
+      "after": [
+        "## 3.6 Jump Counter",
+        "The game tracks:",
+        "`Jumps = 0`",
+        "The maximum number of successful jumps per run is:",
+        "`8`",
+        "Jumps increases only when all of the following are true:",
+        "- Game state is `playing`.",
+        "- A new Space key-down event occurs.",
+        "- `on_ground = true`.",
+        "- Current Jumps is less than 8.",
+        "- A jump is actually started.",
+        "On a valid jump:",
+        "`Jumps += 1`",
+        "Pressing Space while airborne does not increase Jumps.",
+        "Pressing Space after `Jumps = 8` does not increase Jumps and does not start a jump.",
+        "The jump counter never exceeds 8.",
+        "## 3.7 Game State"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "During `playing`, player movement, gravity, moving-platform movement, and collision detection are active.",
+        "During `won` or `lost`, player movement, gravity, and moving-platform updates stop. Only R is accepted."
+      ],
+      "after": [
+        "During `playing`, player movement, gravity, moving-platform movement, jump counting, and collision detection are active.",
+        "During `won` or `lost`, player movement, gravity, moving-platform updates, and jump counting stop. Only R is accepted."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "and",
+        "`Jumps < 8`"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "Pressing Space while airborne has no effect. Double jump is not allowed."
+      ],
+      "after": [
+        "- Increase Jumps by 1.",
+        "Pressing Space while airborne has no effect and does not change Jumps.",
+        "When:",
+        "`Jumps = 8`",
+        "new Space key-down events do not trigger another jump even if `on_ground = true`.",
+        "Reaching the limit does not change the game state and does not directly cause Failure."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "- Jumps to 0."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "- Top display to `Status: Playing`."
+      ],
+      "after": [
+        "- Top display to `Status: Playing`, `Jumps: 0/8`, and `Goal: Reach the Flag`."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [],
+      "after": [
+        "- Maximum successful jumps: 8"
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "## 5.9 Spike Collision"
+      ],
+      "after": [
+        "## 5.9 Jump Limit",
+        "The jump limit applies only to successful jump starts.",
+        "When a new Space key-down event occurs:",
+        "1. Check whether `on_ground = true`.",
+        "2. Check whether `Jumps < 8`.",
+        "3. If both are true, set `vy = -420 px/s`, set `on_ground = false`, and increase Jumps by 1.",
+        "4. Otherwise, do not start a jump and do not change Jumps.",
+        "Jumps is not reduced or restored when the player lands.",
+        "Only pressing R resets Jumps to 0.",
+        "The jump limit does not itself produce `lost`.",
+        "## 5.10 Spike Collision"
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "## 5.10 Falling Failure"
+      ],
+      "after": [
+        "## 5.11 Falling Failure"
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "## 5.11 Goal Collision"
+      ],
+      "after": [
+        "## 5.12 Goal Collision"
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "## 5.12 Terminal Priority"
+      ],
+      "after": [
+        "## 5.13 Terminal Priority"
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [],
+      "after": [
+        "Using all 8 jumps is not a terminal condition."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "## 5.13 Excluded Mechanics"
+      ],
+      "after": [
+        "## 5.14 Excluded Mechanics"
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "At initialization, the game creates the interface, player, fixed platforms, moving platform, spikes, goal flag, and game state."
+      ],
+      "after": [
+        "At initialization, the game creates the interface, player, fixed platforms, moving platform, spikes, goal flag, jump counter, and game state."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [],
+      "after": [
+        "- Jumps: 0"
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "2. Start a jump if Space was newly pressed while `on_ground = true`."
+      ],
+      "after": [
+        "2. If Space was newly pressed, start a jump only if `on_ground = true` and Jumps is less than 8; if a jump starts, increase Jumps by 1."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "11. Update the Status and instruction displays.",
+        "If Failure is triggered, the game enters `lost`. Player movement, gravity, and moving-platform motion stop, the top display changes to `Status: Lost`, and the bottom area displays `Game Over` and `Press R to Restart`.",
+        "If no Failure condition is present but the flag is reached, the game enters `won`. Player movement, gravity, and moving-platform motion stop, the top display changes to `Status: Won`, and the bottom area displays `You Win!` and `Press R to Restart`.",
+        "Pressing R restores the initial player and moving-platform state and returns the game to `playing`."
+      ],
+      "after": [
+        "11. Update the Status, Jumps, Goal, and instruction displays.",
+        "If Jumps reaches 8, gameplay continues normally except that no further jump can be initiated.",
+        "If Failure is triggered, the game enters `lost`. Player movement, gravity, moving-platform motion, and jump counting stop, the top display changes to `Status: Lost`, and the bottom area displays `Game Over` and `Press R to Restart`.",
+        "If no Failure condition is present but the flag is reached, the game enters `won`. Player movement, gravity, moving-platform motion, and jump counting stop, the top display changes to `Status: Won`, and the bottom area displays `You Win!` and `Press R to Restart`.",
+        "Pressing R restores the initial player, jump counter, and moving-platform state and returns the game to `playing`."
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [],
+      "after": [
+        "- Maximum successful jumps: 8"
+      ]
+    },
+    {
+      "id": "change26",
+      "before": [
+        "The player's goal is to traverse the single-screen platform layout and touch the goal flag in the upper-right area."
+      ],
+      "after": [
+        "The player's goal is to traverse the single-screen platform layout and touch the goal flag in the upper-right area using no more than 8 successful jumps."
+      ]
+    },
+    {
+      "id": "change27",
+      "before": [
+        "The top information area displays one of:",
+        "- `Status: Playing`",
+        "- `Status: Won`",
+        "- `Status: Lost`",
+        "The right side continuously displays:",
+        "`Goal: Reach the Flag`"
+      ],
+      "after": [
+        "The top information area displays:",
+        "- One of `Status: Playing`, `Status: Won`, or `Status: Lost`",
+        "- `Jumps: X/8`",
+        "- `Goal: Reach the Flag`"
+      ]
+    },
+    {
+      "id": "change28",
+      "before": [],
+      "after": [
+        "Each successful jump increases Jumps by 1.",
+        "Airborne Space presses and Space presses after Jumps reaches 8 do not change the counter."
+      ]
+    },
+    {
+      "id": "change29",
+      "before": [],
+      "after": [
+        "Reaching `Jumps: 8/8` does not itself cause Failure."
+      ]
+    },
+    {
+      "id": "change30",
+      "before": [
+        "`Reach the flag    Restart: R`"
+      ],
+      "after": [
+        "`Reach the flag within 8 jumps    Restart: R`"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "simple_platformer_var08.D2.2.04",
+    "simple_platformer_var08.D2.1.06",
+    "simple_platformer_var08.D2.2.06",
+    "simple_platformer_var08.D2.5.13"
+  ],
+  "added_checkpoint_ids": [
+    "simple_platformer_var08.D2.1.06",
+    "simple_platformer_var08.D2.2.06",
+    "simple_platformer_var08.D2.5.13"
+  ],
+  "base_checkpoints_sha256": "4fa5974d0ef7ecb0bbcc914ed389e18e591a5da6fe64f3a9eec6440f604b89c9",
+  "checkpoints_sha256": "3ab76928987b6fba4238d601b490757916a401b4ec4c1714652cc5d304c12bae"
+}

@@ -1,12 +1,30 @@
-schema_version: 1
-slug: whack_a_mole
-name: "Whack-a-Mole"
-difficulty: easy
-spec: spec.md
-checkpoints: checkpoints.jsonl
-variants: []
-window_size: [600, 800]
-source_audit:
-  docx_sha256: 5e4a822616d7251944c9f1368c28ed8fa784b183001c81450c212ddcdd7a621d
-  csv_sha256: 4ea14a45ee28d3bd635c0c61b71aa6c4e24f3b97ceb93e6f94c649daf071e675
-  checkpoint_count: 34
+{
+  "schema_version": 1,
+  "slug": "whack_a_mole",
+  "name": "Whack-a-Mole",
+  "difficulty": "easy",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [
+    "whack_a_mole_var01",
+    "whack_a_mole_var02",
+    "whack_a_mole_var03",
+    "whack_a_mole_var04",
+    "whack_a_mole_var05",
+    "whack_a_mole_var06",
+    "whack_a_mole_var07",
+    "whack_a_mole_var08",
+    "whack_a_mole_var09"
+  ],
+  "window_size": [
+    600,
+    800
+  ],
+  "source_audit": {
+    "docx_sha256": "5e4a822616d7251944c9f1368c28ed8fa784b183001c81450c212ddcdd7a621d",
+    "csv_sha256": "4ea14a45ee28d3bd635c0c61b71aa6c4e24f3b97ceb93e6f94c649daf071e675",
+    "checkpoint_count": 34
+  },
+  "family_slug": "whack_a_mole",
+  "variant_id": "base"
+}

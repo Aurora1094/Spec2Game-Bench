@@ -1,0 +1,270 @@
+{
+  "instance_id": "pipe_connection_var06",
+  "family_slug": "pipe_connection",
+  "variant_id": "var06",
+  "variation_types": [
+    "map",
+    "combination"
+  ],
+  "source_path": "游戏规格说明（英文）/13_hard_Pipe Connection Puzzle/13_hard_Pipe Connection Puzzle_V7.docx",
+  "corrections": [
+    "Final DOCX takes precedence over spreadsheet draft differences."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "The game uses a modified fixed Block layout while preserving the same Source, Sinks, and Leak positions."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [],
+      "after": [
+        "Blocks use the modified fixed positions defined in Section 5.1."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [],
+      "after": [
+        "Cells that were Blocks in the base version but contain ordinary Pipes in this version use normal pipe-cell appearance and are rotatable according to pipe type."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "`Click pipe to rotate    Press Space to run water`",
+        "`Connect source to all sinks    Restart: R`"
+      ],
+      "after": [
+        "`Click pipe to rotate Press Space to run water`",
+        "`Connect source to all sinks Restart: R`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "The fixed Leak is at:"
+      ],
+      "after": [
+        "The fixed Leak remains at:"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "If Source-reachable water flows directly into the Leak cell:",
+        "- That outgoing connection contributes exactly 1 Leak.",
+        "- Propagation stops for that connection.",
+        "- The Leak must not be counted again because the Leak cell lacks an ordinary reverse pipe connection."
+      ],
+      "after": [
+        "The modified Block positions are:",
+        "```text",
+        "(1,0)",
+        "(1,2)",
+        "(2,1)",
+        "(2,5)",
+        "(3,0)",
+        "(3,5)",
+        "(4,2)",
+        "(4,5)",
+        "(5,3)",
+        "```"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [],
+      "after": [
+        "The following base-version Block cells now contain ordinary pipes:",
+        "- `(1,4)` contains `TESW`",
+        "- `(4,1)` contains `CES`",
+        "- `(5,2)` contains `SV`",
+        "These cells are rotatable according to their pipe type."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "All rotatable pipes may be rotated, including pipes that are not part of the final correct water route."
+      ],
+      "after": [
+        "Because the Block layout differs from the base version:",
+        "- `(1,2)`, `(3,5)`, and `(4,2)` are Blocks and cannot rotate.",
+        "- `(1,4)`, `(4,1)`, and `(5,2)` contain ordinary pipes and may rotate.",
+        "All other rotatable pipes may also be rotated, including pipes that are not part of the final correct water route."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- Restores all pipes to their fixed initial orientations."
+      ],
+      "after": [
+        "- Restores the V7 fixed Block and Pipe layout.",
+        "- Restores all ordinary pipes to their V7 initial orientations."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "Row 0: SRC-E | SV   | SV   | TNES | SV   | SNK-W",
+        "Row 1: BLK   | CNE  | TESW | SH   | BLK  | CES",
+        "Row 2: CSW   | BLK  | CNE  | SH   | TWNE | BLK",
+        "Row 3: BLK   | SV   | LEK  | SH   | CNE  | SV",
+        "Row 4: TESW  | BLK  | CES  | CES  | CWN  | BLK",
+        "Row 5: SH    | CNE  | BLK  | BLK  | CES  | SNK-W"
+      ],
+      "after": [
+        "Row 0: SRC-E | SV | SV | TNES | SV | SNK-W",
+        "Row 1: BLK | CNE | BLK | SH | TESW | CES",
+        "Row 2: CSW | BLK | CNE | SH | TWNE | BLK",
+        "Row 3: BLK | SV | LEK | SH | CNE | BLK",
+        "Row 4: TESW | CES | BLK | CES | CWN | BLK",
+        "Row 5: SH | CNE | SV | BLK | CES | SNK-W"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "(1,4)"
+      ],
+      "after": [
+        "(1,2)"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "(4,1)"
+      ],
+      "after": [
+        "(3,5)",
+        "(4,2)"
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "(5,2)"
+      ],
+      "after": []
+    },
+    {
+      "id": "change14",
+      "before": [],
+      "after": [
+        "Compared with the base map, three Block/Pipe pairs are exchanged:",
+        "- `(1,4)` changes from Block to `TESW`, while `(1,2)` changes from `TESW` to Block.",
+        "- `(4,1)` changes from Block to `CES`, while `(4,2)` changes from `CES` to Block.",
+        "- `(5,2)` changes from Block to `SV`, while `(3,5)` changes from `SV` to Block.",
+        "The total number of Blocks remains 9."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "- Into a Block."
+      ],
+      "after": [
+        "- Into one of the V7 Block cells."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [],
+      "after": [
+        "Block behavior is determined by the V7 fixed map, not by the base-version Block coordinates."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "If an outlet points directly into the fixed Leak cell:"
+      ],
+      "after": [
+        "If an outlet points directly into the fixed Leak cell at `(3,2)`:"
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "At initialization, the game creates the interface areas and fixed 6 × 6 board.",
+        "All pipes use their predefined initial orientations."
+      ],
+      "after": [
+        "At initialization, the game creates the interface areas and the V7 fixed 6 × 6 board.",
+        "The modified Block and ordinary-pipe positions are loaded as part of the fixed map."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [],
+      "after": [
+        "- Source: `(0,0)`",
+        "- Sink 1: `(0,5)`",
+        "- Sink 2: `(5,5)`",
+        "- Leak: `(3,2)`"
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "During `editing`, the player may rotate any eligible pipe while Moves < 30."
+      ],
+      "after": [
+        "During `editing`, the player may rotate any eligible ordinary pipe while Moves < 30.",
+        "Cells defined as Blocks in the V7 map cannot rotate.",
+        "Cells that contain ordinary pipes in the V7 map are rotatable according to their pipe type, even if those coordinates were Blocks in the base version."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "Restart restores the same fixed puzzle."
+      ],
+      "after": [
+        "Restart restores the V7 fixed puzzle."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "The player's goal is to configure the fixed pipe network within at most 30 successful rotations so that Source water reaches both Sinks without producing any invalid Source-reachable outlet."
+      ],
+      "after": [
+        "The player's goal is to configure the fixed pipe network within at most 30 successful rotations so that Source water reaches both Sinks without producing any invalid Source-reachable outlet under the modified Block layout."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [],
+      "after": [
+        "The V7 Block layout determines which cells cannot rotate and which outgoing connections are invalid because they point toward Blocks."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "R restores the initial map, clears all water-flow results, and returns the game to `editing`."
+      ],
+      "after": [
+        "R restores the V7 fixed map, including the modified Block and Pipe positions, clears all water-flow results, and returns the game to `editing`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "pipe_connection_var06.D2.1.04",
+    "pipe_connection_var06.D2.2.07",
+    "pipe_connection_var06.D2.5.04",
+    "pipe_connection_var06.D2.2.09"
+  ],
+  "added_checkpoint_ids": [
+    "pipe_connection_var06.D2.2.09"
+  ],
+  "base_checkpoints_sha256": "81842a961e20164b1af130002c9a8ab35beeedb93f7f148ef4bbafae418571f6",
+  "checkpoints_sha256": "134339d1e013d741fb65f5485fb146f85fa8ce08069965b1d6f73d5dfb1288f1"
+}

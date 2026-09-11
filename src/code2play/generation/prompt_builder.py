@@ -26,7 +26,7 @@ SPECS_DIR = PROJECT_ROOT / "benchmark" / "games"
 _catalog = load_catalog()
 GAME_SPECS: "OrderedDict[str, Path]" = OrderedDict(
     (str(item["slug"]), PROJECT_ROOT / "benchmark" / str(item["path"]) / "spec.md")
-    for item in _catalog["games"]
+    for item in [*_catalog["games"], *_catalog.get("variant_instances", [])]
 )
 SUPPORTED_GAMES = tuple(GAME_SPECS)
 GAME_ALIASES: dict[str, str] = {}
@@ -281,8 +281,8 @@ def validate_all_prompts(generation_config: Mapping[str, Any] | None = None) -> 
         reports.append({key: rendered[key] for key in ("game_slug", "generation_contract_sha256", "state_prompt_sha256", "checkpoint_count", "dimension_counts", "stage_budgets")})
     if len(checkpoint_paths) != len(SUPPORTED_GAMES):
         raise PromptBuildError("each official game must reference one unique checkpoint JSONL")
-    if sum(item["checkpoint_count"] for item in reports) != 537:
-        raise PromptBuildError("the staged prompt contract must cover exactly 537 D2 rows")
+    if sum(item["checkpoint_count"] for item in reports) != _catalog.get("full_checkpoint_count", 537):
+        raise PromptBuildError("the staged prompt contract must cover every catalog checkpoint")
     return reports
 
 

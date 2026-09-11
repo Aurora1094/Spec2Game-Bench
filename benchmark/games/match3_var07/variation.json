@@ -1,0 +1,117 @@
+{
+  "instance_id": "match3_var07",
+  "family_slug": "match3",
+  "variant_id": "var07",
+  "variation_types": [
+    "interface"
+  ],
+  "source_path": "游戏规格说明（英文）/9_medium_Match-3/9_medium_Match-3_V8.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "The gem shapes are:",
+        "- Red: Diamond",
+        "- Blue: Square",
+        "- Green: Circle",
+        "- Yellow: Regular hexagon",
+        "- Purple: Five-pointed star",
+        "Gem colors and logical types remain fixed."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "| Red | `#E74C3C` | Circle |",
+        "| Blue | `#3498DB` | Diamond |",
+        "| Green | `#2ECC71` | Square |"
+      ],
+      "after": [
+        "| Red | `#E74C3C` | Diamond |",
+        "| Blue | `#3498DB` | Square |",
+        "| Green | `#2ECC71` | Circle |"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [],
+      "after": [
+        "Their fixed visual appearances are:",
+        "- Red: `#E74C3C`, Diamond",
+        "- Blue: `#3498DB`, Square",
+        "- Green: `#2ECC71`, Circle",
+        "- Yellow: `#F1C40F`, Regular hexagon",
+        "- Purple: `#9B59B6`, Five-pointed star"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [],
+      "after": [
+        "Gem shape and color do not affect logical match identity."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "Match detection compares gem type only."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [],
+      "after": [
+        "Each generated gem uses the fixed color and shape assigned to its type."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "8. Check the entire board again.",
+        "9. Repeat the resolving cycle if matches remain.",
+        "10. Return to `waiting` once the board is full and stable."
+      ],
+      "after": [
+        "8. Render each new gem using the fixed color and shape for its type.",
+        "9. Check the entire board again.",
+        "10. Repeat the resolving cycle if matches remain.",
+        "11. Return to `waiting` once the board is full and stable."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "The player's goal is to create horizontal or vertical matches of 3 or more identical gems by swapping adjacent gems, clear as many gems as possible, and achieve a higher Score."
+      ],
+      "after": [
+        "The player's goal is to create horizontal or vertical matches of 3 or more identical gem types by swapping adjacent gems, clear as many gems as possible, and achieve a higher Score."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "The five gem appearances are:",
+        "- Red: Diamond",
+        "- Blue: Square",
+        "- Green: Circle",
+        "- Yellow: Regular hexagon",
+        "- Purple: Five-pointed star",
+        "These visual shapes do not modify match logic."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "match3_var07.D2.1.07",
+    "match3_var07.D2.3.11"
+  ],
+  "added_checkpoint_ids": [
+    "match3_var07.D2.1.07",
+    "match3_var07.D2.3.11"
+  ],
+  "base_checkpoints_sha256": "4c049d5c0f23d85abfa0cb642db6e2ae1a19aad04e27424be1cbeb5f7594f420",
+  "checkpoints_sha256": "048d933b65a9db84d5d55c5073dbd7fcf59aa7cd1dbd8f228ae5caa894dbd2e0"
+}

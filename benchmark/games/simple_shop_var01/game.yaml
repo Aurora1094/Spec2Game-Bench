@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "slug": "simple_shop_var01",
+  "name": "Simple Shop Management",
+  "difficulty": "medium",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [],
+  "window_size": [
+    600,
+    800
+  ],
+  "source_audit": {
+    "docx_sha256": "90b0efddeaa5da8d08150fa9664be6fd1228f45c8ff273cb5185fad8a2a173ec",
+    "base_checkpoints_sha256": "92690470632ad35064fdea71202df38a8d1a3a60254bb79bf23c97bab356f2f3",
+    "checkpoint_count": 43
+  },
+  "family_slug": "simple_shop",
+  "variant_id": "var01",
+  "variation_types": [
+    "object_type",
+    "interface"
+  ]
+}

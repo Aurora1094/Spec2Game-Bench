@@ -1,0 +1,167 @@
+{
+  "instance_id": "simple_shop_var09",
+  "family_slug": "simple_shop",
+  "variant_id": "var09",
+  "variation_types": [
+    "parameter",
+    "combination"
+  ],
+  "source_path": "游戏规格说明（英文）/10_medium_Simple Shop Management/10_medium_Simple Shop Management_V10.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "The initial inventory is:",
+        "- Apple: 5",
+        "- Bread: 3",
+        "- Milk: 1",
+        "The selling prices are:",
+        "- Apple: 5",
+        "- Bread: 8",
+        "- Milk: 10"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "| Apple | 3 | 9 | +3 | 6 | 4 |",
+        "| Bread | 3 | 9 | +3 | 9 | 6 |",
+        "| Milk | 3 | 9 | +3 | 12 | 8 |"
+      ],
+      "after": [
+        "| Apple | 5 | 9 | +3 | 6 | 5 |",
+        "| Bread | 3 | 9 | +3 | 9 | 8 |",
+        "| Milk | 1 | 9 | +3 | 12 | 10 |"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- Apple: 3"
+      ],
+      "after": [
+        "- Apple: 5"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- Milk: 3"
+      ],
+      "after": [
+        "- Milk: 1"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Apple Stock = 3"
+      ],
+      "after": [
+        "- Apple Stock = 5"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "- Milk Stock = 3"
+      ],
+      "after": [
+        "- Milk Stock = 1"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Apple: 4",
+        "- Bread: 6",
+        "- Milk: 8"
+      ],
+      "after": [
+        "- Apple: 5",
+        "- Bread: 8",
+        "- Milk: 10"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- Apple Stock: 3"
+      ],
+      "after": [
+        "- Apple Stock: 5"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- Milk Stock: 3"
+      ],
+      "after": [
+        "- Milk Stock: 1"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "7. If the customer reaches checkout while Time remains above 0, process the sale or Missed result."
+      ],
+      "after": [
+        "7. If the customer reaches checkout while Time remains above 0, process the sale or Missed result using Apple 5, Bread 8, and Milk 10 as the selling prices."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "- Initial and maximum Stock"
+      ],
+      "after": [
+        "- Initial Stock: Apple 5, Bread 3, Milk 1",
+        "- Maximum Stock"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "- Selling prices"
+      ],
+      "after": [
+        "- Selling prices: Apple 5, Bread 8, Milk 10"
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [],
+      "after": [
+        "At the start:",
+        "- Apple Stock = 5",
+        "- Bread Stock = 3",
+        "- Milk Stock = 1"
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "If the requested item is available at checkout, Stock decreases by 1 and Money increases by the corresponding selling price. If it is unavailable, Missed increases by 1."
+      ],
+      "after": [
+        "If the requested item is available at checkout:",
+        "- Apple sale: Stock decreases by 1 and Money increases by 5.",
+        "- Bread sale: Stock decreases by 1 and Money increases by 8.",
+        "- Milk sale: Stock decreases by 1 and Money increases by 10.",
+        "If the requested item is unavailable, Missed increases by 1."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "simple_shop_var09.D2.1.01",
+    "simple_shop_var09.D2.2.06",
+    "simple_shop_var09.D2.3.05",
+    "simple_shop_var09.D2.4.04"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "92690470632ad35064fdea71202df38a8d1a3a60254bb79bf23c97bab356f2f3",
+  "checkpoints_sha256": "f4e67376e3bc0712d49109dfd7316bfbb3f37521126112df30bba3970932392a"
+}

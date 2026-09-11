@@ -1,0 +1,130 @@
+{
+  "instance_id": "simple_shop_var05",
+  "family_slug": "simple_shop",
+  "variant_id": "var05",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/10_medium_Simple Shop Management/10_medium_Simple Shop Management_V6.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Simple Shop Management"
+      ],
+      "after": [
+        "Simple Shop Management_V6"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [],
+      "after": [
+        "The initial inventory is:",
+        "- Apple: 5",
+        "- Bread: 3",
+        "- Milk: 1"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "| Apple | 3 | 9 | +3 | 6 | 4 |"
+      ],
+      "after": [
+        "| Apple | 5 | 9 | +3 | 6 | 4 |"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "| Milk | 3 | 9 | +3 | 12 | 8 |"
+      ],
+      "after": [
+        "| Milk | 1 | 9 | +3 | 12 | 8 |"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Apple: 3"
+      ],
+      "after": [
+        "- Apple: 5"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "- Milk: 3"
+      ],
+      "after": [
+        "- Milk: 1"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Apple Stock = 3"
+      ],
+      "after": [
+        "- Apple Stock = 5"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- Milk Stock = 3"
+      ],
+      "after": [
+        "- Milk Stock = 1"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- Apple Stock: 3"
+      ],
+      "after": [
+        "- Apple Stock: 5"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- Milk Stock: 3"
+      ],
+      "after": [
+        "- Milk Stock: 1"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "- Initial and maximum Stock"
+      ],
+      "after": [
+        "- Initial Stock: Apple 5, Bread 3, Milk 1",
+        "- Maximum Stock"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "At the start:",
+        "- Apple Stock = 5",
+        "- Bread Stock = 3",
+        "- Milk Stock = 1"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "simple_shop_var05.D2.1.01",
+    "simple_shop_var05.D2.2.06"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "92690470632ad35064fdea71202df38a8d1a3a60254bb79bf23c97bab356f2f3",
+  "checkpoints_sha256": "e12719890656d8a58dbc29b7a0839f8f258f77bbdad7929d52dcc39e4d6719e9"
+}

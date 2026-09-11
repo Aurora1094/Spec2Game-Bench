@@ -1,0 +1,55 @@
+{
+  "instance_id": "dodge_blocks_var02",
+  "family_slug": "dodge_blocks",
+  "variant_id": "var02",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/2_easy_Dodge Blocks/2_easy_Dodge Blocks_V3.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Each obstacle is a hazardous 40 × 40 px block that spawns at a random horizontal position and moves vertically downward at a fixed speed."
+      ],
+      "after": [
+        "Each obstacle is a hazardous 40 × 40 px block that spawns at a random horizontal position and moves vertically downward at a fixed speed of 260 px/s."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "Each obstacle moves vertically downward at a fixed speed of 200 px/s."
+      ],
+      "after": [
+        "Each obstacle moves vertically downward at a fixed speed of 260 px/s."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "The obstacle spawn timer advances continuously. Exactly one obstacle is created whenever the fixed 1-second spawn interval is reached, and each active obstacle moves downward at 200 px/s."
+      ],
+      "after": [
+        "The obstacle spawn timer advances continuously. Exactly one obstacle is created whenever the fixed 1-second spawn interval is reached, and each active obstacle moves downward at 260 px/s."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- Obstacle falling speed: 200 px/s"
+      ],
+      "after": [
+        "- Obstacle falling speed: 260 px/s"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "dodge_blocks_var02.D2.3.03",
+    "dodge_blocks_var02.D2.4.04"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "49ce18ae41ba1d7c6ead6d9e52bdbc10b7447961c50d8924076bc487b8706308",
+  "checkpoints_sha256": "985ce8ae81476f7e4b423a37c91b17060b4e235e444f298d625dddf3746e3584"
+}

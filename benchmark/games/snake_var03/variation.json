@@ -1,0 +1,263 @@
+{
+  "instance_id": "snake_var03",
+  "family_slug": "snake",
+  "variant_id": "var03",
+  "variation_types": [
+    "object_count",
+    "map",
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/1_easy_Snake/1_easy_Snake_V4.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "The objective is to collect randomly spawned food while avoiding self-collision and the lethal left and right boundaries."
+      ],
+      "after": [
+        "The objective is to collect randomly spawned food while avoiding self-collision, fixed obstacles, and the lethal left and right boundaries."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [],
+      "after": [
+        "The gameplay grid also contains fixed obstacle cells. Moving the snake head into any obstacle cell immediately ends the game."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "Both the snake and food must remain aligned with the grid."
+      ],
+      "after": [
+        "The snake, food, and obstacles must remain aligned with the grid."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "The snake is drawn using orange blocks, and the food is drawn using a brown block."
+      ],
+      "after": [
+        "The snake is drawn using orange blocks, the food is drawn using a brown block, and fixed obstacles are drawn using dark-gray blocks.",
+        "Obstacle cells use zero-based `(column, row)` grid coordinates and are fixed as:",
+        "- Horizontal obstacle: `(8, 10)`, `(9, 10)`, `(10, 10)`, `(11, 10)`",
+        "- Horizontal obstacle: `(18, 20)`, `(19, 20)`, `(20, 20)`, `(21, 20)`",
+        "- Vertical obstacle: `(22, 8)`, `(22, 9)`, `(22, 10)`, `(22, 11)`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Food: exactly one item randomly spawned on a grid cell not occupied by the snake"
+      ],
+      "after": [
+        "- Food: exactly one item randomly spawned on a grid cell not occupied by the snake or an obstacle"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "The main game objects and state variables include the snake, food, gameplay grid, score, and game state."
+      ],
+      "after": [
+        "The main game objects and state variables include the snake, food, fixed obstacles, gameplay grid, score, and game state."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "If the snake crosses the left or right boundary or collides with a body cell that remains occupied after the current movement update, it dies and the game enters `game_over`."
+      ],
+      "after": [
+        "If the snake crosses the left or right boundary, collides with a fixed obstacle, or collides with a body cell that remains occupied after the current movement update, it dies and the game enters `game_over`."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [],
+      "after": [
+        "- Occupy a grid cell not occupied by a fixed obstacle."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "## 3.3 Gameplay Grid"
+      ],
+      "after": [
+        "## 3.3 Fixed Obstacles",
+        "Fixed obstacles occupy predefined grid cells and remain unchanged throughout the game.",
+        "Obstacle cells use zero-based `(column, row)` grid coordinates:",
+        "- `(8, 10)`, `(9, 10)`, `(10, 10)`, `(11, 10)`",
+        "- `(18, 20)`, `(19, 20)`, `(20, 20)`, `(21, 20)`",
+        "- `(22, 8)`, `(22, 9)`, `(22, 10)`, `(22, 11)`",
+        "Each obstacle occupies exactly one 20 × 20 px grid cell.",
+        "Obstacle cells cannot contain food.",
+        "If the snake head enters any obstacle cell, the game immediately enters `game_over`.",
+        "Obstacles do not move, disappear, or change state.",
+        "## 3.4 Gameplay Grid"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "Both the snake and food must always remain aligned with grid cells, and each movement step advances the snake head exactly one cell.",
+        "## 3.4 Score"
+      ],
+      "after": [
+        "The snake, food, and obstacles must always remain aligned with grid cells, and each movement step advances the snake head exactly one cell.",
+        "## 3.5 Score"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "## 3.5 Game State"
+      ],
+      "after": [
+        "## 3.6 Game State"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "The game enters `game_over` if the snake crosses the left or right boundary or collides with its own body according to the self-collision rule in Section 5.4."
+      ],
+      "after": [
+        "The game enters `game_over` if the snake crosses the left or right boundary, enters a fixed obstacle cell, or collides with its own body according to the self-collision rule in Section 5.5."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [],
+      "after": [
+        "The fixed obstacle layout remains the same after Restart."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [],
+      "after": [
+        "A valid food spawn cell must not be occupied by the snake or a fixed obstacle."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "## 5.4 Self-Collision"
+      ],
+      "after": [
+        "## 5.4 Obstacle Collision",
+        "A fixed obstacle is lethal when entered by the snake head.",
+        "If the new head position occupies any fixed obstacle cell, the game immediately enters `game_over`.",
+        "Obstacle collision is checked after top/bottom wrapping and left/right boundary checks, but before food collection and body updating.",
+        "A terminal obstacle collision does not produce food collection, score increase, growth, or new food spawning during that movement step.",
+        "## 5.5 Self-Collision"
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "## 5.5 Movement-Step Evaluation Order"
+      ],
+      "after": [
+        "## 5.6 Movement-Step Evaluation Order"
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "4. Determine whether the new head position reaches the food.",
+        "5. Determine which body cells remain occupied after the movement:"
+      ],
+      "after": [
+        "4. Check whether the new head position occupies a fixed obstacle cell. If so, immediately enter `game_over`.",
+        "5. Determine whether the new head position reaches the food.",
+        "6. Determine which body cells remain occupied after the movement:"
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "6. Check the new head position against the body cells that remain occupied. If a self-collision occurs, enter `game_over`.",
+        "7. Update the snake body by adding the new head and retaining or removing the tail as determined above.",
+        "8. If food was collected, increase the score by 1, remove the collected food, and spawn one new valid food item.",
+        "If a terminal collision occurs during Step 3 or Step 6, no food collection, score increase, growth, or new food spawning is processed for that movement step."
+      ],
+      "after": [
+        "7. Check the new head position against the body cells that remain occupied. If a self-collision occurs, enter `game_over`.",
+        "8. Update the snake body by adding the new head and retaining or removing the tail as determined above.",
+        "9. If food was collected, increase the score by 1, remove the collected food, and spawn one new valid food item.",
+        "If a terminal collision occurs during Step 3, Step 4, or Step 7, no food collection, score increase, growth, or new food spawning is processed for that movement step."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "At initialization, the game creates the window, interface areas, gameplay grid, snake, food, score, and game state."
+      ],
+      "after": [
+        "At initialization, the game creates the window, interface areas, gameplay grid, snake, food, fixed obstacles, score, and game state."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [],
+      "after": [
+        "- Fixed obstacles: the predefined obstacle layout in Section 3.3"
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "Each movement update follows the boundary, food-collection, self-collision, and body-update rules defined in Section 5."
+      ],
+      "after": [
+        "Each movement update follows the boundary, obstacle-collision, food-collection, self-collision, and body-update rules defined in Section 5."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "When the snake crosses the left or right boundary or collides with a body cell that remains occupied after the movement update, the game enters `game_over`."
+      ],
+      "after": [
+        "When the snake crosses the left or right boundary, enters a fixed obstacle cell, or collides with a body cell that remains occupied after the movement update, the game enters `game_over`."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [],
+      "after": [
+        "- The snake head enters a fixed obstacle cell."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "After `game_over`, pressing R restores the snake to its initial length and configuration, resets the direction to right and score to 0, generates one new valid food item, restores the normal gameplay instructions, and returns the game state to `playing`."
+      ],
+      "after": [
+        "After `game_over`, pressing R restores the snake to its initial length and configuration, resets the direction to right and score to 0, restores the fixed obstacle layout, generates one new valid food item, restores the normal gameplay instructions, and returns the game state to `playing`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "snake_var03.D2.1.03",
+    "snake_var03.D2.3.07",
+    "snake_var03.D2.5.07",
+    "snake_var03.D2.1.06",
+    "snake_var03.D2.3.11",
+    "snake_var03.D2.5.09"
+  ],
+  "added_checkpoint_ids": [
+    "snake_var03.D2.1.06",
+    "snake_var03.D2.3.11",
+    "snake_var03.D2.5.09"
+  ],
+  "base_checkpoints_sha256": "c774c0fc0b96c633aa1e7103fbc3d2e9fdf4b008561d785560907ca5b0ba250d",
+  "checkpoints_sha256": "cc3ed3aad00d3ca213c4b6c13adaa86983c231811152cd3232e80d18fd4cee39"
+}

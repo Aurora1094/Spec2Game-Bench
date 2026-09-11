@@ -1,0 +1,200 @@
+{
+  "instance_id": "match3_var06",
+  "family_slug": "match3",
+  "variant_id": "var06",
+  "variation_types": [
+    "interface"
+  ],
+  "source_path": "游戏规格说明（英文）/9_medium_Match-3/9_medium_Match-3_V7.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "The Purple gem type is displayed using orange color `#E67E22` while retaining its Five-pointed star shape and its logical type name `Purple`."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "| Purple | `#9B59B6` | Five-pointed star |"
+      ],
+      "after": [
+        "| Purple | `#E67E22` | Five-pointed star |",
+        "The logical gem type remains `Purple` even though its display color is orange."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "The available types are:"
+      ],
+      "after": [
+        "The available logical types are:"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [],
+      "after": [
+        "Their visual colors and shapes are:",
+        "- Red: `#E74C3C`, Circle",
+        "- Blue: `#3498DB`, Diamond",
+        "- Green: `#2ECC71`, Square",
+        "- Yellow: `#F1C40F`, Regular hexagon",
+        "- Purple: `#E67E22`, Five-pointed star"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "The displayed orange color of the Purple gem does not create a new Orange gem type."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [],
+      "after": [
+        "The Purple gem is treated as type `Purple` for all swap and match logic regardless of its orange display color."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "Each cell contains one randomly selected gem type from:"
+      ],
+      "after": [
+        "Each cell contains one randomly selected logical gem type from:"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "The initial board must contain no horizontal or vertical sequence of 3 or more identical gems."
+      ],
+      "after": [
+        "The Purple type is rendered using orange color `#E67E22`.",
+        "The initial board must contain no horizontal or vertical sequence of 3 or more identical gem types."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "A horizontal match consists of 3 or more consecutive gems of the same type in one row.",
+        "A vertical match consists of 3 or more consecutive gems of the same type in one column."
+      ],
+      "after": [
+        "A horizontal match consists of 3 or more consecutive gems of the same logical type in one row.",
+        "A vertical match consists of 3 or more consecutive gems of the same logical type in one column."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "Gem color does not determine match identity.",
+        "In particular, a Purple gem remains logical type `Purple` even though it is displayed in orange."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "Match detection compares logical gem type rather than displayed color or shape."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "1. Detect all current matches across the board."
+      ],
+      "after": [
+        "1. Detect all current matches across the board by logical gem type."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "Each new gem is independently selected from the five fixed gem types."
+      ],
+      "after": [
+        "Each new gem is independently selected from the five fixed logical gem types.",
+        "Purple gems generated during refilling are displayed using orange color `#E67E22`."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [],
+      "after": [
+        "The five logical gem types are Red, Blue, Green, Yellow, and Purple.",
+        "Purple gems are visually rendered using orange color `#E67E22` and Five-pointed star shape."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "2. Check the entire board."
+      ],
+      "after": [
+        "2. Check the entire board by logical gem type."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "1. Detect all horizontal and vertical matches."
+      ],
+      "after": [
+        "1. Detect all horizontal and vertical matches by logical gem type."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "8. Check the entire board again.",
+        "9. Repeat the resolving cycle if matches remain.",
+        "10. Return to `waiting` once the board is full and stable."
+      ],
+      "after": [
+        "8. Render any Purple gems using orange color `#E67E22`.",
+        "9. Check the entire board again.",
+        "10. Repeat the resolving cycle if matches remain.",
+        "11. Return to `waiting` once the board is full and stable."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "The player's goal is to create horizontal or vertical matches of 3 or more identical gems by swapping adjacent gems, clear as many gems as possible, and achieve a higher Score."
+      ],
+      "after": [
+        "The player's goal is to create horizontal or vertical matches of 3 or more identical gem types by swapping adjacent gems, clear as many gems as possible, and achieve a higher Score."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [],
+      "after": [
+        "The five logical gem types remain:",
+        "- Red",
+        "- Blue",
+        "- Green",
+        "- Yellow",
+        "- Purple",
+        "Purple gems are displayed in orange `#E67E22`, but they continue to match only with other logical Purple gems."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "match3_var06.D2.1.07",
+    "match3_var06.D2.3.11"
+  ],
+  "added_checkpoint_ids": [
+    "match3_var06.D2.1.07",
+    "match3_var06.D2.3.11"
+  ],
+  "base_checkpoints_sha256": "4c049d5c0f23d85abfa0cb642db6e2ae1a19aad04e27424be1cbeb5f7594f420",
+  "checkpoints_sha256": "e17933f85c9117ad708d34c6402cce07beb97d5b6b8b1a10889648a58251cb64"
+}

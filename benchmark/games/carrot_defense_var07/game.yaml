@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "slug": "carrot_defense_var07",
+  "name": "Carrot Defense-like",
+  "difficulty": "hard",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [],
+  "window_size": [
+    800,
+    600
+  ],
+  "source_audit": {
+    "docx_sha256": "f57facedf036cd3bd8fabf61df2f4b6bfcc14449efa58283be37aa923dfd4881",
+    "base_checkpoints_sha256": "763a94a35ba4ffa1473059ff4dc233b43d72a986810cc0d7664282192c535c37",
+    "checkpoint_count": 42
+  },
+  "family_slug": "carrot_defense",
+  "variant_id": "var07",
+  "variation_types": [
+    "map",
+    "rule",
+    "combination"
+  ]
+}

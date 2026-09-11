@@ -1,0 +1,387 @@
+{
+  "instance_id": "pipe_connection_var09",
+  "family_slug": "pipe_connection",
+  "variant_id": "var09",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/13_hard_Pipe Connection Puzzle/13_hard_Pipe Connection Puzzle_V10.docx",
+  "corrections": [
+    "Final DOCX takes precedence over spreadsheet draft differences."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Pipe Connection Puzzle is a logic puzzle and spatial connection game. The player rotates different pipe types within a fixed 6 × 6 grid so that water from a fixed Source reaches both Sinks through valid pipe connections."
+      ],
+      "after": [
+        "Pipe Connection Puzzle is a logic puzzle and spatial connection game. The player rotates different pipe types within a fixed 6 × 6 grid so that water from a fixed Source reaches at least one Sink through valid pipe connections."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "- Both Sinks are reached from the Source.",
+        "- Water does not enter the fixed Leak cell.",
+        "- No Source-reachable outlet points outside the board.",
+        "- No Source-reachable outlet points toward a Block.",
+        "- No Source-reachable outlet points toward an adjacent pipe without the required reverse connection."
+      ],
+      "after": [
+        "- At least one Sink is reached from the Source.",
+        "- The total number of invalid Source-reachable outlets is at most 1.",
+        "An invalid Source-reachable outlet includes an outlet that points:",
+        "- Outside the board.",
+        "- Toward a Block.",
+        "- Into the fixed Leak cell.",
+        "- Toward an adjacent ordinary pipe without the required reverse connection."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "A custom rule is that reaching both Sinks is not sufficient by itself. Every outlet actually reached by water from the Source must also form a valid connection.",
+        "Each independent invalid reachable outlet contributes exactly 1 Leak and displays a red X at that outlet."
+      ],
+      "after": [
+        "Each independent invalid Source-reachable outlet contributes exactly 1 Leak and displays a red X at that outlet.",
+        "A submitted configuration is successful if at least one Sink is reached and Leaks is 0 or 1."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [],
+      "after": [
+        "A winning submission may still display one red X."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "`Click pipe to rotate    Press Space to run water`",
+        "`Connect source to all sinks    Restart: R`"
+      ],
+      "after": [
+        "`Click pipe to rotate Press Space to run water`",
+        "`Reach at least one sink Restart: R`"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [],
+      "after": [
+        "A `won` state may contain:",
+        "- Exactly one reached Sink.",
+        "- `Leaks: 1`.",
+        "- One visible red X."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [],
+      "after": [
+        "At least one Sink must be reached for Victory."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "The fixed map does not currently contain a Cross Pipe, but the type remains part of the game rules."
+      ],
+      "after": [
+        "The fixed map does not contain a Cross Pipe, but the type remains part of the game rules."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- Sink 1 is reached.",
+        "- Sink 2 is reached.",
+        "- Leaks = 0."
+      ],
+      "after": [
+        "- Sink 1 is reached or Sink 2 is reached.",
+        "- Leaks ≤ 1."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- At least one Sink is not reached, or",
+        "- Leaks > 0."
+      ],
+      "after": [
+        "- Neither Sink is reached, or",
+        "- Leaks ≥ 2."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "All rotatable pipes may be rotated, including pipes that are not part of the final correct water route."
+      ],
+      "after": [
+        "All rotatable pipes may be rotated, including pipes that are not part of the final water route."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "4. Calculate Leaks."
+      ],
+      "after": [
+        "4. Calculate every independent Source-reachable Leak."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [],
+      "after": [
+        "If at least one Sink is reached and Leaks ≤ 1:",
+        "- Enter `won`.",
+        "Otherwise:",
+        "- Enter `failed`."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "Row 0: SRC-E | SV   | SV   | TNES | SV   | SNK-W",
+        "Row 1: BLK   | CNE  | TESW | SH   | BLK  | CES",
+        "Row 2: CSW   | BLK  | CNE  | SH   | TWNE | BLK",
+        "Row 3: BLK   | SV   | LEK  | SH   | CNE  | SV",
+        "Row 4: TESW  | BLK  | CES  | CES  | CWN  | BLK",
+        "Row 5: SH    | CNE  | BLK  | BLK  | CES  | SNK-W"
+      ],
+      "after": [
+        "Row 0: SRC-E | SV | SV | TNES | SV | SNK-W",
+        "Row 1: BLK | CNE | TESW | SH | BLK | CES",
+        "Row 2: CSW | BLK | CNE | SH | TWNE | BLK",
+        "Row 3: BLK | SV | LEK | SH | CNE | SV",
+        "Row 4: TESW | BLK | CES | CES | CWN | BLK",
+        "Row 5: SH | CNE | BLK | BLK | CES | SNK-W"
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "For example, if the current pipe has an E outlet, the cell to its right must have a W connection for water to enter it."
+      ],
+      "after": [
+        "If the current pipe has an E outlet, the cell to its right must have a W connection for water to enter it."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "An isolated pipe that is never reached by Source water contributes no Leak, even if one of its outlets visually points toward an invalid location."
+      ],
+      "after": [
+        "An isolated pipe that is never reached by Source water contributes no Leak."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "To prevent infinite traversal without incorrectly suppressing valid branches, propagation must track processed directed traversal connections rather than treating an entire pipe cell as permanently exhausted after its first visit.",
+        "A traversal can be represented by the directed transition used to enter or leave a pipe.",
+        "The same directed connection must not be processed repeatedly, but the same pipe may still participate through another valid incoming connection when required by the network structure."
+      ],
+      "after": [
+        "Propagation must track processed directed traversal connections to prevent infinite traversal without suppressing valid branches.",
+        "The same directed connection must not be processed repeatedly.",
+        "The same pipe may still participate through another valid incoming connection when required by the network structure.",
+        "The complete Source-reachable network must be evaluated before the result is resolved."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "If an outlet points directly into the fixed Leak cell:"
+      ],
+      "after": [
+        "If an outlet points directly into the fixed Leak cell at `(3,2)`:"
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "A single outlet entering the Leak therefore contributes at most 1 to Leaks."
+      ],
+      "after": [
+        "A single outlet entering the Leak therefore contributes at most 1 Leak."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "A `SNK-W` Sink accepts water only from the cell immediately to its left through that cell's E outlet.",
+        "When water enters through this valid interface:",
+        "- Mark the Sink as `reached`.",
+        "- Stop propagation at the Sink.",
+        "Water approaching the Sink from another direction does not mark it as reached."
+      ],
+      "after": [
+        "Both Sinks use `SNK-W`.",
+        "Sink 1 at `(0,5)` accepts water only from `(0,4)` through that pipe's E outlet.",
+        "Sink 2 at `(5,5)` accepts water only from `(5,4)` through that pipe's E outlet.",
+        "When water enters either Sink through its valid W interface:",
+        "- Mark that Sink as `reached`.",
+        "- Stop propagation at that Sink.",
+        "Water approaching a Sink from another direction does not mark it as reached."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "For example, if one reached T Pipe has two different invalid outgoing directions:"
+      ],
+      "after": [
+        "If one reached T Pipe has two different invalid outgoing directions:"
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [],
+      "after": [
+        "Leak counting is not capped at 1.",
+        "The complete Leak count must be calculated before the final result is determined."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "This shows that water physically reached that outlet even though propagation could not continue."
+      ],
+      "after": [
+        "A red X remains visible when the submitted configuration enters `won` with exactly one Leak.",
+        "A Sink that is not reached receives no reached indication."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "- Sink 1 is `reached`.",
+        "- Sink 2 is `reached`.",
+        "- Leaks = 0."
+      ],
+      "after": [
+        "- At least one Sink is `reached`.",
+        "- Leaks ≤ 1."
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [
+        "- At least one Sink is not `reached`, or",
+        "- Leaks > 0."
+      ],
+      "after": [
+        "- Neither Sink is `reached`, or",
+        "- Leaks ≥ 2."
+      ]
+    },
+    {
+      "id": "change26",
+      "before": [],
+      "after": [
+        "- Source: `(0,0)`",
+        "- Sink 1: `(0,5)`",
+        "- Sink 2: `(5,5)`",
+        "- Leak: `(3,2)`"
+      ]
+    },
+    {
+      "id": "change27",
+      "before": [
+        "7. Count each independent invalid outlet exactly once.",
+        "8. Highlight reached pipe channels in blue.",
+        "9. Display a red X at every invalid outlet.",
+        "10. Record whether each Sink is reached.",
+        "11. Resolve the submitted result.",
+        "If both Sinks are reached and Leaks = 0:"
+      ],
+      "after": [
+        "7. Count every independent invalid outlet exactly once.",
+        "8. Continue evaluating the full reachable network.",
+        "9. Highlight reached pipe channels in blue.",
+        "10. Display a red X at every invalid outlet.",
+        "11. Record whether Sink 1 is reached.",
+        "12. Record whether Sink 2 is reached.",
+        "13. Resolve the submitted result.",
+        "If at least one Sink is reached and Leaks ≤ 1:"
+      ]
+    },
+    {
+      "id": "change28",
+      "before": [
+        "- Red X marks remain visible."
+      ],
+      "after": [
+        "- All red X marks remain visible."
+      ]
+    },
+    {
+      "id": "change29",
+      "before": [
+        "The player's goal is to configure the fixed pipe network within at most 30 successful rotations so that Source water reaches both Sinks without producing any invalid Source-reachable outlet."
+      ],
+      "after": [
+        "The player's goal is to configure the fixed pipe network within at most 30 successful rotations so that Source water reaches at least one Sink while producing no more than one invalid Source-reachable outlet."
+      ]
+    },
+    {
+      "id": "change30",
+      "before": [
+        "- Leaks displays the total number of invalid reachable outlets.",
+        "An outlet that enters the fixed Leak contributes exactly 1 Leak and is not double-counted as both Leak-cell entry and missing reverse connection."
+      ],
+      "after": [
+        "- Leaks displays the complete number of invalid reachable outlets.",
+        "- Each Sink records whether it was reached."
+      ]
+    },
+    {
+      "id": "change31",
+      "before": [
+        "- Both Sinks reached.",
+        "- Leaks = 0."
+      ],
+      "after": [
+        "- At least one Sink reached.",
+        "- Leaks ≤ 1."
+      ]
+    },
+    {
+      "id": "change32",
+      "before": [
+        "- At least one Sink is not reached, or",
+        "- Leaks > 0."
+      ],
+      "after": [
+        "- Neither Sink is reached, or",
+        "- Leaks ≥ 2."
+      ]
+    },
+    {
+      "id": "change33",
+      "before": [
+        "R restores the initial map, clears all water-flow results, and returns the game to `editing`."
+      ],
+      "after": [
+        "R restores the initial map, clears both Sink reached states and all water-flow results, and returns the game to `editing`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "pipe_connection_var09.D2.3.08",
+    "pipe_connection_var09.D2.3.09",
+    "pipe_connection_var09.D2.3.11"
+  ],
+  "added_checkpoint_ids": [
+    "pipe_connection_var09.D2.3.11"
+  ],
+  "base_checkpoints_sha256": "81842a961e20164b1af130002c9a8ab35beeedb93f7f148ef4bbafae418571f6",
+  "checkpoints_sha256": "344d226840cd91996120e6ba6e23c2643b9a4d65a5c7dbf1bd917120a6ffb3ce"
+}

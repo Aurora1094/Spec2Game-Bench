@@ -1,0 +1,368 @@
+{
+  "instance_id": "space_invaders_var08",
+  "family_slug": "space_invaders",
+  "variant_id": "var08",
+  "variation_types": [
+    "object_type",
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/6_medium_Space Invaders/6_medium_Space Invaders_V9.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "The game contains two enemy types:",
+        "- Normal Enemy: requires 1 player-bullet hit to defeat and awards 10 points.",
+        "- Armored Enemy: requires 2 player-bullet hits to defeat and awards 20 points when defeated.",
+        "Armored Enemies appear at fixed positions in each wave and are visually distinguishable from Normal Enemies."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "`Score: X    Lives: Y    Wave: Z/3`"
+      ],
+      "after": [
+        "`Score: X Lives: Y Wave: Z/3`"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`Score: 0    Lives: 3    Wave: 1/3`"
+      ],
+      "after": [
+        "`Score: 0 Lives: 3 Wave: 1/3`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "`Move: A/D    Shoot: Space`"
+      ],
+      "after": [
+        "`Move: A/D Shoot: Space`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "Enemies are represented by purple circles. Each enemy:",
+        "- Has a diameter of 30 px.",
+        "- Uses a 30 × 30 px bounding rectangle for collision detection.",
+        "- Is treated as an independent target."
+      ],
+      "after": [
+        "All enemies use a 30 × 30 px bounding rectangle for collision detection and are treated as independent targets.",
+        "Normal Enemies:",
+        "- Are represented by purple circles.",
+        "- Have a diameter of 30 px.",
+        "- Require 1 hit to defeat.",
+        "Armored Enemies:",
+        "- Have the same 30 px diameter and 30 × 30 px collision rectangle.",
+        "- Are represented using a darker purple circle, a visible outline, or another clearly distinguishable visual treatment.",
+        "- Require 2 player-bullet hits to defeat."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [],
+      "after": [
+        "Armored Enemy positions use `(row, col)` within the formation, with rows and columns numbered starting from 1.",
+        "Fixed Armored Enemy positions are:",
+        "- Wave 1, 2 × 6: `(1,2)`, `(1,5)`",
+        "- Wave 2, 3 × 6: `(1,2)`, `(1,5)`, `(3,2)`, `(3,5)`",
+        "- Wave 3, 3 × 7: `(1,2)`, `(1,6)`, `(2,4)`, `(3,2)`, `(3,6)`",
+        "All other positions contain Normal Enemies."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [],
+      "after": [
+        "Both Normal and Armored Enemies may be selected to fire."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "The main game objects and state variables include the player spaceship, player bullets, enemies, enemy bullets, score, Lives, Wave, temporary invulnerability state, firing timers, and game state."
+      ],
+      "after": [
+        "The main game objects and state variables include the player spaceship, player bullets, Normal Enemies, Armored Enemies, enemy bullets, score, Lives, Wave, temporary invulnerability state, firing timers, and game state."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- Can defeat at most one enemy."
+      ],
+      "after": [
+        "- Can damage at most one enemy."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "Each enemy has two logical states:",
+        "- `alive`",
+        "- `defeated`",
+        "When a player bullet hits an `alive` enemy, that enemy is immediately defeated and removed, the bullet is removed, and Score increases by 10."
+      ],
+      "after": [
+        "Each enemy has an enemy type and remaining hit points.",
+        "Normal Enemy:",
+        "- Initial HP: 1",
+        "- Score on defeat: +10",
+        "Armored Enemy:",
+        "- Initial HP: 2",
+        "- Score on defeat: +20",
+        "When a player bullet hits a surviving enemy:",
+        "1. The bullet is immediately removed.",
+        "2. The enemy loses 1 HP.",
+        "3. If HP remains above 0, the enemy remains alive and no score is awarded.",
+        "4. If HP reaches 0, the enemy is defeated and removed and the corresponding score is awarded.",
+        "An Armored Enemy hit once therefore remains in the formation with:",
+        "`HP = 1`",
+        "It may visually flash or change its outline after the first hit, but its size, movement, firing eligibility, and collision rectangle remain unchanged."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "Normal and Armored Enemies use the same firing behavior."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "Each defeated enemy awards:",
+        "`+10`",
+        "Wave completion provides no additional score.",
+        "The three waves contain:",
+        "- Wave 1: 12 enemies",
+        "- Wave 2: 18 enemies",
+        "- Wave 3: 21 enemies",
+        "Total enemies: 51",
+        "Maximum possible score: 510"
+      ],
+      "after": [
+        "Scoring rules:",
+        "- Normal Enemy defeated: +10",
+        "- Armored Enemy defeated: +20",
+        "- First hit on an Armored Enemy: +0",
+        "- Wave completion: +0",
+        "Fixed enemy-type counts are:",
+        "Wave 1:",
+        "- 10 Normal Enemies",
+        "- 2 Armored Enemies",
+        "Wave 2:",
+        "- 14 Normal Enemies",
+        "- 4 Armored Enemies",
+        "Wave 3:",
+        "- 16 Normal Enemies",
+        "- 5 Armored Enemies",
+        "Across all three waves:",
+        "- Normal Enemies: 40",
+        "- Armored Enemies: 11",
+        "- Total Enemies: 51",
+        "Maximum possible score:",
+        "`40 × 10 + 11 × 20 = 620`"
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [],
+      "after": [
+        "A wave is cleared only after every Normal Enemy and every Armored Enemy in that wave has been defeated."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "- Wave 1 formation."
+      ],
+      "after": [
+        "- All enemy HP values.",
+        "- Wave 1 formation with its fixed Normal and Armored Enemy positions."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "A player bullet is removed when it leaves the top of the gameplay area or successfully hits one enemy."
+      ],
+      "after": [
+        "A player bullet is removed when it leaves the top of the gameplay area or hits one enemy."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "| Wave | Formation | Enemies | Top-left Position | Downward Speed | Firing Interval |",
+        "|---:|---|---:|---|---:|---:|",
+        "| 1 | 2 × 6 | 12 | `(120, 110)` | 6 px/s | 1.6 s |",
+        "| 2 | 3 × 6 | 18 | `(230, 110)` | 7 px/s | 1.4 s |",
+        "| 3 | 3 × 7 | 21 | `(205, 110)` | 8 px/s | 1.2 s |"
+      ],
+      "after": [
+        "| Wave | Formation | Enemies | Armored Positions | Top-left Position | Downward Speed | Firing Interval |",
+        "|---:|---|---:|---|---|---:|---:|",
+        "| 1 | 2 × 6 | 12 | `(1,2)`, `(1,5)` | `(120, 110)` | 6 px/s | 1.6 s |",
+        "| 2 | 3 × 6 | 18 | `(1,2)`, `(1,5)`, `(3,2)`, `(3,5)` | `(230, 110)` | 7 px/s | 1.4 s |",
+        "| 3 | 3 × 7 | 21 | `(1,2)`, `(1,6)`, `(2,4)`, `(3,2)`, `(3,6)` | `(205, 110)` | 8 px/s | 1.2 s |",
+        "Rows and columns are 1-indexed within each formation.",
+        "Every formation position not listed as Armored contains a Normal Enemy."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "1. Select one surviving enemy uniformly at random."
+      ],
+      "after": [
+        "1. Select one surviving enemy uniformly at random from all surviving Normal and Armored Enemies."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [],
+      "after": [
+        "An Armored Enemy with 1 remaining HP is still an eligible surviving enemy."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "When a bullet hits a surviving enemy:",
+        "- The enemy is removed.",
+        "- The bullet is removed.",
+        "- Score increases by 10.",
+        "One bullet can defeat at most one enemy and cannot penetrate enemies."
+      ],
+      "after": [
+        "When a bullet hits a Normal Enemy:",
+        "- Remove the bullet.",
+        "- Reduce the enemy from 1 HP to 0.",
+        "- Remove the enemy.",
+        "- Increase Score by 10.",
+        "When a bullet hits an Armored Enemy with 2 HP:",
+        "- Remove the bullet.",
+        "- Reduce the enemy to 1 HP.",
+        "- Keep the enemy alive.",
+        "- Award no score.",
+        "When a bullet hits an Armored Enemy with 1 HP:",
+        "- Remove the bullet.",
+        "- Reduce the enemy to 0 HP.",
+        "- Remove the enemy.",
+        "- Increase Score by 20.",
+        "One bullet can affect at most one enemy and cannot penetrate enemies."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "A wave ends only after every enemy in that wave has been defeated."
+      ],
+      "after": [
+        "A wave ends only after every Normal and Armored Enemy in that wave has been defeated."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "7. Spawn the next fixed formation."
+      ],
+      "after": [
+        "7. Spawn the next fixed formation with the defined enemy types and full HP values."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "2. The bottom edge of any surviving enemy reaches y = 520.",
+        "3. Any surviving enemy overlaps the spaceship."
+      ],
+      "after": [
+        "2. The bottom edge of any surviving Normal or Armored Enemy reaches y = 520.",
+        "3. Any surviving Normal or Armored Enemy overlaps the spaceship."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "Victory occurs when every enemy in Wave 3 has been defeated."
+      ],
+      "after": [
+        "Victory occurs when every Normal and Armored Enemy in Wave 3 has been defeated."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "At initialization, the game creates the interface, player spaceship, score, Lives, Wave, bullet lists, invulnerability state, firing timers, Wave 1 formation, and game state."
+      ],
+      "after": [
+        "At initialization, the game creates the interface, player spaceship, score, Lives, Wave, bullet lists, invulnerability state, firing timers, Wave 1 formation, enemy types, enemy HP values, and game state."
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [
+        "Wave 1 begins as a 2 × 6 formation at `(120, 110)`."
+      ],
+      "after": [
+        "Wave 1 begins as a 2 × 6 formation at `(120, 110)` with Armored Enemies at `(1,2)` and `(1,5)`."
+      ]
+    },
+    {
+      "id": "change26",
+      "before": [
+        "The game then resolves player bullet–enemy collisions and enemy bullet–player collisions. Defeated enemies are removed and award 10 points each. Valid enemy bullet hits reduce Lives according to the 1-second invulnerability rule."
+      ],
+      "after": [
+        "The game then resolves player bullet–enemy collisions and enemy bullet–player collisions.",
+        "Normal Enemies are defeated after one valid player-bullet hit and award 10 points.",
+        "Armored Enemies require two valid player-bullet hits. The first hit reduces HP from 2 to 1 without awarding score; the second reduces HP from 1 to 0, removes the enemy, and awards 20 points."
+      ]
+    },
+    {
+      "id": "change27",
+      "before": [
+        "If Wave 1 or Wave 2 is cleared, all bullets are removed and the next wave begins while Score, Lives, and player horizontal position are preserved."
+      ],
+      "after": [
+        "If Wave 1 or Wave 2 is cleared, all bullets are removed and the next fixed wave begins with all of its Normal and Armored Enemies at full HP while Score, Lives, and player horizontal position are preserved."
+      ]
+    },
+    {
+      "id": "change28",
+      "before": [
+        "`Score: X    Lives: Y    Wave: Z/3`",
+        "`Move: A/D    Shoot: Space`",
+        "Each defeated enemy increases Score by 10. Wave completion provides no bonus score."
+      ],
+      "after": [
+        "`Score: X Lives: Y Wave: Z/3`",
+        "`Move: A/D Shoot: Space`",
+        "Normal Enemies require one hit and award 10 points when defeated.",
+        "Armored Enemies are visually distinguishable, require two hits, award no score after the first hit, and award 20 points when defeated.",
+        "The maximum possible Score is 620."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "space_invaders_var08.D2.3.03",
+    "space_invaders_var08.D2.1.06",
+    "space_invaders_var08.D2.3.11"
+  ],
+  "added_checkpoint_ids": [
+    "space_invaders_var08.D2.1.06",
+    "space_invaders_var08.D2.3.11"
+  ],
+  "base_checkpoints_sha256": "890569ecc6569c00ed27cde2047639245c470e1675b0f8be5b03b2fb1cf423d7",
+  "checkpoints_sha256": "30a0dfebd07f65cae23b48c2a081abbb41525d5bd2ae6a7ada746470ec721cf1"
+}

@@ -1,0 +1,146 @@
+{
+  "instance_id": "asteroids_var06",
+  "family_slug": "asteroids",
+  "variant_id": "var06",
+  "variation_types": [
+    "object_count"
+  ],
+  "source_path": "游戏规格说明（英文）/4_easy_Asteroids/4_easy_Asteroids_V7.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Asteroids"
+      ],
+      "after": [
+        "Asteroids_V7"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "The game begins with 3 fixed asteroids:"
+      ],
+      "after": [
+        "The game begins with 4 fixed asteroids:"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [],
+      "after": [
+        "| Asteroid 4 | `(430, 580)` | `(-56, -56) px/s` |"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "Only subsequently spawned asteroids appear from the edges of the gameplay area. Asteroids do not split and do not actively chase the spaceship."
+      ],
+      "after": [
+        "Only subsequently spawned asteroids appear from the edges of the gameplay area.",
+        "Asteroids do not split and do not actively chase the spaceship."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "At the start of the game, the spaceship is centered at `(300, 400)` and faces upward, the 3 initial asteroids are present, no bullets are present, the score is 0, and the normal gameplay instructions are displayed."
+      ],
+      "after": [
+        "At the start of the game, the spaceship is centered at `(300, 400)` and faces upward, the 4 initial asteroids are present, no bullets are present, the score is 0, and the normal gameplay instructions are displayed."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "The game begins with 3 fixed asteroids, and at most 4 asteroids may exist simultaneously."
+      ],
+      "after": [
+        "The game begins with 4 fixed asteroids, and at most 5 asteroids may exist simultaneously."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "Score does not increase because of survival time, asteroid wrapping, or bullet expiration. The game does not record a separate high score."
+      ],
+      "after": [
+        "Score does not increase because of survival time, asteroid wrapping, or bullet expiration.",
+        "The game does not record a separate high score."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "The game begins with exactly 3 fixed asteroids:"
+      ],
+      "after": [
+        "The game begins with exactly 4 fixed asteroids:"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "- `(430, 580)`, velocity `(-56, -56) px/s`"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- If fewer than 4 asteroids exist, spawn exactly 1 new asteroid.",
+        "- If 4 asteroids already exist, spawn nothing.",
+        "The maximum number of active asteroids is therefore 4."
+      ],
+      "after": [
+        "- If fewer than 5 asteroids exist, spawn exactly 1 new asteroid.",
+        "- If 5 asteroids already exist, spawn nothing.",
+        "The maximum number of active asteroids is therefore 5."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "At initialization, the game creates the window and interface areas, places the spaceship at `(300, 400)` facing up, sets the score to 0, clears the bullet list, creates the 3 fixed initial asteroids, initializes the firing cooldown and asteroid spawn-check timer, and enters `playing`."
+      ],
+      "after": [
+        "At initialization, the game creates the window and interface areas, places the spaceship at `(300, 400)` facing up, sets the score to 0, clears the bullet list, creates the 4 fixed initial asteroids, initializes the firing cooldown and asteroid spawn-check timer, and enters `playing`."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "- Asteroid 4: `(430, 580)`, velocity `(-56, -56) px/s`"
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "Pressing R fully reinitializes the game. The spaceship returns to `(300, 400)` facing up, score returns to 0, all bullets are cleared, the 3 fixed initial asteroids are restored, all relevant timers are reset, the normal gameplay instructions return, and the game state becomes `playing`."
+      ],
+      "after": [
+        "Pressing R fully reinitializes the game. The spaceship returns to `(300, 400)` facing up, score returns to 0, all bullets are cleared, the 4 fixed initial asteroids are restored, all relevant timers are reset, the normal gameplay instructions return, and the game state becomes `playing`."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "- Maximum asteroid count: 4"
+      ],
+      "after": [
+        "- Maximum asteroid count: 5"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "asteroids_var06.D2.1.02",
+    "asteroids_var06.D2.3.07",
+    "asteroids_var06.D2.5.06"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "d50b680470c3c8924a22f5c3a03e1ceb524a55e81af4465fc04666d60d2662fc",
+  "checkpoints_sha256": "31dc15b87b63bd813d99d530ec26f9cbf74bc454cf6971214175fa7bd465f65c"
+}

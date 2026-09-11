@@ -32,6 +32,8 @@ from code2play.config.project import (
     normalized_policy_sha256,
     require_locked_runtime_policy,
     resolve_workspace,
+    select_run_config,
+    task_storage_dir,
     workspace_round_dir,
     workspace_run_dir,
 )
@@ -79,7 +81,13 @@ def _json(value: Any) -> None:
 
 
 def _config(args: argparse.Namespace) -> dict[str, Any]:
-    return load_config(Path(args.config_path))
+    config = load_config(Path(args.config_path))
+    if hasattr(args, "track"):
+        config = select_run_config(config, track=args.track, model_id=args.model,
+                                   game_slug=getattr(args, "game", None),
+                                   variant_id=args.variant,
+                                   require_model=args.command not in {"contract", "smoke"})
+    return config
 
 
 def _round_id(prefix: str) -> str:
@@ -161,7 +169,7 @@ def validate_benchmark(config: Mapping[str, Any]) -> dict[str, Any]:
     game_reports: list[dict[str, Any]] = []
     game_schema = PROJECT_ROOT / "benchmark" / "schemas" / "game.schema.json"
     checkpoint_schema = PROJECT_ROOT / "benchmark" / "schemas" / "checkpoint.schema.json"
-    for item in catalog_games:
+    for item in [*catalog_games, *catalog.get("variant_instances", [])]:
         if not isinstance(item, Mapping):
             errors.append("catalog contains a non-object game")
             continue
@@ -186,7 +194,7 @@ def validate_benchmark(config: Mapping[str, Any]) -> dict[str, Any]:
                 "difficulty": item.get("difficulty"),
                 "spec": "spec.md",
                 "checkpoints": "checkpoints.jsonl",
-                "variants": [],
+                "variants": item.get("variants", []),
                 "window_size": item.get("window_size"),
             }
             for key, expected in expected_metadata.items():
@@ -197,7 +205,7 @@ def validate_benchmark(config: Mapping[str, Any]) -> dict[str, Any]:
                 errors.append(f"{slug}: game.yaml source_audit is required")
             elif (
                 not SHA256_RE.fullmatch(str(source_audit.get("docx_sha256", "")))
-                or not SHA256_RE.fullmatch(str(source_audit.get("csv_sha256", "")))
+                or not SHA256_RE.fullmatch(str(source_audit.get("csv_sha256" if item.get("variant_id", "base") == "base" else "base_checkpoints_sha256", "")))
                 or int(source_audit.get("checkpoint_count", -1)) != int(item.get("checkpoint_count", -2))
             ):
                 errors.append(f"{slug}: game.yaml source_audit is invalid")
@@ -222,8 +230,8 @@ def validate_benchmark(config: Mapping[str, Any]) -> dict[str, Any]:
             errors.append(f"{slug}: checkpoint JSONL row count differs from loaded evaluator rows")
         if spec.get("game_name") != item.get("name"):
             errors.append(f"{slug}: game name differs between catalog and spec")
-        if item.get("variants") != [] or spec.get("evaluation", {}).get("d4") is not None:
-            errors.append(f"{slug}: variants must be [] and D4 must be round-scoped")
+        if spec.get("evaluation", {}).get("d4") is not None:
+            errors.append(f"{slug}: D4 must be round-scoped")
         local_ids: set[str] = set()
         for row in rows:
             checkpoint_id = str(row.get("id", ""))
@@ -262,8 +270,10 @@ def validate_benchmark(config: Mapping[str, Any]) -> dict[str, Any]:
             errors.append(f"{slug}: checkpoint_count does not match JSONL")
         total += len(rows)
         game_reports.append({"slug": slug, "checkpoints": len(rows)})
-    if total != 537 or dimensions != EXPECTED_DIMENSIONS:
+    if total != catalog.get("full_checkpoint_count") or dimensions != catalog.get("full_dimensions"):
         errors.append("checkpoint totals or dimension counts are invalid")
+    from code2play.config.variants import variant_data_errors
+    errors.extend(variant_data_errors(catalog, PROJECT_ROOT / "benchmark"))
     for path in (PROJECT_ROOT / "benchmark").rglob("*"):
         if path.is_file() and path.suffix.lower() in {".docx", ".csv", ".xls", ".xlsx"}:
             errors.append(f"source file must not be checked in: {path.relative_to(PROJECT_ROOT)}")
@@ -301,7 +311,9 @@ def validate_benchmark(config: Mapping[str, Any]) -> dict[str, Any]:
                         errors.append(f"conversion audit hash is invalid for {audit_game.get('slug')}")
     return {
         "status": "passed" if not errors else "failed",
-        "games": len(game_reports),
+        "games": len(catalog_games),
+        "instances": len(game_reports),
+        "base_checkpoints": catalog["checkpoint_count"],
         "checkpoints": total,
         "dimensions": dimensions,
         "policy_sha256": normalized_policy_sha256(config),
@@ -332,6 +344,20 @@ def cmd_validate(args: argparse.Namespace) -> int:
 def cmd_preflight(args: argparse.Namespace) -> int:
     config = _config(args)
     report = validate_benchmark(config)
+    report["selection"] = config["selection"]
+    if report["status"] != "passed":
+        _json(report)
+        return 1
+    workspace = resolve_workspace(args.workspace)
+    workspace.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=workspace, prefix="probe-") as probe:
+        path = (Path(probe) / "runs" / "r" / "tasks" / "t"
+                / "evaluation/semantic_evidence/sampling_attempt_001/samples"
+                / "candidate_workers/d2_worker_000/cwd/visual_frames/case_000/write-probe")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("ok", encoding="utf-8")
+        report["workspace_writable"] = path.read_text(encoding="utf-8") == "ok"
+        report["workspace_probe_path_characters"] = len(str(path))
     report["workspace"] = str(resolve_workspace(args.workspace))
     from code2play.providers.dashscope import JudgeRouter, resolve_judge_route
 
@@ -340,12 +366,13 @@ def cmd_preflight(args: argparse.Namespace) -> int:
         role: resolve_judge_route(config["judge"], role)
         for role in roles
     }
+    from code2play.providers.dashscope import candidate_api_key_env
     api_key_envs = sorted(
         {
             str(route.get("api_key_env") or "")
             for route in routes.values()
             if str(route.get("api_key_env") or "")
-        }
+        } | {candidate_api_key_env(model) for model in models(config)}
     )
     missing_api_key_envs = [name for name in api_key_envs if not os.environ.get(name)]
     report["api_key_configured"] = not missing_api_key_envs
@@ -414,7 +441,7 @@ def cmd_contract_build(args: argparse.Namespace) -> int:
         generator=generator,
         round_id=round_id,
     )
-    validate_round_manifest(manifest, round_dir=round_dir, expected_slugs=list(EXPECTED_SLUGS))
+    validate_round_manifest(manifest, round_dir=round_dir, expected_slugs=[game.slug for game in games(config)])
     _json(
         {
             "status": "passed",
@@ -439,6 +466,9 @@ def cmd_benchmark(args: argparse.Namespace) -> int:
         workspace=resolve_workspace(args.workspace),
         round_id=args.round_id,
         game_slug=args.game,
+        track=args.track,
+        model_id=args.model,
+        variant_id=args.variant,
     )
     _json(
         {
@@ -462,21 +492,48 @@ def _ensure_round(args: argparse.Namespace, config: Mapping[str, Any]) -> tuple[
 
 
 def cmd_evaluate(args: argparse.Namespace) -> int:
+    from code2play.execution.benchmark import _exclusive_run_lock
+    run_dir = workspace_run_dir(resolve_workspace(args.workspace), args.run_id)
+    run_dir.mkdir(parents=True, exist_ok=True)
+    with _exclusive_run_lock(run_dir):
+        return _evaluate_locked(args)
+
+
+def _evaluate_locked(args: argparse.Namespace) -> int:
     config = _config(args)
     require_locked_runtime_policy(config)
+    if len(games(config)) != 1:
+        raise ValueError("evaluate requires exactly one instance; select --game and --variant")
     from code2play.execution.benchmark import prepare_manual_project
     from code2play.evaluation.pipeline import evaluate_candidate
     from code2play.reporting.reports import write_task_reports
 
-    round_dir, manifest = _ensure_round(args, config)
     run_dir = workspace_run_dir(resolve_workspace(args.workspace), args.run_id)
+    if (run_dir / "run_state.json").exists():
+        raise ValueError("A benchmark already uses this run ID; choose a new run ID for evaluate")
     configured_models = models(config)
     if len(configured_models) != 1:
         raise ValueError("manual evaluation requires exactly one configured candidate model")
     candidate_model = configured_models[0]
-    task_dir = run_dir / "tasks" / f"{args.game}__{candidate_model.id}__r01"
+    game = games(config)[0]
+    task_dir = task_storage_dir(run_dir, f"{game.slug}__{candidate_model.id}__r01")
+    from code2play.execution.safe_artifacts import write_json
+    identity_path = run_dir / "manual_evaluation.json"
+    if identity_path.exists():
+        prior = json.loads(identity_path.read_text(encoding="utf-8"))
+        if not args.round_id:
+            args.round_id = prior["round_id"]
+        expected = {"selection": {**config["selection"], "scope": "subset"}, "model": config["models"][0],
+                    "policy_sha256": normalized_policy_sha256(config), "round_id": args.round_id}
+        if prior != expected:
+            raise ValueError("Manual evaluation selection or policy changed; use a new run ID")
+    round_dir, manifest = _ensure_round(args, config)
+    identity = {"selection": {**config["selection"], "scope": "subset"}, "model": config["models"][0],
+                "policy_sha256": normalized_policy_sha256(config), "round_id": manifest["round_id"]}
+    if identity_path.exists() and json.loads(identity_path.read_text(encoding="utf-8")) != identity:
+        raise ValueError("Manual evaluation selection or policy changed; use a new run ID")
+    write_json(identity_path, identity)
     candidate = prepare_manual_project(args.candidate, task_dir)
-    game = game_by_slug(config, args.game)
     result = evaluate_candidate(
         game=game,
         model_id=candidate_model.id,
@@ -491,6 +548,8 @@ def cmd_evaluate(args: argparse.Namespace) -> int:
         contract_manifest_sha256=str(manifest["manifest_sha256"]),
         config=dict(config),
     )
+    result.setdefault("task", {}).update(instance_id=game.slug, family_slug=game.family_slug,
+                                         variant_id=game.variant_id, track=args.track)
     write_task_reports(task_dir, result)
     _json({"status": result.get("status"), "task_dir": str(task_dir), "official_total": result.get("official_total")})
     return 0
@@ -510,9 +569,17 @@ def _static_plan(config: Mapping[str, Any], game_slugs: list[str]) -> dict[str, 
         "status": "planned_not_sent",
         "model": candidate_model.model,
         "games": game_slugs,
+        "selection": config.get("selection"),
+        "instances": [{"instance_id": game.slug, "family_slug": game.family_slug,
+                       "variant_id": game.variant_id, "spec": str(game.spec),
+                       "checkpoints": str(game.checkpoints)} for game in games(config)],
         "generation": {
             "stage_order": ["state", "game", "rendering", "main"],
             "max_output_tokens": limits,
+            "candidate_count": len(game_slugs),
+            "normal_requests": len(game_slugs) * 4,
+            "output_token_cap": len(game_slugs) * sum(limits.values()),
+            "two_attempt_output_token_cap": len(game_slugs) * sum(limits.values()) * 2,
         },
         "judge_routes": {
             role: {
@@ -536,10 +603,12 @@ def _static_plan(config: Mapping[str, Any], game_slugs: list[str]) -> dict[str, 
 
 def cmd_plan(args: argparse.Namespace) -> int:
     config = _config(args)
-    slugs = [args.game] if args.game else list(EXPECTED_SLUGS)
+    slugs = [game.slug for game in games(config)]
     for slug in slugs:
         game_by_slug(config, slug)
     if args.candidate:
+        if len(slugs) != 1:
+            raise ValueError("A live candidate plan requires exactly one instance")
         from code2play.execution.candidate_project import CandidateProject
         from code2play.planning.requests import run_request_plan
 
@@ -578,7 +647,7 @@ def cmd_smoke(args: argparse.Namespace) -> int:
             generator=generator,
             round_id="smoke",
         )
-        validate_round_manifest(manifest, round_dir=round_dir, expected_slugs=list(EXPECTED_SLUGS))
+        validate_round_manifest(manifest, round_dir=round_dir, expected_slugs=[game.slug for game in games(config)])
         prompt_reports = validate_all_prompts(config["generation"])
     _json(
         {
@@ -624,6 +693,36 @@ def _runtime_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--workspace", default=argparse.SUPPRESS, help="external absolute artifact workspace")
 
 
+def _selection_options(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--model", help="one configured candidate ID (required when several are configured)")
+    parser.add_argument("--track", choices=("core15", "full150"), default="core15")
+    parser.add_argument("--variant", choices=("base", *[f"var{i:02d}" for i in range(1, 10)]))
+
+
+def cmd_status(args: argparse.Namespace) -> int:
+    from code2play.reporting.tracks import inspect_run
+    _json(inspect_run(workspace_run_dir(resolve_workspace(args.workspace), args.run_id)))
+    return 0
+
+
+def cmd_budget(args: argparse.Namespace) -> int:
+    from code2play.reporting.budget import load_prices, project_budget
+    config = _config(args)
+    workspace = resolve_workspace(args.workspace)
+    result = project_budget(config,
+                            [workspace_run_dir(workspace, run_id) for run_id in args.reference_run_ids],
+                            price_snapshot=load_prices(args.prices),
+                            round_dir=workspace_round_dir(workspace, args.round_id) if args.round_id else None)
+    _json(result)
+    return 0
+
+
+def cmd_report(args: argparse.Namespace) -> int:
+    from code2play.reporting.tracks import combined_report
+    _json(combined_report([workspace_run_dir(resolve_workspace(args.workspace), run) for run in args.run_ids]))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="code2play", description="Code2Play-Bench benchmark CLI")
     parser.add_argument("--config", dest="config_path", default=str(DEFAULT_CONFIG), help="config YAML path")
@@ -636,6 +735,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     preflight = commands.add_parser("preflight", help="run local checks; --live performs one paid Judge check")
     _runtime_options(preflight)
+    _selection_options(preflight)
+    preflight.add_argument("--game", choices=EXPECTED_SLUGS)
     preflight.add_argument("--live", action="store_true", help="perform an explicit live Judge request")
     preflight.set_defaults(handler=cmd_preflight)
 
@@ -643,12 +744,15 @@ def build_parser() -> argparse.ArgumentParser:
     contract_commands = contract.add_subparsers(dest="contract_command", required=True)
     build = contract_commands.add_parser("build", help="generate and lock one contract per game")
     _runtime_options(build)
+    _selection_options(build)
+    build.add_argument("--game", choices=EXPECTED_SLUGS)
     build.add_argument("--round-id")
     build.add_argument("--mock", action="store_true", help="use deterministic local contract fixtures")
     build.set_defaults(handler=cmd_contract_build)
 
     benchmark = commands.add_parser("benchmark", help="run the benchmark, optionally for one game")
     _runtime_options(benchmark)
+    _selection_options(benchmark)
     benchmark.add_argument("--run-id", default="main_r1")
     benchmark.add_argument("--round-id")
     benchmark.add_argument("--game", choices=EXPECTED_SLUGS, help="run one selected game")
@@ -662,6 +766,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     evaluate = commands.add_parser("evaluate", help="evaluate one manual five-file candidate")
     _runtime_options(evaluate)
+    _selection_options(evaluate)
     evaluate.add_argument("--game", required=True, choices=EXPECTED_SLUGS)
     evaluate.add_argument("--candidate", required=True)
     evaluate.add_argument("--run-id", default="manual_r1")
@@ -670,6 +775,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     plan = commands.add_parser("plan", help="write a no-send request plan or a live candidate plan")
     _runtime_options(plan)
+    _selection_options(plan)
     plan.add_argument("--game", choices=EXPECTED_SLUGS)
     plan.add_argument("--candidate")
     plan.add_argument("--run-id", default="plan_r1")
@@ -679,8 +785,19 @@ def build_parser() -> argparse.ArgumentParser:
 
     smoke = commands.add_parser("smoke", help="run deterministic local integration checks")
     _runtime_options(smoke)
+    _selection_options(smoke)
+    smoke.add_argument("--game", choices=EXPECTED_SLUGS)
     smoke.add_argument("--live", action="store_true", help="use real Qwen contract generation")
     smoke.set_defaults(handler=cmd_smoke)
+
+    budget = commands.add_parser("budget", help="estimate selected workload using measured pilot usage, without API calls")
+    _runtime_options(budget)
+    _selection_options(budget)
+    budget.add_argument("--game", choices=EXPECTED_SLUGS)
+    budget.add_argument("--reference-run-ids", nargs="*", default=[])
+    budget.add_argument("--prices", help="dated JSON rates: as_of, models, USD per million input/output tokens")
+    budget.add_argument("--round-id", help="existing shared contract round, to avoid budgeting its locked contracts again")
+    budget.set_defaults(handler=cmd_budget)
 
     human = commands.add_parser("human", help="anonymous questionnaire package commands")
     human_commands = human.add_subparsers(dest="human_command", required=True)
@@ -696,6 +813,15 @@ def build_parser() -> argparse.ArgumentParser:
     human_validate.add_argument("--bundle-dir", required=True)
     human_validate.set_defaults(handler=cmd_human_validate)
 
+    status = commands.add_parser("status", help="read run progress without executing or resuming tasks")
+    _runtime_options(status)
+    status.add_argument("--run-id", required=True)
+    status.set_defaults(handler=cmd_status)
+    report = commands.add_parser("report", help="read reports grouped by track and compatible evaluation cohort")
+    _runtime_options(report)
+    report.add_argument("--run-ids", nargs="+", required=True)
+    report.set_defaults(handler=cmd_report)
+
     return parser
 
 
@@ -704,6 +830,10 @@ def main(argv: list[str] | None = None) -> int:
     try:
         return int(args.handler(args))
     except Exception as exc:
+        from code2play.d4.contracts import ContractsIncomplete
+        if isinstance(exc, ContractsIncomplete):
+            _json(exc.report)
+            return 1
         print(f"code2play: {type(exc).__name__}: {exc}")
         return 2
 

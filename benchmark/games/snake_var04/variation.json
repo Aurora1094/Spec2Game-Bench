@@ -1,0 +1,150 @@
+{
+  "instance_id": "snake_var04",
+  "family_slug": "snake",
+  "variant_id": "var04",
+  "variation_types": [
+    "object_count"
+  ],
+  "source_path": "游戏规格说明（英文）/1_easy_Snake/1_easy_Snake_V5.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Each time the snake collects food, its length increases by 1, the score increases by 1, and a new food item is randomly spawned on an unoccupied grid cell."
+      ],
+      "after": [
+        "Two food items are present simultaneously during normal gameplay. Each time the snake collects one food item, its length increases by 1, the score increases by 1, the collected food is removed, and one new food item is randomly spawned on an unoccupied grid cell so that the total number of food items returns to 2."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "The snake is drawn using orange blocks, and the food is drawn using a brown block."
+      ],
+      "after": [
+        "The snake is drawn using orange blocks, and food items are drawn using brown blocks."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- Food: exactly one item randomly spawned on a grid cell not occupied by the snake"
+      ],
+      "after": [
+        "- Food: exactly two items randomly spawned on two distinct grid cells not occupied by the snake"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "Each food item occupies exactly one grid cell, and only one food item may exist at any time.",
+        "Food is spawned once during game initialization and immediately after the previous food item is collected."
+      ],
+      "after": [
+        "Each food item occupies exactly one grid cell, and exactly two food items must exist simultaneously while the game is in the `playing` state.",
+        "Two food items are spawned during game initialization.",
+        "Whenever one food item is collected, that food item is removed and exactly one replacement food item is spawned so that the total number of food items returns to 2."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "- Occupy a grid cell not occupied by the other existing food item."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "Food is collected when the snake head enters the grid cell occupied by the food.",
+        "When food is collected:"
+      ],
+      "after": [
+        "Food is collected when the snake head enters a grid cell occupied by either food item.",
+        "When one food item is collected:"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- The collected food is removed."
+      ],
+      "after": [
+        "- The collected food item is removed."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "Only one normal food item may exist at any time."
+      ],
+      "after": [
+        "The other existing food item remains unchanged.",
+        "A valid replacement food spawn cell must not be occupied by:",
+        "- The snake after the current movement update.",
+        "- The other food item.",
+        "Exactly two normal food items must exist after replacement spawning is complete."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "4. Determine whether the new head position reaches the food."
+      ],
+      "after": [
+        "4. Determine whether the new head position reaches either food item."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "8. If food was collected, increase the score by 1, remove the collected food, and spawn one new valid food item.",
+        "If a terminal collision occurs during Step 3 or Step 6, no food collection, score increase, growth, or new food spawning is processed for that movement step."
+      ],
+      "after": [
+        "8. If food was collected, increase the score by 1, remove the collected food item, and spawn one new valid replacement food item.",
+        "If a terminal collision occurs during Step 3 or Step 6, no food collection, score increase, growth, or replacement food spawning is processed for that movement step."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "- Food: one randomly spawned valid item"
+      ],
+      "after": [
+        "- Food: two randomly spawned valid items on distinct grid cells"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "When the snake collects food, the score and snake length each increase by 1 and a new food item is spawned."
+      ],
+      "after": [
+        "When the snake collects one food item, the score and snake length each increase by 1, the collected food item is removed, and one new food item is spawned so that two food items remain present."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "After `game_over`, pressing R restores the snake to its initial length and configuration, resets the direction to right and score to 0, generates one new valid food item, restores the normal gameplay instructions, and returns the game state to `playing`."
+      ],
+      "after": [
+        "After `game_over`, pressing R restores the snake to its initial length and configuration, resets the direction to right and score to 0, generates two new valid food items on distinct unoccupied grid cells, restores the normal gameplay instructions, and returns the game state to `playing`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "snake_var04.D2.1.03",
+    "snake_var04.D2.3.06",
+    "snake_var04.D2.3.07",
+    "snake_var04.D2.5.07",
+    "snake_var04.D2.3.11"
+  ],
+  "added_checkpoint_ids": [
+    "snake_var04.D2.3.11"
+  ],
+  "base_checkpoints_sha256": "c774c0fc0b96c633aa1e7103fbc3d2e9fdf4b008561d785560907ca5b0ba250d",
+  "checkpoints_sha256": "212ba052dd044afb2b81327ad20f5a90a53763f764b11c9ee4057e76b92f7233"
+}

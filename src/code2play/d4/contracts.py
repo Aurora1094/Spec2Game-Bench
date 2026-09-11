@@ -35,6 +35,7 @@ from code2play.providers.dashscope import (
     OPENROUTER_QWEN_MODEL,
     OPENROUTER_QWEN_VL_MODEL,
     JudgeRouter,
+    JudgeAttemptsExhausted,
     resolve_judge_route,
 )
 
@@ -748,6 +749,16 @@ def _existing_round(
     if not manifest_path.is_file():
         return None
     manifest = _read_json(manifest_path)
+    # The canonical manifest is published atomically before its convenience
+    # pointer. A process interruption between those writes is recoverable.
+    pointer = round_dir / "manifest.json"
+    if not pointer.exists():
+        progress_path = round_dir / "contracts/build_progress.json"
+        progress = _read_json(progress_path) if progress_path.exists() else {}
+        if (progress.get("status") == "building" and not progress.get("failures")
+                and progress.get("completed_instances") == manifest.get("games")):
+            validate_round_manifest(manifest, expected_generator=expected_generator)
+            _write_json(pointer, manifest)
     validate_round_manifest(
         manifest,
         round_dir=round_dir,
@@ -794,7 +805,21 @@ def _existing_round(
     return manifest
 
 
-def build_round_contracts(
+class ContractsIncomplete(RuntimeError):
+    def __init__(self, report: Mapping[str, Any]):
+        self.report = dict(report)
+        super().__init__(f"{len(report['missing_instances'])} D4 contracts still need generation")
+
+
+def build_round_contracts(round_dir, games=None, **kwargs) -> dict[str, Any]:
+    from code2play.execution.benchmark import _exclusive_run_lock
+    root = Path(round_dir).expanduser().resolve()
+    root.mkdir(parents=True, exist_ok=True)
+    with _exclusive_run_lock(root):
+        return _build_round_contracts(root, games, **kwargs)
+
+
+def _build_round_contracts(
     round_dir: str | Path,
     games: Sequence[GameConfig] | None = None,
     *,
@@ -825,6 +850,23 @@ def build_round_contracts(
     )
     if existing is not None:
         return existing
+    contract_dir = round_root / "contracts"
+    contract_dir.mkdir(parents=True, exist_ok=True)
+    progress_path = contract_dir / "build_progress.json"
+    descriptor = {
+        "round_id": round_id,
+        "generator": generator_metadata,
+        "design_version": D4_CONTRACT_DESIGN_VERSION,
+        "policy": D4_CONTRACT_POLICY,
+        "mock": generator is not None,
+        "inputs": [{"instance_id": game.slug, "spec_sha256": sha256_bytes(game.spec.read_bytes()),
+                    "checkpoints_sha256": sha256_bytes(game.checkpoints.read_bytes())}
+                   for game in active_games],
+    }
+    if progress_path.exists() and _read_json(progress_path).get("descriptor") != descriptor:
+        raise ValueError("Unfinished D4 round inputs/configuration changed; use a new round ID")
+    progress = {"descriptor": descriptor, "status": "building", "completed_instances": [], "failures": {}}
+    _write_json(progress_path, progress)
     if generator is None:
         judge_config = active_config.get("judge")
         if not isinstance(judge_config, Mapping):
@@ -850,6 +892,28 @@ def build_round_contracts(
             checkpoints,
             operation_policy,
         )
+        input_records[game.slug] = {
+            "input_sha256": input_hash,
+            "checkpoint_jsonl_sha256": checkpoint_hash,
+            "prompt_sha256": sha256_bytes(prompt.encode("utf-8")),
+        }
+        saved_path = contract_dir / f"{game.slug}.json"
+        if saved_path.is_file():
+            try:
+                saved = _read_json(saved_path)
+                validate_d4_contract(saved, game_slug=game.slug, d2_checkpoints=checkpoints,
+                                     expected_input_sha256=input_hash, operation_policy=operation_policy)
+                if (saved.get("generator") != generator_metadata or saved.get("round_id") != round_id
+                        or saved.get("checkpoint_jsonl_sha256") != checkpoint_hash):
+                    raise ValueError("Draft contract identity differs")
+            except (ValueError, json.JSONDecodeError):
+                # Keep invalid evidence available while requesting a replacement.
+                saved_path.replace(contract_dir / f"invalid-{uuid4().hex}.json")
+            else:
+                contract_records[game.slug] = saved
+                progress["completed_instances"].append(game.slug)
+                _write_json(progress_path, progress)
+                continue
         eligible_ids = {row["id"] for row in eligible}
 
         def normalize(value: Any) -> dict[str, Any]:
@@ -860,7 +924,13 @@ def build_round_contracts(
                 operation_policy=operation_policy,
             )
 
-        raw = _invoke_generator(generator, prompt, game.slug, validator=normalize)
+        try:
+            raw = _invoke_generator(generator, prompt, game.slug, validator=normalize)
+        except JudgeAttemptsExhausted as exc:
+            from code2play.execution.safe_artifacts import redact_text
+            progress["failures"][game.slug] = {"error_type": type(exc).__name__, "error": redact_text(str(exc)), "attempts": 2}
+            _write_json(progress_path, progress)
+            continue
         body = _normalize_generated_body(
             raw,
             game_slug=game.slug,
@@ -888,15 +958,14 @@ def build_round_contracts(
             operation_policy=operation_policy,
         )
         contract_records[game.slug] = contract
-        input_records[game.slug] = {
-            "input_sha256": input_hash,
-            "checkpoint_jsonl_sha256": checkpoint_hash,
-            "prompt_sha256": sha256_bytes(prompt.encode("utf-8")),
-        }
-    contract_dir = round_root / "contracts"
-    contract_dir.mkdir(parents=True, exist_ok=True)
-    for slug, contract in contract_records.items():
-        _write_json(contract_dir / f"{slug}.json", contract)
+        _write_json(saved_path, contract)
+        progress["completed_instances"].append(game.slug)
+        _write_json(progress_path, progress)
+    if progress["failures"]:
+        progress.update(status="needs_contracts", round_id=round_id,
+                        missing_instances=list(progress["failures"]), planned_count=len(active_games))
+        _write_json(progress_path, progress)
+        raise ContractsIncomplete(progress)
     manifest: dict[str, Any] = {
         "schema_version": 1,
         "round_id": round_id,
@@ -913,6 +982,8 @@ def build_round_contracts(
     # Keep a round-level pointer for workspace tooling while the canonical
     # manifest remains beside the contract files.
     _write_json(round_root / "manifest.json", manifest)
+    progress["status"] = "completed"
+    _write_json(progress_path, progress)
     return manifest
 
 
@@ -945,8 +1016,10 @@ def validate_round_manifest(
     slugs = list(manifest.get("games", []))
     if not slugs or any(not isinstance(slug, str) or not re.fullmatch(r"[a-z][a-z0-9_]*", slug) for slug in slugs) or len(set(slugs)) != len(slugs):
         raise ValueError("D4 round manifest game list is invalid")
-    if expected_slugs is not None and slugs != list(expected_slugs):
-        raise ValueError("D4 round manifest game order differs from the catalog")
+    if expected_slugs is not None:
+        requested = list(expected_slugs)
+        if len(set(requested)) != len(requested) or [slug for slug in slugs if slug in set(requested)] != requested:
+            raise ValueError("D4 round manifest game order differs from the requested ordered subset")
     contracts = manifest.get("contracts")
     if not isinstance(contracts, Mapping) or set(contracts) != set(slugs):
         raise ValueError("D4 round manifest contracts are incomplete")

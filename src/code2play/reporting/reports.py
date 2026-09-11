@@ -19,7 +19,7 @@ from code2play.execution.safe_artifacts import redact_text, sanitize
 
 
 REPORT_SCHEMA_VERSION = 2
-JUDGE_POLICY = "openrouter_gpt56_terra_qwenvl_judge_v1"
+JUDGE_POLICY = "openrouter_qwen_vl_judge"
 JUDGE_MODEL = "qwen/qwen3.7-plus + qwen/qwen3-vl-235b-a22b-instruct via OpenRouter"
 JUDGE_MODE = "single_valid_response"
 JUDGE_TEMPERATURE = 0.0
@@ -591,7 +591,8 @@ def write_failure_reports(
         if record.get("status") != "failed" or not record.get("task_id"):
             continue
         task_id = str(record["task_id"])
-        task_dir = destination / "tasks" / task_id
+        from code2play.config.project import task_storage_dir
+        task_dir = Path(record["task_dir"]) if record.get("task_dir") else task_storage_dir(destination, task_id)
         failure = _optional_json(task_dir / "failure.json") or record
         task_state = _optional_json(task_dir / "run_state.json")
         evaluation_state = _optional_json(task_dir / "evaluation" / "stage_state.json")
@@ -748,7 +749,8 @@ def _task_record(record: Any, run_dir: Path | None = None) -> dict[str, Any]:
     item = _mapping(record)
     task_dir = item.get("task_dir")
     if task_dir is None and run_dir is not None and item.get("task_id"):
-        task_dir = str(run_dir / "tasks" / str(item["task_id"]))
+        from code2play.config.project import task_storage_dir
+        task_dir = str(task_storage_dir(run_dir, str(item["task_id"])))
     result = _first_mapping(item.get("result"), item.get("summary"))
     if not result and task_dir:
         summary_path = Path(str(task_dir)) / "summary.json"
@@ -778,6 +780,7 @@ def _task_record(record: Any, run_dir: Path | None = None) -> dict[str, Any]:
     judge = _judge_provenance(result)
     flat: dict[str, Any] = {
         **identity,
+        **{key: item.get(key) for key in ("track", "instance_id", "family_slug", "variant_id")},
         "judge_policy": judge["policy"],
         "judge_model": judge["model"],
         "judge_mode": judge["mode"],
@@ -800,6 +803,7 @@ def _task_record(record: Any, run_dir: Path | None = None) -> dict[str, Any]:
 
 
 BATCH_CSV_FIELDS = (
+    "track", "instance_id", "family_slug", "variant_id",
     "game", "model", "repetition", "status", "judge_policy", "judge_model",
     "judge_mode", "judge_temperature",
     "d4_contract_version", "d4_contract_design_version",
@@ -872,7 +876,7 @@ def write_batch_reports(run_dir: Path | str, task_records: Sequence[Mapping[str,
         f"- Judge temperature: {batch_judge['temperature']}",
         f"- Round-locked D4 contracts: {len(contracts)} game assets",
         "",
-        "A dash means unavailable; all 15 current games use the contract locked for their round.",
+        "A dash means unavailable; each instance uses its own round-locked contract.",
         "",
         "| Game | Model | Rep | Status | D4 contract | D1 (status) | D2 (status) | D3 (status) | D4 (status) | Final |",
         "|---|---|---:|---|---|---:|---:|---:|---:|---:|",
@@ -1055,6 +1059,11 @@ def write_multi_run_reports(
 
     destination = Path(output_dir)
     destination.mkdir(parents=True, exist_ok=True)
+    if any(_optional_json(Path(root) / "run_state.json").get("selection") for root in run_dirs):
+        from code2play.reporting.tracks import combined_report
+        target = destination / "track_comparison.json"
+        _write_json(target, combined_report([Path(root) for root in run_dirs]))
+        return {"track_comparison_json": str(target)}
     combined_rows: list[dict[str, Any]] = []
     run_summaries: list[dict[str, Any]] = []
     panel_records: list[dict[str, Any]] = []

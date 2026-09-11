@@ -1,12 +1,30 @@
-schema_version: 1
-slug: space_invaders
-name: "Space Invaders"
-difficulty: medium
-spec: spec.md
-checkpoints: checkpoints.jsonl
-variants: []
-window_size: [800, 600]
-source_audit:
-  docx_sha256: 15be2f80dc475bb21d7fa9c63fe7afc7331607a71c1ca964eefa3ddfa5cf1f7d
-  csv_sha256: 504380e00acf31d2be19e4c4d96d704921ce00a723b465cf4c2ecedeb38dc864
-  checkpoint_count: 30
+{
+  "schema_version": 1,
+  "slug": "space_invaders",
+  "name": "Space Invaders",
+  "difficulty": "medium",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [
+    "space_invaders_var01",
+    "space_invaders_var02",
+    "space_invaders_var03",
+    "space_invaders_var04",
+    "space_invaders_var05",
+    "space_invaders_var06",
+    "space_invaders_var07",
+    "space_invaders_var08",
+    "space_invaders_var09"
+  ],
+  "window_size": [
+    800,
+    600
+  ],
+  "source_audit": {
+    "docx_sha256": "15be2f80dc475bb21d7fa9c63fe7afc7331607a71c1ca964eefa3ddfa5cf1f7d",
+    "csv_sha256": "504380e00acf31d2be19e4c4d96d704921ce00a723b465cf4c2ecedeb38dc864",
+    "checkpoint_count": 30
+  },
+  "family_slug": "space_invaders",
+  "variant_id": "base"
+}

@@ -1,0 +1,148 @@
+{
+  "instance_id": "farming_lite_var02",
+  "family_slug": "farming_lite",
+  "variant_id": "var02",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/12_hard_Farming-lite/12_hard_Farming-lite_V3.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Farming-lite is a simplified farming management game with a fixed 8-day operating cycle. The player buys seeds, plants crops, waters them, waits for them to grow, harvests mature crops, and earns Gold."
+      ],
+      "after": [
+        "Farming-lite is a simplified farming management game with a fixed 8-day operating cycle.",
+        "The player buys seeds, plants crops, waters them, waits for them to grow, harvests mature crops, and earns Gold."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [],
+      "after": [
+        "Mature Carrots provide 22 Gold when harvested, while mature Pumpkins provide 60 Gold."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`Left Click: Use    Right Click: Cancel`"
+      ],
+      "after": [
+        "`Left Click: Use Right Click: Cancel`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "| Carrot | 8 Gold | 2 | Stage 2 | 18 Gold |",
+        "| Pumpkin | 18 Gold | 4 | Stage 4 | 50 Gold |"
+      ],
+      "after": [
+        "| Carrot | 8 Gold | 2 | Stage 2 | 22 Gold |",
+        "| Pumpkin | 18 Gold | 4 | Stage 4 | 60 Gold |"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Harvest mature Carrot: +18",
+        "- Harvest mature Pumpkin: +50"
+      ],
+      "after": [
+        "- Harvest mature Carrot: +22",
+        "- Harvest mature Pumpkin: +60"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "- Carrot → `Harvested Carrot +18`",
+        "- Pumpkin → `Harvested Pumpkin +50`"
+      ],
+      "after": [
+        "- Carrot → `Harvested Carrot +22`",
+        "- Pumpkin → `Harvested Pumpkin +60`"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [],
+      "after": [
+        "Automatic harvest values are:",
+        "- Mature Carrot: +22 Gold",
+        "- Mature Pumpkin: +60 Gold"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- Mature Carrot: 18 Gold",
+        "- Mature Pumpkin: 50 Gold"
+      ],
+      "after": [
+        "- Mature Carrot: 22 Gold",
+        "- Mature Pumpkin: 60 Gold"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "Harvesting a mature crop adds Gold, updates harvest statistics, and clears the plot."
+      ],
+      "after": [
+        "Harvesting a mature Carrot adds 22 Gold.",
+        "Harvesting a mature Pumpkin adds 60 Gold.",
+        "Successful harvesting also updates harvest statistics and clears the plot."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- Update Gold and harvest statistics."
+      ],
+      "after": [
+        "- Add 22 Gold for each mature Carrot and 60 Gold for each mature Pumpkin.",
+        "- Update harvest statistics."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "`Left Click: Use    Right Click: Cancel`"
+      ],
+      "after": [
+        "`Left Click: Use Right Click: Cancel`"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "- `Harvested Carrot +18`",
+        "- `Harvested Pumpkin +50`"
+      ],
+      "after": [
+        "- `Harvested Carrot +22`",
+        "- `Harvested Pumpkin +60`"
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "3. All crops mature at that point are automatically harvested."
+      ],
+      "after": [
+        "3. All crops mature at that point are automatically harvested using their normal harvest values."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "farming_lite_var02.D2.3.07",
+    "farming_lite_var02.D2.5.02"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "216ba3d8ea18719c2a19c1a40d9e1f270ce4c0ab2c6a8a8ac2e1e38ea0061256",
+  "checkpoints_sha256": "3ca298cc0947dde87d762c8a7cfc0b7da4d40d09ee2dd667b4f6eb0eabe163ae"
+}

@@ -1,0 +1,169 @@
+{
+  "instance_id": "whack_a_mole_var08",
+  "family_slug": "whack_a_mole",
+  "variant_id": "var08",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/3_easy_Whack-a-Hole/3_easy_Whack-a-Mole_V9.docx",
+  "corrections": [
+    "Mapped the Whack-a-Hole source folder to whack_a_mole."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Whack-a-Mole"
+      ],
+      "after": [
+        "Whack-a-Mole_V9"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "Each new mole is independently generated as a Normal Mole with 80% probability or a Golden Mole with 20% probability. The player's goal is to achieve the highest possible score before the 30-second countdown reaches 0."
+      ],
+      "after": [
+        "Each new mole is independently generated as a Normal Mole with 80% probability or a Golden Mole with 20% probability.",
+        "The first mole may appear at any of the 9 holes. Every later mole must appear at a hole different from the immediately previous mole's hole.",
+        "The player's goal is to achieve the highest possible score before the 30-second countdown reaches 0."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "The main game objects and state variables include the 9 holes, Normal Mole, Golden Mole, current mole, score, countdown, mole-related timers, and game state."
+      ],
+      "after": [
+        "The main game objects and state variables include the 9 holes, Normal Mole, Golden Mole, current mole, previous mole hole, score, countdown, mole-related timers, and game state."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "The hole is randomly selected from all 9 fixed holes. Two consecutive moles are allowed to appear at the same hole; the previous hole is not excluded from the next selection."
+      ],
+      "after": [
+        "For the first mole, the hole is randomly selected from all 9 fixed holes.",
+        "After the first mole has appeared, the game stores that mole's selected hole as the previous mole hole.",
+        "For every later spawn, the new hole is randomly selected from the other 8 holes and must not equal the immediately previous mole hole.",
+        "The restriction depends only on the immediately previous mole's hole. A hole may be used again after at least one different hole has been used in between."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "The next mole must appear at a hole different from the clicked mole's hole."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [],
+      "after": [
+        "The next mole must still appear at a hole different from the missed mole's hole."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "Restart resets the score, countdown, current mole, all mole-related timers, interface state, and game state. A new 0.3-second initial waiting period begins before the first mole appears."
+      ],
+      "after": [
+        "Restart resets the score, countdown, current mole, previous mole hole, all mole-related timers, interface state, and game state. A new 0.3-second initial waiting period begins before the first mole appears."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "2. Randomly select one of the 9 holes."
+      ],
+      "after": [
+        "2. Select the spawn hole:",
+        "   - For the first mole, randomly select any of the 9 holes.",
+        "   - For every later mole, randomly select one of the 8 holes other than the immediately previous mole's hole."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "6. Remove the mole.",
+        "7. Begin the next 0.3-second waiting period."
+      ],
+      "after": [
+        "6. Record the current mole's hole as the previous mole hole.",
+        "7. Remove the mole.",
+        "8. Begin the next 0.3-second waiting period."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "The previous-hole restriction affects only hole selection and does not affect mole-type probabilities or timing."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "At initialization, the game creates the interface and 9 fixed holes, sets Score to 0 and Time to 30, clears the current mole, initializes all mole-related timers, enters `playing`, and starts a 0.3-second initial waiting period."
+      ],
+      "after": [
+        "At initialization, the game creates the interface and 9 fixed holes, sets Score to 0 and Time to 30, clears the current mole and previous mole hole, initializes all mole-related timers, enters `playing`, and starts a 0.3-second initial waiting period."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "If Time remains above 0, the game updates the current mole cycle. During a waiting period, the waiting timer advances until one mole is spawned. While a mole is visible, its appearance timer advances and valid mouse clicks are processed. A successful click updates the score, removes the mole, and starts a new 0.3-second waiting period. If the appearance duration expires first, the mole is removed without changing the score and the same waiting period begins."
+      ],
+      "after": [
+        "If Time remains above 0, the game updates the current mole cycle.",
+        "During the initial waiting period, the waiting timer advances until the first mole is spawned at any randomly selected hole.",
+        "For each later spawn, the next mole is selected from the 8 holes other than the immediately previous mole's hole.",
+        "While a mole is visible, its appearance timer advances and valid mouse clicks are processed. A successful click updates the score, records the mole's hole as the previous mole hole, removes the mole, and starts a new 0.3-second waiting period.",
+        "If the appearance duration expires first, the mole's hole is still recorded as the previous mole hole, the mole is removed without changing the score, and the same waiting period begins."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "Pressing R fully reinitializes the game and starts a new 0.3-second initial waiting period."
+      ],
+      "after": [
+        "Pressing R fully reinitializes the game, clears the previous mole hole, and starts a new 0.3-second initial waiting period."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "During `playing`, the bottom instruction area displays `Click the mole` and `Restart: R`. When Time reaches 0, the game enters `game_over`, the current mole disappears, Score stops changing, and the bottom area displays `Game Over` and `Press R to Restart`."
+      ],
+      "after": [
+        "During `playing`, the bottom instruction area displays `Click the mole` and `Restart: R`.",
+        "When Time reaches 0, the game enters `game_over`, the current mole disappears, Score stops changing, and the bottom area displays `Game Over` and `Press R to Restart`."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "After entering `game_over`, pressing R restores Score to 0, Time to 30, clears the current mole and all mole timers, restores the normal gameplay instructions, returns the state to `playing`, and begins a new 0.3-second initial waiting period."
+      ],
+      "after": [
+        "After entering `game_over`, pressing R restores Score to 0, Time to 30, clears the current mole, previous mole hole, and all mole timers, restores the normal gameplay instructions, returns the state to `playing`, and begins a new 0.3-second initial waiting period."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "whack_a_mole_var08.D2.3.08",
+    "whack_a_mole_var08.D2.3.11",
+    "whack_a_mole_var08.D2.5.09"
+  ],
+  "added_checkpoint_ids": [
+    "whack_a_mole_var08.D2.3.11",
+    "whack_a_mole_var08.D2.5.09"
+  ],
+  "base_checkpoints_sha256": "43d84d8468fbefa4975d64dd345cc4462cfd75494319b4b1da4704f95a3b403b",
+  "checkpoints_sha256": "028e0f14ca8a2819a12bd85b22e47323bf9c914551382a603b27fc451938abb9"
+}

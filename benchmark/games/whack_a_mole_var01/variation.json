@@ -1,0 +1,130 @@
+{
+  "instance_id": "whack_a_mole_var01",
+  "family_slug": "whack_a_mole",
+  "variant_id": "var01",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/3_easy_Whack-a-Hole/3_easy_Whack-a-Mole_V2.docx",
+  "corrections": [
+    "Mapped the Whack-a-Hole source folder to whack_a_mole."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Whack-a-Mole is a single-player real-time reaction and clicking game. The player uses the left mouse button to click moles that randomly appear from a fixed 3 × 3 set of holes within a 30-second time limit."
+      ],
+      "after": [
+        "Whack-a-Mole is a single-player real-time reaction and clicking game. The player uses the left mouse button to click moles that randomly appear from a fixed 3 × 3 set of holes within a 45-second time limit."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "Each new mole is independently generated as a Normal Mole with 80% probability or a Golden Mole with 20% probability. The player's goal is to achieve the highest possible score before the 30-second countdown reaches 0."
+      ],
+      "after": [
+        "Each new mole is independently generated as a Normal Mole with 80% probability or a Golden Mole with 20% probability. The player's goal is to achieve the highest possible score before the 45-second countdown reaches 0."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`Time: 30`"
+      ],
+      "after": [
+        "`Time: 45`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "At the start of the game, all 9 holes are visible, no mole is visible, Score is 0, Time is 30, and the game waits 0.3 seconds before spawning the first mole."
+      ],
+      "after": [
+        "At the start of the game, all 9 holes are visible, no mole is visible, Score is 0, Time is 45, and the game waits 0.3 seconds before spawning the first mole."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "The total game duration is fixed at 30 seconds. The countdown includes the initial waiting period, mole appearance periods, and waiting periods between moles."
+      ],
+      "after": [
+        "The total game duration is fixed at 45 seconds. The countdown includes the initial waiting period, mole appearance periods, and waiting periods between moles."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "The 30-second countdown has priority over mole clicks, appearance timers, and spawn timers."
+      ],
+      "after": [
+        "The 45-second countdown has priority over mole clicks, appearance timers, and spawn timers."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "At initialization, the game creates the interface and 9 fixed holes, sets Score to 0 and Time to 30, clears the current mole, initializes all mole-related timers, enters `playing`, and starts a 0.3-second initial waiting period."
+      ],
+      "after": [
+        "At initialization, the game creates the interface and 9 fixed holes, sets Score to 0 and Time to 45, clears the current mole, initializes all mole-related timers, enters `playing`, and starts a 0.3-second initial waiting period."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "The game contains no difficulty progression. Total duration remains 30 seconds, both initial and between-mole waiting periods remain 0.3 seconds, Normal Mole duration remains 1.0 second, Golden Mole duration remains 0.6 seconds, and Golden Mole probability remains 20%."
+      ],
+      "after": [
+        "The game contains no difficulty progression. Total duration remains 45 seconds, both initial and between-mole waiting periods remain 0.3 seconds, Normal Mole duration remains 1.0 second, Golden Mole duration remains 0.6 seconds, and Golden Mole probability remains 20%."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "The player's goal is to click as many moles as possible within 30 seconds and achieve the highest possible score. The game has no fixed victory score, victory state, or level-completion condition."
+      ],
+      "after": [
+        "The player's goal is to click as many moles as possible within 45 seconds and achieve the highest possible score. The game has no fixed victory score, victory state, or level-completion condition."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "The remaining time is displayed as `Time: T`, starting from `Time: 30` and ending at `Time: 0`. T is always displayed as a non-negative whole number.",
+        "During `playing`, the bottom instruction area displays `Click the mole` and `Restart: R`. When Time reaches 0, the game enters `game_over`, the current mole disappears, Score stops changing, and the bottom area displays `Game Over` and `Press R to Restart`."
+      ],
+      "after": [
+        "The remaining time is displayed as `Time: T`, starting from `Time: 45` and ending at `Time: 0`. T is always displayed as a non-negative whole number.",
+        "During `playing`, the bottom instruction area displays `Click the mole` and `Restart: R`.",
+        "When Time reaches 0, the game enters `game_over`, the current mole disappears, Score stops changing, and the bottom area displays `Game Over` and `Press R to Restart`."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "After entering `game_over`, pressing R restores Score to 0, Time to 30, clears the current mole and all mole timers, restores the normal gameplay instructions, returns the state to `playing`, and begins a new 0.3-second initial waiting period."
+      ],
+      "after": [
+        "After entering `game_over`, pressing R restores Score to 0, Time to 45, clears the current mole and all mole timers, restores the normal gameplay instructions, returns the state to `playing`, and begins a new 0.3-second initial waiting period."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "whack_a_mole_var01.D2.1.01",
+    "whack_a_mole_var01.D2.1.02",
+    "whack_a_mole_var01.D2.1.03",
+    "whack_a_mole_var01.D2.1.04",
+    "whack_a_mole_var01.D2.1.05",
+    "whack_a_mole_var01.D2.2.05",
+    "whack_a_mole_var01.D2.4.01",
+    "whack_a_mole_var01.D2.4.02",
+    "whack_a_mole_var01.D2.5.06"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "43d84d8468fbefa4975d64dd345cc4462cfd75494319b4b1da4704f95a3b403b",
+  "checkpoints_sha256": "946818856605024eb5c7073fca723e60e631c08dfee0f7983838f952b6bb8867"
+}

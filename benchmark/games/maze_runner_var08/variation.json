@@ -1,0 +1,286 @@
+{
+  "instance_id": "maze_runner_var08",
+  "family_slug": "maze_runner",
+  "variant_id": "var08",
+  "variation_types": [
+    "object_count"
+  ],
+  "source_path": "游戏规格说明（英文）/5_easy_Maze Runner/5_easy_Maze Runner_V9.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Maze Runner is a single-screen, time-limited spatial navigation game. The player moves through a fixed grid maze and must reach the exit before the 30-second countdown expires.",
+        "The entire maze is visible from the beginning. The player must examine the wall and pathway layout, plan a route, and navigate from the starting cell to the exit as quickly as possible."
+      ],
+      "after": [
+        "Maze Runner is a single-screen, time-limited spatial navigation game. The player moves through a fixed grid maze and must reach either of two exits before the 30-second countdown expires.",
+        "The entire maze is visible from the beginning. The player must examine the wall and pathway layout, plan a route, and navigate from the starting cell to either exit as quickly as possible."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "- If the target cell is a pathway or the exit, the movement succeeds."
+      ],
+      "after": [
+        "- If the target cell is a pathway or an exit, the movement succeeds."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "The player wins by entering the exit while Time is still above 0. If Time reaches 0 before the exit has been successfully reached, the player loses."
+      ],
+      "after": [
+        "The player wins by entering either exit while Time is still above 0. If Time reaches 0 before either exit has been successfully reached, the player loses."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "#       #   # #"
+      ],
+      "after": [
+        "#       #   #E#"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "| `E` | Exit; entering this cell while Time > 0 triggers victory |"
+      ],
+      "after": [
+        "| `E` | Exit; entering either exit while Time > 0 triggers victory |"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "The exit is located at `(row=13, col=12)`, corresponding to cell center `(500, 640)`."
+      ],
+      "after": [
+        "The two exits are located at:",
+        "- Exit 1: `(row=13, col=12)`, corresponding to cell center `(500, 640)`",
+        "- Exit 2: `(row=11, col=13)`, corresponding to cell center `(540, 560)`"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "Walls use dark-gray or black blocks, pathways use a light-colored background, and the exit is displayed as a green block or door-shaped icon and may show the letter `E`. Light-gray grid lines should remain visible."
+      ],
+      "after": [
+        "Walls use dark-gray or black blocks, pathways use a light-colored background, and both exits are displayed as green blocks or door-shaped icons and may show the letter `E`. Light-gray grid lines should remain visible."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "`Reach the exit before time runs out    Restart: R`"
+      ],
+      "after": [
+        "`Reach either exit before time runs out    Restart: R`"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "The main game objects and state variables include the fixed maze, player, exit, Time, Steps, held-key repeat state, and game state."
+      ],
+      "after": [
+        "The main game objects and state variables include the fixed maze, player, two exits, Time, Steps, held-key repeat state, and game state."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- `E`"
+      ],
+      "after": [
+        "- Either `E`"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "## 3.3 Exit",
+        "The exit is fixed at `(row=13, col=12)` and is an enterable cell.",
+        "If the player successfully enters the exit while Time is still above 0, the game immediately enters `won`."
+      ],
+      "after": [
+        "## 3.3 Exits",
+        "The game contains exactly two fixed exits:",
+        "- Exit 1: `(row=13, col=12)`",
+        "- Exit 2: `(row=11, col=13)`",
+        "Both exits are enterable cells.",
+        "If the player successfully enters either exit while Time is still above 0, the game immediately enters `won`.",
+        "The player does not need to reach both exits. Reaching either one is sufficient for victory."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "Whenever the player successfully enters a pathway cell or the exit:"
+      ],
+      "after": [
+        "Whenever the player successfully enters a pathway cell or either exit:"
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "In `won`, the player has reached the exit before Time expired; movement stops, Time stops, and Steps no longer changes.",
+        "In `lost`, Time has reached 0 before a successful exit movement was completed; movement stops, Time remains 0, and Steps no longer changes."
+      ],
+      "after": [
+        "In `won`, the player has reached either exit before Time expired; movement stops, Time stops, and Steps no longer changes.",
+        "In `lost`, Time has reached 0 before either exit was successfully reached; movement stops, Time remains 0, and Steps no longer changes."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [],
+      "after": [
+        "- Both fixed exits are restored."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "- `E`"
+      ],
+      "after": [
+        "- Either `E`"
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "Entering the exit also counts as one successful movement, so Steps increases by 1 when the exit is successfully reached."
+      ],
+      "after": [
+        "Entering either exit also counts as one successful movement, so Steps increases by 1 when either exit is successfully reached."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "5. Do not allow an exit entry during that frame to trigger `won`.",
+        "Victory therefore requires the player to have successfully entered `E` while Time was still above 0.",
+        "If Time reaches 0 and an exit movement would otherwise occur during the same frame, the result is `lost`."
+      ],
+      "after": [
+        "5. Do not allow entry into either exit during that frame to trigger `won`.",
+        "Victory therefore requires the player to have successfully entered either `E` while Time was still above 0.",
+        "If Time reaches 0 and a movement into either exit would otherwise occur during the same frame, the result is `lost`."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "At initialization, the game creates the interface, fixed maze, player, exit, Time, Steps, held-key repeat state, and game state."
+      ],
+      "after": [
+        "At initialization, the game creates the interface, fixed maze, player, two exits, Time, Steps, held-key repeat state, and game state."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "- Exit: `(row=13, col=12)`"
+      ],
+      "after": [
+        "- Exit 1: `(row=13, col=12)`",
+        "- Exit 2: `(row=11, col=13)`"
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "The complete maze is visible immediately."
+      ],
+      "after": [
+        "The complete maze and both exits are visible immediately."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "Each successful movement increases Steps by 1. After a successful movement, if the player has entered `E`, the game immediately enters `won`."
+      ],
+      "after": [
+        "Each successful movement increases Steps by 1.",
+        "After a successful movement, if the player has entered either `E`, the game immediately enters `won`."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "The maze layout, total duration of 30 seconds, movement-repeat interval of 0.15 seconds, player starting position, and exit position remain fixed for every run."
+      ],
+      "after": [
+        "The maze layout, total duration of 30 seconds, movement-repeat interval of 0.15 seconds, player starting position, and both exit positions remain fixed for every run."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "The player's only objective is to move from the starting position to the exit before the 30-second countdown expires.",
+        "The game does not require collecting items, defeating enemies, or completing secondary objectives."
+      ],
+      "after": [
+        "The player's only objective is to move from the starting position to either of the two exits before the 30-second countdown expires.",
+        "The game does not require reaching both exits, collecting items, defeating enemies, or completing secondary objectives."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "- Valid target cell → player moves one cell and Steps increases by 1."
+      ],
+      "after": [
+        "- Valid pathway cell → player moves one cell and Steps increases by 1.",
+        "- Either exit → player moves into the exit, Steps increases by 1, and the game enters `won` if Time > 0."
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [
+        "`Reach the exit before time runs out    Restart: R`",
+        "Victory occurs when the player successfully enters the exit while Time is greater than 0. The game enters `won` and displays:"
+      ],
+      "after": [
+        "`Reach either exit before time runs out    Restart: R`",
+        "Victory occurs when the player successfully enters either exit while Time is greater than 0. The game enters `won` and displays:"
+      ]
+    },
+    {
+      "id": "change26",
+      "before": [
+        "Failure occurs when Time reaches 0 before the player has successfully reached the exit. The game enters `lost` and displays:"
+      ],
+      "after": [
+        "Failure occurs when Time reaches 0 before the player has successfully reached either exit. The game enters `lost` and displays:"
+      ]
+    },
+    {
+      "id": "change27",
+      "before": [
+        "If Time reaches 0 in the same frame in which an exit movement would otherwise be processed, Failure takes priority and the exit movement is not accepted."
+      ],
+      "after": [
+        "If Time reaches 0 in the same frame in which movement into either exit would otherwise be processed, Failure takes priority and the exit movement is not accepted."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "maze_runner_var08.D2.1.03",
+    "maze_runner_var08.D2.5.01",
+    "maze_runner_var08.D2.5.02"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "665c6469f0a0a37ce038210a1cd05a3b62cec36bc61457f8e0906eea00c906eb",
+  "checkpoints_sha256": "9a6a3fad711d57666547b1271749cc0964855affd121214f7f5f1c3eb8b87e37"
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "slug": "maze_runner_var05",
+  "name": "Maze Runner",
+  "difficulty": "easy",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [],
+  "window_size": [
+    600,
+    800
+  ],
+  "source_audit": {
+    "docx_sha256": "487ec6a9c3d8c9e559707c2ce6d9b3b338e7c97272646c441ac2219773182f7a",
+    "base_checkpoints_sha256": "665c6469f0a0a37ce038210a1cd05a3b62cec36bc61457f8e0906eea00c906eb",
+    "checkpoint_count": 27
+  },
+  "family_slug": "maze_runner",
+  "variant_id": "var05",
+  "variation_types": [
+    "map"
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "instance_id": "arena_shooter_var06",
+  "family_slug": "arena_shooter",
+  "variant_id": "var06",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/14_hard_Top-down Arena Shooter/14_hard_Top-down Arena Shooter_V7.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Shooters adjust their movement according to their distance from the player and attempt to fire at the player every 1.5 seconds when direct line of sight is available."
+      ],
+      "after": [
+        "Shooters adjust their movement according to their distance from the player. They approach when farther than 340 px, remain stationary between 220 px and 340 px inclusive, and retreat when closer than 220 px.",
+        "Shooters attempt to fire at the player every 1.5 seconds when direct line of sight is available."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "`WASD: Move    Mouse: Aim    Left Click: Shoot`",
+        "`R: Reload    Defeat all enemies`"
+      ],
+      "after": [
+        "`WASD: Move Mouse: Aim Left Click: Shoot`",
+        "`R: Reload Defeat all enemies`"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "Shooters approach, remain stationary, or retreat according to their distance from the player."
+      ],
+      "after": [
+        "Shooters use distance `d` from the player to choose one of three movement states:",
+        "- Approach",
+        "- Stationary",
+        "- Retreat",
+        "The movement-state thresholds are:",
+        "- `d > 340 px` → approach",
+        "- `220 ≤ d ≤ 340 px` → stationary",
+        "- `d < 220 px` → retreat"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- `d > 300 px` → move toward the player.",
+        "- `180 ≤ d ≤ 300 px` → remain stationary.",
+        "- `d < 180 px` → move away from the player."
+      ],
+      "after": [
+        "- `d > 340 px` → move toward the player.",
+        "- `220 ≤ d ≤ 340 px` → remain stationary.",
+        "- `d < 220 px` → move away from the player.",
+        "At exactly `d = 340 px`, the Shooter remains stationary.",
+        "At exactly `d = 220 px`, the Shooter remains stationary."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "The distance thresholds affect only Shooter movement state. They do not change Shooter firing interval, line-of-sight rules, bullet behavior, HP, or speed."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [],
+      "after": [
+        "- Shooter movement thresholds:",
+        "  - approach if `d > 340 px`",
+        "  - stationary if `220 ≤ d ≤ 340 px`",
+        "  - retreat if `d < 220 px`"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "3. Update surviving Chaser and Shooter movement, Shooter firing timers, line-of-sight checks, and enemy-bullet spawning."
+      ],
+      "after": [
+        "3. Update surviving Chaser movement and Shooter movement using the V7 distance thresholds, then update Shooter firing timers, line-of-sight checks, and enemy-bullet spawning."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [],
+      "after": [
+        "For each living Shooter during Step 3:",
+        "1. Calculate current distance `d` to the player's current center.",
+        "2. If `d > 340 px`, move toward the player.",
+        "3. If `220 ≤ d ≤ 340 px`, remain stationary.",
+        "4. If `d < 220 px`, move away from the player.",
+        "5. Apply normal x-first, y-second wall and arena collision handling.",
+        "6. Continue updating the Shooter's independent firing timer regardless of its movement state."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- All Shooter positions, HP, and firing timers."
+      ],
+      "after": [
+        "- All Shooter positions, HP, firing timers, and V7 distance-based movement behavior."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "Shooters dynamically choose their movement state according to current player distance:",
+        "- farther than 340 px → approach",
+        "- 220–340 px inclusive → remain stationary",
+        "- closer than 220 px → retreat",
+        "Shooter firing behavior remains independent of these movement-state thresholds and still uses the 1.5-second firing-attempt interval and wall-based line-of-sight rule."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "arena_shooter_var06.D2.3.07",
+    "arena_shooter_var06.D2.5.05",
+    "arena_shooter_var06.D2.3.15"
+  ],
+  "added_checkpoint_ids": [
+    "arena_shooter_var06.D2.3.15"
+  ],
+  "base_checkpoints_sha256": "6e07bdccd4ca0e0e9a26c2ca4a10d9fda3f5d4dec89e9acbde374c292b6151e4",
+  "checkpoints_sha256": "b1b5c41130b6a918443c016873b4f014dbd8636f4b0d9b9250e90d9228c1a8cb"
+}

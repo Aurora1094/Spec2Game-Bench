@@ -1,0 +1,124 @@
+{
+  "instance_id": "arena_shooter_var08",
+  "family_slug": "arena_shooter",
+  "variant_id": "var08",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/14_hard_Top-down Arena Shooter/14_hard_Top-down Arena Shooter_V9.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "After taking valid damage, the player receives 0.5 seconds of damage invulnerability."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "`WASD: Move    Mouse: Aim    Left Click: Shoot`",
+        "`R: Reload    Defeat all enemies`"
+      ],
+      "after": [
+        "`WASD: Move Mouse: Aim Left Click: Shoot`",
+        "`R: Reload Defeat all enemies`"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- Start 0.8 seconds of damage invulnerability.",
+        "During invulnerability:"
+      ],
+      "after": [
+        "- Start 0.5 seconds of damage invulnerability.",
+        "During the 0.5-second invulnerability period:"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [],
+      "after": [
+        "The per-frame damage limit is independent of the 0.5-second invulnerability duration."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "If a Chaser remains in contact after the 0.8-second invulnerability expires, it may damage the player again."
+      ],
+      "after": [
+        "If a Chaser remains in contact after the 0.5-second invulnerability expires, it may damage the player again.",
+        "A new valid damage event starts a new 0.5-second invulnerability period."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [],
+      "after": [
+        "- Damage-invulnerability duration: 0.5 seconds when activated"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "5. Process player damage from recorded enemy-bullet hits and Chaser contact, allowing at most 1 HP loss for the frame.",
+        "6. Update Reload, damage-invulnerability, player flashing, and enemy hit-highlight timers."
+      ],
+      "after": [
+        "5. Process player damage from recorded enemy-bullet hits and Chaser contact, allowing at most 1 HP loss for the frame. Any valid damage starts 0.5 seconds of damage invulnerability.",
+        "6. Update Reload, the 0.5-second damage-invulnerability timer, player flashing, and enemy hit-highlight timers."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [],
+      "after": [
+        "During Step 5:",
+        "- If damage invulnerability is already active, Chaser contact cannot reduce HP.",
+        "- Enemy-bullet collisions cannot reduce HP, but those bullets are still removed.",
+        "- If invulnerability is inactive and multiple valid damage sources occur in the same frame, only one can decrease HP.",
+        "- After that valid damage, the 0.5-second invulnerability period begins."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "- The damage-invulnerability timer to inactive."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "Valid player damage immediately decreases HP by 1 and starts the 0.8-second flashing invulnerability period.",
+        "The player can lose at most 1 HP in a single frame."
+      ],
+      "after": [
+        "Valid player damage immediately decreases HP by 1 and starts a 0.5-second flashing invulnerability period.",
+        "During this 0.5-second period:",
+        "- Chaser contact cannot cause additional HP loss.",
+        "- Enemy bullets cannot cause additional HP loss.",
+        "- Enemy bullets that collide still disappear.",
+        "The player can lose at most 1 HP in a single frame regardless of the invulnerability duration.",
+        "If a Chaser remains in contact when the 0.5-second invulnerability period expires, it may damage the player again."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "arena_shooter_var08.D2.3.10",
+    "arena_shooter_var08.D2.3.11",
+    "arena_shooter_var08.D2.3.12",
+    "arena_shooter_var08.D2.3.13",
+    "arena_shooter_var08.D2.3.14",
+    "arena_shooter_var08.D2.5.05",
+    "arena_shooter_var08.D2.3.15"
+  ],
+  "added_checkpoint_ids": [
+    "arena_shooter_var08.D2.3.15"
+  ],
+  "base_checkpoints_sha256": "6e07bdccd4ca0e0e9a26c2ca4a10d9fda3f5d4dec89e9acbde374c292b6151e4",
+  "checkpoints_sha256": "22de713ce83a788a047ad3d37d2d1a68341a4b5466fbda2c8a23ee67228f21cc"
+}

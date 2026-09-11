@@ -1,0 +1,374 @@
+{
+  "instance_id": "farming_lite_var07",
+  "family_slug": "farming_lite",
+  "variant_id": "var07",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/12_hard_Farming-lite/12_hard_Farming-lite_V8.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Farming-lite is a simplified farming management game with a fixed 8-day operating cycle. The player buys seeds, plants crops, waters them, waits for them to grow, harvests mature crops, and earns Gold."
+      ],
+      "after": [
+        "Farming-lite is a simplified farming management game with a fixed 8-day operating cycle.",
+        "The player buys seeds, plants crops, pays Gold to water them, waits for them to grow, harvests mature crops, and earns Gold."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [],
+      "after": [
+        "Watering one eligible immature crop costs 1 Gold."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- If it was watered during the current Day, it grows by exactly 1 stage."
+      ],
+      "after": [
+        "- If it was successfully watered during the current Day, it grows by exactly 1 stage."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [],
+      "after": [
+        "- A successful watering operation deducts exactly 1 Gold.",
+        "- Failed watering does not deduct Gold."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "Gold updates immediately after successful planting, watering, or harvesting."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "- Watering can icon + `W`"
+      ],
+      "after": [
+        "- Watering can icon + `W` + `1`"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [],
+      "after": [
+        "The `1` beside the watering can indicates that one successful watering costs 1 Gold."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "`Left Click: Use    Right Click: Cancel`"
+      ],
+      "after": [
+        "`Left Click: Use Right Click: Cancel`"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- Water crop: 0"
+      ],
+      "after": [
+        "- Successfully water one eligible crop: -1"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "A successful watering operation is possible only when the player has at least 1 Gold."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "If Gold is below 1 when watering is attempted, watering fails and no Gold is deducted."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "The watering can may remain selected even when Gold is 0.",
+        "Gold availability is checked only when watering is attempted."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "Gold is checked only when planting is attempted."
+      ],
+      "after": [
+        "The watering can may still be selected even if the player has 0 Gold.",
+        "Gold is checked only when planting or watering is attempted."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "Watering is free."
+      ],
+      "after": [
+        "Each successful watering costs:",
+        "`1 Gold`"
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "3. The plot has not already been watered that Day."
+      ],
+      "after": [
+        "3. The plot has not already been watered during the current Day.",
+        "4. The player has at least 1 Gold."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [],
+      "after": [
+        "- Deduct exactly 1 Gold."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [],
+      "after": [
+        "- Update the displayed Gold immediately."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "Failure handling:",
+        "- Empty plot → `No crop here`",
+        "- Mature crop → no effect and no error feedback",
+        "- Already watered immature crop → `Already watered today`"
+      ],
+      "after": [
+        "Watering failure is checked in this fixed order:",
+        "1. Empty plot → `No crop here`",
+        "2. Mature crop → no effect and no error feedback",
+        "3. Already watered immature crop → `Already watered today`",
+        "4. Insufficient Gold → `Not enough gold`",
+        "Failed watering never deducts Gold.",
+        "Therefore:",
+        "- Clicking an empty plot with 0 Gold displays `No crop here`.",
+        "- Clicking a mature crop with 0 Gold has no effect and displays no error.",
+        "- Clicking an already watered crop with 0 Gold displays `Already watered today`.",
+        "- `Not enough gold` is shown only when the crop would otherwise be eligible for watering."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [],
+      "after": [
+        "After Restart, each successful watering again costs 1 Gold.",
+        "No Gold expenditure or watered state from the previous run carries over."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "- Watered during current Day → stage +1",
+        "- Not watered → stage unchanged"
+      ],
+      "after": [
+        "- Successfully watered during current Day → stage +1",
+        "- Not successfully watered → stage unchanged"
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [],
+      "after": [
+        "A watering attempt counts as successful only if all watering conditions are satisfied and 1 Gold is deducted.",
+        "A failed watering attempt does not mark the crop as watered."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "A crop may be planted and watered during the same Day."
+      ],
+      "after": [
+        "A crop may be planted and successfully watered during the same Day."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "2. Increase the stage of each watered immature crop by 1."
+      ],
+      "after": [
+        "2. Increase the stage of each successfully watered immature crop by 1."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [],
+      "after": [
+        "Gold is not changed during growth settlement itself.",
+        "The 1 Gold watering cost has already been deducted when each successful watering operation occurred."
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [],
+      "after": [
+        "No additional watering cost is charged during final settlement."
+      ]
+    },
+    {
+      "id": "change26",
+      "before": [],
+      "after": [
+        "Watering price:",
+        "- One successful watering: 1 Gold"
+      ]
+    },
+    {
+      "id": "change27",
+      "before": [
+        "If the newly planted crop is watered before that Day ends, it can still receive that Day's growth event."
+      ],
+      "after": [
+        "If the newly planted crop is successfully watered before that Day ends, it can still receive that Day's growth event.",
+        "All Gold deductions occur immediately when the corresponding successful action occurs."
+      ]
+    },
+    {
+      "id": "change28",
+      "before": [
+        "Watering costs no Gold."
+      ],
+      "after": [
+        "Each successful watering costs 1 Gold."
+      ]
+    },
+    {
+      "id": "change29",
+      "before": [],
+      "after": [
+        "A successful watering requires:",
+        "- A crop exists.",
+        "- The crop is immature.",
+        "- The plot has not already been watered that Day.",
+        "- Gold ≥ 1.",
+        "On successful watering:",
+        "- Gold -= 1",
+        "- Mark the crop as watered for the current Day"
+      ]
+    },
+    {
+      "id": "change30",
+      "before": [],
+      "after": [
+        "- Does not deduct additional Gold."
+      ]
+    },
+    {
+      "id": "change31",
+      "before": [],
+      "after": [
+        "If Gold is 0:",
+        "- An otherwise eligible crop cannot be watered.",
+        "- Its watered state remains false.",
+        "- Its stage therefore does not increase at that Day's settlement unless it was successfully watered earlier in the same Day."
+      ]
+    },
+    {
+      "id": "change32",
+      "before": [],
+      "after": [
+        "Gold earned from harvesting may immediately be used for planting or watering during the same Day."
+      ]
+    },
+    {
+      "id": "change33",
+      "before": [],
+      "after": [
+        "Running out of Gold does not terminate the game.",
+        "The player may continue waiting, harvesting mature crops, or performing any zero-cost valid action."
+      ]
+    },
+    {
+      "id": "change34",
+      "before": [
+        "Planting deducts Gold and creates a Stage 0 crop.",
+        "Watering marks an immature crop as watered for the current Day."
+      ],
+      "after": [
+        "Planting deducts the corresponding seed price and creates a Stage 0 crop.",
+        "Successfully watering an eligible immature crop deducts 1 Gold and marks that crop as watered for the current Day.",
+        "Failed watering does not deduct Gold or change watered state."
+      ]
+    },
+    {
+      "id": "change35",
+      "before": [
+        "3. Clear all watered states."
+      ],
+      "after": [
+        "3. Increase only successfully watered immature crops by one stage.",
+        "4. Clear all watered states."
+      ]
+    },
+    {
+      "id": "change36",
+      "before": [
+        "The player's goal is to manage the 8-day farming cycle effectively by purchasing seeds, planting crops, watering them, and harvesting mature crops to accumulate Gold and increase crop harvest counts."
+      ],
+      "after": [
+        "The player's goal is to manage the 8-day farming cycle effectively by purchasing seeds, paying for necessary watering, growing crops, and harvesting mature crops to accumulate Gold and increase crop harvest counts."
+      ]
+    },
+    {
+      "id": "change37",
+      "before": [],
+      "after": [
+        "The Gold display updates immediately after:",
+        "- Planting",
+        "- Successful watering",
+        "- Harvesting"
+      ]
+    },
+    {
+      "id": "change38",
+      "before": [
+        "`Left Click: Use    Right Click: Cancel`"
+      ],
+      "after": [
+        "`Left Click: Use Right Click: Cancel`"
+      ]
+    },
+    {
+      "id": "change39",
+      "before": [],
+      "after": [
+        "`Not enough gold` may occur during either planting or an otherwise valid watering attempt."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "farming_lite_var07.D2.3.03",
+    "farming_lite_var07.D2.3.10"
+  ],
+  "added_checkpoint_ids": [
+    "farming_lite_var07.D2.3.10"
+  ],
+  "base_checkpoints_sha256": "216ba3d8ea18719c2a19c1a40d9e1f270ce4c0ab2c6a8a8ac2e1e38ea0061256",
+  "checkpoints_sha256": "6fa520f438db4e424a06813c0a0f2ba5dad4306fbd2cf8a18a98e4350885306d"
+}

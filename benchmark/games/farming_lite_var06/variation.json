@@ -1,0 +1,445 @@
+{
+  "instance_id": "farming_lite_var06",
+  "family_slug": "farming_lite",
+  "variant_id": "var06",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/12_hard_Farming-lite/12_hard_Farming-lite_V7.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Farming-lite is a simplified farming management game with a fixed 8-day operating cycle. The player buys seeds, plants crops, waters them, waits for them to grow, harvests mature crops, and earns Gold."
+      ],
+      "after": [
+        "Farming-lite is a simplified farming management game with a fixed 8-day operating cycle.",
+        "The player buys seeds, plants crops, waters them, waits for them to grow, harvests mature crops, and earns Gold."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "A custom rule is that crops do not grow continuously with real time and do not grow immediately when watered.",
+        "Growth occurs only during the unified end-of-day settlement."
+      ],
+      "after": [
+        "Crops do not grow continuously with real time and do not grow immediately when watered.",
+        "Growth and regression occur only during the unified end-of-day settlement."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- If it was not watered, its stage does not change.",
+        "- Unwatered crops do not die or regress."
+      ],
+      "after": [
+        "- If it was not watered during the current Day, it regresses by exactly 1 stage.",
+        "- Crop stage can never fall below Stage 0.",
+        "- Mature crops do not grow or regress."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [],
+      "after": [
+        "If an immature crop regresses at end-of-day settlement, its displayed crop graphic changes to the visual representation of the new lower stage when the next Day begins."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "An immature crop that regresses must use the visual appearance of its resulting lower stage.",
+        "A Stage 0 crop remains at Stage 0 if it is not watered."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "`Left Click: Use    Right Click: Cancel`"
+      ],
+      "after": [
+        "`Left Click: Use Right Click: Cancel`"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [],
+      "after": [
+        "No separate feedback message is required when an unwatered crop regresses during end-of-day settlement. The changed visual stage is sufficient feedback."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "Each effective end-of-day growth event:"
+      ],
+      "after": [
+        "For a watered immature crop during end-of-day settlement:"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "For an unwatered immature crop during end-of-day settlement:",
+        "`stage = max(0, stage - 1)`"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "Once a crop becomes mature, it no longer regresses even if it remains unharvested on later Days."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "Crop regression does not change Gold."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "- Immature crops either grow or regress according to whether they were watered during that Day."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "For Day 8, the game proceeds to final settlement."
+      ],
+      "after": [
+        "For Day 8, the game proceeds to final settlement after the Day 8 growth/regression settlement."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [],
+      "after": [
+        "Crop regression does not affect harvest statistics."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [],
+      "after": [
+        "- Crop growth and regression no longer occur."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [],
+      "after": [
+        "A crop planted during the current Day is subject to the same end-of-day rule as any other immature crop:",
+        "- If watered before the Day ends, it grows by 1 stage.",
+        "- If not watered before the Day ends, it remains at Stage 0 because stage cannot fall below 0."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [],
+      "after": [
+        "A watered immature crop grows by exactly one stage during the end-of-day settlement and does not regress during that settlement."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [],
+      "after": [
+        "Canceling selection does not affect whether any crop has been watered."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [],
+      "after": [
+        "- All watered states"
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [],
+      "after": [
+        "No crop-growth or regression state from the previous run continues after Restart."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "## 5.1 Crop Growth",
+        "Crops do not grow continuously over real time and do not grow immediately when watered.",
+        "Growth occurs only during end-of-day settlement."
+      ],
+      "after": [
+        "## 5.1 Crop Growth & Regression",
+        "Crops do not grow or regress continuously over real time.",
+        "Watering does not immediately change crop stage.",
+        "All growth and regression occur only during end-of-day settlement."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "- Watered during current Day → stage +1",
+        "- Not watered → stage unchanged",
+        "- If the new stage reaches the mature stage → mark mature"
+      ],
+      "after": [
+        "- If watered during the current Day → stage +1",
+        "- If not watered during the current Day → stage -1, with a minimum of Stage 0",
+        "- If a watered crop reaches its mature stage → mark mature",
+        "- Mature crops are not processed for further growth or regression",
+        "The regression rule is:",
+        "`stage = max(0, stage - 1)`",
+        "Therefore:",
+        "- Stage 0 unwatered → Stage 0",
+        "- Stage 1 unwatered → Stage 0",
+        "- Stage 2 immature unwatered → Stage 1",
+        "- Higher immature stages regress similarly by exactly 1 stage",
+        "For Carrot:",
+        "- Stage 0 → watered → Stage 1",
+        "- Stage 1 → watered → Stage 2 and becomes mature",
+        "- Stage 1 → unwatered → Stage 0",
+        "- Stage 0 → unwatered → Stage 0",
+        "- Stage 2 mature → remains Stage 2 regardless of watering",
+        "For Pumpkin:",
+        "- Stage 0 → watered → Stage 1",
+        "- Stage 1 → watered → Stage 2",
+        "- Stage 2 → watered → Stage 3",
+        "- Stage 3 → watered → Stage 4 and becomes mature",
+        "- Any unwatered immature Stage 1–3 regresses by exactly 1 stage",
+        "- Stage 0 remains Stage 0 when unwatered",
+        "- Stage 4 mature remains Stage 4 regardless of watering"
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "Unwatered crops do not die or regress."
+      ],
+      "after": []
+    },
+    {
+      "id": "change24",
+      "before": [],
+      "after": [
+        "A crop planted but not watered during the same Day remains at Stage 0."
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [
+        "1. Check all planted immature crops.",
+        "2. Increase the stage of each watered immature crop by 1.",
+        "3. Leave each unwatered immature crop unchanged.",
+        "4. Mark crops that have reached their mature stage as mature.",
+        "5. Clear the watered state of every plot.",
+        "6. If the current Day is Day 1–7, increase Day by 1 and reset Time to 30 seconds.",
+        "7. If the current Day is Day 8, proceed directly to final settlement."
+      ],
+      "after": [
+        "1. Check all planted crops.",
+        "2. Ignore crops that are already mature.",
+        "3. For each watered immature crop, increase its stage by exactly 1.",
+        "4. For each unwatered immature crop above Stage 0, decrease its stage by exactly 1.",
+        "5. Leave each unwatered Stage 0 crop at Stage 0.",
+        "6. Mark Carrots reaching Stage 2 as mature.",
+        "7. Mark Pumpkins reaching Stage 4 as mature.",
+        "8. Clear the watered state of every plot.",
+        "9. If the current Day is Day 1–7, increase Day by 1 and reset Time to 30 seconds.",
+        "10. If the current Day is Day 8, proceed directly to final settlement.",
+        "A crop is processed exactly once during each end-of-day settlement.",
+        "A watered crop cannot also regress during the same settlement.",
+        "An unwatered crop cannot also grow during the same settlement."
+      ]
+    },
+    {
+      "id": "change26",
+      "before": [
+        "1. Perform the normal Day 8 growth settlement.",
+        "2. Identify all crops that are mature after that growth settlement.",
+        "3. Automatically harvest all mature crops.",
+        "4. Add each harvested crop's normal value to Gold.",
+        "5. Increase total harvested count.",
+        "6. Increase the corresponding Carrot or Pumpkin count.",
+        "7. Clear all automatically harvested plots.",
+        "8. Leave immature crops without final earnings.",
+        "9. Enter `settlement`.",
+        "Therefore, a crop that becomes mature during the Day 8 growth settlement is included in the automatic final harvest."
+      ],
+      "after": [
+        "1. Perform the normal Day 8 growth/regression settlement.",
+        "2. For each watered immature crop, apply one growth event.",
+        "3. For each unwatered immature crop, apply one regression event without going below Stage 0.",
+        "4. Mark crops reaching their mature stage as mature.",
+        "5. Identify all crops that are mature after the Day 8 settlement.",
+        "6. Automatically harvest all mature crops.",
+        "7. Add each harvested crop's normal value to Gold.",
+        "8. Increase total harvested count.",
+        "9. Increase the corresponding Carrot or Pumpkin count.",
+        "10. Clear all automatically harvested plots.",
+        "11. Leave all crops still immature after Day 8 without final earnings.",
+        "12. Enter `settlement`.",
+        "Therefore:",
+        "- A watered Carrot at Stage 1 on Day 8 becomes Stage 2, becomes mature, and is automatically harvested.",
+        "- An unwatered Carrot at Stage 1 on Day 8 regresses to Stage 0 and provides no final earnings.",
+        "- A watered Pumpkin at Stage 3 on Day 8 becomes Stage 4, becomes mature, and is automatically harvested.",
+        "- An unwatered Pumpkin at Stage 3 on Day 8 regresses to Stage 2 and provides no final earnings.",
+        "- A crop that was already mature before Day 8 settlement remains mature and is automatically harvested."
+      ]
+    },
+    {
+      "id": "change27",
+      "before": [
+        "If the newly planted crop is watered before that Day ends, it can still receive that Day's growth event."
+      ],
+      "after": [
+        "If the newly planted crop is watered before that Day ends, it receives one growth event.",
+        "If the newly planted crop is not watered before that Day ends, it remains at Stage 0.",
+        "Crop regression never refunds Gold."
+      ]
+    },
+    {
+      "id": "change28",
+      "before": [
+        "- Does not change the current stage."
+      ],
+      "after": [
+        "- Does not prevent more than one regression event because a watered crop does not regress at all during that Day's settlement.",
+        "- Does not change the current stage immediately.",
+        "A successfully watered immature crop is protected from regression for that Day and instead receives exactly one growth event."
+      ]
+    },
+    {
+      "id": "change29",
+      "before": [
+        "Immature crops cannot be harvested."
+      ],
+      "after": [
+        "Immature crops cannot be harvested, regardless of whether they have grown or regressed on previous Days.",
+        "Once a crop reaches maturity, it remains mature until harvested manually or automatically during final settlement."
+      ]
+    },
+    {
+      "id": "change30",
+      "before": [],
+      "after": [
+        "Crop regression does not directly end the game."
+      ]
+    },
+    {
+      "id": "change31",
+      "before": [],
+      "after": [
+        "Watered status determines whether an immature crop grows or regresses at the end of that Day."
+      ]
+    },
+    {
+      "id": "change32",
+      "before": [
+        "2. Perform the daily growth settlement.",
+        "3. Clear all watered states."
+      ],
+      "after": [
+        "2. Check all planted crops.",
+        "3. Leave mature crops unchanged.",
+        "4. Increase each watered immature crop by one stage.",
+        "5. Decrease each unwatered immature crop by one stage, but never below Stage 0.",
+        "6. Mark crops that reach their mature stage as mature.",
+        "7. Clear all watered states."
+      ]
+    },
+    {
+      "id": "change33",
+      "before": [
+        "- Complete the Day 8 growth settlement."
+      ],
+      "after": [
+        "- Complete the Day 8 growth/regression settlement."
+      ]
+    },
+    {
+      "id": "change34",
+      "before": [
+        "- Ignore immature crops for final earnings."
+      ],
+      "after": [
+        "- Ignore all remaining immature crops for final earnings."
+      ]
+    },
+    {
+      "id": "change35",
+      "before": [
+        "The player's goal is to manage the 8-day farming cycle effectively by purchasing seeds, planting crops, watering them, and harvesting mature crops to accumulate Gold and increase crop harvest counts."
+      ],
+      "after": [
+        "The player's goal is to manage the 8-day farming cycle effectively by purchasing seeds, planting crops, watering them consistently, and harvesting mature crops to accumulate Gold and increase crop harvest counts.",
+        "Water management is required to maintain crop progress.",
+        "During each end-of-day settlement:",
+        "- A watered immature crop advances one stage.",
+        "- An unwatered immature crop regresses one stage.",
+        "- Stage cannot fall below Stage 0.",
+        "- Mature crops do not regress."
+      ]
+    },
+    {
+      "id": "change36",
+      "before": [],
+      "after": [
+        "After an end-of-day regression, the crop uses the graphic corresponding to its new lower stage."
+      ]
+    },
+    {
+      "id": "change37",
+      "before": [
+        "`Left Click: Use    Right Click: Cancel`"
+      ],
+      "after": [
+        "`Left Click: Use Right Click: Cancel`"
+      ]
+    },
+    {
+      "id": "change38",
+      "before": [],
+      "after": [
+        "No additional textual warning is required when a crop regresses."
+      ]
+    },
+    {
+      "id": "change39",
+      "before": [
+        "2. The Day 8 growth settlement is completed."
+      ],
+      "after": [
+        "2. The Day 8 growth/regression settlement is completed."
+      ]
+    },
+    {
+      "id": "change40",
+      "before": [
+        "5. The game enters `settlement`.",
+        "Immature crops remaining after final growth provide no final earnings."
+      ],
+      "after": [
+        "5. Remaining immature crops receive no final earnings.",
+        "6. The game enters `settlement`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "farming_lite_var06.D2.4.06",
+    "farming_lite_var06.D2.4.07"
+  ],
+  "added_checkpoint_ids": [
+    "farming_lite_var06.D2.4.07"
+  ],
+  "base_checkpoints_sha256": "216ba3d8ea18719c2a19c1a40d9e1f270ce4c0ab2c6a8a8ac2e1e38ea0061256",
+  "checkpoints_sha256": "d9d8e785046c9f96b49352e7a1a28e64b084adfbb8ebe92f26554eae4f65d4ae"
+}

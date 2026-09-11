@@ -26,7 +26,7 @@ generation:
       max_output_tokens: 2000
 
 judge:
-  policy: openrouter_gpt56_terra_qwenvl_judge_v1
+  policy: openrouter_qwen_vl_judge
   provider: openrouter
   model: qwen/qwen3.7-plus
   api_style: chat_completions

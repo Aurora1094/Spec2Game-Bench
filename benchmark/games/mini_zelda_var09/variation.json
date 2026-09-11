@@ -1,0 +1,366 @@
+{
+  "instance_id": "mini_zelda_var09",
+  "family_slug": "mini_zelda",
+  "variant_id": "var09",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/15_hard_Mini Zelda-like Room Adventure/15_hard_Mini Zelda-like Room Adventure_V10.docx",
+  "corrections": [
+    "Corrected the Game State subsection heading level.",
+    "Final DOCX takes precedence over spreadsheet draft differences."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "`Room A → Room C → Room B → obtain Key 1 → Room C → unlock Room D → obtain Key 2 → Room C → unlock Room E → open the treasure chest → Victory`"
+      ],
+      "after": [
+        "`Room A → Room C → Room B → obtain Key 1 → Room C → unlock Room D → obtain Key 2 → Room C → unlock Room E → attack the treasure chest with the sword → Victory`"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "A custom rule is the sequential dependency between Key 1 and Key 2. The player must first clear Room B to obtain Key 1 and unlock Room D, then clear Room D to obtain Key 2 and unlock Room E."
+      ],
+      "after": [
+        "Key 1 and Key 2 form a sequential dependency. The player must first clear Room B to obtain Key 1 and unlock Room D, then clear Room D to obtain Key 2 and unlock Room E.",
+        "The treasure chest in Room E can be opened only by a valid melee sword hit.",
+        "Physical contact with the closed treasure chest does not open it and does not trigger Victory."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`WASD: Move    Space: Attack`"
+      ],
+      "after": [
+        "`WASD: Move Space: Attack`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "          Room B",
+        "            |"
+      ],
+      "after": [
+        "       Room B",
+        "         |"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "            |",
+        "          Room E"
+      ],
+      "after": [
+        "         |",
+        "       Room E"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [],
+      "after": [
+        "While closed:",
+        "- The chest is a physical obstacle.",
+        "- Player movement cannot pass through it.",
+        "- Physical contact does not open it.",
+        "The chest opens only when a valid active sword attack overlaps the closed chest rectangle.",
+        "---"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [],
+      "after": [
+        "If movement would cause the player's circle to touch or overlap the closed treasure chest:",
+        "- Block the corresponding movement.",
+        "- Keep the chest `closed`.",
+        "- Do not mark Victory."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [],
+      "after": [
+        "A valid sword attack may hit:",
+        "- Slimes",
+        "- Guards",
+        "- The closed treasure chest",
+        "The sword does not damage or affect:",
+        "- Room walls",
+        "- Fixed obstacles",
+        "- Doors",
+        "- Keys"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "## 5.2 Sword Damage"
+      ],
+      "after": [
+        "## 5.2 Sword Damage & Chest Interaction"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- Does not open the treasure chest.",
+        "Enemies do not block the sword from reaching other enemies."
+      ],
+      "after": [
+        "If the active sword attack rectangle overlaps the closed treasure chest rectangle while the player is in Room E:",
+        "- Set chest state to `opened`.",
+        "- Grant the final treasure.",
+        "- Mark Victory as a candidate terminal result.",
+        "The treasure chest has no HP.",
+        "A single valid sword hit is sufficient to open it.",
+        "Once opened:",
+        "- It cannot be opened again.",
+        "- Further sword hits have no effect on the chest.",
+        "Physical contact with the chest never opens it."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "An enemy behind a blocking obstacle cannot be damaged even if it overlaps the unclipped attack rectangle."
+      ],
+      "after": [
+        "An enemy or treasure chest behind a blocking wall or fixed obstacle cannot be hit even if it overlaps the unclipped attack rectangle.",
+        "The treasure chest itself does not block the sword before the hit is resolved."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "The actual room transition is still performed during the unified room-transition stage."
+      ],
+      "after": [
+        "The actual room transition is performed during the unified room-transition stage."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "- Right-side door → message appears to the left",
+        "- Bottom-side door → message appears above"
+      ],
+      "after": [
+        "- Right-side door message appears to the left.",
+        "- Bottom-side door message appears above."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "Victory is marked when the treasure chest is successfully opened."
+      ],
+      "after": [
+        "Victory is marked when the closed treasure chest is successfully opened by a valid sword hit."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "Therefore, if HP reaches 0 and the final treasure is obtained during the same frame, the game enters `game_over`."
+      ],
+      "after": [
+        "Therefore, if HP reaches 0 and the treasure chest is opened during the same frame, the game enters `game_over`."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [],
+      "after": [
+        "If the treasure chest has not been opened, it remains `closed`.",
+        "If the chest is opened, Victory is resolved during the same frame, so normal room transitions cannot occur afterward."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "## 6.4 Treasure Chest & Victory Trigger"
+      ],
+      "after": [
+        "## 6.4 Treasure Chest Interaction & Victory Trigger"
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "While closed, the chest is a physical obstacle.",
+        "If the player's proposed movement first touches or overlaps the closed chest rectangle:",
+        "- Block movement into the chest.",
+        "- Record `treasure_contact` for the current frame.",
+        "The player's final position does not need to overlap the chest.",
+        "Later in the same frame, if `treasure_contact` is recorded:"
+      ],
+      "after": [
+        "While closed, the treasure chest is a physical obstacle.",
+        "Player movement cannot pass through it.",
+        "Touching or pushing against the chest:",
+        "- Blocks movement.",
+        "- Does not change chest state.",
+        "- Does not grant the treasure.",
+        "- Does not mark Victory.",
+        "The chest is opened only by an active melee sword attack.",
+        "During an active attack, if the effective sword attack rectangle overlaps the closed chest rectangle:"
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "Sword attacks cannot open the chest.",
+        "The opened chest remains visible."
+      ],
+      "after": [
+        "The attack must satisfy all normal sword rules.",
+        "Room walls and fixed obstacles may clip the sword before it reaches the chest.",
+        "The treasure chest has no HP and requires exactly one valid sword hit.",
+        "After opening:",
+        "- The chest remains visibly `opened`.",
+        "- Further sword attacks do not change it."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "   - For the chest, block entry and record `treasure_contact`."
+      ],
+      "after": [
+        "   - The closed chest blocks movement but does not open through contact."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "5. If the attack remains active, update the attack area and process enemy hits, HP reduction, and deaths."
+      ],
+      "after": [
+        "5. If the attack remains active:",
+        "   - Recalculate the effective sword attack area.",
+        "   - Clip it against room walls and fixed obstacles.",
+        "   - Process enemy hits, HP reduction, and deaths.",
+        "   - If the current room is Room E and the effective sword area overlaps the closed treasure chest, open the chest and mark Victory."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "10. If `treasure_contact` was recorded, open the chest and mark Victory.",
+        "11. Update attack cooldown, damage invulnerability, player flashing, `Locked` feedback, and other visual timers.",
+        "12. Determine the terminal result using Game-Over-before-Victory priority."
+      ],
+      "after": [
+        "10. Update attack cooldown, damage invulnerability, player flashing, `Locked` feedback, enemy hit highlights, and other visual timers.",
+        "11. Determine the terminal result using Game-Over-before-Victory priority."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "Terminal resolution in Step 12:"
+      ],
+      "after": [
+        "If the treasure chest is opened in Step 5:",
+        "- Victory remains marked until terminal resolution in Step 11.",
+        "- The chest remains `opened`.",
+        "Terminal resolution in Step 11:"
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "2. Otherwise, if Victory was marked in Step 10, enter `victory`."
+      ],
+      "after": [
+        "2. Otherwise, if Victory was marked by opening the treasure chest, enter `victory`."
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [
+        "13. Contact the final treasure chest.",
+        "14. Open the chest and obtain the treasure.",
+        "15. Enter Victory if HP remains above 0."
+      ],
+      "after": [
+        "13. Navigate around the Room E obstacles.",
+        "14. Approach the closed treasure chest.",
+        "15. Face the treasure chest.",
+        "16. Press Space when the sword attack can reach the chest.",
+        "17. Hit the treasure chest with the effective sword attack area.",
+        "18. Open the chest and obtain the treasure.",
+        "19. Enter Victory if HP remains above 0."
+      ]
+    },
+    {
+      "id": "change26",
+      "before": [
+        "- Contact and open the final treasure chest."
+      ],
+      "after": [
+        "- Enter Room E.",
+        "- Reach a valid melee position near the treasure chest.",
+        "- Hit the closed treasure chest with the sword.",
+        "- Open the chest and obtain the treasure.",
+        "Physical chest contact:",
+        "- Blocks movement.",
+        "- Does not open the chest.",
+        "- Does not trigger Victory.",
+        "Sword-chest interaction:",
+        "- A valid active sword attack overlapping the closed chest opens it immediately.",
+        "- The chest requires one valid hit.",
+        "- The chest has no HP.",
+        "- The chest changes visually from `closed` to `opened`."
+      ]
+    },
+    {
+      "id": "change27",
+      "before": [
+        "- The player contacts the final closed treasure chest."
+      ],
+      "after": [
+        "- A valid effective sword attack overlaps the closed treasure chest."
+      ]
+    },
+    {
+      "id": "change28",
+      "before": [
+        "If HP reaches 0 in the same frame in which the final treasure is obtained, Game Over takes priority."
+      ],
+      "after": [
+        "If HP reaches 0 during the same frame in which the treasure chest is opened, Game Over takes priority."
+      ]
+    },
+    {
+      "id": "change29",
+      "before": [
+        "- Prevent chest opening from creating Victory."
+      ],
+      "after": [
+        "- Prevent any later chest hit from creating Victory."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "mini_zelda_var09.D2.3.03",
+    "mini_zelda_var09.D2.5.01",
+    "mini_zelda_var09.D2.5.02",
+    "mini_zelda_var09.D2.3.21",
+    "mini_zelda_var09.D2.3.22"
+  ],
+  "added_checkpoint_ids": [
+    "mini_zelda_var09.D2.3.21",
+    "mini_zelda_var09.D2.3.22"
+  ],
+  "base_checkpoints_sha256": "1e56b3ca7b602293b90ac54d2ecebc5f7a4483be506870a833a77652c49dc967",
+  "checkpoints_sha256": "708bf90d90db6f3238a253660aa340fb0ca478061c00f075fe9634edcc3674fd"
+}

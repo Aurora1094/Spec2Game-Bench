@@ -1,0 +1,88 @@
+{
+  "instance_id": "simple_shop_var04",
+  "family_slug": "simple_shop",
+  "variant_id": "var04",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/10_medium_Simple Shop Management/10_medium_Simple Shop Management_V5.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "The fixed restocking costs are:",
+        "- Apple: 5",
+        "- Bread: 8",
+        "- Milk: 11"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "| Restock Apple | `(40, 630)` | `160 × 60 px` | Apple icon, `Restock Apple`, `Cost: 6` |",
+        "| Restock Bread | `(220, 630)` | `160 × 60 px` | Bread icon, `Restock Bread`, `Cost: 9` |",
+        "| Restock Milk | `(400, 630)` | `160 × 60 px` | Milk icon, `Restock Milk`, `Cost: 12` |"
+      ],
+      "after": [
+        "| Restock Apple | `(40, 630)` | `160 × 60 px` | Apple icon, `Restock Apple`, `Cost: 5` |",
+        "| Restock Bread | `(220, 630)` | `160 × 60 px` | Bread icon, `Restock Bread`, `Cost: 8` |",
+        "| Restock Milk | `(400, 630)` | `160 × 60 px` | Milk icon, `Restock Milk`, `Cost: 11` |"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "| Apple | 3 | 9 | +3 | 6 | 4 |",
+        "| Bread | 3 | 9 | +3 | 9 | 6 |",
+        "| Milk | 3 | 9 | +3 | 12 | 8 |"
+      ],
+      "after": [
+        "| Apple | 3 | 9 | +3 | 5 | 4 |",
+        "| Bread | 3 | 9 | +3 | 8 | 6 |",
+        "| Milk | 3 | 9 | +3 | 11 | 8 |"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- Apple: 6",
+        "- Bread: 9",
+        "- Milk: 12"
+      ],
+      "after": [
+        "- Apple: 5",
+        "- Bread: 8",
+        "- Milk: 11"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Restock costs"
+      ],
+      "after": [
+        "- Restock costs: Apple 5, Bread 8, Milk 11"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "Successful restocking immediately increases the corresponding Stock by 3 and deducts its fixed cost from Money."
+      ],
+      "after": [
+        "Successful restocking immediately increases the corresponding Stock by 3 and deducts its fixed cost from Money:",
+        "- Apple: 5",
+        "- Bread: 8",
+        "- Milk: 11"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "simple_shop_var04.D2.2.01"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "92690470632ad35064fdea71202df38a8d1a3a60254bb79bf23c97bab356f2f3",
+  "checkpoints_sha256": "aae52e84aab18512583ab7293e3a63d32af96591d4ed9099628076f311d38015"
+}

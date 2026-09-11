@@ -1,12 +1,30 @@
-schema_version: 1
-slug: arena_shooter
-name: "Top-down Arena Shooter"
-difficulty: hard
-spec: spec.md
-checkpoints: checkpoints.jsonl
-variants: []
-window_size: [800, 700]
-source_audit:
-  docx_sha256: 277562803efaa3fa1edea1b65594c95eee7ee957ecb32062a0e4937810ec916a
-  csv_sha256: 8c63a380c5c5e37103fe8db498d3fa9bf4f9f2672e72f00d2f8f3b4f4096ca35
-  checkpoint_count: 51
+{
+  "schema_version": 1,
+  "slug": "arena_shooter",
+  "name": "Top-down Arena Shooter",
+  "difficulty": "hard",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [
+    "arena_shooter_var01",
+    "arena_shooter_var02",
+    "arena_shooter_var03",
+    "arena_shooter_var04",
+    "arena_shooter_var05",
+    "arena_shooter_var06",
+    "arena_shooter_var07",
+    "arena_shooter_var08",
+    "arena_shooter_var09"
+  ],
+  "window_size": [
+    800,
+    700
+  ],
+  "source_audit": {
+    "docx_sha256": "277562803efaa3fa1edea1b65594c95eee7ee957ecb32062a0e4937810ec916a",
+    "csv_sha256": "8c63a380c5c5e37103fe8db498d3fa9bf4f9f2672e72f00d2f8f3b4f4096ca35",
+    "checkpoint_count": 51
+  },
+  "family_slug": "arena_shooter",
+  "variant_id": "base"
+}

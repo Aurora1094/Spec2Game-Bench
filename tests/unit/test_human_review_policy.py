@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 
-from code2play.config.project import games, load_config
+from code2play.config.project import all_instances, load_config
 from code2play.generation.prompt_builder import load_evaluator_checkpoints, load_spec
 from code2play.human_review.policy import (
     D2_DIMENSIONS,
@@ -19,9 +19,9 @@ def test_human_review_policy_covers_all_games_with_fixed_anchor_shapes() -> None
 
     assert human_review_policy_errors(config) == []
     assert policy["items_per_game"] == HUMAN_REVIEW_ITEM_COUNT == 10
-    assert set(policy["games"]) == {game.slug for game in games(config)}
+    assert set(policy["games"]) == {game.slug for game in all_instances(config)}
 
-    for game in games(config):
+    for game in all_instances(config):
         anchors = policy["games"][game.slug]
         checkpoints = {
             str(item["id"]): item

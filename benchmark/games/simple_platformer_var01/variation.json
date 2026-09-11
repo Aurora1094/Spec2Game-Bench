@@ -1,0 +1,63 @@
+{
+  "instance_id": "simple_platformer_var01",
+  "family_slug": "simple_platformer",
+  "variant_id": "var01",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/7_medium_Simple Platformer/7_medium_Simple Platformer_V2.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "`vx = -220 px/s`"
+      ],
+      "after": [
+        "`vx = -280 px/s`"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "`vx = 220 px/s`"
+      ],
+      "after": [
+        "`vx = 280 px/s`"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- Horizontal speed: 220 px/s"
+      ],
+      "after": [
+        "- Horizontal speed: 280 px/s"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "5. Process the player's horizontal movement and horizontal platform collisions."
+      ],
+      "after": [
+        "5. Process the player's horizontal movement at 280 px/s and horizontal platform collisions."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Horizontal speed: 220 px/s"
+      ],
+      "after": [
+        "- Horizontal speed: 280 px/s"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "simple_platformer_var01.D2.2.01"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "4fa5974d0ef7ecb0bbcc914ed389e18e591a5da6fe64f3a9eec6440f604b89c9",
+  "checkpoints_sha256": "03814205ef68da5776a400474aaef6338be3b7fb8a0012fff512dbd1d713f916"
+}

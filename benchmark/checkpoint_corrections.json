@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "revision": "2026-09-10-terminal-priority",
+  "authority": "final_docx",
+  "supersedes": "Base checkpoint semantics present in d87964b and retained by the English translation in 81d6d60.",
+  "corrections": [
+    {
+      "checkpoint_id": "maze_runner.D2.5.01",
+      "kind": "normal_victory_setup",
+      "source_spec": "games/maze_runner/spec.md",
+      "source_section": "5.6 Time, Victory & Failure Priority",
+      "reason": "Separate normal victory from the simultaneous-failure boundary case.",
+      "source_expected_transition": "won",
+      "before": {
+        "objective": "Verify the victory of reaching the exit and compete with zeroing (verify only: won)",
+        "initial_state": "Player is adjacent to E, time is close to 0",
+        "trigger": "Successfully moved into E",
+        "expected_transition": "won",
+        "detection_method": "Race condition testing",
+        "score_rubric": {
+          "0": "The initial state cannot be established, the event cannot be triggered, or there is no core state change after triggering.",
+          "1": "The initial state and trigger event can be established only partially, and the expected transition is incomplete; key values, ordering, boundary conditions, or freeze/reset requirements are missing.",
+          "2": "The initial state, triggering events and expected changes are all completely satisfied: won"
+        }
+      },
+      "after": {
+        "objective": "Verify that entering the exit wins when time remains above zero after the countdown update.",
+        "initial_state": "State is running and the player is adjacent to E. Movement is permitted, and Time is greater than the next update's dt.",
+        "trigger": "Send a direction toward E and advance one update by dt.",
+        "expected_transition": "Time remains above 0, the player enters E, and the state becomes won.",
+        "detection_method": "Controlled input and time with before/after state snapshots",
+        "score_rubric": {
+          "0": "The required state or trigger cannot be established, or the required terminal outcome is absent.",
+          "1": "The terminal outcome is correct, but a specified condition, update order, or associated state change is incomplete.",
+          "2": "The initial state, trigger, and complete expected behavior are satisfied: Time remains above 0, the player enters E, and the state becomes won."
+        }
+      }
+    },
+    {
+      "checkpoint_id": "maze_runner.D2.5.02",
+      "kind": "terminal_priority",
+      "source_spec": "games/maze_runner/spec.md",
+      "source_section": "5.6 Time, Victory & Failure Priority",
+      "reason": "Align the checkpoint with the final specification's failure-before-victory rule.",
+      "source_expected_transition": "\u540c\u5e27\u5f52\u96f6\u65f6\u4ecd\u4ee5won\u4f18\u5148",
+      "before": {
+        "objective": "Verify the victory of reaching the exit and compete with zeroing (verify only: won still takes priority when zeroing in the same frame)",
+        "initial_state": "Player is adjacent to E, time is close to 0",
+        "trigger": "Successfully moved into E",
+        "expected_transition": "When the same frame is reset to zero, won still takes priority.",
+        "detection_method": "Race condition testing",
+        "score_rubric": {
+          "0": "The initial state cannot be established, the event cannot be triggered, or there is no core state change after triggering.",
+          "1": "The initial state and trigger event can be established only partially, and the expected transition is incomplete; key values, ordering, boundary conditions, or freeze/reset requirements are missing.",
+          "2": "The initial state, triggering events and expected changes are all fully satisfied: Won still takes priority when returning to zero in the same frame"
+        }
+      },
+      "after": {
+        "objective": "Verify countdown-expiration priority over an attempted exit movement in the same frame.",
+        "initial_state": "State is running and the player is adjacent to E. Movement is permitted, and 0 < Time <= the next update's dt.",
+        "trigger": "Send a direction toward E and advance one update by dt.",
+        "expected_transition": "The countdown reaches 0 before movement and the state becomes lost. The exit movement is not accepted; player position and step count remain unchanged.",
+        "detection_method": "Controlled input and time with before/after state snapshots",
+        "score_rubric": {
+          "0": "The required state or trigger cannot be established, or the required terminal outcome is absent.",
+          "1": "The terminal outcome is correct, but a specified condition, update order, or associated state change is incomplete.",
+          "2": "The initial state, trigger, and complete expected behavior are satisfied: The countdown reaches 0 before movement and the state becomes lost. The exit movement is not accepted; player position and step count remain unchanged."
+        }
+      }
+    },
+    {
+      "checkpoint_id": "arena_shooter.D2.5.05",
+      "kind": "terminal_priority",
+      "source_spec": "games/arena_shooter/spec.md",
+      "source_section": "5.9 Terminal Priority",
+      "reason": "Align the checkpoint with the final specification's failure-before-victory rule.",
+      "source_expected_transition": "Victory\u4f18\u5148",
+      "before": {
+        "objective": "Verify Enemies=0 when the frame wins and beats HP0 in the same frame (verify only: Victory takes precedence)",
+        "initial_state": "Only the last enemy is left, players can also be injured in the same frame",
+        "trigger": "Kill the last enemy and complete the frame",
+        "expected_transition": "Victory takes priority",
+        "detection_method": "Competition state machine testing",
+        "score_rubric": {
+          "0": "The initial state cannot be established, the event cannot be triggered, or there is no core state change after triggering.",
+          "1": "The initial state and trigger event can be established only partially, and the expected transition is incomplete; key values, ordering, boundary conditions, or freeze/reset requirements are missing.",
+          "2": "The initial state, triggering events and expected changes are all fully satisfied: Victory takes precedence"
+        }
+      },
+      "after": {
+        "objective": "Verify Game Over priority when player HP and the living-enemy count both reach zero in one frame.",
+        "initial_state": "State is playing. Player HP = 1 with no damage invulnerability, and the last enemy has 1 HP. A player bullet will hit that enemy while an already active enemy bullet will hit the player in the same update.",
+        "trigger": "Advance the complete update through bullet collisions, enemy death, player damage, and terminal resolution.",
+        "expected_transition": "HP = 0 and Enemies = 0 after damage processing; the final state is game_over, which takes priority over victory.",
+        "detection_method": "Controlled simultaneous damage with before/after state snapshots",
+        "score_rubric": {
+          "0": "The required state or trigger cannot be established, or the required terminal outcome is absent.",
+          "1": "The terminal outcome is correct, but a specified condition, update order, or associated state change is incomplete.",
+          "2": "The initial state, trigger, and complete expected behavior are satisfied: HP = 0 and Enemies = 0 after damage processing; the final state is game_over, which takes priority over victory."
+        }
+      }
+    },
+    {
+      "checkpoint_id": "mini_zelda.D2.5.01",
+      "kind": "normal_victory_setup",
+      "source_spec": "games/mini_zelda/spec.md",
+      "source_section": "6.4 Treasure Chest & Victory Trigger; 6.5 Fixed Frame Update Order",
+      "reason": "Separate normal victory from the simultaneous-failure boundary case.",
+      "source_expected_transition": "\u5b9d\u7bb1opened\u5e76Victory",
+      "before": {
+        "objective": "Verify that contact with the closed treasure chest opens the victory, and is better than HP0 in the same frame (verify only: the treasure chest is opened and Victory)",
+        "initial_state": "Room E, players will touch the treasure chest for the first time and can be injured at the same time",
+        "trigger": "Advance contact frames",
+        "expected_transition": "Treasure chest opened and Victory",
+        "detection_method": "Race condition testing",
+        "score_rubric": {
+          "0": "The initial state cannot be established, the event cannot be triggered, or there is no core state change after triggering.",
+          "1": "The initial state and trigger event can be established only partially, and the expected transition is incomplete; key values, ordering, boundary conditions, or freeze/reset requirements are missing.",
+          "2": "The initial state, triggering events and expected changes are all fully satisfied: the treasure chest is opened and Victory"
+        }
+      },
+      "after": {
+        "objective": "Verify that contact opens the closed treasure chest and wins when the player survives the frame.",
+        "initial_state": "State is playing in Room E with a closed chest. The player's movement path will contact the chest, and HP remains above 0 after all damage in this frame.",
+        "trigger": "Move into the chest and advance the complete frame through chest opening and terminal resolution.",
+        "expected_transition": "The chest becomes opened and the final treasure is obtained; with HP > 0 at terminal resolution, the state becomes victory.",
+        "detection_method": "Controlled chest interaction with before/after state snapshots",
+        "score_rubric": {
+          "0": "The required state or trigger cannot be established, or the required terminal outcome is absent.",
+          "1": "The terminal outcome is correct, but a specified condition, update order, or associated state change is incomplete.",
+          "2": "The initial state, trigger, and complete expected behavior are satisfied: The chest becomes opened and the final treasure is obtained; with HP > 0 at terminal resolution, the state becomes victory."
+        }
+      }
+    },
+    {
+      "checkpoint_id": "mini_zelda.D2.5.02",
+      "kind": "terminal_priority",
+      "source_spec": "games/mini_zelda/spec.md",
+      "source_section": "5.14 Terminal Priority; 6.5 Fixed Frame Update Order",
+      "reason": "Align the checkpoint with the final specification's failure-before-victory rule.",
+      "source_expected_transition": "\u82e5\u540c\u5e27HP=0\u4ecdVictory\u4f18\u5148",
+      "before": {
+        "objective": "Verify that contact with the closed treasure chest opens the victory, and it is better than HP0 in the same frame (verify only: if HP=0 in the same frame, Victory still takes priority)",
+        "initial_state": "Room E, players will touch the treasure chest for the first time and can be injured at the same time",
+        "trigger": "Advance contact frames",
+        "expected_transition": "If HP=0 in the same frame, Victory still takes priority.",
+        "detection_method": "Race condition testing",
+        "score_rubric": {
+          "0": "The initial state cannot be established, the event cannot be triggered, or there is no core state change after triggering.",
+          "1": "The initial state and trigger event can be established only partially, and the expected transition is incomplete; key values, ordering, boundary conditions, or freeze/reset requirements are missing.",
+          "2": "The initial state, trigger events and expected changes are all fully satisfied: if HP=0 in the same frame, Victory still takes priority"
+        }
+      },
+      "after": {
+        "objective": "Verify Game Over priority when the chest opens and player HP reaches zero in the same frame.",
+        "initial_state": "State is playing in Room E with a closed chest, HP = 1, and no damage invulnerability. Chest contact and a valid lethal-damage event coincide in the next frame.",
+        "trigger": "Advance the complete contact frame through damage, chest opening, and terminal resolution.",
+        "expected_transition": "The chest becomes opened and the final treasure is obtained, but HP = 0 makes the final state game_over; victory does not override Game Over.",
+        "detection_method": "Controlled simultaneous chest contact and damage with state snapshots",
+        "score_rubric": {
+          "0": "The required state or trigger cannot be established, or the required terminal outcome is absent.",
+          "1": "The terminal outcome is correct, but a specified condition, update order, or associated state change is incomplete.",
+          "2": "The initial state, trigger, and complete expected behavior are satisfied: The chest becomes opened and the final treasure is obtained, but HP = 0 makes the final state game_over; victory does not override Game Over."
+        }
+      }
+    }
+  ],
+  "variant_exceptions": [
+    {
+      "instance_id": "arena_shooter_var09",
+      "checkpoint_id": "arena_shooter_var09.D2.5.05",
+      "rule": "Its final specification explicitly gives victory priority when HP and Enemies both reach 0."
+    },
+    {
+      "instance_id": "mini_zelda_var09",
+      "checkpoint_ids": [
+        "mini_zelda_var09.D2.5.01",
+        "mini_zelda_var09.D2.5.02"
+      ],
+      "rule": "The chest opens through a valid sword hit, not contact; Game Over retains priority."
+    }
+  ]
+}

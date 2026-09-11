@@ -1,0 +1,265 @@
+{
+  "instance_id": "simple_platformer_var07",
+  "family_slug": "simple_platformer",
+  "variant_id": "var07",
+  "variation_types": [
+    "object_count",
+    "map"
+  ],
+  "source_path": "游戏规格说明（英文）/7_medium_Simple Platformer/7_medium_Simple Platformer_V8.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Fixed platforms form the main traversal route. The game also includes one horizontally moving platform. When the player is standing on top of the moving platform, the player is carried horizontally with it. Side contact or incidental airborne overlap does not cause the player to be carried."
+      ],
+      "after": [
+        "Fixed platforms form the main traversal route. The game also includes two horizontally moving platforms. When the player is standing on top of a moving platform, the player is carried horizontally with that platform. Side contact or incidental airborne overlap does not cause the player to be carried."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "It contains the player, fixed platforms, moving platform, spikes, and goal flag."
+      ],
+      "after": [
+        "It contains the player, fixed platforms, two moving platforms, spikes, and goal flag."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- Moving platform: `#F2A33A`"
+      ],
+      "after": [
+        "- Moving platforms: `#F2A33A`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [],
+      "after": [
+        "Both moving platforms use the moving-platform color and remain visually distinguishable from fixed platforms."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Moving platform position: `(300, 315)`",
+        "- Moving platform direction: right"
+      ],
+      "after": [
+        "- Moving Platform 1 position: `(300, 315)`",
+        "- Moving Platform 1 direction: right",
+        "- Moving Platform 2 position: `(500, 280)`",
+        "- Moving Platform 2 direction: left"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "The main game objects and state variables include the player, fixed platforms, moving platform, spikes, goal flag, movement state, and game state."
+      ],
+      "after": [
+        "The main game objects and state variables include the player, fixed platforms, two moving platforms, spikes, goal flag, movement state, and game state."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "## 3.3 Moving Platform",
+        "The moving platform has:"
+      ],
+      "after": [
+        "## 3.3 Moving Platforms",
+        "The game contains exactly two horizontally moving platforms.",
+        "Moving Platform 1:"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "It moves continuously back and forth while the game is `playing`.",
+        "The player is carried horizontally only while standing on top of it."
+      ],
+      "after": [
+        "Moving Platform 2:",
+        "- Initial top-left coordinate: `(500, 280)`",
+        "- Size: 100 × 20 px",
+        "- Fixed y-coordinate: 280",
+        "- Horizontal movement range: x = 460–620",
+        "- Speed: 70 px/s",
+        "- Initial direction: left",
+        "Both platforms move continuously back and forth while the game is `playing`.",
+        "The player is carried horizontally only while standing on top of one of them.",
+        "Side contact or airborne overlap does not trigger the carrying effect."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "During `playing`, player movement, gravity, moving-platform movement, and collision detection are active."
+      ],
+      "after": [
+        "During `playing`, player movement, gravity, both moving-platform movements, and collision detection are active."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- Moving platform position to `(300, 315)`.",
+        "- Moving platform direction to right."
+      ],
+      "after": [
+        "- Moving Platform 1 position to `(300, 315)`.",
+        "- Moving Platform 1 direction to right.",
+        "- Moving Platform 2 position to `(500, 280)`.",
+        "- Moving Platform 2 direction to left."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "The player, fixed platforms, moving platform, spikes, and goal flag all use axis-aligned rectangular collision detection."
+      ],
+      "after": [
+        "The player, fixed platforms, both moving platforms, spikes, and goal flag all use axis-aligned rectangular collision detection."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "Both moving platforms participate in platform collision in the same way as the original moving platform."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "The moving platform moves horizontally at 80 px/s between x = 260 and x = 430 while remaining at y = 315."
+      ],
+      "after": [
+        "Moving Platform 1 moves horizontally at 80 px/s between x = 260 and x = 430 while remaining at y = 315."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "The platform never moves vertically."
+      ],
+      "after": [
+        "Moving Platform 2 moves horizontally at 70 px/s between x = 460 and x = 620 while remaining at y = 280.",
+        "Its direction changes as follows:",
+        "- At `x >= 620`, change direction to left.",
+        "- At `x <= 460`, change direction to right.",
+        "Neither moving platform moves vertically."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "If the player was standing on top of the moving platform in the previous frame:",
+        "1. Update the moving platform position.",
+        "2. Compute its horizontal displacement `dx`.",
+        "3. Move the player horizontally by the same `dx`.",
+        "4. Apply the gameplay area's horizontal boundary constraints.",
+        "5. Process the player's own horizontal input and platform collisions.",
+        "The player is carried only while standing on top of the moving platform.",
+        "Side contact or airborne overlap does not trigger the carrying effect."
+      ],
+      "after": [
+        "At the beginning of each frame, determine whether the player was standing on top of a moving platform in the previous frame.",
+        "Then:",
+        "1. Update both moving-platform positions.",
+        "2. Compute each platform's horizontal displacement.",
+        "3. If the player was standing on Moving Platform 1, move the player horizontally by Moving Platform 1's `dx`.",
+        "4. If the player was standing on Moving Platform 2, move the player horizontally by Moving Platform 2's `dx`.",
+        "5. Apply the gameplay area's horizontal boundary constraints.",
+        "6. Process the player's own horizontal input and platform collisions.",
+        "The player can be carried by only the moving platform on whose top surface the player was standing in the previous frame.",
+        "The displacement of the other moving platform is not applied to the player.",
+        "Side contact or airborne overlap with either moving platform does not trigger carrying."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "At initialization, the game creates the interface, player, fixed platforms, moving platform, spikes, goal flag, and game state."
+      ],
+      "after": [
+        "At initialization, the game creates the interface, player, fixed platforms, two moving platforms, spikes, goal flag, and game state."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "- Moving platform position: `(300, 315)`",
+        "- Moving platform direction: right"
+      ],
+      "after": [
+        "- Moving Platform 1 position: `(300, 315)`",
+        "- Moving Platform 1 direction: right",
+        "- Moving Platform 2 position: `(500, 280)`",
+        "- Moving Platform 2 direction: left"
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "3. Update the moving platform and determine its horizontal displacement.",
+        "4. If the player was standing on it in the previous frame, apply the platform's displacement to the player."
+      ],
+      "after": [
+        "3. Update both moving platforms and determine their horizontal displacements.",
+        "4. If the player was standing on one moving platform in the previous frame, apply only that platform's displacement to the player."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "If Failure is triggered, the game enters `lost`. Player movement, gravity, and moving-platform motion stop, the top display changes to `Status: Lost`, and the bottom area displays `Game Over` and `Press R to Restart`.",
+        "If no Failure condition is present but the flag is reached, the game enters `won`. Player movement, gravity, and moving-platform motion stop, the top display changes to `Status: Won`, and the bottom area displays `You Win!` and `Press R to Restart`.",
+        "Pressing R restores the initial player and moving-platform state and returns the game to `playing`."
+      ],
+      "after": [
+        "If Failure is triggered, the game enters `lost`. Player movement, gravity, and both moving-platform motions stop, the top display changes to `Status: Lost`, and the bottom area displays `Game Over` and `Press R to Restart`.",
+        "If no Failure condition is present but the flag is reached, the game enters `won`. Player movement, gravity, and both moving-platform motions stop, the top display changes to `Status: Won`, and the bottom area displays `You Win!` and `Press R to Restart`.",
+        "Pressing R restores the initial player and both moving-platform states and returns the game to `playing`."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "- Moving platform speed: 80 px/s",
+        "- Moving platform range: x = 260–430"
+      ],
+      "after": [
+        "- Moving Platform 1 speed: 80 px/s",
+        "- Moving Platform 1 range: x = 260–430",
+        "- Moving Platform 2 speed: 70 px/s",
+        "- Moving Platform 2 range: x = 460–620"
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "While standing on the moving platform, the player is carried horizontally with it. Side contact or airborne overlap does not cause carrying."
+      ],
+      "after": [
+        "While standing on either moving platform, the player is carried horizontally with that platform. Side contact or airborne overlap does not cause carrying."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "simple_platformer_var07.D2.1.05",
+    "simple_platformer_var07.D2.3.06",
+    "simple_platformer_var07.D2.5.11",
+    "simple_platformer_var07.D2.3.07"
+  ],
+  "added_checkpoint_ids": [
+    "simple_platformer_var07.D2.3.07"
+  ],
+  "base_checkpoints_sha256": "4fa5974d0ef7ecb0bbcc914ed389e18e591a5da6fe64f3a9eec6440f604b89c9",
+  "checkpoints_sha256": "ac7092469c3ac2e657fb4030a1a428573e1b10e4d80ece4465b2b63d74a3a7f6"
+}

@@ -1,0 +1,225 @@
+{
+  "instance_id": "carrot_defense_var09",
+  "family_slug": "carrot_defense",
+  "variant_id": "var09",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/11_hard_Carrot Defense-like/11_hard_Carrot Defense-like_V10.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Carrot Defense-like"
+      ],
+      "after": [
+        "Carrot Defense-like_V10"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [],
+      "after": [
+        "Normal and Fast Enemies deal 1 carrot damage when reaching the target. Tank Enemies deal 3 carrot damage."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "A custom mechanic is the Perfect Wave reward. If no enemy reaches the carrot during an entire wave, the player receives 30 Gold when that wave ends."
+      ],
+      "after": [
+        "A custom mechanic is the Perfect Wave reward. If no enemy reaches the carrot during an entire wave, the player receives 50 Gold when that wave ends."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- `Perfect Wave! +30 Gold`"
+      ],
+      "after": [
+        "- `Perfect Wave! +50 Gold`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "(0,2) → (1,2) → (2,2) → (3,2) → (4,2) → (5,2)",
+        "                                             ↓",
+        "                                           (5,3)",
+        "                                             ↓",
+        "                                           (5,4)",
+        "                                             ↓",
+        "                                           (5,5)",
+        "                                             ↓",
+        "(6,5) → (7,5) → (8,5) → (9,5)"
+      ],
+      "after": [
+        "(0,2) (1,2) (2,2) (3,2) (4,2) (5,2)"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "                            (9,4)"
+      ],
+      "after": [
+        "                            (5,3)"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "                            (9,3)"
+      ],
+      "after": [
+        "                            (5,4)"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "                          (10,3) → (11,3)"
+      ],
+      "after": [
+        "                            (5,5)",
+        "                              ↓",
+        "(6,5) (7,5) (8,5) (9,5)",
+        "                  ↑",
+        "                (9,4)",
+        "                  ↑",
+        "                (9,3) (10,3) (11,3)"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- Tank Enemy: 2"
+      ],
+      "after": [
+        "- Tank Enemy: 3"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "`+30`"
+      ],
+      "after": [
+        "`+50`"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "| Tank | 100 | 40 px/s | 2 | 25 Gold | Larger dark-gray rectangle or circle |"
+      ],
+      "after": [
+        "| Tank | 100 | 40 px/s | 3 | 25 Gold | Larger dark-gray rectangle or circle |"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "The Perfect Wave reward remains 50 Gold after Restart.",
+        "Tank Enemy carrot damage remains 3 after Restart."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [],
+      "after": [
+        "Carrot damage:",
+        "- Normal Enemy: 1",
+        "- Fast Enemy: 1",
+        "- Tank Enemy: 3"
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "- Gold += 30",
+        "- Display `Perfect Wave! +30 Gold`"
+      ],
+      "after": [
+        "- Gold += 50",
+        "- Display `Perfect Wave! +50 Gold`"
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "If carrot HP reaches 0 or below, however, Failure occurs immediately and no subsequent wave-end settlement is processed."
+      ],
+      "after": [
+        "If carrot HP reaches 0 or below, Failure occurs immediately and no subsequent wave-end settlement is processed."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "2. If qualified, grant the +30 Gold reward.",
+        "3. Display the Perfect Wave feedback as applicable."
+      ],
+      "after": [
+        "2. If qualified, grant the +50 Gold reward.",
+        "3. Display `Perfect Wave! +50 Gold` as applicable."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "When an enemy reaches the carrot, it is removed, damages the carrot, provides no Gold, and makes the current Wave ineligible for Perfect Wave."
+      ],
+      "after": [
+        "When an enemy reaches the carrot, it is removed, applies its fixed carrot damage, provides no Gold, and makes the current Wave ineligible for Perfect Wave.",
+        "Tank Enemies apply 3 carrot damage when they reach the carrot."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "- Apply the Perfect Wave reward if eligible."
+      ],
+      "after": [
+        "- Apply the 50 Gold Perfect Wave reward if eligible."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "- Apply the Perfect Wave reward if eligible."
+      ],
+      "after": [
+        "- Apply the 50 Gold Perfect Wave reward if eligible."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "When an enemy reaches the carrot, the carrot flashes, its HP bar decreases, and the top HP value updates."
+      ],
+      "after": [
+        "When an enemy reaches the carrot, the carrot flashes, its HP bar decreases according to the enemy's carrot damage, and the top HP value updates."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "If Wave 4 is perfect, its +30 Gold reward is applied before entering Victory."
+      ],
+      "after": [
+        "If Wave 4 is perfect, its +50 Gold reward is applied before entering Victory."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "carrot_defense_var09.D2.3.09",
+    "carrot_defense_var09.D2.3.10"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "763a94a35ba4ffa1473059ff4dc233b43d72a986810cc0d7664282192c535c37",
+  "checkpoints_sha256": "c7c86bdc57adb207470b4ca0d1d3da5997427370500de7b45113fa6abe98851c"
+}

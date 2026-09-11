@@ -1,0 +1,97 @@
+{
+  "instance_id": "match3_var03",
+  "family_slug": "match3",
+  "variant_id": "var03",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/9_medium_Match-3/9_medium_Match-3_V4.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "- Score increases according to the number of distinct gems cleared."
+      ],
+      "after": [
+        "- Score increases by 15 for each distinct gem cleared."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "`+10`"
+      ],
+      "after": [
+        "`+15`"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "If one gem belongs to both a horizontal and vertical match in the same clearing round, it is cleared once and contributes +10 once."
+      ],
+      "after": [
+        "If one gem belongs to both a horizontal and vertical match in the same clearing round, it is cleared once and contributes +15 once."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "4. Increase Score by 10 for each distinct cleared gem."
+      ],
+      "after": [
+        "4. Increase Score by 15 for each distinct cleared gem."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Increase Score normally."
+      ],
+      "after": [
+        "- Increase Score by 15 for each distinct cleared gem."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "4. Increase Score by 10 per distinct cleared gem."
+      ],
+      "after": [
+        "4. Increase Score by 15 per distinct cleared gem."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "During automatic chains, Score continues to increase while Moves remains unchanged."
+      ],
+      "after": [
+        "During automatic chains, Score continues to increase by 15 per distinct cleared gem while Moves remains unchanged."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "Score starts at 0 and increases by 10 for every distinct gem cleared."
+      ],
+      "after": [
+        "Score starts at 0 and increases by 15 for every distinct gem cleared."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "Every distinct gem cleared during an automatic chain also contributes +15 Score."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "match3_var03.D2.3.08"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "4c049d5c0f23d85abfa0cb642db6e2ae1a19aad04e27424be1cbeb5f7594f420",
+  "checkpoints_sha256": "e929e7c3997739ca541ace1a4b915f935a133f021bb85d3406322f5bcf15006c"
+}

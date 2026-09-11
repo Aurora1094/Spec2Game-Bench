@@ -1,0 +1,110 @@
+{
+  "instance_id": "asteroids_var05",
+  "family_slug": "asteroids",
+  "variant_id": "var05",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/4_easy_Asteroids/4_easy_Asteroids_V6.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Asteroids"
+      ],
+      "after": [
+        "Asteroids_V6"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "| Asteroid 1 | `(120, 220)` | `(56, 56) px/s` |",
+        "| Asteroid 2 | `(500, 300)` | `(-56, 56) px/s` |",
+        "| Asteroid 3 | `(250, 620)` | `(56, -56) px/s` |",
+        "These velocity vectors correspond to an overall speed of approximately 80 px/s. The initial asteroids are positioned far enough from the spaceship to avoid an immediate collision.",
+        "Only subsequently spawned asteroids appear from the edges of the gameplay area. Asteroids do not split and do not actively chase the spaceship."
+      ],
+      "after": [
+        "| Asteroid 1 | `(120, 220)` | `(85, 85) px/s` |",
+        "| Asteroid 2 | `(500, 300)` | `(-85, 85) px/s` |",
+        "| Asteroid 3 | `(250, 620)` | `(85, -85) px/s` |",
+        "These velocity vectors correspond to an overall speed of approximately 120 px/s. The initial asteroids are positioned far enough from the spaceship to avoid an immediate collision.",
+        "Only subsequently spawned asteroids appear from the edges of the gameplay area.",
+        "Asteroids do not split and do not actively chase the spaceship."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- Moves at approximately 80 px/s."
+      ],
+      "after": [
+        "- Moves at approximately 120 px/s."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "Score does not increase because of survival time, asteroid wrapping, or bullet expiration. The game does not record a separate high score."
+      ],
+      "after": [
+        "Score does not increase because of survival time, asteroid wrapping, or bullet expiration.",
+        "The game does not record a separate high score."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- `(120, 220)`, velocity `(56, 56) px/s`",
+        "- `(500, 300)`, velocity `(-56, 56) px/s`",
+        "- `(250, 620)`, velocity `(56, -56) px/s`"
+      ],
+      "after": [
+        "- `(120, 220)`, velocity `(85, 85) px/s`",
+        "- `(500, 300)`, velocity `(-85, 85) px/s`",
+        "- `(250, 620)`, velocity `(85, -85) px/s`"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "The other velocity component may be randomized, but the overall speed should remain approximately 80 px/s."
+      ],
+      "after": [
+        "The other velocity component may be randomized, but the overall speed should remain approximately 120 px/s."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Asteroid 1: `(120, 220)`, velocity `(56, 56) px/s`",
+        "- Asteroid 2: `(500, 300)`, velocity `(-56, 56) px/s`",
+        "- Asteroid 3: `(250, 620)`, velocity `(56, -56) px/s`"
+      ],
+      "after": [
+        "- Asteroid 1: `(120, 220)`, velocity `(85, 85) px/s`",
+        "- Asteroid 2: `(500, 300)`, velocity `(-85, 85) px/s`",
+        "- Asteroid 3: `(250, 620)`, velocity `(85, -85) px/s`"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- Asteroid speed: approximately 80 px/s"
+      ],
+      "after": [
+        "- Asteroid speed: approximately 120 px/s"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "asteroids_var05.D2.1.02",
+    "asteroids_var05.D2.4.01",
+    "asteroids_var05.D2.5.06"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "d50b680470c3c8924a22f5c3a03e1ceb524a55e81af4465fc04666d60d2662fc",
+  "checkpoints_sha256": "620257a9f2dd75f44bcf1475f7f47456cf48e7dc7f07fcd6ab2105bbe82babbe"
+}

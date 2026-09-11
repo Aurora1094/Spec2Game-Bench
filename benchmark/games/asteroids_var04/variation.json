@@ -1,0 +1,146 @@
+{
+  "instance_id": "asteroids_var04",
+  "family_slug": "asteroids",
+  "variant_id": "var04",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/4_easy_Asteroids/4_easy_Asteroids_V5.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Asteroids"
+      ],
+      "after": [
+        "Asteroids_V5"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [],
+      "after": [
+        "At most 3 bullets may exist simultaneously. If 3 bullets are already active, pressing Space does not create another bullet and does not start or restart the firing cooldown."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [],
+      "after": [
+        "At most 3 bullets may exist simultaneously."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "Only subsequently spawned asteroids appear from the edges of the gameplay area. Asteroids do not split and do not actively chase the spaceship."
+      ],
+      "after": [
+        "Only subsequently spawned asteroids appear from the edges of the gameplay area.",
+        "Asteroids do not split and do not actively chase the spaceship."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "A bullet that reaches the end of its 1.5-second lifetime disappears without changing the score."
+      ],
+      "after": [
+        "At most 3 bullets may exist simultaneously.",
+        "A bullet that reaches the end of its 1.5-second lifetime disappears without changing the score and immediately frees one bullet slot.",
+        "A bullet that hits an asteroid also disappears immediately and frees one bullet slot."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "Score does not increase because of survival time, asteroid wrapping, or bullet expiration. The game does not record a separate high score."
+      ],
+      "after": [
+        "Score does not increase because of survival time, asteroid wrapping, or bullet expiration.",
+        "The game does not record a separate high score."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "Space is used to fire. A shot succeeds only when the 0.25-second firing cooldown has ended."
+      ],
+      "after": [
+        "Space is used to fire. A shot succeeds only when:",
+        "1. The 0.25-second firing cooldown has ended.",
+        "2. Fewer than 3 bullets currently exist."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [],
+      "after": [
+        "If 3 bullets already exist, pressing Space does not spawn a bullet and does not start or restart the firing cooldown."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "At most 3 bullets may exist simultaneously.",
+        "A new bullet may be created only when fewer than 3 bullets are active and the firing cooldown has ended.",
+        "If 3 bullets are active, a Space input is ignored and does not start or restart the firing cooldown."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "When a bullet reaches the end of its 1.5-second lifetime, it is removed without changing the score."
+      ],
+      "after": [
+        "When a bullet reaches the end of its 1.5-second lifetime, it is removed without changing the score. When a bullet hits an asteroid, it is also removed. In either case, its removal immediately reduces the active bullet count and makes that bullet slot available again."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "- The active bullet count decreases by 1."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "While `playing`, the game continuously processes player rotation, forward movement, and shooting input. It updates spaceship, bullet, and asteroid positions, applies four-edge wrapping, advances bullet lifetimes and timers, and performs the 1.5-second asteroid-count check."
+      ],
+      "after": [
+        "While `playing`, the game continuously processes player rotation, forward movement, and shooting input. A valid shot requires both an available firing cooldown and fewer than 3 active bullets.",
+        "The game updates spaceship, bullet, and asteroid positions, applies four-edge wrapping, advances bullet lifetimes and timers, removes expired bullets, and performs the 1.5-second asteroid-count check.",
+        "Removing a bullet because of expiration or asteroid collision immediately frees one bullet slot."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [],
+      "after": [
+        "- Maximum active bullet count: 3"
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "Successful shooting creates one bullet at the front of the spaceship. A bullet disappears when it hits an asteroid or reaches its 1.5-second lifetime."
+      ],
+      "after": [
+        "Successful shooting creates one bullet at the front of the spaceship only when fewer than 3 bullets are currently active and the firing cooldown has ended.",
+        "A bullet disappears when it hits an asteroid or reaches its 1.5-second lifetime. Its disappearance makes one bullet slot available again."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "asteroids_var04.D2.2.04",
+    "asteroids_var04.D2.2.07"
+  ],
+  "added_checkpoint_ids": [
+    "asteroids_var04.D2.2.07"
+  ],
+  "base_checkpoints_sha256": "d50b680470c3c8924a22f5c3a03e1ceb524a55e81af4465fc04666d60d2662fc",
+  "checkpoints_sha256": "935543d0740c02f3331068fcb4c0dbfd65562eb2f01cd89d8b4e10022aa09685"
+}

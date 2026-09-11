@@ -18,6 +18,7 @@ from typing import Any
 
 from docx import Document
 
+from checkpoint_corrections import apply_corrections, correction_metadata, load_corrections
 
 SOURCE_FILES = {
     "snake": ("1_easy_Snake.docx", "snake_checkpoints.csv", "easy", [600, 800]),
@@ -109,7 +110,7 @@ def _read_checkpoints(path: Path, slug: str) -> list[dict[str, Any]]:
         if missing:
             raise ValueError(f"empty fields for {checkpoint_id}: {missing}")
         result.append(values)
-    return result
+    return apply_corrections(result, slug)
 
 
 def _write_text(path: Path, text: str) -> None:
@@ -221,8 +222,10 @@ def convert(source_dir: Path, project_dir: Path) -> dict[str, Any]:
     # gives loaders and audits a stable byte representation while retaining the
     # requested ``catalog.yaml`` interface.
     _write_json(project_dir / "benchmark" / "catalog.yaml", catalog)
+    _write_json(project_dir / "benchmark" / "checkpoint_corrections.json", load_corrections())
     _write_json(project_dir / "benchmark" / "conversion_audit.json", {
         "schema_version": 1,
+        "checkpoint_corrections": correction_metadata(),
         "source_root_name": source_dir.name,
         "source_file_policy": "source files are external and are not copied into the repository",
         "games": audits,

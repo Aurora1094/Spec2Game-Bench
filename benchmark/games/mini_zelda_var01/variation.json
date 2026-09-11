@@ -1,0 +1,118 @@
+{
+  "instance_id": "mini_zelda_var01",
+  "family_slug": "mini_zelda",
+  "variant_id": "var01",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/15_hard_Mini Zelda-like Room Adventure/15_hard_Mini Zelda-like Room Adventure_V2.docx",
+  "corrections": [
+    "Final DOCX takes precedence over spreadsheet draft differences."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "The player starts with 7 HP."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "| HP | `(30, 28)` | `HP: 5/5` |"
+      ],
+      "after": [
+        "| HP | `(30, 28)` | `HP: 7/7` |"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`WASD: Move    Space: Attack`"
+      ],
+      "after": [
+        "`WASD: Move Space: Attack`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- Maximum HP: 5",
+        "- Initial HP: 5"
+      ],
+      "after": [
+        "- Maximum HP: 7",
+        "- Initial HP: 7"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "          Room B",
+        "            |"
+      ],
+      "after": [
+        "       Room B",
+        "         |"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "            |",
+        "          Room E"
+      ],
+      "after": [
+        "         |",
+        "       Room E"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "`HP = 5`"
+      ],
+      "after": [
+        "`HP = 7`"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- Right-side door → message appears to the left",
+        "- Bottom-side door → message appears above"
+      ],
+      "after": [
+        "- Right-side door message appears to the left.",
+        "- Bottom-side door message appears above."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- Top HP display updates."
+      ],
+      "after": [
+        "- Top HP display updates as `HP: X/7`."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- HP → 5"
+      ],
+      "after": [
+        "- HP → 7"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "mini_zelda_var01.D2.1.03",
+    "mini_zelda_var01.D2.5.02",
+    "mini_zelda_var01.D2.5.08"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "1e56b3ca7b602293b90ac54d2ecebc5f7a4483be506870a833a77652c49dc967",
+  "checkpoints_sha256": "b03d1a182730f4d1bdda3635d724497d6424742f0b1989e5ad8fd84773cc9250"
+}

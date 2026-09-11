@@ -1,0 +1,138 @@
+{
+  "instance_id": "dodge_blocks_var07",
+  "family_slug": "dodge_blocks",
+  "variant_id": "var07",
+  "variation_types": [
+    "object_type",
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/2_easy_Dodge Blocks/2_easy_Dodge Blocks_V8.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "Obstacles may have two different sizes. Each newly spawned obstacle is independently selected to be either a 40 × 40 px normal-size obstacle or a 60 × 40 px wide obstacle."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "Each obstacle:",
+        "- Has a fixed size of 40 × 40 px.",
+        "- Uses red or dark red.",
+        "- Spawns with top-left y-coordinate y = 100.",
+        "- Uses a random integer top-left x-coordinate from 0 to 560 inclusive."
+      ],
+      "after": [
+        "Each newly spawned obstacle is independently selected as one of two sizes:",
+        "- Normal-size obstacle: 40 × 40 px",
+        "- Wide obstacle: 60 × 40 px",
+        "Each size has a 50% spawn probability.",
+        "All obstacles:",
+        "- Use red or dark red.",
+        "- Spawn with top-left y-coordinate y = 100.",
+        "- Use a random integer top-left x-coordinate that keeps the entire obstacle inside the gameplay area.",
+        "Therefore:",
+        "- A 40 × 40 px obstacle uses x from 0 to 560 inclusive.",
+        "- A 60 × 40 px obstacle uses x from 0 to 540 inclusive."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "Each obstacle is a hazardous 40 × 40 px block that spawns at a random horizontal position and moves vertically downward at a fixed speed."
+      ],
+      "after": [
+        "Each obstacle is a hazardous rectangular block that spawns at a random horizontal position and moves vertically downward at a fixed speed.",
+        "Each new obstacle independently has:",
+        "- 50% probability of being 40 × 40 px.",
+        "- 50% probability of being 60 × 40 px.",
+        "For a 40 × 40 px obstacle, the top-left x-coordinate is a random integer from 0 to 560 inclusive.",
+        "For a 60 × 40 px obstacle, the top-left x-coordinate is a random integer from 0 to 540 inclusive."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [],
+      "after": [
+        "At each spawn event, the obstacle size is independently selected:",
+        "- 50% probability: 40 × 40 px",
+        "- 50% probability: 60 × 40 px"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Width: 40 px",
+        "- Height: 40 px"
+      ],
+      "after": []
+    },
+    {
+      "id": "change06",
+      "before": [
+        "- Top-left x-coordinate: random integer from 0 to 560 inclusive"
+      ],
+      "after": [
+        "- For a 40 × 40 px obstacle, top-left x-coordinate: random integer from 0 to 560 inclusive",
+        "- For a 60 × 40 px obstacle, top-left x-coordinate: random integer from 0 to 540 inclusive"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "The game does not include differently sized obstacles, special obstacles, obstacle acceleration, or increasing difficulty."
+      ],
+      "after": [
+        "The game does not include special obstacle behaviors, obstacle acceleration, or increasing difficulty."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "Collision between the player and obstacles uses rectangle-overlap detection. Pixel-perfect collision detection is not required."
+      ],
+      "after": [
+        "Collision between the player and obstacles uses rectangle-overlap detection based on each obstacle's actual rectangle size. Pixel-perfect collision detection is not required."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "The obstacle spawn timer advances continuously. Exactly one obstacle is created whenever the fixed 1-second spawn interval is reached, and each active obstacle moves downward at 200 px/s."
+      ],
+      "after": [
+        "The obstacle spawn timer advances continuously. Exactly one obstacle is created whenever the fixed 1-second spawn interval is reached. Its size is selected using the defined 50% / 50% probability, and each active obstacle moves downward at 200 px/s."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "The game continuously checks rectangle overlap between the player and active obstacles. If a collision occurs, the game immediately enters `game_over`."
+      ],
+      "after": [
+        "The game continuously checks rectangle overlap between the player and active obstacles using each obstacle's actual size. If a collision occurs, the game immediately enters `game_over`."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "- Obstacle size: 40 × 40 px"
+      ],
+      "after": [
+        "- Obstacle sizes: 40 × 40 px or 60 × 40 px"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "dodge_blocks_var07.D2.3.02",
+    "dodge_blocks_var07.D2.3.07"
+  ],
+  "added_checkpoint_ids": [
+    "dodge_blocks_var07.D2.3.07"
+  ],
+  "base_checkpoints_sha256": "49ce18ae41ba1d7c6ead6d9e52bdbc10b7447961c50d8924076bc487b8706308",
+  "checkpoints_sha256": "468184e895feddddd9ca05c493b8f0a530c41ff123765f3f2febc92a19eb6ce1"
+}

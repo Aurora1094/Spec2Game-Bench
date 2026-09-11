@@ -1,0 +1,305 @@
+{
+  "instance_id": "tetris_var05",
+  "family_slug": "tetris",
+  "variant_id": "var05",
+  "variation_types": [
+    "interface"
+  ],
+  "source_path": "游戏规格说明（英文）/8_medium_tetris/8_medium_Tetris_V6.docx",
+  "corrections": [
+    "Final DOCX removes the Next preview; draft spreadsheet bullet design is superseded."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "The interface uses a left-right layout. The board is displayed on the left, while the information area on the right displays Score, Lines, the Next piece preview, control instructions, and Game Over feedback.",
+        "During initialization, both the current piece and the Next piece are randomly generated. After the current piece is locked and row-clearing processing is completed, the Next piece becomes the new current piece and a new Next piece is generated."
+      ],
+      "after": [
+        "The interface uses a left-right layout. The board is displayed on the left, while the information area on the right displays Score, Lines, control instructions, and Game Over feedback.",
+        "During initialization, both the current piece and an internal next piece are randomly generated. After the current piece is locked and row-clearing processing is completed, the internal next piece becomes the new current piece and a new internal next piece is generated.",
+        "The upcoming piece is not displayed to the player. The game contains no Next label or Next preview box."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "| `Next` | `(400, 220)` | 32 px |",
+        "| Next Preview Box | `(420, 260)` | 4 × 4 cells, each 25 × 25 px |",
+        "| `Move: ← / →` | `(400, 410)` | 22 px |",
+        "| `Rotate: ↑` | `(400, 440)` | 22 px |",
+        "| `Soft Drop: ↓` | `(400, 470)` | 22 px |",
+        "| `Restart: R` | `(400, 500)` | 22 px |",
+        "## 2.3 Next Preview",
+        "The Next preview uses a 4 × 4 grid:",
+        "- Top-left coordinate: `(420, 260)`",
+        "- Total size: 100 × 100 px",
+        "- Preview cell size: 25 × 25 px",
+        "The Next piece is drawn according to its original 4 × 4 local matrix. No additional scaling, rotation, or shape redesign is required."
+      ],
+      "after": [
+        "| `Move: ← / →` | `(400, 300)` | 22 px |",
+        "| `Rotate: ↑` | `(400, 335)` | 22 px |",
+        "| `Soft Drop: ↓` | `(400, 370)` | 22 px |",
+        "| `Restart: R` | `(400, 405)` | 22 px |",
+        "There is no `Next` label and no Next Preview Box.",
+        "## 2.3 Hidden Next Piece",
+        "The game internally maintains one upcoming piece as `next_piece`.",
+        "The player is not shown the identity, shape, color, or local matrix of `next_piece`.",
+        "No preview box, placeholder, hidden outline, or other visual indication of the next tetromino is displayed.",
+        "The internal `next_piece` continues to follow the normal promotion and random-generation rules."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "After the game enters `game_over`, the information area continues to display the final Score, Lines, and Next piece."
+      ],
+      "after": [
+        "After the game enters `game_over`, the information area continues to display the final Score and Lines."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "Suggested placement begins near `(400, 540)`."
+      ],
+      "after": [
+        "Suggested placement begins near `(400, 500)`."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "The internal next piece remains undisplayed after Game Over."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "- `next_piece`: randomly generated"
+      ],
+      "after": [
+        "- `next_piece`: randomly generated internally"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Next piece: displayed in the preview area"
+      ],
+      "after": [
+        "- Next piece: not displayed"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "The main game objects and state variables include the board, current piece, Next piece, fixed blocks, Score, Lines, automatic fall timer, and game state."
+      ],
+      "after": [
+        "The main game objects and state variables include the board, current piece, internal Next piece, fixed blocks, Score, Lines, automatic fall timer, and game state."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "## 3.3 Next Piece",
+        "The Next piece is the tetromino that will become the next current piece. It is displayed in the Next preview area and cannot be directly controlled or manually swapped."
+      ],
+      "after": [
+        "## 3.3 Internal Next Piece",
+        "The `next_piece` is the tetromino that will become the next current piece.",
+        "It cannot be directly controlled or manually swapped and is not displayed anywhere in the interface."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "4. The Next preview is updated."
+      ],
+      "after": [
+        "4. The new `next_piece` remains hidden from the player."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "- Randomly generates new `current_piece` and `next_piece`."
+      ],
+      "after": [
+        "- Randomly generates new `current_piece` and internal `next_piece`."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "- Keeps the new `next_piece` hidden."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "- Restores the normal information display."
+      ],
+      "after": [
+        "- Restores the normal information display without any Next preview."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "- Do not promote the Next piece.",
+        "- Do not generate a new Next piece."
+      ],
+      "after": [
+        "- Do not promote the internal Next piece.",
+        "- Do not generate a new internal Next piece."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "1. Promote `next_piece` to `current_piece`."
+      ],
+      "after": [
+        "1. Promote the internal `next_piece` to `current_piece`."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "3. Randomly generate a new `next_piece`.",
+        "4. Update the Next preview."
+      ],
+      "after": [
+        "3. Randomly generate a new internal `next_piece`.",
+        "4. Keep the new `next_piece` hidden."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "At initialization, the game creates the 600 × 800 px window, board area, information area, empty 10 × 20 board, Score, Lines, current piece, Next piece, automatic fall timer, and game state."
+      ],
+      "after": [
+        "At initialization, the game creates the 600 × 800 px window, board area, information area, empty 10 × 20 board, Score, Lines, current piece, internal Next piece, automatic fall timer, and game state."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "- `next_piece`: randomly generated"
+      ],
+      "after": [
+        "- `next_piece`: randomly generated internally"
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [],
+      "after": [
+        "- Next piece preview: none"
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "6. Promote `next_piece` to `current_piece`."
+      ],
+      "after": [
+        "6. Promote internal `next_piece` to `current_piece`."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "8. Generate a new `next_piece`.",
+        "9. Update the Next preview."
+      ],
+      "after": [
+        "8. Generate a new internal `next_piece`.",
+        "9. Keep the new internal `next_piece` hidden."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "- The Next preview remains visible."
+      ],
+      "after": [
+        "- No Next piece is displayed."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "Pressing R fully resets the board, Score, Lines, current piece, Next piece, automatic fall timer, and game state."
+      ],
+      "after": [
+        "Pressing R fully resets the board, Score, Lines, current piece, internal Next piece, automatic fall timer, and game state."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "Board dimensions, cell size, tetromino types and colors, spawn position, rotation rule, row-clearing rule, and failure conditions remain fixed."
+      ],
+      "after": [
+        "Board dimensions, cell size, tetromino types and colors, spawn position, rotation rule, row-clearing rule, internal Next promotion rule, and failure conditions remain fixed."
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [],
+      "after": [
+        "The upcoming tetromino is not displayed."
+      ]
+    },
+    {
+      "id": "change26",
+      "before": [
+        "- ←: attempt to move 1 cell left.",
+        "- →: attempt to move 1 cell right.",
+        "- ↑: attempt to rotate 90° clockwise.",
+        "- ↓: attempt one additional downward movement."
+      ],
+      "after": [
+        "- `←`: attempt to move 1 cell left.",
+        "- `→`: attempt to move 1 cell right.",
+        "- `↑`: attempt to rotate 90° clockwise.",
+        "- `↓`: attempt one additional downward movement."
+      ]
+    },
+    {
+      "id": "change27",
+      "before": [
+        "The Next preview always displays the upcoming tetromino.",
+        "After a successful lock and row-clear process, the previous Next piece becomes the current piece and a new Next piece is generated."
+      ],
+      "after": [
+        "Internally, after a successful lock and row-clear process, the previous `next_piece` becomes the current piece and a new `next_piece` is generated. Neither upcoming piece is previewed before it becomes current."
+      ]
+    },
+    {
+      "id": "change28",
+      "before": [
+        "Restart clears the board, resets Score and Lines to 0, generates new current and Next pieces, resets the automatic fall timer, and returns the game state to `playing`."
+      ],
+      "after": [
+        "Restart clears the board, resets Score and Lines to 0, generates new current and internal Next pieces, resets the automatic fall timer, and returns the game state to `playing`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "tetris_var05.D2.1.05",
+    "tetris_var05.D2.3.08",
+    "tetris_var05.D2.5.09"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "9b869e2c2acb9eecb215d5d29bf1b3c0bfe88e8f64288d28331d5a79e22d62f0",
+  "checkpoints_sha256": "b0622e9d2cdd4082dae4854b338446ea6a28719d810e65d7259d29f290a89843"
+}

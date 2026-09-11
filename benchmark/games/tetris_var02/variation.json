@@ -1,0 +1,71 @@
+{
+  "instance_id": "tetris_var02",
+  "family_slug": "tetris",
+  "variant_id": "var02",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/8_medium_tetris/8_medium_Tetris_V3.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Tetris"
+      ],
+      "after": [
+        "Tetris_V3"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "- If the key remains held, the action may repeat at most once every 0.12 seconds."
+      ],
+      "after": [
+        "- If the key remains held, the action may repeat at most once every 0.08 seconds."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "The player may also move it left or right, rotate it clockwise, or perform soft drops. Every proposed move or rotation is validated before being applied."
+      ],
+      "after": [
+        "The player may also move it left or right, rotate it clockwise, or perform soft drops.",
+        "A new left, right, or down key-down immediately triggers one corresponding action. If the key remains held, that action may repeat at most once every 0.08 seconds.",
+        "Every proposed move or rotation is validated before being applied."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- ←: attempt to move 1 cell left.",
+        "- →: attempt to move 1 cell right.",
+        "- ↑: attempt to rotate 90° clockwise.",
+        "- ↓: attempt one additional downward movement."
+      ],
+      "after": [
+        "- `←`: attempt to move 1 cell left.",
+        "- `→`: attempt to move 1 cell right.",
+        "- `↑`: attempt to rotate 90° clockwise.",
+        "- `↓`: attempt one additional downward movement."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "While left, right, or down is held, the corresponding action may repeat at most once every 0.08 seconds."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "tetris_var02.D2.2.04",
+    "tetris_var02.D2.2.05",
+    "tetris_var02.D2.2.06"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "9b869e2c2acb9eecb215d5d29bf1b3c0bfe88e8f64288d28331d5a79e22d62f0",
+  "checkpoints_sha256": "91eed2f14a47c648ee455f616eddf050d5c4da5f8f3b816be72749609fd091e9"
+}

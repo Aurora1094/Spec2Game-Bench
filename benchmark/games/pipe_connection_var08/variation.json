@@ -1,0 +1,275 @@
+{
+  "instance_id": "pipe_connection_var08",
+  "family_slug": "pipe_connection",
+  "variant_id": "var08",
+  "variation_types": [
+    "map",
+    "object_type",
+    "combination"
+  ],
+  "source_path": "游戏规格说明（英文）/13_hard_Pipe Connection Puzzle/13_hard_Pipe Connection Puzzle_V9.docx",
+  "corrections": [
+    "Final DOCX takes precedence over spreadsheet draft differences."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "This version uses a modified pipe-type layout. Several ordinary pipe cells use different pipe types from the base puzzle, creating an additional valid branch that may rejoin the Source-reachable network."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [],
+      "after": [
+        "Because water may branch and rejoin in this version, all Source-reachable branches must be evaluated independently."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [],
+      "after": [
+        "If water branches into multiple valid Source-reachable paths and those paths later rejoin, all actually reached branches are highlighted."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "`Click pipe to rotate    Press Space to run water`",
+        "`Connect source to all sinks    Restart: R`"
+      ],
+      "after": [
+        "`Click pipe to rotate Press Space to run water`",
+        "`Connect source to all sinks Restart: R`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "Compared with the base map:",
+        "- `(2,3)` contains a T Pipe instead of a Straight Pipe.",
+        "- `(2,4)` contains a Corner Pipe instead of a T Pipe.",
+        "- `(3,3)` contains a T Pipe instead of a Straight Pipe.",
+        "These modified pipe types follow the normal rotation cycles for their new types."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "The fixed Leak is at:"
+      ],
+      "after": [
+        "The fixed Leak remains at:"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [],
+      "after": [
+        "The modified cells rotate according to their V9 pipe types:",
+        "- `(2,3)` is a T Pipe.",
+        "- `(2,4)` is a Corner Pipe.",
+        "- `(3,3)` is a T Pipe."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- Restores all pipes to their fixed initial orientations."
+      ],
+      "after": [
+        "- Restores the V9 fixed map.",
+        "- Restores every ordinary pipe to its V9 initial pipe type and orientation.",
+        "- Restores `(2,3)` to `TESW`.",
+        "- Restores `(2,4)` to `CNE`.",
+        "- Restores `(3,3)` to `TNES`."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "Row 0: SRC-E | SV   | SV   | TNES | SV   | SNK-W",
+        "Row 1: BLK   | CNE  | TESW | SH   | BLK  | CES",
+        "Row 2: CSW   | BLK  | CNE  | SH   | TWNE | BLK",
+        "Row 3: BLK   | SV   | LEK  | SH   | CNE  | SV",
+        "Row 4: TESW  | BLK  | CES  | CES  | CWN  | BLK",
+        "Row 5: SH    | CNE  | BLK  | BLK  | CES  | SNK-W"
+      ],
+      "after": [
+        "Row 0: SRC-E | SV | SV | TNES | SV | SNK-W",
+        "Row 1: BLK | CNE | TESW | SH | BLK | CES",
+        "Row 2: CSW | BLK | CNE | TESW | CNE | BLK",
+        "Row 3: BLK | SV | LEK | TNES | CNE | SV",
+        "Row 4: TESW | BLK | CES | CES | CWN | BLK",
+        "Row 5: SH | CNE | BLK | BLK | CES | SNK-W"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "Compared with the base map:",
+        "- `(2,3)`: `SH` → `TESW`",
+        "- `(2,4)`: `TWNE` → `CNE`",
+        "- `(3,3)`: `SH` → `TNES`",
+        "The changes above alter pipe types, not only orientations."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "The modified V9 network may contain a Source-reachable branch that reconnects to another Source-reachable pipe."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "A branch that later rejoins another valid Source-reachable pipe is not a Leak as long as every adjacent connection is bidirectionally valid."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "If an outlet points directly into the fixed Leak cell:"
+      ],
+      "after": [
+        "If an outlet points directly into the fixed Leak cell at `(3,2)`:"
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [],
+      "after": [
+        "A valid branch or loop does not itself contribute a Leak."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [],
+      "after": [
+        "If multiple valid paths branch and rejoin:",
+        "- All traversed branches are highlighted in blue.",
+        "- Rejoining does not terminate other valid traversal branches."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "This shows that water physically reached that outlet even though propagation could not continue."
+      ],
+      "after": []
+    },
+    {
+      "id": "change17",
+      "before": [
+        "At initialization, the game creates the interface areas and fixed 6 × 6 board.",
+        "All pipes use their predefined initial orientations."
+      ],
+      "after": [
+        "At initialization, the game creates the interface areas and the V9 fixed 6 × 6 board."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [],
+      "after": [
+        "- Source: `(0,0)`",
+        "- Sink 1: `(0,5)`",
+        "- Sink 2: `(5,5)`",
+        "- Leak: `(3,2)`"
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [],
+      "after": [
+        "The modified ordinary pipes begin as:",
+        "- `(2,3)`: `TESW`",
+        "- `(2,4)`: `CNE`",
+        "- `(3,3)`: `TNES`"
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [],
+      "after": [
+        "Each modified pipe follows the rotation cycle of its V9 pipe type."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "6. Evaluate every actual outgoing direction of each reached pipe.",
+        "7. Count each independent invalid outlet exactly once.",
+        "8. Highlight reached pipe channels in blue.",
+        "9. Display a red X at every invalid outlet.",
+        "10. Record whether each Sink is reached.",
+        "11. Resolve the submitted result."
+      ],
+      "after": [
+        "6. Allow valid branches to rejoin without treating the rejoining connection as a Leak.",
+        "7. Evaluate every actual outgoing direction of each reached pipe.",
+        "8. Count each independent invalid outlet exactly once.",
+        "9. Highlight reached pipe channels in blue.",
+        "10. Display a red X at every invalid outlet.",
+        "11. Record whether each Sink is reached.",
+        "12. Resolve the submitted result."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "Restart restores the same fixed puzzle."
+      ],
+      "after": [
+        "Restart restores the V9 fixed puzzle."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "The player's goal is to configure the fixed pipe network within at most 30 successful rotations so that Source water reaches both Sinks without producing any invalid Source-reachable outlet."
+      ],
+      "after": [
+        "The player's goal is to configure the modified pipe network within at most 30 successful rotations so that Source water reaches both Sinks without producing any invalid Source-reachable outlet.",
+        "The modified pipe types can create branching and rejoining Source-reachable paths, and all such paths must satisfy the same bidirectional connection rules."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "- Source-reachable channels are highlighted in blue."
+      ],
+      "after": [
+        "- All Source-reachable traversed channels are highlighted in blue.",
+        "- Valid branches and rejoining paths remain blue."
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [
+        "R restores the initial map, clears all water-flow results, and returns the game to `editing`."
+      ],
+      "after": [
+        "R restores the V9 initial map, including all modified pipe types and orientations, clears all water-flow results, and returns the game to `editing`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "pipe_connection_var08.D2.1.04",
+    "pipe_connection_var08.D2.2.07",
+    "pipe_connection_var08.D2.5.04",
+    "pipe_connection_var08.D2.2.09",
+    "pipe_connection_var08.D2.3.11"
+  ],
+  "added_checkpoint_ids": [
+    "pipe_connection_var08.D2.2.09",
+    "pipe_connection_var08.D2.3.11"
+  ],
+  "base_checkpoints_sha256": "81842a961e20164b1af130002c9a8ab35beeedb93f7f148ef4bbafae418571f6",
+  "checkpoints_sha256": "79235e1fb04025b6c20afc702f4e89435febe8a10121bc7f1833c2bf226eb3c9"
+}

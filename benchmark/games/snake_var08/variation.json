@@ -1,0 +1,222 @@
+{
+  "instance_id": "snake_var08",
+  "family_slug": "snake",
+  "variant_id": "var08",
+  "variation_types": [
+    "object_type",
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/1_easy_Snake/1_easy_Snake_V9.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Each time the snake collects food, its length increases by 1, the score increases by 1, and a new food item is randomly spawned on an unoccupied grid cell."
+      ],
+      "after": [
+        "The game contains normal food and golden food. Each time a food item is collected, the snake's length increases by 1. Normal food increases the score by 1, while golden food increases the score by 2.",
+        "After a food item is collected, one new food item is randomly spawned on an unoccupied grid cell.",
+        "Each new food spawn independently has an 80% probability of being normal food and a 20% probability of being golden food."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "The snake is drawn using orange blocks, and the food is drawn using a brown block."
+      ],
+      "after": [
+        "The snake is drawn using orange blocks.",
+        "Normal food is drawn using a brown block, and golden food is drawn using a clearly distinguishable gold or yellow block."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- Food: exactly one item randomly spawned on a grid cell not occupied by the snake"
+      ],
+      "after": [
+        "- Food: exactly one randomly spawned item on a grid cell not occupied by the snake",
+        "- Initial food type: independently selected using the same 80% normal / 20% golden probability"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "If food is collected, the snake's length increases by 1."
+      ],
+      "after": [
+        "If any food is collected, the snake's length increases by 1."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "Food has two possible types:",
+        "- Normal food",
+        "- Golden food"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [],
+      "after": [
+        "For every food spawn:",
+        "- Normal food probability: 80%",
+        "- Golden food probability: 20%"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "The game does not include special food, timed food, bonus food, or other food types."
+      ],
+      "after": [
+        "Normal food:",
+        "- Color: brown",
+        "- Score reward: +1",
+        "- Snake growth: +1",
+        "Golden food:",
+        "- Color: gold or yellow",
+        "- Score reward: +2",
+        "- Snake growth: +1",
+        "The game does not include timed food, additional bonus food types, or simultaneous multiple food items."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "Score records the number of food items collected.",
+        "The initial score is 0. Each valid food collection increases the score by 1 and immediately updates the top information display to `Score: X`."
+      ],
+      "after": [
+        "Score records the points earned from collected food.",
+        "The initial score is 0.",
+        "Collecting:",
+        "- Normal food increases Score by 1.",
+        "- Golden food increases Score by 2.",
+        "After each valid food collection, the top information display immediately updates to `Score: X`."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "If the snake collects food, the tail is retained, causing the snake's length to increase by 1."
+      ],
+      "after": [
+        "If the snake collects either type of food, the tail is retained, causing the snake's length to increase by 1."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "When food is collected:"
+      ],
+      "after": [
+        "When normal food is collected:"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "Only one normal food item may exist at any time."
+      ],
+      "after": [
+        "When golden food is collected:",
+        "- Score increases by 2.",
+        "- Snake length increases by 1.",
+        "- The collected food is removed.",
+        "- One new food item is randomly spawned on a valid unoccupied grid cell.",
+        "For each newly spawned food item:",
+        "- 80% probability: normal food",
+        "- 20% probability: golden food",
+        "Only one food item may exist at any time."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "If the current movement collects food, the tail is retained. The current tail cell therefore remains occupied and is included in self-collision detection."
+      ],
+      "after": [
+        "If the current movement collects normal or golden food, the tail is retained. The current tail cell therefore remains occupied and is included in self-collision detection."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "4. Determine whether the new head position reaches the food."
+      ],
+      "after": [
+        "4. Determine whether the new head position reaches the current food item and identify its type."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "8. If food was collected, increase the score by 1, remove the collected food, and spawn one new valid food item."
+      ],
+      "after": [
+        "8. If food was collected:",
+        "   - Increase Score by 1 for normal food or 2 for golden food.",
+        "   - Remove the collected food.",
+        "   - Spawn one new food item on a valid unoccupied grid cell using the 80% normal / 20% golden probability."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "- Food: one randomly spawned valid item"
+      ],
+      "after": [
+        "- Food: one randomly spawned valid item whose type is selected using the 80% normal / 20% golden probability"
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "When the snake collects food, the score and snake length each increase by 1 and a new food item is spawned."
+      ],
+      "after": [
+        "When the snake collects normal food, the score increases by 1 and snake length increases by 1.",
+        "When the snake collects golden food, the score increases by 2 and snake length increases by 1.",
+        "After either type is collected, a new food item is spawned using the defined food-type probabilities."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "Each food collection immediately increases X by 1."
+      ],
+      "after": [
+        "Normal food:",
+        "- Score +1",
+        "- Snake length +1",
+        "Golden food:",
+        "- Score +2",
+        "- Snake length +1"
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "After `game_over`, pressing R restores the snake to its initial length and configuration, resets the direction to right and score to 0, generates one new valid food item, restores the normal gameplay instructions, and returns the game state to `playing`."
+      ],
+      "after": [
+        "After `game_over`, pressing R restores the snake to its initial length and configuration, resets the direction to right and score to 0, generates one new valid food item using the defined food-type probability, restores the normal gameplay instructions, and returns the game state to `playing`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "snake_var08.D2.3.05",
+    "snake_var08.D2.1.06",
+    "snake_var08.D2.3.11"
+  ],
+  "added_checkpoint_ids": [
+    "snake_var08.D2.1.06",
+    "snake_var08.D2.3.11"
+  ],
+  "base_checkpoints_sha256": "c774c0fc0b96c633aa1e7103fbc3d2e9fdf4b008561d785560907ca5b0ba250d",
+  "checkpoints_sha256": "d3f73d0a74a3284bfd9af0dc72cfe6e3b273f11325c563827796941bce9c83df"
+}

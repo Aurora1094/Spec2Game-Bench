@@ -1,0 +1,357 @@
+{
+  "instance_id": "mini_zelda_var06",
+  "family_slug": "mini_zelda",
+  "variant_id": "var06",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/15_hard_Mini Zelda-like Room Adventure/15_hard_Mini Zelda-like Room Adventure_V7.docx",
+  "corrections": [
+    "Final DOCX takes precedence over spreadsheet draft differences."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "`Room A → Room C → Room B → obtain Key 1 → Room C → unlock Room D → obtain Key 2 → Room C → unlock Room E → open the treasure chest → Victory`"
+      ],
+      "after": [
+        "`Room A → Room C → Room B → obtain Key 1 → Room C → unlock Room D while retaining Key 1 → obtain Key 2 → Room C → use Key 1 and Key 2 together to unlock Room E → open the treasure chest → Victory`"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "Spawned or collected Keys, unlocked doors, surviving enemy HP and positions, Guard behavior states and patrol directions, and the treasure chest state are preserved across room transitions.",
+        "A custom rule is the sequential dependency between Key 1 and Key 2. The player must first clear Room B to obtain Key 1 and unlock Room D, then clear Room D to obtain Key 2 and unlock Room E."
+      ],
+      "after": [
+        "Spawned or collected Keys, currently held Keys, unlocked doors, surviving enemy HP and positions, Guard behavior states and patrol directions, and the treasure chest state are preserved across room transitions.",
+        "Key 1 is required to unlock Room D but is not consumed when Room D is unlocked. The player must retain Key 1, obtain Key 2 in Room D, and then hold both Key 1 and Key 2 simultaneously to unlock Room E."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [],
+      "after": [
+        "`Keys` displays the number of currently held Keys.",
+        "Under normal progression:",
+        "`Keys: 0 → Keys: 1 → Keys: 2 → Keys: 0`",
+        "Unlocking Room D does not decrease Keys.",
+        "Unlocking Room E consumes both held Keys and decreases Keys by 2."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "`WASD: Move    Space: Attack`"
+      ],
+      "after": [
+        "`WASD: Move Space: Attack`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "          Room B",
+        "            |"
+      ],
+      "after": [
+        "       Room B",
+        "         |"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "            |",
+        "          Room E"
+      ],
+      "after": [
+        "         |",
+        "       Room E"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Room C ↔ Room E: initially locked, requires Key 2"
+      ],
+      "after": [
+        "- Room C ↔ Room E: initially locked, requires Key 1 and Key 2 simultaneously",
+        "Unlocking the C-D door does not consume Key 1.",
+        "Unlocking the C-E door consumes both Key 1 and Key 2."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- Bottom to Room E: y = 600, x = 370–430, initially locked by Key 2"
+      ],
+      "after": [
+        "- Bottom to Room E: y = 600, x = 370–430, initially locked by Key 1 and Key 2"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "When a Key is used:",
+        "- `held = false`",
+        "- `collected` remains true",
+        "The top `Keys` value counts only currently held, unconsumed Keys."
+      ],
+      "after": [
+        "When Room D is unlocked:",
+        "- `key1_held` remains true.",
+        "- `key1_collected` remains true.",
+        "When Room E is unlocked:",
+        "- `key1_held = false`",
+        "- `key2_held = false`",
+        "- `key1_collected = true`",
+        "- `key2_collected = true`",
+        "The top `Keys` value counts currently held Keys."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "A collected Key cannot spawn or be collected again."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "The C-E door requires Key 2.",
+        "When the player attempts to pass through a locked door, the corresponding `held` state is checked before physical blocking.",
+        "If the required Key is not held:",
+        "- Keep the door locked."
+      ],
+      "after": [
+        "The C-E door requires both Key 1 and Key 2 simultaneously.",
+        "### C-D Door",
+        "When the player attempts to pass through the locked C-D door, check:",
+        "`key1_held`",
+        "If `key1_held = false`:",
+        "- Keep the C-D door locked."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "If the required Key is held:",
+        "- Consume the Key.",
+        "- Set the corresponding `held = false`.",
+        "- Decrease Keys by 1.",
+        "- Set the corresponding door unlocked.",
+        "- Permit transition through that door during the same frame.",
+        "The actual room transition is still performed during the unified room-transition stage."
+      ],
+      "after": [
+        "If `key1_held = true`:",
+        "- Keep `key1_held = true`.",
+        "- Keep Keys unchanged.",
+        "- Set `door_d_unlocked = true`.",
+        "- Permit transition into Room D during the same frame.",
+        "After unlocking, the C-D door remains permanently open and passable in both directions.",
+        "Returning through the C-D door does not check Key 1 again.",
+        "### C-E Door",
+        "When the player attempts to pass through the locked C-E door, check:",
+        "- `key1_held`",
+        "- `key2_held`",
+        "If either required Key is not held:",
+        "- Keep the C-E door locked.",
+        "- Treat the door as a physical barrier.",
+        "- Do not allow transition.",
+        "- Do not consume either Key.",
+        "- Keep Keys unchanged.",
+        "- Display `Locked`.",
+        "If both required Keys are held:",
+        "- Set `key1_held = false`.",
+        "- Set `key2_held = false`.",
+        "- Keep both `collected` states true.",
+        "- Decrease Keys by exactly 2.",
+        "- Set `door_e_unlocked = true`.",
+        "- Permit transition into Room E during the same frame."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "- The door remains permanently open."
+      ],
+      "after": [
+        "- The C-E door remains permanently open."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "- The Key is never checked or consumed again."
+      ],
+      "after": [
+        "- Neither Key is checked again."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "- Right-side door → message appears to the left",
+        "- Bottom-side door → message appears above"
+      ],
+      "after": [
+        "- Right-side door message appears to the left.",
+        "- Bottom-side door message appears above."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [],
+      "after": [
+        "For the C-E door, missing either Key is sufficient to display `Locked`."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [],
+      "after": [
+        "In particular:",
+        "- `key1_held` remains true after the C-D door is unlocked.",
+        "- `door_d_unlocked` remains true permanently.",
+        "- Key 1 remains held across Room C ↔ Room D transitions.",
+        "- After Key 2 is collected, both `key1_held` and `key2_held` may be true simultaneously.",
+        "- After the C-E door is unlocked, both held states become false and `door_e_unlocked` remains true."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "   - For locked doors, check required Key before applying physical blocking."
+      ],
+      "after": [
+        "   - For the C-D door, check Key 1 before physical blocking.",
+        "   - If Key 1 is held, unlock the C-D door without consuming Key 1.",
+        "   - For the C-E door, check Key 1 and Key 2 before physical blocking.",
+        "   - If both Keys are held, consume both and unlock the C-E door."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "   - Doors unlocked through Key consumption during this frame"
+      ],
+      "after": [
+        "   - Doors unlocked during this frame"
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [],
+      "after": [
+        "When the C-D door is unlocked:",
+        "- `key1_held` remains true.",
+        "- Keys does not change.",
+        "- Transition into Room D may occur during the same frame.",
+        "When the C-E door is unlocked:",
+        "- `key1_held = false`",
+        "- `key2_held = false`",
+        "- Keys decreases by 2.",
+        "- Transition into Room E may occur during the same frame."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "6. Use Key 1 to permanently unlock Room D.",
+        "7. Enter Room D."
+      ],
+      "after": [
+        "6. Use Key 1 to permanently unlock Room D without consuming Key 1.",
+        "7. Enter Room D while still holding Key 1."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "10. Return to Room C.",
+        "11. Use Key 2 to permanently unlock Room E.",
+        "12. Enter Room E.",
+        "13. Contact the final treasure chest.",
+        "14. Open the chest and obtain the treasure.",
+        "15. Enter Victory if HP remains above 0."
+      ],
+      "after": [
+        "10. Hold Key 1 and Key 2 simultaneously.",
+        "11. Return to Room C.",
+        "12. Use both Key 1 and Key 2 to permanently unlock Room E.",
+        "13. Consume both Keys.",
+        "14. Enter Room E.",
+        "15. Contact the final treasure chest.",
+        "16. Open the chest and obtain the treasure.",
+        "17. Enter Victory if HP remains above 0."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "- Unlock Room D."
+      ],
+      "after": [
+        "- Unlock Room D without consuming Key 1.",
+        "- Retain Key 1."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "- Unlock Room E."
+      ],
+      "after": [
+        "- Hold Key 1 and Key 2 simultaneously.",
+        "- Use both Keys to unlock Room E."
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [
+        "- Spawned Keys use gold graphics.",
+        "- Collection removes the Key immediately.",
+        "- Keys updates immediately.",
+        "- Keys represents only currently held, unconsumed Keys.",
+        "Locked-door feedback:",
+        "- Missing required Key → display `Locked`.",
+        "- Successful unlock → change the door to an open entrance.",
+        "- Once unlocked, the door remains permanently passable."
+      ],
+      "after": [
+        "- Collect Key 1 → `Keys: 1`",
+        "- Unlock Room D → Key 1 remains held and `Keys: 1`",
+        "- Collect Key 2 → `Keys: 2`",
+        "- Attempt Room E without both Keys → display `Locked`; consume nothing",
+        "- Unlock Room E with both Keys → consume both and set `Keys: 0`",
+        "Once a door is unlocked, it remains permanently passable."
+      ]
+    },
+    {
+      "id": "change26",
+      "before": [
+        "- C-D and C-E doors restored to locked"
+      ],
+      "after": [
+        "- C-D door restored to locked and requiring Key 1",
+        "- C-E door restored to locked and requiring both Key 1 and Key 2"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "mini_zelda_var06.D2.3.18",
+    "mini_zelda_var06.D2.3.19",
+    "mini_zelda_var06.D2.5.02",
+    "mini_zelda_var06.D2.3.21"
+  ],
+  "added_checkpoint_ids": [
+    "mini_zelda_var06.D2.3.21"
+  ],
+  "base_checkpoints_sha256": "1e56b3ca7b602293b90ac54d2ecebc5f7a4483be506870a833a77652c49dc967",
+  "checkpoints_sha256": "5465f55e6b132f4c4e623d64bff8ed32b9b97d97be1174ad36c5e147aa70c0c6"
+}

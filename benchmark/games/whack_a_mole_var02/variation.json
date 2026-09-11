@@ -1,0 +1,81 @@
+{
+  "instance_id": "whack_a_mole_var02",
+  "family_slug": "whack_a_mole",
+  "variant_id": "var02",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/3_easy_Whack-a-Hole/3_easy_Whack-a-Mole_V3.docx",
+  "corrections": [
+    "Mapped the Whack-a-Hole source folder to whack_a_mole."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "- Normal Mole: worth 1 point and visible for 1.0 second.",
+        "- Golden Mole: worth 3 points and visible for 0.6 seconds."
+      ],
+      "after": [
+        "- Normal Mole: worth 1 point and visible for 0.8 seconds.",
+        "- Golden Mole: worth 3 points and visible for 0.5 seconds."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "A Normal Mole has a size of 60 × 60 px, remains visible for at most 1.0 second, and awards 1 point when successfully clicked.",
+        "A Golden Mole has the same size, remains visible for at most 0.6 seconds, and awards 3 points when successfully clicked."
+      ],
+      "after": [
+        "A Normal Mole has a size of 60 × 60 px, remains visible for at most 0.8 seconds, and awards 1 point when successfully clicked.",
+        "A Golden Mole has the same size, remains visible for at most 0.5 seconds, and awards 3 points when successfully clicked."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "If a Normal Mole remains unclicked for 1.0 second, or a Golden Mole remains unclicked for 0.6 seconds, it disappears automatically. Missing a mole does not reduce the score or create any other penalty."
+      ],
+      "after": [
+        "If a Normal Mole remains unclicked for 0.8 seconds, or a Golden Mole remains unclicked for 0.5 seconds, it disappears automatically. Missing a mole does not reduce the score or create any other penalty."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "Normal Mole appearance duration is fixed at 1.0 second, Golden Mole appearance duration is fixed at 0.6 seconds, and the waiting period between moles is fixed at 0.3 seconds. These values do not change according to score, elapsed time, or the number of previously spawned moles."
+      ],
+      "after": [
+        "Normal Mole appearance duration is fixed at 0.8 seconds, Golden Mole appearance duration is fixed at 0.5 seconds, and the waiting period between moles is fixed at 0.3 seconds. These values do not change according to score, elapsed time, or the number of previously spawned moles."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "The game contains no difficulty progression. Total duration remains 30 seconds, both initial and between-mole waiting periods remain 0.3 seconds, Normal Mole duration remains 1.0 second, Golden Mole duration remains 0.6 seconds, and Golden Mole probability remains 20%."
+      ],
+      "after": [
+        "The game contains no difficulty progression. Total duration remains 30 seconds, both initial and between-mole waiting periods remain 0.3 seconds, Normal Mole duration remains 0.8 seconds, Golden Mole duration remains 0.5 seconds, and Golden Mole probability remains 20%."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "During `playing`, the bottom instruction area displays `Click the mole` and `Restart: R`. When Time reaches 0, the game enters `game_over`, the current mole disappears, Score stops changing, and the bottom area displays `Game Over` and `Press R to Restart`."
+      ],
+      "after": [
+        "During `playing`, the bottom instruction area displays `Click the mole` and `Restart: R`.",
+        "When Time reaches 0, the game enters `game_over`, the current mole disappears, Score stops changing, and the bottom area displays `Game Over` and `Press R to Restart`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "whack_a_mole_var02.D2.3.02",
+    "whack_a_mole_var02.D2.3.04",
+    "whack_a_mole_var02.D2.4.04"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "43d84d8468fbefa4975d64dd345cc4462cfd75494319b4b1da4704f95a3b403b",
+  "checkpoints_sha256": "f1deaad1baf73a29246401dbf2b0dbf0f9cccb0723d3f78559b5842a32aa267a"
+}

@@ -1,0 +1,122 @@
+{
+  "instance_id": "tetris_var04",
+  "family_slug": "tetris",
+  "variant_id": "var04",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/8_medium_tetris/8_medium_Tetris_V5.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "A soft-drop action attempts to move the current piece downward by up to 2 cells using sequential validity checks."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "The down arrow key performs an additional attempt to move the current piece downward by 1 cell.",
+        "If the downward movement is valid:",
+        "- Move the piece downward by 1 cell.",
+        "If the downward movement is invalid:",
+        "- Immediately begin the locking process."
+      ],
+      "after": [
+        "The down arrow key performs one soft-drop action that attempts to move the current piece downward by up to 2 cells.",
+        "The movement is resolved sequentially:",
+        "1. Test the position 1 cell below the current position.",
+        "2. If the 1-cell-down position is invalid, immediately begin the locking process.",
+        "3. If the 1-cell-down position is valid, test the position 2 cells below the original position.",
+        "4. If both the 1-cell-down and 2-cell-down positions are valid, move the piece downward by exactly 2 cells.",
+        "5. If the 1-cell-down position is valid but the 2-cell-down position is invalid, move the piece downward by exactly 1 cell and do not lock during that soft-drop action.",
+        "This sequential check prevents the piece from skipping through an occupied cell or the bottom boundary."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [],
+      "after": [
+        "Each repeated down action follows the same up-to-2-cell soft-drop rule."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "A piece enters the locking process only when a downward movement attempt fails.",
+        "This includes:",
+        "- Failed automatic fall.",
+        "- Failed soft drop."
+      ],
+      "after": [
+        "A piece enters the locking process when:",
+        "- An automatic 1-cell downward movement attempt fails.",
+        "- The first 1-cell step of a soft-drop action is invalid.",
+        "If the first soft-drop step is valid but the second step is invalid, the piece moves down by 1 cell and does not lock during that action."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "- Failure of only the second cell of a 2-cell soft-drop attempt."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "The player may also move it left or right, rotate it clockwise, or perform soft drops. Every proposed move or rotation is validated before being applied."
+      ],
+      "after": [
+        "The player may also move it left or right, rotate it clockwise, or perform soft drops.",
+        "Each soft-drop action first tests one cell downward. If that position is invalid, locking begins immediately. If it is valid, the game tests a second cell downward. The piece moves down by 2 cells when both steps are valid, or by 1 cell when only the first step is valid.",
+        "Every proposed move or rotation is validated before being applied."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "If an automatic fall or soft-drop attempt fails, the current piece immediately enters the locking process."
+      ],
+      "after": []
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- ←: attempt to move 1 cell left.",
+        "- →: attempt to move 1 cell right.",
+        "- ↑: attempt to rotate 90° clockwise.",
+        "- ↓: attempt one additional downward movement."
+      ],
+      "after": [
+        "- `←`: attempt to move 1 cell left.",
+        "- `→`: attempt to move 1 cell right.",
+        "- `↑`: attempt to rotate 90° clockwise.",
+        "- `↓`: attempt to soft-drop by up to 2 cells.",
+        "A soft-drop action:",
+        "- Moves 2 cells if both sequential downward positions are valid.",
+        "- Moves 1 cell if only the first downward position is valid.",
+        "- Begins locking if the first downward position is invalid."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "A failed downward movement immediately begins the locking process."
+      ],
+      "after": []
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "tetris_var04.D2.2.04",
+    "tetris_var04.D2.3.02",
+    "tetris_var04.D2.2.07"
+  ],
+  "added_checkpoint_ids": [
+    "tetris_var04.D2.2.07"
+  ],
+  "base_checkpoints_sha256": "9b869e2c2acb9eecb215d5d29bf1b3c0bfe88e8f64288d28331d5a79e22d62f0",
+  "checkpoints_sha256": "e89197053cb4c67b7c58b8f9128c556110f952f807d7c59c65d9fa93a100a1b5"
+}

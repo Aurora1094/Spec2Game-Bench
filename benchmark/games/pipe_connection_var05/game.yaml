@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "slug": "pipe_connection_var05",
+  "name": "Pipe Connection Puzzle",
+  "difficulty": "hard",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [],
+  "window_size": [
+    600,
+    800
+  ],
+  "source_audit": {
+    "docx_sha256": "5a45d0abd8c20a1fd9971cedfa7cf96d2b903f33fd69278b409d9c575e91534c",
+    "base_checkpoints_sha256": "81842a961e20164b1af130002c9a8ab35beeedb93f7f148ef4bbafae418571f6",
+    "checkpoint_count": 36
+  },
+  "family_slug": "pipe_connection",
+  "variant_id": "var05",
+  "variation_types": [
+    "map",
+    "combination"
+  ]
+}

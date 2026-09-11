@@ -1,0 +1,271 @@
+{
+  "instance_id": "carrot_defense_var03",
+  "family_slug": "carrot_defense",
+  "variant_id": "var03",
+  "variation_types": [
+    "object_count",
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/11_hard_Carrot Defense-like/11_hard_Carrot Defense-like_V4.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Carrot Defense-like"
+      ],
+      "after": [
+        "Carrot Defense-like_V4"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "Carrot Defense-like is a single-level tower defense game. The player builds defensive towers on a fixed grid map to prevent enemies from following a predefined path and reaching the carrot target on the right side."
+      ],
+      "after": [
+        "Carrot Defense-like_V4 is a single-level tower defense game. The player builds defensive towers on a fixed grid map to prevent enemies from following a predefined path and reaching the carrot target on the right side."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "The game contains 4 fixed waves. Enemies spawn in a predefined order and move along a fixed path toward the carrot."
+      ],
+      "after": [
+        "The game contains 5 fixed waves. Enemies spawn in a predefined order and move along a fixed path toward the carrot."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "The player's goal is to complete all 4 waves while keeping carrot HP above 0.",
+        "If carrot HP reaches 0 or below at any time, the game immediately ends in Failure. After Wave 4 has fully ended, the player wins if carrot HP remains greater than 0."
+      ],
+      "after": [
+        "The player's goal is to complete all 5 waves while keeping carrot HP above 0.",
+        "If carrot HP reaches 0 or below at any time, the game immediately ends in Failure. After Wave 5 has fully ended, the player wins if carrot HP remains greater than 0."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Current Wave, such as `Wave: 1/4`"
+      ],
+      "after": [
+        "- Current Wave, such as `Wave: 1/5`"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "(0,2) → (1,2) → (2,2) → (3,2) → (4,2) → (5,2)",
+        "                                             ↓",
+        "                                           (5,3)",
+        "                                             ↓",
+        "                                           (5,4)",
+        "                                             ↓",
+        "                                           (5,5)",
+        "                                             ↓",
+        "(6,5) → (7,5) → (8,5) → (9,5)"
+      ],
+      "after": [
+        "(0,2) (1,2) (2,2) (3,2) (4,2) (5,2)"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "                            (9,4)"
+      ],
+      "after": [
+        "                            (5,3)"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "                            (9,3)"
+      ],
+      "after": [
+        "                            (5,4)"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "                          (10,3) → (11,3)"
+      ],
+      "after": [
+        "                            (5,5)",
+        "                              ↓",
+        "(6,5) (7,5) (8,5) (9,5)",
+        "                  ↑",
+        "                (9,4)",
+        "                  ↑",
+        "                (9,3) (10,3) (11,3)"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "Victory after Wave 4 requires carrot HP to remain strictly greater than 0."
+      ],
+      "after": [
+        "Victory after Wave 5 requires carrot HP to remain strictly greater than 0."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "The game contains 4 non-overlapping Waves."
+      ],
+      "after": [
+        "The game contains 5 non-overlapping Waves."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "After Waves 1–3 end, the game enters a 3-second preparation phase."
+      ],
+      "after": [
+        "| Wave 5 | Normal, Fast, Tank, Fast, Normal, Tank, Fast, Normal, Fast, Tank, Normal, Fast, Tank, Fast |",
+        "Wave 5 contains:",
+        "- 4 Normal Enemies",
+        "- 6 Fast Enemies",
+        "- 4 Tank Enemies",
+        "- 14 enemies in total",
+        "After Waves 1–4 end, the game enters a 3-second preparation phase."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "Wave 4 has no subsequent preparation phase."
+      ],
+      "after": [
+        "Wave 5 has no subsequent preparation phase."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "After Wave 4 has fully resolved, the game enters `victory` only if carrot HP remains greater than 0."
+      ],
+      "after": [
+        "After Wave 5 has fully resolved, the game enters `victory` only if carrot HP remains greater than 0."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "When Waves 1–3 end normally:"
+      ],
+      "after": [
+        "When Waves 1–4 end normally:"
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [],
+      "after": [
+        "Wave 5 is the final Wave and does not enter a subsequent preparation phase."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "Wave 4 is also eligible for the reward."
+      ],
+      "after": [
+        "Wave 5 is also eligible for the reward."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "## 5.6 Wave 4 Final Settlement",
+        "When every Wave 4 enemy has been resolved and carrot HP remains greater than 0:",
+        "1. Determine whether Wave 4 qualifies for Perfect Wave."
+      ],
+      "after": [
+        "## 5.6 Wave 5 Final Settlement",
+        "When every Wave 5 enemy has been resolved and carrot HP remains greater than 0:",
+        "1. Determine whether Wave 5 qualifies for Perfect Wave."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "If carrot HP reaches 0 or below at any point, including while the final Wave 4 enemy is being resolved, the game enters `failure` immediately instead."
+      ],
+      "after": [
+        "If carrot HP reaches 0 or below at any point, including while the final Wave 5 enemy is being resolved, the game enters `failure` immediately instead."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "- Wave 4 has fully ended."
+      ],
+      "after": [
+        "- Wave 5 has fully ended."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "If all enemies in Waves 1–3 are resolved while carrot HP remains above 0:"
+      ],
+      "after": [
+        "If all enemies in Waves 1–4 are resolved while carrot HP remains above 0:"
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "After Wave 4 is fully resolved while carrot HP remains above 0:"
+      ],
+      "after": [
+        "After Wave 5 is fully resolved while carrot HP remains above 0:"
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "The player's goal is to use Gold effectively across all 4 Waves, build and adjust defensive towers, prevent enemies from reaching the carrot, and keep carrot HP above 0."
+      ],
+      "after": [
+        "The player's goal is to use Gold effectively across all 5 Waves, build and adjust defensive towers, prevent enemies from reaching the carrot, and keep carrot HP above 0."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "Victory occurs only after all Wave 4 enemies have been resolved while:"
+      ],
+      "after": [
+        "Victory occurs only after all Wave 5 enemies have been resolved while:"
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [
+        "If Wave 4 is perfect, its +30 Gold reward is applied before entering Victory."
+      ],
+      "after": [
+        "If Wave 5 is perfect, its +30 Gold reward is applied before entering Victory."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "carrot_defense_var03.D2.5.02",
+    "carrot_defense_var03.D2.4.07"
+  ],
+  "added_checkpoint_ids": [
+    "carrot_defense_var03.D2.4.07"
+  ],
+  "base_checkpoints_sha256": "763a94a35ba4ffa1473059ff4dc233b43d72a986810cc0d7664282192c535c37",
+  "checkpoints_sha256": "8c4580dd608013eaf45f5062e3bc9a37836e64aaa1d5f166ac3c6987b4e61028"
+}

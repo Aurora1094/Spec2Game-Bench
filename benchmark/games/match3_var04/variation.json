@@ -1,0 +1,228 @@
+{
+  "instance_id": "match3_var04",
+  "family_slug": "match3",
+  "variant_id": "var04",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/9_medium_Match-3/9_medium_Match-3_V5.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "If the resulting board contains at least one horizontal or vertical sequence of 3 or more gems of the same type, the swap is valid and remains in place."
+      ],
+      "after": [
+        "If the resulting board contains at least one horizontal, vertical, or diagonal sequence of 3 or more gems of the same type, the swap is valid and remains in place."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "At the start of the game, the board is randomly generated as a full 8 × 8 board with no horizontal or vertical match of 3 or more identical gems."
+      ],
+      "after": [
+        "At the start of the game, the board is randomly generated as a full 8 × 8 board with no horizontal, vertical, or diagonal match of 3 or more identical gems."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`Only valid matches stay    Restart: R`"
+      ],
+      "after": [
+        "`Horizontal, vertical, or diagonal matches stay    Restart: R`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- Free of horizontal or vertical matches of 3 or more."
+      ],
+      "after": [
+        "- Free of horizontal, vertical, or diagonal matches of 3 or more."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "If one gem belongs to both a horizontal and vertical match in the same clearing round, it is cleared once and contributes +10 once."
+      ],
+      "after": [
+        "If one gem belongs to multiple horizontal, vertical, or diagonal matches in the same clearing round, it is cleared once and contributes +10 once."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "Therefore, only up, down, left, and right adjacency is valid.",
+        "Diagonal adjacency is not valid."
+      ],
+      "after": [
+        "Therefore, only up, down, left, and right adjacency is valid for swapping.",
+        "Diagonal adjacency is not valid for swapping."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "2. Check the entire resulting board for horizontal or vertical matches of 3 or more."
+      ],
+      "after": [
+        "2. Check the entire resulting board for horizontal, vertical, or diagonal matches of 3 or more."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- Generate a new full 8 × 8 board with no initial match."
+      ],
+      "after": [
+        "- Generate a new full 8 × 8 board with no initial horizontal, vertical, or diagonal match."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "The initial board must contain no horizontal or vertical sequence of 3 or more identical gems."
+      ],
+      "after": [
+        "The initial board must contain no horizontal, vertical, or diagonal sequence of 3 or more identical gems."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "Diagonal sequences do not count.",
+        "Sequences of 4 or 5 gems are ordinary matches and do not create special gems."
+      ],
+      "after": [
+        "A descending diagonal match consists of 3 or more consecutive gems of the same type along positions where both row and column increase by 1.",
+        "An ascending diagonal match consists of 3 or more consecutive gems of the same type along positions where row increases by 1 while column decreases by 1.",
+        "Sequences of 4, 5, or more gems in any valid match direction are ordinary matches and do not create special gems."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "All horizontal and vertical matches must be identified before clearing begins."
+      ],
+      "after": [
+        "All horizontal, vertical, ascending-diagonal, and descending-diagonal matches must be identified before clearing begins."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "If at least one match exists anywhere on the board:"
+      ],
+      "after": [
+        "If at least one horizontal, vertical, or diagonal match exists anywhere on the board:"
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "1. Detect all current matches across the board."
+      ],
+      "after": [
+        "1. Detect all current horizontal, vertical, and diagonal matches across the board."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "If refilling creates one or more matches, those matches are handled as automatic chains."
+      ],
+      "after": [
+        "If refilling creates one or more horizontal, vertical, or diagonal matches, those matches are handled as automatic chains."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "If any match exists:"
+      ],
+      "after": [
+        "If any horizontal, vertical, or diagonal match exists:"
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [],
+      "after": [
+        "- No ascending-diagonal match of 3 or more exists.",
+        "- No descending-diagonal match of 3 or more exists."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "At initialization, the game creates the interface and 8 × 8 board, generates a full board with no initial matches, sets Score and Moves to 0, clears the selection, and enters `waiting`."
+      ],
+      "after": [
+        "At initialization, the game creates the interface and 8 × 8 board, generates a full board with no initial horizontal, vertical, or diagonal matches, sets Score and Moves to 0, clears the selection, and enters `waiting`."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "3. If no match exists, revert the swap, keep Score and Moves unchanged, clear selection, and remain in `waiting`.",
+        "4. If at least one match exists, retain the swap, increase Moves by 1, clear selection, and enter `resolving`."
+      ],
+      "after": [
+        "3. If no horizontal, vertical, or diagonal match exists, revert the swap, keep Score and Moves unchanged, clear selection, and remain in `waiting`.",
+        "4. If at least one valid match exists, retain the swap, increase Moves by 1, clear selection, and enter `resolving`."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "1. Detect all horizontal and vertical matches."
+      ],
+      "after": [
+        "1. Detect all horizontal, vertical, and diagonal matches."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "The player's goal is to create horizontal or vertical matches of 3 or more identical gems by swapping adjacent gems, clear as many gems as possible, and achieve a higher Score."
+      ],
+      "after": [
+        "The player's goal is to create horizontal, vertical, or diagonal matches of 3 or more identical gems by swapping adjacent gems, clear as many gems as possible, and achieve a higher Score."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "After clearing, remaining gems fall within their columns, new gems refill the top, and any newly created matches are resolved automatically."
+      ],
+      "after": [
+        "After clearing, remaining gems fall within their columns, new gems refill the top, and any newly created horizontal, vertical, or diagonal matches are resolved automatically."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "Restart immediately cancels any active resolving process, generates a new initial board without matches, resets Score and Moves, clears the selection, and returns the game to `waiting`."
+      ],
+      "after": [
+        "Restart immediately cancels any active resolving process, generates a new initial board without horizontal, vertical, or diagonal matches, resets Score and Moves, clears the selection, and returns the game to `waiting`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "match3_var04.D2.1.03",
+    "match3_var04.D2.3.06",
+    "match3_var04.D2.4.02",
+    "match3_var04.D2.5.03",
+    "match3_var04.D2.3.11"
+  ],
+  "added_checkpoint_ids": [
+    "match3_var04.D2.3.11"
+  ],
+  "base_checkpoints_sha256": "4c049d5c0f23d85abfa0cb642db6e2ae1a19aad04e27424be1cbeb5f7594f420",
+  "checkpoints_sha256": "1550ccc519d212416a178c566fe28344114af8fd7b95281ef6b211986d38575a"
+}

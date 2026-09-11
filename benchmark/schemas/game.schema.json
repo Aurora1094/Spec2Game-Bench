@@ -10,7 +10,9 @@
     "difficulty": {"enum": ["easy", "medium", "hard"]},
     "spec": {"const": "spec.md"},
     "checkpoints": {"const": "checkpoints.jsonl"},
-    "variants": {"type": "array", "maxItems": 0},
+    "variants": {"type": "array", "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*_var0[1-9]$"}, "uniqueItems": true, "maxItems": 9},
+    "family_slug": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "variant_id": {"type": "string", "pattern": "^(base|var0[1-9])$"},
     "window_size": {"type": "array", "prefixItems": [{"type": "integer", "minimum": 1}, {"type": "integer", "minimum": 1}], "minItems": 2, "maxItems": 2}
   },
   "additionalProperties": true

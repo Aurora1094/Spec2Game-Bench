@@ -198,6 +198,1761 @@
         "mini_zelda.D2.2.06",
         "mini_zelda.D2.3.20"
       ]
+    },
+    "snake_var01": {
+      "d2_anchor_ids": [
+        "snake_var01.D2.1.02",
+        "snake_var01.D2.2.01",
+        "snake_var01.D2.3.04",
+        "snake_var01.D2.4.01",
+        "snake_var01.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "snake_var01.D2.2.01",
+        "snake_var01.D2.3.04"
+      ]
+    },
+    "snake_var02": {
+      "d2_anchor_ids": [
+        "snake_var02.D2.1.02",
+        "snake_var02.D2.2.01",
+        "snake_var02.D2.3.04",
+        "snake_var02.D2.4.01",
+        "snake_var02.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "snake_var02.D2.2.01",
+        "snake_var02.D2.3.04"
+      ]
+    },
+    "snake_var03": {
+      "d2_anchor_ids": [
+        "snake_var03.D2.1.02",
+        "snake_var03.D2.2.01",
+        "snake_var03.D2.3.04",
+        "snake_var03.D2.4.01",
+        "snake_var03.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "snake_var03.D2.2.01",
+        "snake_var03.D2.3.04"
+      ]
+    },
+    "snake_var04": {
+      "d2_anchor_ids": [
+        "snake_var04.D2.1.02",
+        "snake_var04.D2.2.01",
+        "snake_var04.D2.3.04",
+        "snake_var04.D2.4.01",
+        "snake_var04.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "snake_var04.D2.2.01",
+        "snake_var04.D2.3.04"
+      ]
+    },
+    "snake_var05": {
+      "d2_anchor_ids": [
+        "snake_var05.D2.1.02",
+        "snake_var05.D2.2.01",
+        "snake_var05.D2.3.04",
+        "snake_var05.D2.4.01",
+        "snake_var05.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "snake_var05.D2.2.01",
+        "snake_var05.D2.3.04"
+      ]
+    },
+    "snake_var06": {
+      "d2_anchor_ids": [
+        "snake_var06.D2.1.02",
+        "snake_var06.D2.2.01",
+        "snake_var06.D2.3.04",
+        "snake_var06.D2.4.01",
+        "snake_var06.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "snake_var06.D2.2.01",
+        "snake_var06.D2.3.04"
+      ]
+    },
+    "snake_var07": {
+      "d2_anchor_ids": [
+        "snake_var07.D2.1.02",
+        "snake_var07.D2.2.01",
+        "snake_var07.D2.3.04",
+        "snake_var07.D2.4.01",
+        "snake_var07.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "snake_var07.D2.2.01",
+        "snake_var07.D2.3.04"
+      ]
+    },
+    "snake_var08": {
+      "d2_anchor_ids": [
+        "snake_var08.D2.1.02",
+        "snake_var08.D2.2.01",
+        "snake_var08.D2.3.04",
+        "snake_var08.D2.4.01",
+        "snake_var08.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "snake_var08.D2.2.01",
+        "snake_var08.D2.3.04"
+      ]
+    },
+    "snake_var09": {
+      "d2_anchor_ids": [
+        "snake_var09.D2.1.02",
+        "snake_var09.D2.2.01",
+        "snake_var09.D2.3.04",
+        "snake_var09.D2.4.01",
+        "snake_var09.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "snake_var09.D2.2.01",
+        "snake_var09.D2.3.04"
+      ]
+    },
+    "dodge_blocks_var01": {
+      "d2_anchor_ids": [
+        "dodge_blocks_var01.D2.1.01",
+        "dodge_blocks_var01.D2.2.04",
+        "dodge_blocks_var01.D2.3.03",
+        "dodge_blocks_var01.D2.4.01",
+        "dodge_blocks_var01.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "dodge_blocks_var01.D2.2.04",
+        "dodge_blocks_var01.D2.3.03"
+      ]
+    },
+    "dodge_blocks_var02": {
+      "d2_anchor_ids": [
+        "dodge_blocks_var02.D2.1.01",
+        "dodge_blocks_var02.D2.2.04",
+        "dodge_blocks_var02.D2.3.03",
+        "dodge_blocks_var02.D2.4.01",
+        "dodge_blocks_var02.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "dodge_blocks_var02.D2.2.04",
+        "dodge_blocks_var02.D2.3.03"
+      ]
+    },
+    "dodge_blocks_var03": {
+      "d2_anchor_ids": [
+        "dodge_blocks_var03.D2.1.01",
+        "dodge_blocks_var03.D2.2.04",
+        "dodge_blocks_var03.D2.3.03",
+        "dodge_blocks_var03.D2.4.01",
+        "dodge_blocks_var03.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "dodge_blocks_var03.D2.2.04",
+        "dodge_blocks_var03.D2.3.03"
+      ]
+    },
+    "dodge_blocks_var04": {
+      "d2_anchor_ids": [
+        "dodge_blocks_var04.D2.1.01",
+        "dodge_blocks_var04.D2.2.04",
+        "dodge_blocks_var04.D2.3.03",
+        "dodge_blocks_var04.D2.4.01",
+        "dodge_blocks_var04.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "dodge_blocks_var04.D2.2.04",
+        "dodge_blocks_var04.D2.3.03"
+      ]
+    },
+    "dodge_blocks_var05": {
+      "d2_anchor_ids": [
+        "dodge_blocks_var05.D2.1.01",
+        "dodge_blocks_var05.D2.2.04",
+        "dodge_blocks_var05.D2.3.03",
+        "dodge_blocks_var05.D2.4.01",
+        "dodge_blocks_var05.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "dodge_blocks_var05.D2.2.04",
+        "dodge_blocks_var05.D2.3.03"
+      ]
+    },
+    "dodge_blocks_var06": {
+      "d2_anchor_ids": [
+        "dodge_blocks_var06.D2.1.01",
+        "dodge_blocks_var06.D2.2.04",
+        "dodge_blocks_var06.D2.3.03",
+        "dodge_blocks_var06.D2.4.01",
+        "dodge_blocks_var06.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "dodge_blocks_var06.D2.2.04",
+        "dodge_blocks_var06.D2.3.03"
+      ]
+    },
+    "dodge_blocks_var07": {
+      "d2_anchor_ids": [
+        "dodge_blocks_var07.D2.1.01",
+        "dodge_blocks_var07.D2.2.04",
+        "dodge_blocks_var07.D2.3.03",
+        "dodge_blocks_var07.D2.4.01",
+        "dodge_blocks_var07.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "dodge_blocks_var07.D2.2.04",
+        "dodge_blocks_var07.D2.3.03"
+      ]
+    },
+    "dodge_blocks_var08": {
+      "d2_anchor_ids": [
+        "dodge_blocks_var08.D2.1.01",
+        "dodge_blocks_var08.D2.2.04",
+        "dodge_blocks_var08.D2.3.03",
+        "dodge_blocks_var08.D2.4.01",
+        "dodge_blocks_var08.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "dodge_blocks_var08.D2.2.04",
+        "dodge_blocks_var08.D2.3.03"
+      ]
+    },
+    "dodge_blocks_var09": {
+      "d2_anchor_ids": [
+        "dodge_blocks_var09.D2.1.01",
+        "dodge_blocks_var09.D2.2.04",
+        "dodge_blocks_var09.D2.3.03",
+        "dodge_blocks_var09.D2.4.01",
+        "dodge_blocks_var09.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "dodge_blocks_var09.D2.2.04",
+        "dodge_blocks_var09.D2.3.03"
+      ]
+    },
+    "whack_a_mole_var01": {
+      "d2_anchor_ids": [
+        "whack_a_mole_var01.D2.1.01",
+        "whack_a_mole_var01.D2.2.01",
+        "whack_a_mole_var01.D2.3.03",
+        "whack_a_mole_var01.D2.4.01",
+        "whack_a_mole_var01.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "whack_a_mole_var01.D2.2.01",
+        "whack_a_mole_var01.D2.3.03"
+      ]
+    },
+    "whack_a_mole_var02": {
+      "d2_anchor_ids": [
+        "whack_a_mole_var02.D2.1.01",
+        "whack_a_mole_var02.D2.2.01",
+        "whack_a_mole_var02.D2.3.03",
+        "whack_a_mole_var02.D2.4.01",
+        "whack_a_mole_var02.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "whack_a_mole_var02.D2.2.01",
+        "whack_a_mole_var02.D2.3.03"
+      ]
+    },
+    "whack_a_mole_var03": {
+      "d2_anchor_ids": [
+        "whack_a_mole_var03.D2.1.01",
+        "whack_a_mole_var03.D2.2.01",
+        "whack_a_mole_var03.D2.3.03",
+        "whack_a_mole_var03.D2.4.01",
+        "whack_a_mole_var03.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "whack_a_mole_var03.D2.2.01",
+        "whack_a_mole_var03.D2.3.03"
+      ]
+    },
+    "whack_a_mole_var04": {
+      "d2_anchor_ids": [
+        "whack_a_mole_var04.D2.1.01",
+        "whack_a_mole_var04.D2.2.01",
+        "whack_a_mole_var04.D2.3.03",
+        "whack_a_mole_var04.D2.4.01",
+        "whack_a_mole_var04.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "whack_a_mole_var04.D2.2.01",
+        "whack_a_mole_var04.D2.3.03"
+      ]
+    },
+    "whack_a_mole_var05": {
+      "d2_anchor_ids": [
+        "whack_a_mole_var05.D2.1.01",
+        "whack_a_mole_var05.D2.2.01",
+        "whack_a_mole_var05.D2.3.03",
+        "whack_a_mole_var05.D2.4.01",
+        "whack_a_mole_var05.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "whack_a_mole_var05.D2.2.01",
+        "whack_a_mole_var05.D2.3.03"
+      ]
+    },
+    "whack_a_mole_var06": {
+      "d2_anchor_ids": [
+        "whack_a_mole_var06.D2.1.01",
+        "whack_a_mole_var06.D2.2.01",
+        "whack_a_mole_var06.D2.3.03",
+        "whack_a_mole_var06.D2.4.01",
+        "whack_a_mole_var06.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "whack_a_mole_var06.D2.2.01",
+        "whack_a_mole_var06.D2.3.03"
+      ]
+    },
+    "whack_a_mole_var07": {
+      "d2_anchor_ids": [
+        "whack_a_mole_var07.D2.1.01",
+        "whack_a_mole_var07.D2.2.01",
+        "whack_a_mole_var07.D2.3.03",
+        "whack_a_mole_var07.D2.4.01",
+        "whack_a_mole_var07.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "whack_a_mole_var07.D2.2.01",
+        "whack_a_mole_var07.D2.3.03"
+      ]
+    },
+    "whack_a_mole_var08": {
+      "d2_anchor_ids": [
+        "whack_a_mole_var08.D2.1.01",
+        "whack_a_mole_var08.D2.2.01",
+        "whack_a_mole_var08.D2.3.03",
+        "whack_a_mole_var08.D2.4.01",
+        "whack_a_mole_var08.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "whack_a_mole_var08.D2.2.01",
+        "whack_a_mole_var08.D2.3.03"
+      ]
+    },
+    "whack_a_mole_var09": {
+      "d2_anchor_ids": [
+        "whack_a_mole_var09.D2.1.01",
+        "whack_a_mole_var09.D2.2.01",
+        "whack_a_mole_var09.D2.3.03",
+        "whack_a_mole_var09.D2.4.01",
+        "whack_a_mole_var09.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "whack_a_mole_var09.D2.2.01",
+        "whack_a_mole_var09.D2.3.03"
+      ]
+    },
+    "asteroids_var01": {
+      "d2_anchor_ids": [
+        "asteroids_var01.D2.1.01",
+        "asteroids_var01.D2.2.04",
+        "asteroids_var01.D2.3.04",
+        "asteroids_var01.D2.4.01",
+        "asteroids_var01.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "asteroids_var01.D2.2.04",
+        "asteroids_var01.D2.3.04"
+      ]
+    },
+    "asteroids_var02": {
+      "d2_anchor_ids": [
+        "asteroids_var02.D2.1.01",
+        "asteroids_var02.D2.2.04",
+        "asteroids_var02.D2.3.04",
+        "asteroids_var02.D2.4.01",
+        "asteroids_var02.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "asteroids_var02.D2.2.04",
+        "asteroids_var02.D2.3.04"
+      ]
+    },
+    "asteroids_var03": {
+      "d2_anchor_ids": [
+        "asteroids_var03.D2.1.01",
+        "asteroids_var03.D2.2.04",
+        "asteroids_var03.D2.3.04",
+        "asteroids_var03.D2.4.01",
+        "asteroids_var03.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "asteroids_var03.D2.2.04",
+        "asteroids_var03.D2.3.04"
+      ]
+    },
+    "asteroids_var04": {
+      "d2_anchor_ids": [
+        "asteroids_var04.D2.1.01",
+        "asteroids_var04.D2.2.04",
+        "asteroids_var04.D2.3.04",
+        "asteroids_var04.D2.4.01",
+        "asteroids_var04.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "asteroids_var04.D2.2.04",
+        "asteroids_var04.D2.3.04"
+      ]
+    },
+    "asteroids_var05": {
+      "d2_anchor_ids": [
+        "asteroids_var05.D2.1.01",
+        "asteroids_var05.D2.2.04",
+        "asteroids_var05.D2.3.04",
+        "asteroids_var05.D2.4.01",
+        "asteroids_var05.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "asteroids_var05.D2.2.04",
+        "asteroids_var05.D2.3.04"
+      ]
+    },
+    "asteroids_var06": {
+      "d2_anchor_ids": [
+        "asteroids_var06.D2.1.01",
+        "asteroids_var06.D2.2.04",
+        "asteroids_var06.D2.3.04",
+        "asteroids_var06.D2.4.01",
+        "asteroids_var06.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "asteroids_var06.D2.2.04",
+        "asteroids_var06.D2.3.04"
+      ]
+    },
+    "asteroids_var07": {
+      "d2_anchor_ids": [
+        "asteroids_var07.D2.1.01",
+        "asteroids_var07.D2.2.04",
+        "asteroids_var07.D2.3.04",
+        "asteroids_var07.D2.4.01",
+        "asteroids_var07.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "asteroids_var07.D2.2.04",
+        "asteroids_var07.D2.3.04"
+      ]
+    },
+    "asteroids_var08": {
+      "d2_anchor_ids": [
+        "asteroids_var08.D2.1.01",
+        "asteroids_var08.D2.2.04",
+        "asteroids_var08.D2.3.04",
+        "asteroids_var08.D2.4.01",
+        "asteroids_var08.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "asteroids_var08.D2.2.04",
+        "asteroids_var08.D2.3.04"
+      ]
+    },
+    "asteroids_var09": {
+      "d2_anchor_ids": [
+        "asteroids_var09.D2.1.01",
+        "asteroids_var09.D2.2.04",
+        "asteroids_var09.D2.3.04",
+        "asteroids_var09.D2.4.01",
+        "asteroids_var09.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "asteroids_var09.D2.2.04",
+        "asteroids_var09.D2.3.04"
+      ]
+    },
+    "maze_runner_var01": {
+      "d2_anchor_ids": [
+        "maze_runner_var01.D2.1.01",
+        "maze_runner_var01.D2.2.01",
+        "maze_runner_var01.D2.3.01",
+        "maze_runner_var01.D2.4.01",
+        "maze_runner_var01.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "maze_runner_var01.D2.3.01",
+        "maze_runner_var01.D2.5.01"
+      ]
+    },
+    "maze_runner_var02": {
+      "d2_anchor_ids": [
+        "maze_runner_var02.D2.1.01",
+        "maze_runner_var02.D2.2.01",
+        "maze_runner_var02.D2.3.01",
+        "maze_runner_var02.D2.4.01",
+        "maze_runner_var02.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "maze_runner_var02.D2.3.01",
+        "maze_runner_var02.D2.5.01"
+      ]
+    },
+    "maze_runner_var03": {
+      "d2_anchor_ids": [
+        "maze_runner_var03.D2.1.01",
+        "maze_runner_var03.D2.2.01",
+        "maze_runner_var03.D2.3.01",
+        "maze_runner_var03.D2.4.01",
+        "maze_runner_var03.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "maze_runner_var03.D2.3.01",
+        "maze_runner_var03.D2.5.01"
+      ]
+    },
+    "maze_runner_var04": {
+      "d2_anchor_ids": [
+        "maze_runner_var04.D2.1.01",
+        "maze_runner_var04.D2.2.01",
+        "maze_runner_var04.D2.3.01",
+        "maze_runner_var04.D2.4.01",
+        "maze_runner_var04.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "maze_runner_var04.D2.3.01",
+        "maze_runner_var04.D2.5.01"
+      ]
+    },
+    "maze_runner_var05": {
+      "d2_anchor_ids": [
+        "maze_runner_var05.D2.1.01",
+        "maze_runner_var05.D2.2.01",
+        "maze_runner_var05.D2.3.01",
+        "maze_runner_var05.D2.4.01",
+        "maze_runner_var05.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "maze_runner_var05.D2.3.01",
+        "maze_runner_var05.D2.5.01"
+      ]
+    },
+    "maze_runner_var06": {
+      "d2_anchor_ids": [
+        "maze_runner_var06.D2.1.01",
+        "maze_runner_var06.D2.2.01",
+        "maze_runner_var06.D2.3.01",
+        "maze_runner_var06.D2.4.01",
+        "maze_runner_var06.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "maze_runner_var06.D2.3.01",
+        "maze_runner_var06.D2.5.01"
+      ]
+    },
+    "maze_runner_var07": {
+      "d2_anchor_ids": [
+        "maze_runner_var07.D2.1.01",
+        "maze_runner_var07.D2.2.01",
+        "maze_runner_var07.D2.3.01",
+        "maze_runner_var07.D2.4.01",
+        "maze_runner_var07.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "maze_runner_var07.D2.3.01",
+        "maze_runner_var07.D2.5.01"
+      ]
+    },
+    "maze_runner_var08": {
+      "d2_anchor_ids": [
+        "maze_runner_var08.D2.1.01",
+        "maze_runner_var08.D2.2.01",
+        "maze_runner_var08.D2.3.01",
+        "maze_runner_var08.D2.4.01",
+        "maze_runner_var08.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "maze_runner_var08.D2.3.01",
+        "maze_runner_var08.D2.5.01"
+      ]
+    },
+    "maze_runner_var09": {
+      "d2_anchor_ids": [
+        "maze_runner_var09.D2.1.01",
+        "maze_runner_var09.D2.2.01",
+        "maze_runner_var09.D2.3.01",
+        "maze_runner_var09.D2.4.01",
+        "maze_runner_var09.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "maze_runner_var09.D2.3.01",
+        "maze_runner_var09.D2.5.01"
+      ]
+    },
+    "space_invaders_var01": {
+      "d2_anchor_ids": [
+        "space_invaders_var01.D2.1.04",
+        "space_invaders_var01.D2.2.02",
+        "space_invaders_var01.D2.3.03",
+        "space_invaders_var01.D2.4.01",
+        "space_invaders_var01.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "space_invaders_var01.D2.2.02",
+        "space_invaders_var01.D2.3.03"
+      ]
+    },
+    "space_invaders_var02": {
+      "d2_anchor_ids": [
+        "space_invaders_var02.D2.1.04",
+        "space_invaders_var02.D2.2.02",
+        "space_invaders_var02.D2.3.03",
+        "space_invaders_var02.D2.4.01",
+        "space_invaders_var02.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "space_invaders_var02.D2.2.02",
+        "space_invaders_var02.D2.3.03"
+      ]
+    },
+    "space_invaders_var03": {
+      "d2_anchor_ids": [
+        "space_invaders_var03.D2.1.04",
+        "space_invaders_var03.D2.2.02",
+        "space_invaders_var03.D2.3.03",
+        "space_invaders_var03.D2.4.01",
+        "space_invaders_var03.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "space_invaders_var03.D2.2.02",
+        "space_invaders_var03.D2.3.03"
+      ]
+    },
+    "space_invaders_var04": {
+      "d2_anchor_ids": [
+        "space_invaders_var04.D2.1.04",
+        "space_invaders_var04.D2.2.02",
+        "space_invaders_var04.D2.3.03",
+        "space_invaders_var04.D2.4.01",
+        "space_invaders_var04.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "space_invaders_var04.D2.2.02",
+        "space_invaders_var04.D2.3.03"
+      ]
+    },
+    "space_invaders_var05": {
+      "d2_anchor_ids": [
+        "space_invaders_var05.D2.1.04",
+        "space_invaders_var05.D2.2.02",
+        "space_invaders_var05.D2.3.03",
+        "space_invaders_var05.D2.4.01",
+        "space_invaders_var05.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "space_invaders_var05.D2.2.02",
+        "space_invaders_var05.D2.3.03"
+      ]
+    },
+    "space_invaders_var06": {
+      "d2_anchor_ids": [
+        "space_invaders_var06.D2.1.04",
+        "space_invaders_var06.D2.2.02",
+        "space_invaders_var06.D2.3.03",
+        "space_invaders_var06.D2.4.01",
+        "space_invaders_var06.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "space_invaders_var06.D2.2.02",
+        "space_invaders_var06.D2.3.03"
+      ]
+    },
+    "space_invaders_var07": {
+      "d2_anchor_ids": [
+        "space_invaders_var07.D2.1.04",
+        "space_invaders_var07.D2.2.02",
+        "space_invaders_var07.D2.3.03",
+        "space_invaders_var07.D2.4.01",
+        "space_invaders_var07.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "space_invaders_var07.D2.2.02",
+        "space_invaders_var07.D2.3.03"
+      ]
+    },
+    "space_invaders_var08": {
+      "d2_anchor_ids": [
+        "space_invaders_var08.D2.1.04",
+        "space_invaders_var08.D2.2.02",
+        "space_invaders_var08.D2.3.03",
+        "space_invaders_var08.D2.4.01",
+        "space_invaders_var08.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "space_invaders_var08.D2.2.02",
+        "space_invaders_var08.D2.3.03"
+      ]
+    },
+    "space_invaders_var09": {
+      "d2_anchor_ids": [
+        "space_invaders_var09.D2.1.04",
+        "space_invaders_var09.D2.2.02",
+        "space_invaders_var09.D2.3.03",
+        "space_invaders_var09.D2.4.01",
+        "space_invaders_var09.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "space_invaders_var09.D2.2.02",
+        "space_invaders_var09.D2.3.03"
+      ]
+    },
+    "simple_platformer_var01": {
+      "d2_anchor_ids": [
+        "simple_platformer_var01.D2.1.04",
+        "simple_platformer_var01.D2.2.04",
+        "simple_platformer_var01.D2.3.06",
+        "simple_platformer_var01.D2.4.01",
+        "simple_platformer_var01.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_platformer_var01.D2.2.04",
+        "simple_platformer_var01.D2.3.06"
+      ]
+    },
+    "simple_platformer_var02": {
+      "d2_anchor_ids": [
+        "simple_platformer_var02.D2.1.04",
+        "simple_platformer_var02.D2.2.04",
+        "simple_platformer_var02.D2.3.06",
+        "simple_platformer_var02.D2.4.01",
+        "simple_platformer_var02.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_platformer_var02.D2.2.04",
+        "simple_platformer_var02.D2.3.06"
+      ]
+    },
+    "simple_platformer_var03": {
+      "d2_anchor_ids": [
+        "simple_platformer_var03.D2.1.04",
+        "simple_platformer_var03.D2.2.04",
+        "simple_platformer_var03.D2.3.06",
+        "simple_platformer_var03.D2.4.01",
+        "simple_platformer_var03.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_platformer_var03.D2.2.04",
+        "simple_platformer_var03.D2.3.06"
+      ]
+    },
+    "simple_platformer_var04": {
+      "d2_anchor_ids": [
+        "simple_platformer_var04.D2.1.04",
+        "simple_platformer_var04.D2.2.04",
+        "simple_platformer_var04.D2.3.06",
+        "simple_platformer_var04.D2.4.01",
+        "simple_platformer_var04.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_platformer_var04.D2.2.04",
+        "simple_platformer_var04.D2.3.06"
+      ]
+    },
+    "simple_platformer_var05": {
+      "d2_anchor_ids": [
+        "simple_platformer_var05.D2.1.04",
+        "simple_platformer_var05.D2.2.04",
+        "simple_platformer_var05.D2.3.06",
+        "simple_platformer_var05.D2.4.01",
+        "simple_platformer_var05.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_platformer_var05.D2.2.04",
+        "simple_platformer_var05.D2.3.06"
+      ]
+    },
+    "simple_platformer_var06": {
+      "d2_anchor_ids": [
+        "simple_platformer_var06.D2.1.04",
+        "simple_platformer_var06.D2.2.04",
+        "simple_platformer_var06.D2.3.06",
+        "simple_platformer_var06.D2.4.01",
+        "simple_platformer_var06.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_platformer_var06.D2.2.04",
+        "simple_platformer_var06.D2.3.06"
+      ]
+    },
+    "simple_platformer_var07": {
+      "d2_anchor_ids": [
+        "simple_platformer_var07.D2.1.04",
+        "simple_platformer_var07.D2.2.04",
+        "simple_platformer_var07.D2.3.06",
+        "simple_platformer_var07.D2.4.01",
+        "simple_platformer_var07.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_platformer_var07.D2.2.04",
+        "simple_platformer_var07.D2.3.06"
+      ]
+    },
+    "simple_platformer_var08": {
+      "d2_anchor_ids": [
+        "simple_platformer_var08.D2.1.04",
+        "simple_platformer_var08.D2.2.04",
+        "simple_platformer_var08.D2.3.06",
+        "simple_platformer_var08.D2.4.01",
+        "simple_platformer_var08.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_platformer_var08.D2.2.04",
+        "simple_platformer_var08.D2.3.06"
+      ]
+    },
+    "simple_platformer_var09": {
+      "d2_anchor_ids": [
+        "simple_platformer_var09.D2.1.04",
+        "simple_platformer_var09.D2.2.04",
+        "simple_platformer_var09.D2.3.06",
+        "simple_platformer_var09.D2.4.01",
+        "simple_platformer_var09.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_platformer_var09.D2.2.04",
+        "simple_platformer_var09.D2.3.06"
+      ]
+    },
+    "tetris_var01": {
+      "d2_anchor_ids": [
+        "tetris_var01.D2.1.04",
+        "tetris_var01.D2.2.01",
+        "tetris_var01.D2.3.03",
+        "tetris_var01.D2.4.01",
+        "tetris_var01.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "tetris_var01.D2.2.01",
+        "tetris_var01.D2.3.03"
+      ]
+    },
+    "tetris_var02": {
+      "d2_anchor_ids": [
+        "tetris_var02.D2.1.04",
+        "tetris_var02.D2.2.01",
+        "tetris_var02.D2.3.03",
+        "tetris_var02.D2.4.01",
+        "tetris_var02.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "tetris_var02.D2.2.01",
+        "tetris_var02.D2.3.03"
+      ]
+    },
+    "tetris_var03": {
+      "d2_anchor_ids": [
+        "tetris_var03.D2.1.04",
+        "tetris_var03.D2.2.01",
+        "tetris_var03.D2.3.03",
+        "tetris_var03.D2.4.01",
+        "tetris_var03.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "tetris_var03.D2.2.01",
+        "tetris_var03.D2.3.03"
+      ]
+    },
+    "tetris_var04": {
+      "d2_anchor_ids": [
+        "tetris_var04.D2.1.04",
+        "tetris_var04.D2.2.01",
+        "tetris_var04.D2.3.03",
+        "tetris_var04.D2.4.01",
+        "tetris_var04.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "tetris_var04.D2.2.01",
+        "tetris_var04.D2.3.03"
+      ]
+    },
+    "tetris_var05": {
+      "d2_anchor_ids": [
+        "tetris_var05.D2.1.04",
+        "tetris_var05.D2.2.01",
+        "tetris_var05.D2.3.03",
+        "tetris_var05.D2.4.01",
+        "tetris_var05.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "tetris_var05.D2.2.01",
+        "tetris_var05.D2.3.03"
+      ]
+    },
+    "tetris_var06": {
+      "d2_anchor_ids": [
+        "tetris_var06.D2.1.04",
+        "tetris_var06.D2.2.01",
+        "tetris_var06.D2.3.03",
+        "tetris_var06.D2.4.01",
+        "tetris_var06.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "tetris_var06.D2.2.01",
+        "tetris_var06.D2.3.03"
+      ]
+    },
+    "tetris_var07": {
+      "d2_anchor_ids": [
+        "tetris_var07.D2.1.04",
+        "tetris_var07.D2.2.01",
+        "tetris_var07.D2.3.03",
+        "tetris_var07.D2.4.01",
+        "tetris_var07.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "tetris_var07.D2.2.01",
+        "tetris_var07.D2.3.03"
+      ]
+    },
+    "tetris_var08": {
+      "d2_anchor_ids": [
+        "tetris_var08.D2.1.04",
+        "tetris_var08.D2.2.01",
+        "tetris_var08.D2.3.03",
+        "tetris_var08.D2.4.01",
+        "tetris_var08.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "tetris_var08.D2.2.01",
+        "tetris_var08.D2.3.03"
+      ]
+    },
+    "tetris_var09": {
+      "d2_anchor_ids": [
+        "tetris_var09.D2.1.04",
+        "tetris_var09.D2.2.01",
+        "tetris_var09.D2.3.03",
+        "tetris_var09.D2.4.01",
+        "tetris_var09.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "tetris_var09.D2.2.01",
+        "tetris_var09.D2.3.03"
+      ]
+    },
+    "match3_var01": {
+      "d2_anchor_ids": [
+        "match3_var01.D2.1.01",
+        "match3_var01.D2.2.05",
+        "match3_var01.D2.3.07",
+        "match3_var01.D2.4.01",
+        "match3_var01.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "match3_var01.D2.2.05",
+        "match3_var01.D2.3.07"
+      ]
+    },
+    "match3_var02": {
+      "d2_anchor_ids": [
+        "match3_var02.D2.1.01",
+        "match3_var02.D2.2.05",
+        "match3_var02.D2.3.07",
+        "match3_var02.D2.4.01",
+        "match3_var02.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "match3_var02.D2.2.05",
+        "match3_var02.D2.3.07"
+      ]
+    },
+    "match3_var03": {
+      "d2_anchor_ids": [
+        "match3_var03.D2.1.01",
+        "match3_var03.D2.2.05",
+        "match3_var03.D2.3.07",
+        "match3_var03.D2.4.01",
+        "match3_var03.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "match3_var03.D2.2.05",
+        "match3_var03.D2.3.07"
+      ]
+    },
+    "match3_var04": {
+      "d2_anchor_ids": [
+        "match3_var04.D2.1.01",
+        "match3_var04.D2.2.05",
+        "match3_var04.D2.3.07",
+        "match3_var04.D2.4.01",
+        "match3_var04.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "match3_var04.D2.2.05",
+        "match3_var04.D2.3.07"
+      ]
+    },
+    "match3_var05": {
+      "d2_anchor_ids": [
+        "match3_var05.D2.1.01",
+        "match3_var05.D2.2.05",
+        "match3_var05.D2.3.07",
+        "match3_var05.D2.4.01",
+        "match3_var05.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "match3_var05.D2.2.05",
+        "match3_var05.D2.3.07"
+      ]
+    },
+    "match3_var06": {
+      "d2_anchor_ids": [
+        "match3_var06.D2.1.01",
+        "match3_var06.D2.2.05",
+        "match3_var06.D2.3.07",
+        "match3_var06.D2.4.01",
+        "match3_var06.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "match3_var06.D2.2.05",
+        "match3_var06.D2.3.07"
+      ]
+    },
+    "match3_var07": {
+      "d2_anchor_ids": [
+        "match3_var07.D2.1.01",
+        "match3_var07.D2.2.05",
+        "match3_var07.D2.3.07",
+        "match3_var07.D2.4.01",
+        "match3_var07.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "match3_var07.D2.2.05",
+        "match3_var07.D2.3.07"
+      ]
+    },
+    "match3_var08": {
+      "d2_anchor_ids": [
+        "match3_var08.D2.1.01",
+        "match3_var08.D2.2.05",
+        "match3_var08.D2.3.07",
+        "match3_var08.D2.4.01",
+        "match3_var08.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "match3_var08.D2.2.05",
+        "match3_var08.D2.3.07"
+      ]
+    },
+    "match3_var09": {
+      "d2_anchor_ids": [
+        "match3_var09.D2.1.01",
+        "match3_var09.D2.2.05",
+        "match3_var09.D2.3.07",
+        "match3_var09.D2.4.01",
+        "match3_var09.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "match3_var09.D2.2.05",
+        "match3_var09.D2.3.07"
+      ]
+    },
+    "simple_shop_var01": {
+      "d2_anchor_ids": [
+        "simple_shop_var01.D2.1.01",
+        "simple_shop_var01.D2.2.01",
+        "simple_shop_var01.D2.3.05",
+        "simple_shop_var01.D2.4.01",
+        "simple_shop_var01.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_shop_var01.D2.2.01",
+        "simple_shop_var01.D2.3.05"
+      ]
+    },
+    "simple_shop_var02": {
+      "d2_anchor_ids": [
+        "simple_shop_var02.D2.1.01",
+        "simple_shop_var02.D2.2.01",
+        "simple_shop_var02.D2.3.05",
+        "simple_shop_var02.D2.4.01",
+        "simple_shop_var02.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_shop_var02.D2.2.01",
+        "simple_shop_var02.D2.3.05"
+      ]
+    },
+    "simple_shop_var03": {
+      "d2_anchor_ids": [
+        "simple_shop_var03.D2.1.01",
+        "simple_shop_var03.D2.2.01",
+        "simple_shop_var03.D2.3.05",
+        "simple_shop_var03.D2.4.01",
+        "simple_shop_var03.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_shop_var03.D2.2.01",
+        "simple_shop_var03.D2.3.05"
+      ]
+    },
+    "simple_shop_var04": {
+      "d2_anchor_ids": [
+        "simple_shop_var04.D2.1.01",
+        "simple_shop_var04.D2.2.01",
+        "simple_shop_var04.D2.3.05",
+        "simple_shop_var04.D2.4.01",
+        "simple_shop_var04.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_shop_var04.D2.2.01",
+        "simple_shop_var04.D2.3.05"
+      ]
+    },
+    "simple_shop_var05": {
+      "d2_anchor_ids": [
+        "simple_shop_var05.D2.1.01",
+        "simple_shop_var05.D2.2.01",
+        "simple_shop_var05.D2.3.05",
+        "simple_shop_var05.D2.4.01",
+        "simple_shop_var05.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_shop_var05.D2.2.01",
+        "simple_shop_var05.D2.3.05"
+      ]
+    },
+    "simple_shop_var06": {
+      "d2_anchor_ids": [
+        "simple_shop_var06.D2.1.01",
+        "simple_shop_var06.D2.2.01",
+        "simple_shop_var06.D2.3.05",
+        "simple_shop_var06.D2.4.01",
+        "simple_shop_var06.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_shop_var06.D2.2.01",
+        "simple_shop_var06.D2.3.05"
+      ]
+    },
+    "simple_shop_var07": {
+      "d2_anchor_ids": [
+        "simple_shop_var07.D2.1.01",
+        "simple_shop_var07.D2.2.01",
+        "simple_shop_var07.D2.3.05",
+        "simple_shop_var07.D2.4.01",
+        "simple_shop_var07.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_shop_var07.D2.2.01",
+        "simple_shop_var07.D2.3.05"
+      ]
+    },
+    "simple_shop_var08": {
+      "d2_anchor_ids": [
+        "simple_shop_var08.D2.1.01",
+        "simple_shop_var08.D2.2.01",
+        "simple_shop_var08.D2.3.05",
+        "simple_shop_var08.D2.4.01",
+        "simple_shop_var08.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_shop_var08.D2.2.01",
+        "simple_shop_var08.D2.3.05"
+      ]
+    },
+    "simple_shop_var09": {
+      "d2_anchor_ids": [
+        "simple_shop_var09.D2.1.01",
+        "simple_shop_var09.D2.2.01",
+        "simple_shop_var09.D2.3.05",
+        "simple_shop_var09.D2.4.01",
+        "simple_shop_var09.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "simple_shop_var09.D2.2.01",
+        "simple_shop_var09.D2.3.05"
+      ]
+    },
+    "carrot_defense_var01": {
+      "d2_anchor_ids": [
+        "carrot_defense_var01.D2.1.01",
+        "carrot_defense_var01.D2.2.01",
+        "carrot_defense_var01.D2.3.01",
+        "carrot_defense_var01.D2.4.01",
+        "carrot_defense_var01.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "carrot_defense_var01.D2.3.01",
+        "carrot_defense_var01.D2.3.06"
+      ]
+    },
+    "carrot_defense_var02": {
+      "d2_anchor_ids": [
+        "carrot_defense_var02.D2.1.01",
+        "carrot_defense_var02.D2.2.01",
+        "carrot_defense_var02.D2.3.01",
+        "carrot_defense_var02.D2.4.01",
+        "carrot_defense_var02.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "carrot_defense_var02.D2.3.01",
+        "carrot_defense_var02.D2.3.06"
+      ]
+    },
+    "carrot_defense_var03": {
+      "d2_anchor_ids": [
+        "carrot_defense_var03.D2.1.01",
+        "carrot_defense_var03.D2.2.01",
+        "carrot_defense_var03.D2.3.01",
+        "carrot_defense_var03.D2.4.01",
+        "carrot_defense_var03.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "carrot_defense_var03.D2.3.01",
+        "carrot_defense_var03.D2.3.06"
+      ]
+    },
+    "carrot_defense_var04": {
+      "d2_anchor_ids": [
+        "carrot_defense_var04.D2.1.01",
+        "carrot_defense_var04.D2.2.01",
+        "carrot_defense_var04.D2.3.01",
+        "carrot_defense_var04.D2.4.01",
+        "carrot_defense_var04.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "carrot_defense_var04.D2.3.01",
+        "carrot_defense_var04.D2.3.06"
+      ]
+    },
+    "carrot_defense_var05": {
+      "d2_anchor_ids": [
+        "carrot_defense_var05.D2.1.01",
+        "carrot_defense_var05.D2.2.01",
+        "carrot_defense_var05.D2.3.01",
+        "carrot_defense_var05.D2.4.01",
+        "carrot_defense_var05.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "carrot_defense_var05.D2.3.01",
+        "carrot_defense_var05.D2.3.06"
+      ]
+    },
+    "carrot_defense_var06": {
+      "d2_anchor_ids": [
+        "carrot_defense_var06.D2.1.01",
+        "carrot_defense_var06.D2.2.01",
+        "carrot_defense_var06.D2.3.01",
+        "carrot_defense_var06.D2.4.01",
+        "carrot_defense_var06.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "carrot_defense_var06.D2.3.01",
+        "carrot_defense_var06.D2.3.06"
+      ]
+    },
+    "carrot_defense_var07": {
+      "d2_anchor_ids": [
+        "carrot_defense_var07.D2.1.01",
+        "carrot_defense_var07.D2.2.01",
+        "carrot_defense_var07.D2.3.01",
+        "carrot_defense_var07.D2.4.01",
+        "carrot_defense_var07.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "carrot_defense_var07.D2.3.01",
+        "carrot_defense_var07.D2.3.06"
+      ]
+    },
+    "carrot_defense_var08": {
+      "d2_anchor_ids": [
+        "carrot_defense_var08.D2.1.01",
+        "carrot_defense_var08.D2.2.01",
+        "carrot_defense_var08.D2.3.01",
+        "carrot_defense_var08.D2.4.01",
+        "carrot_defense_var08.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "carrot_defense_var08.D2.3.01",
+        "carrot_defense_var08.D2.3.06"
+      ]
+    },
+    "carrot_defense_var09": {
+      "d2_anchor_ids": [
+        "carrot_defense_var09.D2.1.01",
+        "carrot_defense_var09.D2.2.01",
+        "carrot_defense_var09.D2.3.01",
+        "carrot_defense_var09.D2.4.01",
+        "carrot_defense_var09.D2.5.02"
+      ],
+      "d42_anchor_ids": [
+        "carrot_defense_var09.D2.3.01",
+        "carrot_defense_var09.D2.3.06"
+      ]
+    },
+    "farming_lite_var01": {
+      "d2_anchor_ids": [
+        "farming_lite_var01.D2.1.01",
+        "farming_lite_var01.D2.2.01",
+        "farming_lite_var01.D2.3.07",
+        "farming_lite_var01.D2.4.01",
+        "farming_lite_var01.D2.5.04"
+      ],
+      "d42_anchor_ids": [
+        "farming_lite_var01.D2.3.01",
+        "farming_lite_var01.D2.3.07"
+      ]
+    },
+    "farming_lite_var02": {
+      "d2_anchor_ids": [
+        "farming_lite_var02.D2.1.01",
+        "farming_lite_var02.D2.2.01",
+        "farming_lite_var02.D2.3.07",
+        "farming_lite_var02.D2.4.01",
+        "farming_lite_var02.D2.5.04"
+      ],
+      "d42_anchor_ids": [
+        "farming_lite_var02.D2.3.01",
+        "farming_lite_var02.D2.3.07"
+      ]
+    },
+    "farming_lite_var03": {
+      "d2_anchor_ids": [
+        "farming_lite_var03.D2.1.01",
+        "farming_lite_var03.D2.2.01",
+        "farming_lite_var03.D2.3.07",
+        "farming_lite_var03.D2.4.01",
+        "farming_lite_var03.D2.5.04"
+      ],
+      "d42_anchor_ids": [
+        "farming_lite_var03.D2.3.01",
+        "farming_lite_var03.D2.3.07"
+      ]
+    },
+    "farming_lite_var04": {
+      "d2_anchor_ids": [
+        "farming_lite_var04.D2.1.01",
+        "farming_lite_var04.D2.2.01",
+        "farming_lite_var04.D2.3.07",
+        "farming_lite_var04.D2.4.01",
+        "farming_lite_var04.D2.5.04"
+      ],
+      "d42_anchor_ids": [
+        "farming_lite_var04.D2.3.01",
+        "farming_lite_var04.D2.3.07"
+      ]
+    },
+    "farming_lite_var05": {
+      "d2_anchor_ids": [
+        "farming_lite_var05.D2.1.01",
+        "farming_lite_var05.D2.2.01",
+        "farming_lite_var05.D2.3.07",
+        "farming_lite_var05.D2.4.01",
+        "farming_lite_var05.D2.5.04"
+      ],
+      "d42_anchor_ids": [
+        "farming_lite_var05.D2.3.01",
+        "farming_lite_var05.D2.3.07"
+      ]
+    },
+    "farming_lite_var06": {
+      "d2_anchor_ids": [
+        "farming_lite_var06.D2.1.01",
+        "farming_lite_var06.D2.2.01",
+        "farming_lite_var06.D2.3.07",
+        "farming_lite_var06.D2.4.01",
+        "farming_lite_var06.D2.5.04"
+      ],
+      "d42_anchor_ids": [
+        "farming_lite_var06.D2.3.01",
+        "farming_lite_var06.D2.3.07"
+      ]
+    },
+    "farming_lite_var07": {
+      "d2_anchor_ids": [
+        "farming_lite_var07.D2.1.01",
+        "farming_lite_var07.D2.2.01",
+        "farming_lite_var07.D2.3.07",
+        "farming_lite_var07.D2.4.01",
+        "farming_lite_var07.D2.5.04"
+      ],
+      "d42_anchor_ids": [
+        "farming_lite_var07.D2.3.01",
+        "farming_lite_var07.D2.3.07"
+      ]
+    },
+    "farming_lite_var08": {
+      "d2_anchor_ids": [
+        "farming_lite_var08.D2.1.01",
+        "farming_lite_var08.D2.2.01",
+        "farming_lite_var08.D2.3.07",
+        "farming_lite_var08.D2.4.01",
+        "farming_lite_var08.D2.5.04"
+      ],
+      "d42_anchor_ids": [
+        "farming_lite_var08.D2.3.01",
+        "farming_lite_var08.D2.3.07"
+      ]
+    },
+    "farming_lite_var09": {
+      "d2_anchor_ids": [
+        "farming_lite_var09.D2.1.01",
+        "farming_lite_var09.D2.2.01",
+        "farming_lite_var09.D2.3.07",
+        "farming_lite_var09.D2.4.01",
+        "farming_lite_var09.D2.5.04"
+      ],
+      "d42_anchor_ids": [
+        "farming_lite_var09.D2.3.01",
+        "farming_lite_var09.D2.3.07"
+      ]
+    },
+    "pipe_connection_var01": {
+      "d2_anchor_ids": [
+        "pipe_connection_var01.D2.1.04",
+        "pipe_connection_var01.D2.2.02",
+        "pipe_connection_var01.D2.3.08",
+        "pipe_connection_var01.D2.4.02",
+        "pipe_connection_var01.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "pipe_connection_var01.D2.2.02",
+        "pipe_connection_var01.D2.3.08"
+      ]
+    },
+    "pipe_connection_var02": {
+      "d2_anchor_ids": [
+        "pipe_connection_var02.D2.1.04",
+        "pipe_connection_var02.D2.2.02",
+        "pipe_connection_var02.D2.3.08",
+        "pipe_connection_var02.D2.4.02",
+        "pipe_connection_var02.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "pipe_connection_var02.D2.2.02",
+        "pipe_connection_var02.D2.3.08"
+      ]
+    },
+    "pipe_connection_var03": {
+      "d2_anchor_ids": [
+        "pipe_connection_var03.D2.1.04",
+        "pipe_connection_var03.D2.2.02",
+        "pipe_connection_var03.D2.3.08",
+        "pipe_connection_var03.D2.4.02",
+        "pipe_connection_var03.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "pipe_connection_var03.D2.2.02",
+        "pipe_connection_var03.D2.3.08"
+      ]
+    },
+    "pipe_connection_var04": {
+      "d2_anchor_ids": [
+        "pipe_connection_var04.D2.1.04",
+        "pipe_connection_var04.D2.2.02",
+        "pipe_connection_var04.D2.3.08",
+        "pipe_connection_var04.D2.4.02",
+        "pipe_connection_var04.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "pipe_connection_var04.D2.2.02",
+        "pipe_connection_var04.D2.3.08"
+      ]
+    },
+    "pipe_connection_var05": {
+      "d2_anchor_ids": [
+        "pipe_connection_var05.D2.1.04",
+        "pipe_connection_var05.D2.2.02",
+        "pipe_connection_var05.D2.3.08",
+        "pipe_connection_var05.D2.4.02",
+        "pipe_connection_var05.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "pipe_connection_var05.D2.2.02",
+        "pipe_connection_var05.D2.3.08"
+      ]
+    },
+    "pipe_connection_var06": {
+      "d2_anchor_ids": [
+        "pipe_connection_var06.D2.1.04",
+        "pipe_connection_var06.D2.2.02",
+        "pipe_connection_var06.D2.3.08",
+        "pipe_connection_var06.D2.4.02",
+        "pipe_connection_var06.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "pipe_connection_var06.D2.2.02",
+        "pipe_connection_var06.D2.3.08"
+      ]
+    },
+    "pipe_connection_var07": {
+      "d2_anchor_ids": [
+        "pipe_connection_var07.D2.1.04",
+        "pipe_connection_var07.D2.2.02",
+        "pipe_connection_var07.D2.3.08",
+        "pipe_connection_var07.D2.4.02",
+        "pipe_connection_var07.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "pipe_connection_var07.D2.2.02",
+        "pipe_connection_var07.D2.3.08"
+      ]
+    },
+    "pipe_connection_var08": {
+      "d2_anchor_ids": [
+        "pipe_connection_var08.D2.1.04",
+        "pipe_connection_var08.D2.2.02",
+        "pipe_connection_var08.D2.3.08",
+        "pipe_connection_var08.D2.4.02",
+        "pipe_connection_var08.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "pipe_connection_var08.D2.2.02",
+        "pipe_connection_var08.D2.3.08"
+      ]
+    },
+    "pipe_connection_var09": {
+      "d2_anchor_ids": [
+        "pipe_connection_var09.D2.1.04",
+        "pipe_connection_var09.D2.2.02",
+        "pipe_connection_var09.D2.3.08",
+        "pipe_connection_var09.D2.4.02",
+        "pipe_connection_var09.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "pipe_connection_var09.D2.2.02",
+        "pipe_connection_var09.D2.3.08"
+      ]
+    },
+    "arena_shooter_var01": {
+      "d2_anchor_ids": [
+        "arena_shooter_var01.D2.1.04",
+        "arena_shooter_var01.D2.2.04",
+        "arena_shooter_var01.D2.3.02",
+        "arena_shooter_var01.D2.4.04",
+        "arena_shooter_var01.D2.5.05"
+      ],
+      "d42_anchor_ids": [
+        "arena_shooter_var01.D2.2.04",
+        "arena_shooter_var01.D2.3.02"
+      ]
+    },
+    "arena_shooter_var02": {
+      "d2_anchor_ids": [
+        "arena_shooter_var02.D2.1.04",
+        "arena_shooter_var02.D2.2.04",
+        "arena_shooter_var02.D2.3.02",
+        "arena_shooter_var02.D2.4.04",
+        "arena_shooter_var02.D2.5.05"
+      ],
+      "d42_anchor_ids": [
+        "arena_shooter_var02.D2.2.04",
+        "arena_shooter_var02.D2.3.02"
+      ]
+    },
+    "arena_shooter_var03": {
+      "d2_anchor_ids": [
+        "arena_shooter_var03.D2.1.04",
+        "arena_shooter_var03.D2.2.04",
+        "arena_shooter_var03.D2.3.02",
+        "arena_shooter_var03.D2.4.04",
+        "arena_shooter_var03.D2.5.05"
+      ],
+      "d42_anchor_ids": [
+        "arena_shooter_var03.D2.2.04",
+        "arena_shooter_var03.D2.3.02"
+      ]
+    },
+    "arena_shooter_var04": {
+      "d2_anchor_ids": [
+        "arena_shooter_var04.D2.1.04",
+        "arena_shooter_var04.D2.2.04",
+        "arena_shooter_var04.D2.3.02",
+        "arena_shooter_var04.D2.4.04",
+        "arena_shooter_var04.D2.5.05"
+      ],
+      "d42_anchor_ids": [
+        "arena_shooter_var04.D2.2.04",
+        "arena_shooter_var04.D2.3.02"
+      ]
+    },
+    "arena_shooter_var05": {
+      "d2_anchor_ids": [
+        "arena_shooter_var05.D2.1.04",
+        "arena_shooter_var05.D2.2.04",
+        "arena_shooter_var05.D2.3.02",
+        "arena_shooter_var05.D2.4.04",
+        "arena_shooter_var05.D2.5.05"
+      ],
+      "d42_anchor_ids": [
+        "arena_shooter_var05.D2.2.04",
+        "arena_shooter_var05.D2.3.02"
+      ]
+    },
+    "arena_shooter_var06": {
+      "d2_anchor_ids": [
+        "arena_shooter_var06.D2.1.04",
+        "arena_shooter_var06.D2.2.04",
+        "arena_shooter_var06.D2.3.02",
+        "arena_shooter_var06.D2.4.04",
+        "arena_shooter_var06.D2.5.05"
+      ],
+      "d42_anchor_ids": [
+        "arena_shooter_var06.D2.2.04",
+        "arena_shooter_var06.D2.3.02"
+      ]
+    },
+    "arena_shooter_var07": {
+      "d2_anchor_ids": [
+        "arena_shooter_var07.D2.1.04",
+        "arena_shooter_var07.D2.2.04",
+        "arena_shooter_var07.D2.3.02",
+        "arena_shooter_var07.D2.4.04",
+        "arena_shooter_var07.D2.5.05"
+      ],
+      "d42_anchor_ids": [
+        "arena_shooter_var07.D2.2.04",
+        "arena_shooter_var07.D2.3.02"
+      ]
+    },
+    "arena_shooter_var08": {
+      "d2_anchor_ids": [
+        "arena_shooter_var08.D2.1.04",
+        "arena_shooter_var08.D2.2.04",
+        "arena_shooter_var08.D2.3.02",
+        "arena_shooter_var08.D2.4.04",
+        "arena_shooter_var08.D2.5.05"
+      ],
+      "d42_anchor_ids": [
+        "arena_shooter_var08.D2.2.04",
+        "arena_shooter_var08.D2.3.02"
+      ]
+    },
+    "arena_shooter_var09": {
+      "d2_anchor_ids": [
+        "arena_shooter_var09.D2.1.04",
+        "arena_shooter_var09.D2.2.04",
+        "arena_shooter_var09.D2.3.02",
+        "arena_shooter_var09.D2.4.04",
+        "arena_shooter_var09.D2.5.05"
+      ],
+      "d42_anchor_ids": [
+        "arena_shooter_var09.D2.2.04",
+        "arena_shooter_var09.D2.3.02"
+      ]
+    },
+    "mini_zelda_var01": {
+      "d2_anchor_ids": [
+        "mini_zelda_var01.D2.1.01",
+        "mini_zelda_var01.D2.2.06",
+        "mini_zelda_var01.D2.3.20",
+        "mini_zelda_var01.D2.4.05",
+        "mini_zelda_var01.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "mini_zelda_var01.D2.2.06",
+        "mini_zelda_var01.D2.3.20"
+      ]
+    },
+    "mini_zelda_var02": {
+      "d2_anchor_ids": [
+        "mini_zelda_var02.D2.1.01",
+        "mini_zelda_var02.D2.2.06",
+        "mini_zelda_var02.D2.3.20",
+        "mini_zelda_var02.D2.4.05",
+        "mini_zelda_var02.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "mini_zelda_var02.D2.2.06",
+        "mini_zelda_var02.D2.3.20"
+      ]
+    },
+    "mini_zelda_var03": {
+      "d2_anchor_ids": [
+        "mini_zelda_var03.D2.1.01",
+        "mini_zelda_var03.D2.2.06",
+        "mini_zelda_var03.D2.3.20",
+        "mini_zelda_var03.D2.4.05",
+        "mini_zelda_var03.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "mini_zelda_var03.D2.2.06",
+        "mini_zelda_var03.D2.3.20"
+      ]
+    },
+    "mini_zelda_var04": {
+      "d2_anchor_ids": [
+        "mini_zelda_var04.D2.1.01",
+        "mini_zelda_var04.D2.2.06",
+        "mini_zelda_var04.D2.3.20",
+        "mini_zelda_var04.D2.4.05",
+        "mini_zelda_var04.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "mini_zelda_var04.D2.2.06",
+        "mini_zelda_var04.D2.3.20"
+      ]
+    },
+    "mini_zelda_var05": {
+      "d2_anchor_ids": [
+        "mini_zelda_var05.D2.1.01",
+        "mini_zelda_var05.D2.2.06",
+        "mini_zelda_var05.D2.3.20",
+        "mini_zelda_var05.D2.4.05",
+        "mini_zelda_var05.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "mini_zelda_var05.D2.2.06",
+        "mini_zelda_var05.D2.3.20"
+      ]
+    },
+    "mini_zelda_var06": {
+      "d2_anchor_ids": [
+        "mini_zelda_var06.D2.1.01",
+        "mini_zelda_var06.D2.2.06",
+        "mini_zelda_var06.D2.3.20",
+        "mini_zelda_var06.D2.4.05",
+        "mini_zelda_var06.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "mini_zelda_var06.D2.2.06",
+        "mini_zelda_var06.D2.3.20"
+      ]
+    },
+    "mini_zelda_var07": {
+      "d2_anchor_ids": [
+        "mini_zelda_var07.D2.1.01",
+        "mini_zelda_var07.D2.2.06",
+        "mini_zelda_var07.D2.3.20",
+        "mini_zelda_var07.D2.4.05",
+        "mini_zelda_var07.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "mini_zelda_var07.D2.2.06",
+        "mini_zelda_var07.D2.3.20"
+      ]
+    },
+    "mini_zelda_var08": {
+      "d2_anchor_ids": [
+        "mini_zelda_var08.D2.1.01",
+        "mini_zelda_var08.D2.2.06",
+        "mini_zelda_var08.D2.3.20",
+        "mini_zelda_var08.D2.4.05",
+        "mini_zelda_var08.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "mini_zelda_var08.D2.2.06",
+        "mini_zelda_var08.D2.3.20"
+      ]
+    },
+    "mini_zelda_var09": {
+      "d2_anchor_ids": [
+        "mini_zelda_var09.D2.1.01",
+        "mini_zelda_var09.D2.2.06",
+        "mini_zelda_var09.D2.3.20",
+        "mini_zelda_var09.D2.4.05",
+        "mini_zelda_var09.D2.5.01"
+      ],
+      "d42_anchor_ids": [
+        "mini_zelda_var09.D2.2.06",
+        "mini_zelda_var09.D2.3.20"
+      ]
     }
   }
 }
