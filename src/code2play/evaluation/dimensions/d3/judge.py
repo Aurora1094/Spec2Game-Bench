@@ -34,7 +34,7 @@ JUDGE_RUBRIC = {
     "conformance": 100,
 }
 MAX_EVIDENCE_LINES = 5
-JUDGE_POLICY = "openrouter_gpt56_terra_candidate_judge_v1"
+JUDGE_POLICY = "aws_mantle_qwen_vl_judge"
 POLICY_METADATA = {
     "schema_version": 6,
     "judge_policy": JUDGE_POLICY,

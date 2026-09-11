@@ -31,7 +31,7 @@ models:
 
 ## 查看与运行
 
-从项目目录执行。以下命令假设 `OPENROUTER_API_KEY` 和安装了 Pygame 的 `CODE2PLAY_PYTHON` 已设置。工作区可通过 `--workspace` 或 `CODE2PLAY_WORKSPACE` 指定；默认位于当前用户目录下的 `Code2Play-Workspace`。新任务与请求使用短目录名，不绑定某个用户名或盘符。
+从项目目录执行。以下命令假设候选生成所需的 `OPENROUTER_API_KEY`、Judge 所需的 `AWS_MANTLE_API_KEY` 和安装了 Pygame 的 `CODE2PLAY_PYTHON` 已设置。工作区可通过 `--workspace` 或 `CODE2PLAY_WORKSPACE` 指定；默认位于当前用户目录下的 `Code2Play-Workspace`。新任务与请求使用短目录名，不绑定某个用户名或盘符。
 
 ```powershell
 python main.py plan --model gpt_5_6_terra --track core15

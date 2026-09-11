@@ -41,6 +41,12 @@ OPENROUTER_QWEN_JUDGE_REASONING = {"effort": "none"}
 _LEGACY_OPENROUTER_QWEN_JUDGE_REASONING = {"effort": "minimal", "exclude": True}
 OPENROUTER_API_KEY_ENV = "OPENROUTER_API_KEY"
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+AWS_MANTLE_PROVIDER = "aws_mantle"
+AWS_MANTLE_API_STYLE = "chat_completions"
+AWS_MANTLE_API_KEY_ENV = "AWS_MANTLE_API_KEY"
+AWS_MANTLE_BASE_URL = "https://bedrock-mantle.us-east-1.api.aws/v1"
+AWS_MANTLE_QWEN_CODER_MODEL = "qwen.qwen3-coder-next"
+AWS_MANTLE_QWEN_VL_MODEL = "qwen.qwen3-vl-235b-a22b-instruct"
 LINK_OPENAI_PROVIDER = "link_openai"
 LINK_OPENAI_MODEL = "gpt-5.6-sol"
 LINK_OPENAI_API_STYLE = "chat_completions"
@@ -50,7 +56,12 @@ MAX_JUDGE_OUTPUT_TOKENS = 6000
 JUDGE_TEMPERATURE = 0.0
 PANEL_POLICY = "single_qwen37_plus_stateless"
 
-_SECRET_ENV_NAMES = ("DASHSCOPE_API_KEY", "OPENROUTER_API_KEY", LINK_OPENAI_API_KEY_ENV)
+_SECRET_ENV_NAMES = (
+    "DASHSCOPE_API_KEY",
+    "OPENROUTER_API_KEY",
+    AWS_MANTLE_API_KEY_ENV,
+    LINK_OPENAI_API_KEY_ENV,
+)
 _DIMENSION_NAMES = {
     "D2.1": "game element modeling",
     "D2.2": "interaction modeling",
@@ -1208,6 +1219,50 @@ class OpenRouterChatJudge(OpenAICompatibleChatJudge):
         )
 
 
+class AwsMantleChatJudge(OpenAICompatibleChatJudge):
+    """AWS Bedrock Mantle OpenAI-compatible Judge endpoint."""
+
+    _SUPPORTED_MODELS = frozenset(
+        {AWS_MANTLE_QWEN_CODER_MODEL, AWS_MANTLE_QWEN_VL_MODEL}
+    )
+
+    def __init__(
+        self,
+        log_dir: Path,
+        *,
+        model: str = AWS_MANTLE_QWEN_CODER_MODEL,
+        max_output_tokens: int = MAX_JUDGE_OUTPUT_TOKENS,
+        enable_thinking: bool = False,
+        attempts: int = 2,
+        retry_delays_seconds: Sequence[float] = (2,),
+        role: str = "scoring",
+        response_format: Mapping[str, Any] | None = None,
+        client: Any | None = None,
+        base_url: str | None = None,
+        api_key_env: str = AWS_MANTLE_API_KEY_ENV,
+    ) -> None:
+        if model not in self._SUPPORTED_MODELS:
+            raise ValueError(
+                "AWS Mantle Judge only supports qwen.qwen3-coder-next and "
+                "qwen.qwen3-vl-235b-a22b-instruct"
+            )
+        super().__init__(
+            log_dir,
+            provider=AWS_MANTLE_PROVIDER,
+            model=model,
+            api_style=AWS_MANTLE_API_STYLE,
+            api_key_env=api_key_env,
+            base_url=base_url or os.getenv("AWS_MANTLE_BASE_URL", AWS_MANTLE_BASE_URL),
+            max_output_tokens=max_output_tokens,
+            enable_thinking=enable_thinking,
+            attempts=attempts,
+            retry_delays_seconds=retry_delays_seconds,
+            role=role,
+            response_format=response_format,
+            client=client,
+        )
+
+
 class LinkOpenAIChatJudge(OpenAICompatibleChatJudge):
     """Link's OpenAI-compatible endpoint for the fixed GPT-5.6 Sol trial."""
 
@@ -1306,6 +1361,20 @@ def create_judge(
             client=client,
             base_url=base_url,
             api_key_env=api_key_env or OPENROUTER_API_KEY_ENV,
+        )
+    if provider == AWS_MANTLE_PROVIDER:
+        return AwsMantleChatJudge(
+            log_dir,
+            model=model,
+            max_output_tokens=max_output_tokens,
+            enable_thinking=enable_thinking,
+            attempts=attempts,
+            retry_delays_seconds=retry_delays_seconds,
+            role=role,
+            response_format=response_format,
+            client=client,
+            base_url=base_url,
+            api_key_env=api_key_env or AWS_MANTLE_API_KEY_ENV,
         )
     if provider == LINK_OPENAI_PROVIDER:
         return LinkOpenAIChatJudge(
@@ -1450,10 +1519,17 @@ class RoutedSemanticJudge:
 
 
 __all__ = [
+    "AWS_MANTLE_API_KEY_ENV",
+    "AWS_MANTLE_API_STYLE",
+    "AWS_MANTLE_BASE_URL",
+    "AWS_MANTLE_PROVIDER",
+    "AWS_MANTLE_QWEN_CODER_MODEL",
+    "AWS_MANTLE_QWEN_VL_MODEL",
     "DASHSCOPE_API_STYLE",
     "DASHSCOPE_MODEL",
     "DASHSCOPE_PROVIDER",
     "DashScopeChatJudge",
+    "AwsMantleChatJudge",
     "GenerationNeedsRegeneration",
     "GenerationOutputInvalid",
     "GenerationResult",

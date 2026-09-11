@@ -218,6 +218,22 @@ _QWEN_VL_OPENROUTER_JUDGE_PROFILE = {
     "base_url": "https://openrouter.ai/api/v1",
     "response_format": {"type": "json_object"},
 }
+_AWS_MANTLE_QWEN_CODER_JUDGE_PROFILE = {
+    "provider": "aws_mantle",
+    "model": "qwen.qwen3-coder-next",
+    "api_style": "chat_completions",
+    "api_key_env": "AWS_MANTLE_API_KEY",
+    "base_url": "https://bedrock-mantle.us-east-1.api.aws/v1",
+    "response_format": {"type": "json_object"},
+}
+_AWS_MANTLE_QWEN_VL_JUDGE_PROFILE = {
+    "provider": "aws_mantle",
+    "model": "qwen.qwen3-vl-235b-a22b-instruct",
+    "api_style": "chat_completions",
+    "api_key_env": "AWS_MANTLE_API_KEY",
+    "base_url": "https://bedrock-mantle.us-east-1.api.aws/v1",
+    "response_format": {"type": "json_object"},
+}
 _LINK_SOL_JUDGE_PROFILE = {
     "provider": "link_openai",
     "model": "gpt-5.6-sol",
@@ -231,6 +247,8 @@ _LOCKED_JUDGE_PROFILES = (
     _OPENROUTER_QWEN_JUDGE_PROFILE,
     _GEMINI_OPENROUTER_JUDGE_PROFILE,
     _QWEN_VL_OPENROUTER_JUDGE_PROFILE,
+    _AWS_MANTLE_QWEN_CODER_JUDGE_PROFILE,
+    _AWS_MANTLE_QWEN_VL_JUDGE_PROFILE,
     _LINK_SOL_JUDGE_PROFILE,
 )
 
@@ -432,6 +450,34 @@ def _locked_execution_bundle(policy: str) -> dict[str, Any] | None:
                 }
             ],
         }
+    if policy == "aws_mantle_qwen_vl_judge":
+        return {
+            "judge_identity": _provider_identity(_AWS_MANTLE_QWEN_CODER_JUDGE_PROFILE),
+            "route_identities": {
+                "text": _provider_identity(_AWS_MANTLE_QWEN_CODER_JUDGE_PROFILE),
+                "vision": _provider_identity(_AWS_MANTLE_QWEN_VL_JUDGE_PROFILE),
+            },
+            "required_profiles": {
+                "text": "aws_mantle_coder",
+                "vision": "aws_mantle_vl",
+            },
+            "profile_specs": {
+                "text": _AWS_MANTLE_QWEN_CODER_JUDGE_PROFILE,
+                "vision": _AWS_MANTLE_QWEN_VL_JUDGE_PROFILE,
+            },
+            "models": [
+                {
+                    "id": "gpt_5_6_terra",
+                    "name": "GPT-5.6 Terra",
+                    "provider": "openrouter",
+                    "model": "openai/gpt-5.6-terra",
+                    "api_style": "chat_completions",
+                    "api_key_env": "OPENROUTER_API_KEY",
+                    "base_url": "https://openrouter.ai/api/v1",
+                    "reasoning": {"effort": "none"},
+                }
+            ],
+        }
     if policy == "link_sol_single_pass_v1":
         return {
             "judge_identity": _provider_identity(_LINK_SOL_JUDGE_PROFILE),
@@ -493,7 +539,8 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
                 "openrouter_qwen_gemini_judge_v1/v2, "
                 "openrouter_kimi27_candidate_judge_v1/v2, "
                 "openrouter_gpt56_terra_candidate_judge_v1, "
-                "openrouter_gpt56_terra_qwenvl_judge_v1, or link_sol_single_pass_v1"
+                "openrouter_gpt56_terra_qwenvl_judge_v1, "
+                "aws_mantle_qwen_vl_judge, or link_sol_single_pass_v1"
             )
         else:
             if not _matches_mapping(judge, bundle["judge_identity"]):

@@ -199,6 +199,7 @@ def test_benchmark_binds_every_task_to_one_locked_round(
         return {"status": "completed", "official_total": 68.5}
 
     monkeypatch.setenv("OPENROUTER_API_KEY", "integration-test-key")
+    monkeypatch.setenv("AWS_MANTLE_API_KEY", "integration-test-key")
     monkeypatch.setattr(benchmark_module, "build_round_contracts", build_mock_round)
     monkeypatch.setattr(benchmark_module, "run_task", complete_task)
     state = benchmark_module.run_benchmark(
@@ -255,6 +256,7 @@ def test_benchmark_can_run_one_selected_game(
         return {"status": "completed", "official_total": 68.5}
 
     monkeypatch.setenv("OPENROUTER_API_KEY", "integration-test-key")
+    monkeypatch.setenv("AWS_MANTLE_API_KEY", "integration-test-key")
     monkeypatch.setattr(benchmark_module, "build_round_contracts", build_mock_round)
     monkeypatch.setattr(benchmark_module, "run_task", complete_task)
     state = benchmark_module.run_benchmark(
@@ -287,6 +289,7 @@ def test_selected_benchmark_reuses_a_full_round_manifest(
         return {"status": "completed", "official_total": 68.5}
 
     monkeypatch.setenv("OPENROUTER_API_KEY", "integration-test-key")
+    monkeypatch.setenv("AWS_MANTLE_API_KEY", "integration-test-key")
     monkeypatch.setattr(benchmark_module, "run_task", complete_task)
     state = benchmark_module.run_benchmark(
         workspace=workspace,

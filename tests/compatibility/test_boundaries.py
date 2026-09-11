@@ -230,7 +230,7 @@ def test_current_batch_matrix_can_be_combined_without_score_regression(
     assert combined["matrix"][0]["final_score"] == 68.5
 
 
-def test_default_openrouter_terra_generation_and_judge_routes() -> None:
+def test_default_openrouter_terra_generation_and_aws_mantle_judge_routes() -> None:
     config = load_config()
     configured_models = models(config)
     assert len(configured_models) == 1
@@ -242,30 +242,36 @@ def test_default_openrouter_terra_generation_and_judge_routes() -> None:
     assert configured_models[0].api_key_env == "OPENROUTER_API_KEY"
     assert configured_models[0].base_url == "https://openrouter.ai/api/v1"
     assert configured_models[0].reasoning == {"effort": "none"}
-    assert config["judge"]["policy"] == "openrouter_gpt56_terra_candidate_judge_v1"
+    assert config["judge"]["policy"] == "aws_mantle_qwen_vl_judge"
     assert config["judge"]["routing"]["roles"] == {
-        "text": "qwen_openrouter",
-        "vision": "gemini_openrouter",
+        "text": "aws_mantle_coder",
+        "vision": "aws_mantle_vl",
+    }
+    text_roles = {
+        "action_compiler",
+        "functionality",
+        "specification_deviation",
+        "code_quality",
+        "contract_generation",
     }
     for role, route in config["judge"]["routes"].items():
-        modality = config["judge"]["routing"]["role_modalities"][role]
         expected_model = (
-            "qwen/qwen3.7-plus" if modality == "text" else "google/gemini-3.8-flash"
+            "qwen.qwen3-coder-next"
+            if role in text_roles
+            else "qwen.qwen3-vl-235b-a22b-instruct"
         )
         assert route == {
-            "provider": "openrouter",
+            "provider": "aws_mantle",
             "model": expected_model,
             "api_style": "chat_completions",
             "enable_thinking": False,
             "max_output_tokens": route["max_output_tokens"],
         }
     for profile in config["judge"]["routing"]["profiles"].values():
-        assert profile["api_key_env"] == "OPENROUTER_API_KEY"
+        assert profile["api_key_env"] == "AWS_MANTLE_API_KEY"
         assert profile["response_format"] == {"type": "json_object"}
-    assert config["judge"]["routing"]["profiles"]["qwen_openrouter"]["reasoning"] == {
-        "effort": "none",
-    }
-    assert "reasoning" not in config["judge"]["routing"]["profiles"]["gemini_openrouter"]
+    assert "reasoning" not in config["judge"]["routing"]["profiles"]["aws_mantle_coder"]
+    assert "reasoning" not in config["judge"]["routing"]["profiles"]["aws_mantle_vl"]
     assert not hasattr(dashscope, "create_compiler_judge")
     assert not hasattr(dashscope, "create_scoring_judge")
 

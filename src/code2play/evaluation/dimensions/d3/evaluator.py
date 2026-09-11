@@ -195,6 +195,21 @@ _SEMANTIC_JUDGE_CONTRACTS["openrouter_qwen_vl_judge"] = {
     "policy": "openrouter_qwen_vl_judge",
 }
 
+_SEMANTIC_JUDGE_CONTRACTS["aws_mantle_qwen_vl_judge"] = {
+    "policy": "aws_mantle_qwen_vl_judge",
+    "region": "us-east-1",
+    "stateless": True,
+    "max_output_tokens": 1200,
+    "temperature": 0.0,
+    "provider": "aws_mantle",
+    "model": "qwen.qwen3-coder-next",
+    "api": "chat_completions",
+    "enable_thinking": False,
+    "criterion_scale_max": 100,
+    "repetitions": 1,
+    "aggregation": "single_valid_response",
+}
+
 
 def validate_semantic_judge_config(value: Mapping[str, Any]) -> dict[str, Any]:
     policy = str(value.get("policy") or "")

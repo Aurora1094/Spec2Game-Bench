@@ -402,7 +402,7 @@ def cmd_preflight(args: argparse.Namespace) -> int:
             "d4_contract_preflight",
         )
         with tempfile.NamedTemporaryFile(
-            prefix="code2play-openrouter-vision-",
+            prefix="code2play-mantle-vision-",
             suffix=".png",
             delete=False,
         ) as handle:
