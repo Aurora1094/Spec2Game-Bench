@@ -4,13 +4,15 @@ The benchmark preserves the locked scoring semantics while expanding the game
 catalog to 15 games. The official score is:
 
 ```text
-Final = 0.20*D1 + Gate_D1*(0.50*D2 + 0.15*D3 + 0.15*D4)
+g(D1) = clip((D1 - 40) / 20, 0, 1)
+Final = 0.20*D1 + g(D1)*(0.50*D2 + 0.15*D3 + 0.15*D4)
 ```
 
-D1 controls score contributions only. D2, D3, and D4 are measured for
-diagnosis whenever the candidate can produce valid evidence. A missing valid
-dimension keeps the official total incomplete rather than silently treating it
-as zero. All four weights are fixed and are not renormalized.
+D1 controls score contributions only through a continuous factor. D2, D3, and
+D4 are measured for diagnosis whenever the candidate can produce valid evidence.
+A missing valid dimension keeps the official total incomplete rather than
+silently treating it as zero. All four weights are fixed and are not
+renormalized.
 
 ## Generation
 

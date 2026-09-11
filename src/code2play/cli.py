@@ -409,14 +409,14 @@ def cmd_preflight(args: argparse.Namespace) -> int:
             probe_path = Path(handle.name)
             handle.write(
                 base64.b64decode(
-                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5sXcAAAAASUVORK5CYII="
+                    "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAKklEQVR4nGOQr79PU8QwasGoBaMWjFowasGoBaMWjFowasGoBaMWDBULAGlq9EwJGxW7AAAAAElFTkSuQmCC"
                 )
             )
         try:
             router.for_role("artistic_visual").json_vision(
                 "Return one JSON object with an ok boolean.",
                 '{"request": "Code2Play-Bench visual live connectivity check"}',
-                [(probe_path, "one-pixel preflight image")],
+                [(probe_path, "RGB preflight image")],
                 "d4_1_artistic_visual_quality",
             )
         finally:

@@ -560,34 +560,52 @@ def _normalize_generated_body(
         "target",
         MAX_CONTRACT_TARGET_CHARACTERS,
     )
-    operations, normalized_operation_policy = _normalize_contract_operations(
-        value,
-        operation_policy=operation_policy,
-    )
-    art_direction = _string_list(
-        _contract_field(value, "art_direction", "art_requirements"),
-        "art_direction",
-        maximum=MAX_ART_DIRECTION_ITEMS,
-        maximum_characters=MAX_ART_DIRECTION_CHARACTERS,
-    )
+    validation_errors: list[str] = []
+    try:
+        operations, normalized_operation_policy = _normalize_contract_operations(
+            value,
+            operation_policy=operation_policy,
+        )
+    except ValueError as exc:
+        validation_errors.append(str(exc))
+        operations, normalized_operation_policy = [], None
+    try:
+        art_direction = _string_list(
+            _contract_field(value, "art_direction", "art_requirements"),
+            "art_direction",
+            maximum=MAX_ART_DIRECTION_ITEMS,
+            maximum_characters=MAX_ART_DIRECTION_CHARACTERS,
+        )
+    except ValueError as exc:
+        validation_errors.append(str(exc))
+        art_direction = []
     sample_size = value.get("art_sample_size", D41_ART_SAMPLE_SIZE)
     sample_seed = value.get("sample_seed", D41_SAMPLE_SEED)
     if isinstance(sample_size, bool) or not isinstance(sample_size, int) or not 1 <= sample_size <= 12:
         raise ValueError("art_sample_size must be an integer from 1 through 12")
     if isinstance(sample_seed, bool) or not isinstance(sample_seed, int) or sample_seed < 0:
         raise ValueError("sample_seed must be a non-negative integer")
-    source_ids = _source_checkpoint_ids(value)
-    if not isinstance(source_ids, list) or len(source_ids) != D43_QUESTION_COUNT:
-        raise ValueError("d4_3_source_checkpoint_ids must contain exactly two IDs")
     normalized_sources = []
-    for index, source_id in enumerate(source_ids):
-        source_id = _canonical_checkpoint_id(source_id, eligible_ids)
-        source_id = _english(source_id, f"d4_3_source_checkpoint_ids[{index}]")
-        if source_id not in eligible_ids:
-            raise ValueError(f"D4.3 source references ineligible checkpoint {source_id!r}")
-        normalized_sources.append(source_id)
-    if len(set(normalized_sources)) != D43_QUESTION_COUNT:
-        raise ValueError("D4.3 source checkpoint IDs must be distinct")
+    try:
+        source_ids = _source_checkpoint_ids(value)
+        if not isinstance(source_ids, list) or len(source_ids) != D43_QUESTION_COUNT:
+            raise ValueError("d4_3_source_checkpoint_ids must contain exactly two IDs")
+        for index, source_id in enumerate(source_ids):
+            source_id = _canonical_checkpoint_id(source_id, eligible_ids)
+            source_id = _english(source_id, f"d4_3_source_checkpoint_ids[{index}]")
+            if source_id not in eligible_ids:
+                raise ValueError(
+                    f"D4.3 source references ineligible checkpoint {source_id!r}; "
+                    "copy exactly two IDs from the eligible list: "
+                    + ", ".join(sorted(eligible_ids))
+                )
+            normalized_sources.append(source_id)
+        if len(set(normalized_sources)) != D43_QUESTION_COUNT:
+            raise ValueError("D4.3 source checkpoint IDs must be distinct")
+    except ValueError as exc:
+        validation_errors.append(str(exc))
+    if validation_errors:
+        raise ValueError("; ".join(validation_errors))
     body: dict[str, Any] = {
         "game_slug": game_slug,
         "target": target,

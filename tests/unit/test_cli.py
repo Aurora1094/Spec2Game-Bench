@@ -49,7 +49,11 @@ def test_live_preflight_checks_aws_mantle_text_and_vision_routes(
             purpose: str,
         ) -> dict[str, bool]:
             assert len(images) == 1
-            assert images[0][0].read_bytes().startswith(b"\x89PNG")
+            png = images[0][0].read_bytes()
+            assert png.startswith(b"\x89PNG\r\n\x1a\n")
+            assert int.from_bytes(png[16:20], "big") == 32
+            assert int.from_bytes(png[20:24], "big") == 32
+            assert png[24:26] == b"\x08\x02"  # 8-bit RGB
             calls.append((self.role, purpose))
             return {"ok": True}
 

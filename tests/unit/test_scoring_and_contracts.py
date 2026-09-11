@@ -19,7 +19,7 @@ from code2play.d4.contracts import (
 from code2play.evaluation.scoring import assemble_result
 
 
-def test_official_weights_and_d1_contribution_gate() -> None:
+def test_official_weights_and_soft_d1_contribution_gate() -> None:
     result = assemble_result(
         game="snake",
         model="qwen3_7_plus",
@@ -46,7 +46,36 @@ def test_official_weights_and_d1_contribution_gate() -> None:
         d4_detail={"score_normalized": 1.0, "status": "completed"},
     )
     assert gated["official_total"] == 8.0
+    assert gated["dimensions"]["D1"]["gate_factor"] == 0.0
     assert gated["dimensions"]["D2"]["weighted_contribution"] == 0.0
+
+    transition = assemble_result(
+        game="snake",
+        model="qwen3_7_plus",
+        repetition=1,
+        candidate_project_sha256="a" * 64,
+        d4_configured=True,
+        d1_detail={"score": 50, "gate_pass": False},
+        d2_detail={"score": 1.0, "status": "completed"},
+        d3_detail={"score": 100, "max_score": 100, "status": "completed"},
+        d4_detail={"score_normalized": 1.0, "status": "completed"},
+    )
+    assert transition["dimensions"]["D1"]["gate_factor"] == 0.5
+    assert transition["official_total"] == 50.0
+
+    passed = assemble_result(
+        game="snake",
+        model="qwen3_7_plus",
+        repetition=1,
+        candidate_project_sha256="a" * 64,
+        d4_configured=True,
+        d1_detail={"score": 60, "gate_pass": True},
+        d2_detail={"score": 1.0, "status": "completed"},
+        d3_detail={"score": 100, "max_score": 100, "status": "completed"},
+        d4_detail={"score_normalized": 1.0, "status": "completed"},
+    )
+    assert passed["dimensions"]["D1"]["gate_factor"] == 1.0
+    assert passed["official_total"] == 92.0
 
 
 def test_judge_gap_has_no_official_total_even_when_d1_gate_fails() -> None:
@@ -198,6 +227,30 @@ def test_contract_requires_two_distinct_gameplay_operations() -> None:
             game_slug="snake",
             eligible_ids={row["id"] for row in eligible},
         )
+
+
+def test_contract_reports_operation_and_source_errors_together() -> None:
+    eligible_ids = {"criterion_2_01", "criterion_2_02"}
+
+    with pytest.raises(ValueError) as exc_info:
+        _normalize_generated_body(
+            {
+                "target": "Collect food and survive as long as possible.",
+                "allowed_operations": [
+                    "Press W to move up.",
+                    "Press R to restart after game over.",
+                ],
+                "art_direction": ["Use a clear, readable game scene."],
+                "d4_3_source_checkpoint_ids": ["D2.1", "D2.2"],
+            },
+            game_slug="snake",
+            eligible_ids=eligible_ids,
+        )
+
+    message = str(exc_info.value)
+    assert "allowed operation is disallowed" in message
+    assert "D4.3 source references ineligible checkpoint" in message
+    assert "criterion_2_01, criterion_2_02" in message
 
 
 def test_whack_a_mole_target_policy_uses_two_game_semantic_operations(
