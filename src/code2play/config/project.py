@@ -226,6 +226,14 @@ _AWS_MANTLE_QWEN_CODER_JUDGE_PROFILE = {
     "base_url": "https://bedrock-mantle.us-east-1.api.aws/v1",
     "response_format": {"type": "json_object"},
 }
+_AWS_MANTLE_QWEN_235B_2507_JUDGE_PROFILE = {
+    "provider": "aws_mantle",
+    "model": "qwen.qwen3-235b-a22b-2507",
+    "api_style": "chat_completions",
+    "api_key_env": "AWS_MANTLE_API_KEY",
+    "base_url": "https://bedrock-mantle.us-east-1.api.aws/v1",
+    "response_format": {"type": "json_object"},
+}
 _AWS_MANTLE_QWEN_VL_JUDGE_PROFILE = {
     "provider": "aws_mantle",
     "model": "qwen.qwen3-vl-235b-a22b-instruct",
@@ -248,6 +256,7 @@ _LOCKED_JUDGE_PROFILES = (
     _GEMINI_OPENROUTER_JUDGE_PROFILE,
     _QWEN_VL_OPENROUTER_JUDGE_PROFILE,
     _AWS_MANTLE_QWEN_CODER_JUDGE_PROFILE,
+    _AWS_MANTLE_QWEN_235B_2507_JUDGE_PROFILE,
     _AWS_MANTLE_QWEN_VL_JUDGE_PROFILE,
     _LINK_SOL_JUDGE_PROFILE,
 )
@@ -478,6 +487,66 @@ def _locked_execution_bundle(policy: str) -> dict[str, Any] | None:
                 }
             ],
         }
+    if policy == "aws_mantle_vl_dashscope_qwen37_text":
+        return {
+            "judge_identity": _provider_identity(_QWEN_JUDGE_PROFILE),
+            "route_identities": {
+                "text": _provider_identity(_QWEN_JUDGE_PROFILE),
+                "vision": _provider_identity(_AWS_MANTLE_QWEN_VL_JUDGE_PROFILE),
+                "contract": _provider_identity(_AWS_MANTLE_QWEN_CODER_JUDGE_PROFILE),
+            },
+            "required_profiles": {
+                "text": "dashscope_qwen",
+                "vision": "aws_mantle_vl",
+                "contract": "aws_mantle_coder",
+            },
+            "profile_specs": {
+                "text": _QWEN_JUDGE_PROFILE,
+                "vision": _AWS_MANTLE_QWEN_VL_JUDGE_PROFILE,
+                "contract": _AWS_MANTLE_QWEN_CODER_JUDGE_PROFILE,
+            },
+            "models": [
+                {
+                    "id": "qwen3_7_plus",
+                    "name": "Qwen3.7 Plus",
+                    "provider": "alibaba_dashscope",
+                    "model": "qwen3.7-plus",
+                    "api_style": "chat_completions",
+                    "api_key_env": "DASHSCOPE_API_KEY",
+                    "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+                }
+            ],
+        }
+    if policy == "aws_mantle_vl_qwen235b_2507_text":
+        return {
+            "judge_identity": _provider_identity(_AWS_MANTLE_QWEN_235B_2507_JUDGE_PROFILE),
+            "route_identities": {
+                "text": _provider_identity(_AWS_MANTLE_QWEN_235B_2507_JUDGE_PROFILE),
+                "vision": _provider_identity(_AWS_MANTLE_QWEN_VL_JUDGE_PROFILE),
+                "contract": _provider_identity(_AWS_MANTLE_QWEN_CODER_JUDGE_PROFILE),
+            },
+            "required_profiles": {
+                "text": "aws_mantle_qwen235b",
+                "vision": "aws_mantle_vl",
+                "contract": "aws_mantle_coder",
+            },
+            "profile_specs": {
+                "text": _AWS_MANTLE_QWEN_235B_2507_JUDGE_PROFILE,
+                "vision": _AWS_MANTLE_QWEN_VL_JUDGE_PROFILE,
+                "contract": _AWS_MANTLE_QWEN_CODER_JUDGE_PROFILE,
+            },
+            "models": [
+                {
+                    "id": "qwen3_7_plus",
+                    "name": "Qwen3.7 Plus",
+                    "provider": "alibaba_dashscope",
+                    "model": "qwen3.7-plus",
+                    "api_style": "chat_completions",
+                    "api_key_env": "DASHSCOPE_API_KEY",
+                    "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+                }
+            ],
+        }
     if policy == "link_sol_single_pass_v1":
         return {
             "judge_identity": _provider_identity(_LINK_SOL_JUDGE_PROFILE),
@@ -523,6 +592,17 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
             {"id": "rendering", "target": "rendering.py", "max_output_tokens": 5000},
             {"id": "main", "target": "main.py", "max_output_tokens": 2000},
         ],
+        "difficulty_overrides": {
+            "hard": {
+                "total_max_output_tokens": 31000,
+                "stages": [
+                    {"id": "state", "target": "state.py", "max_output_tokens": 5000},
+                    {"id": "game", "target": "game.py", "max_output_tokens": 14000},
+                    {"id": "rendering", "target": "rendering.py", "max_output_tokens": 10000},
+                    {"id": "main", "target": "main.py", "max_output_tokens": 2000},
+                ],
+            }
+        },
     }
     if config.get("schema_version") != 3:
         errors.append("configuration schema_version must be 3")
@@ -540,7 +620,8 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
                 "openrouter_kimi27_candidate_judge_v1/v2, "
                 "openrouter_gpt56_terra_candidate_judge_v1, "
                 "openrouter_gpt56_terra_qwenvl_judge_v1, "
-                "aws_mantle_qwen_vl_judge, or link_sol_single_pass_v1"
+                "aws_mantle_qwen_vl_judge, aws_mantle_vl_dashscope_qwen37_text, "
+                "aws_mantle_vl_qwen235b_2507_text, or link_sol_single_pass_v1"
             )
         else:
             if not _matches_mapping(judge, bundle["judge_identity"]):
@@ -587,21 +668,22 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
             elif not isinstance(profiles, Mapping):
                 errors.append("judge routing profiles must be a mapping")
             elif bundle is not None:
-                for modality in ("text", "vision"):
-                    profile_name = bundle["required_profiles"][modality]
+                for modality, profile_name in bundle["required_profiles"].items():
                     expected_profile = bundle["profile_specs"][modality]
                     if not _matches_mapping(profiles.get(profile_name), expected_profile):
                         errors.append(
                             f"judge routing must define the {profile_name} {modality} profile"
                         )
             if not isinstance(role_modalities, Mapping) or any(
-                role_modalities.get(role) != modality
+                role_modalities.get(role) not in (
+                    {modality, "contract"} if role == "contract_generation" else {modality}
+                )
                 for role, modality in expected_modalities.items()
             ):
                 errors.append("judge role modalities are incomplete or invalid")
         routes = judge.get("routes", {})
         expected_limits = {
-            "action_compiler": 6000,
+            "action_compiler": 24000,
             "functionality": 2000,
             "specification_deviation": 800,
             "code_quality": 1200,
@@ -611,11 +693,23 @@ def locked_runtime_policy_errors(config: Mapping[str, Any]) -> list[str]:
             "question_answering": 500,
             "contract_generation": 2000,
         }
+        routing_modalities = (
+            judge.get("routing", {}).get("role_modalities", {})
+            if isinstance(judge.get("routing"), Mapping)
+            else {}
+        )
         for role, output_limit in expected_limits.items():
             route = routes.get(role) if isinstance(routes, Mapping) else None
             modality = expected_modalities[role]
+            identity_key = (
+                routing_modalities.get(role)
+                if isinstance(routing_modalities, Mapping)
+                and bundle is not None
+                and routing_modalities.get(role) in bundle["route_identities"]
+                else modality
+            )
             expected_route = {
-                **(bundle["route_identities"][modality] if bundle is not None else {}),
+                **(bundle["route_identities"][identity_key] if bundle is not None else {}),
                 "enable_thinking": False,
                 "max_output_tokens": output_limit,
             }

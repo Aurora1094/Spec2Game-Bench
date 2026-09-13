@@ -209,6 +209,34 @@ _SEMANTIC_JUDGE_CONTRACTS["aws_mantle_qwen_vl_judge"] = {
     "repetitions": 1,
     "aggregation": "single_valid_response",
 }
+_SEMANTIC_JUDGE_CONTRACTS["aws_mantle_vl_dashscope_qwen37_text"] = {
+    "policy": "aws_mantle_vl_dashscope_qwen37_text",
+    "region": "us-east-1",
+    "stateless": True,
+    "max_output_tokens": 1200,
+    "temperature": 0.0,
+    "provider": "alibaba_dashscope",
+    "model": "qwen3.7-plus",
+    "api": "chat_completions",
+    "enable_thinking": False,
+    "criterion_scale_max": 100,
+    "repetitions": 1,
+    "aggregation": "single_valid_response",
+}
+_SEMANTIC_JUDGE_CONTRACTS["aws_mantle_vl_qwen235b_2507_text"] = {
+    "policy": "aws_mantle_vl_qwen235b_2507_text",
+    "region": "us-east-1",
+    "stateless": True,
+    "max_output_tokens": 1200,
+    "temperature": 0.0,
+    "provider": "aws_mantle",
+    "model": "qwen.qwen3-235b-a22b-2507",
+    "api": "chat_completions",
+    "enable_thinking": False,
+    "criterion_scale_max": 100,
+    "repetitions": 1,
+    "aggregation": "single_valid_response",
+}
 
 
 def validate_semantic_judge_config(value: Mapping[str, Any]) -> dict[str, Any]:

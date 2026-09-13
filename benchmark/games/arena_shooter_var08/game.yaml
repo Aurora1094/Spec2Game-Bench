@@ -12,7 +12,7 @@
   ],
   "source_audit": {
     "docx_sha256": "e091c30a3a9c4a9ebb8f1f99f7d6851b11bb1199124f22bc6029331315c9e647",
-    "base_checkpoints_sha256": "6e07bdccd4ca0e0e9a26c2ca4a10d9fda3f5d4dec89e9acbde374c292b6151e4",
+    "base_checkpoints_sha256": "d6fae9aaf4efdeb69d045f4236cf99dbb29f890a51b0a1f431c7d23c35667a0e",
     "checkpoint_count": 52
   },
   "family_slug": "arena_shooter",

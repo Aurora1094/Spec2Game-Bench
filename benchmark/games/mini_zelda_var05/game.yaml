@@ -12,7 +12,7 @@
   ],
   "source_audit": {
     "docx_sha256": "4ff282620fcb0b820b0501e62639ede5a8e373504739bd6eec80faf13d21a9d2",
-    "base_checkpoints_sha256": "1e56b3ca7b602293b90ac54d2ecebc5f7a4483be506870a833a77652c49dc967",
+    "base_checkpoints_sha256": "6d064a9a7dc36ddc40e4609a9b9a0e6a89fe8f6b7b121d0a50edc6b186682597",
     "checkpoint_count": 59
   },
   "family_slug": "mini_zelda",

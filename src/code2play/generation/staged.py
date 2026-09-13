@@ -322,14 +322,34 @@ def _call_generator(
     return generate(model, prompt.text, **kwargs)
 
 
-def _stage_config(generation_config: Mapping[str, Any], stage: str) -> dict[str, Any]:
+def _stage_config(
+    generation_config: Mapping[str, Any],
+    stage: str,
+    difficulty: str = "",
+) -> dict[str, Any]:
     stages = generation_config.get("stages")
     if not isinstance(stages, list):
         raise ValueError("generation.stages must be a list")
     matches = [item for item in stages if isinstance(item, Mapping) and item.get("id") == stage]
     if len(matches) != 1:
         raise ValueError(f"generation stage {stage!r} must appear exactly once")
-    return dict(matches[0])
+    result = dict(matches[0])
+    if difficulty != "hard":
+        return result
+    overrides = generation_config.get("difficulty_overrides")
+    hard = overrides.get("hard") if isinstance(overrides, Mapping) else None
+    hard_stages = hard.get("stages") if isinstance(hard, Mapping) else None
+    if not isinstance(hard_stages, list):
+        return result
+    hard_matches = [
+        item for item in hard_stages if isinstance(item, Mapping) and item.get("id") == stage
+    ]
+    if len(hard_matches) != 1:
+        return result
+    tokens = hard_matches[0].get("max_output_tokens")
+    if isinstance(tokens, int) and not isinstance(tokens, bool) and tokens > 0:
+        result["max_output_tokens"] = tokens
+    return result
 
 
 def _write_call_artifacts(
@@ -455,7 +475,9 @@ def generate_candidate_project(
         (stage_dir / "prompt.md").write_text(
             prompt.text, encoding="utf-8", newline="\n"
         )
-        stage_policy = _stage_config(generation_config, stage)
+        stage_policy = _stage_config(
+            generation_config, stage, difficulty=str(game.difficulty or "")
+        )
         started = time.perf_counter()
         cycle = _next_generation_cycle(stage_dir)
         try:

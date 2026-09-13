@@ -122,7 +122,7 @@ def test_two_independent_tracks_schedule_165_distinct_projects(tmp_path, monkeyp
         observed.append((game.slug, task, game.spec, game.checkpoints, kwargs["config"]["selection"]["track"]))
         return {"status": "completed", "official_total": 0.0}
 
-    monkeypatch.setenv("OPENROUTER_API_KEY", "not-a-real-key")
+    monkeypatch.setenv("DASHSCOPE_API_KEY", "not-a-real-key")
     monkeypatch.setenv("AWS_MANTLE_API_KEY", "not-a-real-key")
     monkeypatch.setattr(benchmark, "build_round_contracts", mock_build)
     monkeypatch.setattr(benchmark, "run_task", generated)
@@ -338,14 +338,14 @@ def test_budget_does_not_price_unexecuted_judging_as_a_full_workload(tmp_path):
 
 def test_completed_task_resume_preserves_original_execution_timestamps(tmp_path, monkeypatch):
     real_build = build_round_contracts
-    monkeypatch.setenv("OPENROUTER_API_KEY", "not-a-real-key")
+    monkeypatch.setenv("DASHSCOPE_API_KEY", "not-a-real-key")
     monkeypatch.setenv("AWS_MANTLE_API_KEY", "not-a-real-key")
 
     def contracts(root, selected, *, config, round_id):
         return real_build(root, selected, config=config, round_id=round_id, generator=_mock_contract_generator(config))
 
     def task(**kwargs):
-        root = task_storage_dir(kwargs["run_dir"], "snake__gpt_5_6_terra__r01")
+        root = task_storage_dir(kwargs["run_dir"], "snake__qwen3_7_plus__r01")
         put(root / "run_state.json", {"created_at": "2026-09-10T10:00:00+00:00", "finished_at": "2026-09-10T10:05:00+00:00"})
         return {"status": "completed", "official_total": 70}
 
