@@ -51,13 +51,13 @@
     ]
   },
   "semantic_judge": {
-    "policy": "aws_mantle_qwen_vl_judge",
+    "policy": "aws_mantle_vl_qwen235b_2507_text",
     "region": "us-east-1",
     "stateless": true,
     "max_output_tokens": 1200,
     "temperature": 0.0,
     "provider": "aws_mantle",
-    "model": "qwen.qwen3-coder-next",
+    "model": "qwen.qwen3-235b-a22b-2507",
     "api": "chat_completions",
     "enable_thinking": false,
     "criterion_scale_max": 100,

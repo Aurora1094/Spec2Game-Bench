@@ -19,8 +19,8 @@ from code2play.execution.safe_artifacts import redact_text, sanitize
 
 
 REPORT_SCHEMA_VERSION = 2
-JUDGE_POLICY = "aws_mantle_qwen_vl_judge"
-JUDGE_MODEL = "qwen.qwen3-coder-next + qwen.qwen3-vl-235b-a22b-instruct via AWS Bedrock Mantle"
+JUDGE_POLICY = "aws_mantle_vl_qwen235b_2507_text"
+JUDGE_MODEL = "qwen.qwen3-235b-a22b-2507 + qwen.qwen3-vl-235b-a22b-instruct via AWS Bedrock Mantle"
 JUDGE_MODE = "single_valid_response"
 JUDGE_TEMPERATURE = 0.0
 CSV_FIELDS = (

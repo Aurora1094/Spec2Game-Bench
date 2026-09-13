@@ -46,6 +46,7 @@ AWS_MANTLE_API_STYLE = "chat_completions"
 AWS_MANTLE_API_KEY_ENV = "AWS_MANTLE_API_KEY"
 AWS_MANTLE_BASE_URL = "https://bedrock-mantle.us-east-1.api.aws/v1"
 AWS_MANTLE_QWEN_CODER_MODEL = "qwen.qwen3-coder-next"
+AWS_MANTLE_QWEN_235B_2507_MODEL = "qwen.qwen3-235b-a22b-2507"
 AWS_MANTLE_QWEN_VL_MODEL = "qwen.qwen3-vl-235b-a22b-instruct"
 LINK_OPENAI_PROVIDER = "link_openai"
 LINK_OPENAI_MODEL = "gpt-5.6-sol"
@@ -465,7 +466,7 @@ def candidate_generation_settings(model: Any) -> dict[str, Any]:
                     "https://dashscope.aliyuncs.com/compatible-mode/v1",
                 )
             ),
-            "enable_thinking": True,
+            "enable_thinking": False,
         }
     if provider == OPENROUTER_PROVIDER:
         if not re.fullmatch(r"[A-Za-z0-9._-]+/[A-Za-z0-9._:/-]+", requested_model):
@@ -548,7 +549,7 @@ def _generate_once(
     if isinstance(reasoning, Mapping):
         request_kwargs["extra_body"] = {"reasoning": dict(reasoning)}
     elif settings["provider"] == DASHSCOPE_PROVIDER:
-        request_kwargs["extra_body"] = {"enable_thinking": True}
+        request_kwargs["extra_body"] = {"enable_thinking": bool(settings.get("enable_thinking", False))}
     response = client.chat.completions.create(**request_kwargs)
     parts: list[str] = []
     usage: dict[str, Any] | None = None
@@ -1223,7 +1224,11 @@ class AwsMantleChatJudge(OpenAICompatibleChatJudge):
     """AWS Bedrock Mantle OpenAI-compatible Judge endpoint."""
 
     _SUPPORTED_MODELS = frozenset(
-        {AWS_MANTLE_QWEN_CODER_MODEL, AWS_MANTLE_QWEN_VL_MODEL}
+        {
+            AWS_MANTLE_QWEN_CODER_MODEL,
+            AWS_MANTLE_QWEN_235B_2507_MODEL,
+            AWS_MANTLE_QWEN_VL_MODEL,
+        }
     )
 
     def __init__(
@@ -1243,7 +1248,8 @@ class AwsMantleChatJudge(OpenAICompatibleChatJudge):
     ) -> None:
         if model not in self._SUPPORTED_MODELS:
             raise ValueError(
-                "AWS Mantle Judge only supports qwen.qwen3-coder-next and "
+                "AWS Mantle Judge only supports qwen.qwen3-coder-next, "
+                "qwen.qwen3-235b-a22b-2507, and "
                 "qwen.qwen3-vl-235b-a22b-instruct"
             )
         super().__init__(
@@ -1524,6 +1530,7 @@ __all__ = [
     "AWS_MANTLE_BASE_URL",
     "AWS_MANTLE_PROVIDER",
     "AWS_MANTLE_QWEN_CODER_MODEL",
+    "AWS_MANTLE_QWEN_235B_2507_MODEL",
     "AWS_MANTLE_QWEN_VL_MODEL",
     "DASHSCOPE_API_STYLE",
     "DASHSCOPE_MODEL",

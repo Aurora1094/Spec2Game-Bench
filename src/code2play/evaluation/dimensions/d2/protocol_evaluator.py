@@ -17,6 +17,7 @@ from .base import FunctionalityResult
 DIMENSIONS = ("D2.1", "D2.2", "D2.3", "D2.4", "D2.5")
 D2_BATCH_TARGET_PROMPT_CHARS = 500_000
 MAX_CHECKPOINT_JUDGE_PROMPT_CHARS = 600_000
+CARROT_DEFENSE_MAX_CHECKPOINT_JUDGE_PROMPT_CHARS = 2_000_000
 D2_BATCH_MAX_CHECKPOINTS = 8
 OPAQUE_RANDOM_STATE_KEYS = frozenset({"rng_state", "random_state", "prng_state"})
 DIMENSION_NAMES = {
@@ -188,12 +189,25 @@ def _compact_trace_for_judge(trace: dict[str, Any]) -> dict[str, Any]:
     return _compact_opaque_state_for_judge(_strip_d4_only_trace_evidence(compact))
 
 
-def _validate_checkpoint_prompt_size(prompt: str, checkpoint_id: str) -> str:
-    if len(prompt) > MAX_CHECKPOINT_JUDGE_PROMPT_CHARS:
+def _is_carrot_defense_checkpoint(checkpoint_id: str) -> bool:
+    slug = str(checkpoint_id).split(".", 1)[0]
+    return slug == "carrot_defense" or slug.startswith("carrot_defense_")
+
+
+def _max_checkpoint_judge_prompt_chars(*checkpoint_ids: str) -> int:
+    if any(_is_carrot_defense_checkpoint(checkpoint_id) for checkpoint_id in checkpoint_ids):
+        return CARROT_DEFENSE_MAX_CHECKPOINT_JUDGE_PROMPT_CHARS
+    return MAX_CHECKPOINT_JUDGE_PROMPT_CHARS
+
+
+def _validate_checkpoint_prompt_size(prompt: str, *checkpoint_ids: str) -> str:
+    limit = _max_checkpoint_judge_prompt_chars(*checkpoint_ids)
+    label = checkpoint_ids[0] if len(checkpoint_ids) == 1 else ",".join(checkpoint_ids)
+    if len(prompt) > limit:
         raise ValueError(
-            f"D2 checkpoint {checkpoint_id} judge prompt remains too large after "
+            f"D2 checkpoint {label} judge prompt remains too large after "
             f"semantic compaction: {len(prompt)} characters exceeds "
-            f"{MAX_CHECKPOINT_JUDGE_PROMPT_CHARS}"
+            f"{limit}"
         )
     return prompt
 
@@ -385,11 +399,12 @@ def _partition_dimension_batches(
             )
         )
         checkpoint_id = str(checkpoint["id"])
-        if singleton_size > MAX_CHECKPOINT_JUDGE_PROMPT_CHARS:
+        hard_limit = _max_checkpoint_judge_prompt_chars(checkpoint_id)
+        if singleton_size > hard_limit:
             raise ValueError(
                 f"D2 checkpoint {checkpoint_id} remains too large after D4 evidence "
                 f"exclusion and semantic compaction: {singleton_size} characters exceeds "
-                f"the hard limit of {MAX_CHECKPOINT_JUDGE_PROMPT_CHARS}"
+                f"the hard limit of {hard_limit}"
             )
 
         prospective = [*current, checkpoint]
@@ -591,7 +606,7 @@ def _judge_dimension_batch(
             )
             if len(prompt) != prompt_characters:
                 raise RuntimeError("D2 batch prompt changed during partitioning")
-            validated_prompt = _validate_checkpoint_prompt_size(prompt, dimension)
+            validated_prompt = _validate_checkpoint_prompt_size(prompt, *checkpoint_ids)
 
             def validate_batch(value: dict[str, Any]) -> dict[str, Any]:
                 valid_rows, missing_rows = _normalize_dimension_batch(
@@ -641,7 +656,9 @@ def _judge_dimension_batch(
                     "checkpoint_count": len(checkpoint_ids),
                     "prompt_characters": prompt_characters,
                     "target_prompt_characters": D2_BATCH_TARGET_PROMPT_CHARS,
-                    "hard_prompt_characters": MAX_CHECKPOINT_JUDGE_PROMPT_CHARS,
+                    "hard_prompt_characters": _max_checkpoint_judge_prompt_chars(
+                        *checkpoint_ids
+                    ),
                     "purpose": purpose,
                     "status": "completed",
                 }

@@ -34,7 +34,7 @@ JUDGE_RUBRIC = {
     "conformance": 100,
 }
 MAX_EVIDENCE_LINES = 5
-JUDGE_POLICY = "aws_mantle_qwen_vl_judge"
+JUDGE_POLICY = "aws_mantle_vl_qwen235b_2507_text"
 POLICY_METADATA = {
     "schema_version": 6,
     "judge_policy": JUDGE_POLICY,

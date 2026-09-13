@@ -234,32 +234,32 @@ def test_default_openrouter_terra_generation_and_aws_mantle_judge_routes() -> No
     config = load_config()
     configured_models = models(config)
     assert len(configured_models) == 1
-    assert configured_models[0].id == "gpt_5_6_terra"
-    assert configured_models[0].name == "GPT-5.6 Terra"
-    assert configured_models[0].provider == "openrouter"
-    assert configured_models[0].model == "openai/gpt-5.6-terra"
+    assert configured_models[0].id == "qwen3_7_plus"
+    assert configured_models[0].name == "Qwen3.7 Plus"
+    assert configured_models[0].provider == "alibaba_dashscope"
+    assert configured_models[0].model == "qwen3.7-plus"
     assert configured_models[0].api_style == "chat_completions"
-    assert configured_models[0].api_key_env == "OPENROUTER_API_KEY"
-    assert configured_models[0].base_url == "https://openrouter.ai/api/v1"
-    assert configured_models[0].reasoning == {"effort": "none"}
-    assert config["judge"]["policy"] == "aws_mantle_qwen_vl_judge"
+    assert configured_models[0].api_key_env == "DASHSCOPE_API_KEY"
+    assert configured_models[0].base_url == "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    assert config["judge"]["policy"] == "aws_mantle_vl_qwen235b_2507_text"
     assert config["judge"]["routing"]["roles"] == {
-        "text": "aws_mantle_coder",
+        "text": "aws_mantle_qwen235b",
         "vision": "aws_mantle_vl",
+        "contract": "aws_mantle_coder",
     }
     text_roles = {
         "action_compiler",
         "functionality",
         "specification_deviation",
         "code_quality",
-        "contract_generation",
     }
     for role, route in config["judge"]["routes"].items():
-        expected_model = (
-            "qwen.qwen3-coder-next"
-            if role in text_roles
-            else "qwen.qwen3-vl-235b-a22b-instruct"
-        )
+        if role in text_roles:
+            expected_model = "qwen.qwen3-235b-a22b-2507"
+        elif role == "contract_generation":
+            expected_model = "qwen.qwen3-coder-next"
+        else:
+            expected_model = "qwen.qwen3-vl-235b-a22b-instruct"
         assert route == {
             "provider": "aws_mantle",
             "model": expected_model,
@@ -267,11 +267,14 @@ def test_default_openrouter_terra_generation_and_aws_mantle_judge_routes() -> No
             "enable_thinking": False,
             "max_output_tokens": route["max_output_tokens"],
         }
-    for profile in config["judge"]["routing"]["profiles"].values():
+    profiles = config["judge"]["routing"]["profiles"]
+    assert profiles["aws_mantle_qwen235b"]["api_key_env"] == "AWS_MANTLE_API_KEY"
+    assert profiles["aws_mantle_coder"]["api_key_env"] == "AWS_MANTLE_API_KEY"
+    assert profiles["aws_mantle_vl"]["api_key_env"] == "AWS_MANTLE_API_KEY"
+    for profile in profiles.values():
         assert profile["api_key_env"] == "AWS_MANTLE_API_KEY"
         assert profile["response_format"] == {"type": "json_object"}
-    assert "reasoning" not in config["judge"]["routing"]["profiles"]["aws_mantle_coder"]
-    assert "reasoning" not in config["judge"]["routing"]["profiles"]["aws_mantle_vl"]
+        assert "reasoning" not in profile
     assert not hasattr(dashscope, "create_compiler_judge")
     assert not hasattr(dashscope, "create_scoring_judge")
 
