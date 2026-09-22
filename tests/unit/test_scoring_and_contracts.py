@@ -19,7 +19,7 @@ from code2play.d4.contracts import (
 from code2play.evaluation.scoring import assemble_result
 
 
-def test_official_weights_and_d1_contribution_gate() -> None:
+def test_official_weights_and_soft_d1_contribution_gate() -> None:
     result = assemble_result(
         game="snake",
         model="qwen3_7_plus",
@@ -46,7 +46,36 @@ def test_official_weights_and_d1_contribution_gate() -> None:
         d4_detail={"score_normalized": 1.0, "status": "completed"},
     )
     assert gated["official_total"] == 8.0
+    assert gated["dimensions"]["D1"]["gate_factor"] == 0.0
     assert gated["dimensions"]["D2"]["weighted_contribution"] == 0.0
+
+    transition = assemble_result(
+        game="snake",
+        model="qwen3_7_plus",
+        repetition=1,
+        candidate_project_sha256="a" * 64,
+        d4_configured=True,
+        d1_detail={"score": 50, "gate_pass": False},
+        d2_detail={"score": 1.0, "status": "completed"},
+        d3_detail={"score": 100, "max_score": 100, "status": "completed"},
+        d4_detail={"score_normalized": 1.0, "status": "completed"},
+    )
+    assert transition["dimensions"]["D1"]["gate_factor"] == 0.5
+    assert transition["official_total"] == 50.0
+
+    passed = assemble_result(
+        game="snake",
+        model="qwen3_7_plus",
+        repetition=1,
+        candidate_project_sha256="a" * 64,
+        d4_configured=True,
+        d1_detail={"score": 60, "gate_pass": True},
+        d2_detail={"score": 1.0, "status": "completed"},
+        d3_detail={"score": 100, "max_score": 100, "status": "completed"},
+        d4_detail={"score_normalized": 1.0, "status": "completed"},
+    )
+    assert passed["dimensions"]["D1"]["gate_factor"] == 1.0
+    assert passed["official_total"] == 92.0
 
 
 def test_judge_gap_has_no_official_total_even_when_d1_gate_fails() -> None:
