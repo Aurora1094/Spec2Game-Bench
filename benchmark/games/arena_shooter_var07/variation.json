@@ -1,0 +1,236 @@
+{
+  "instance_id": "arena_shooter_var07",
+  "family_slug": "arena_shooter",
+  "variant_id": "var07",
+  "variation_types": [
+    "map"
+  ],
+  "source_path": "游戏规格说明（英文）/14_hard_Top-down Arena Shooter/14_hard_Top-down Arena Shooter_V8.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "This version uses a modified fixed wall layout while preserving the same player and enemy initial positions."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "| Wall A | `(180, 190)` | `180 × 45 px` |",
+        "| Wall B | `(385, 285)` | `55 × 150 px` |",
+        "| Wall C | `(510, 430)` | `170 × 45 px` |"
+      ],
+      "after": [
+        "| Wall A | `(150, 210)` | `190 × 45 px` |",
+        "| Wall B | `(390, 300)` | `55 × 140 px` |",
+        "| Wall C | `(490, 445)` | `145 × 45 px` |"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [],
+      "after": [
+        "All three walls lie completely within the main combat area.",
+        "The fixed player and enemy initial positions do not overlap any wall."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "`WASD: Move    Mouse: Aim    Left Click: Shoot`",
+        "`R: Reload    Defeat all enemies`"
+      ],
+      "after": [
+        "`WASD: Move Mouse: Aim Left Click: Shoot`",
+        "`R: Reload Defeat all enemies`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "All characters begin without overlapping each other or any wall."
+      ],
+      "after": [
+        "All characters begin without overlapping each other or any of the V8 walls."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [],
+      "after": [
+        "Their rectangles are:",
+        "- Wall A: top-left `(150, 210)`, size `190 × 45 px`",
+        "- Wall B: top-left `(390, 300)`, size `55 × 140 px`",
+        "- Wall C: top-left `(490, 445)`, size `145 × 45 px`"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [],
+      "after": [
+        "The same V8 wall rectangles are used consistently by all six systems above."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "Player-wall collision uses axis-separated movement:"
+      ],
+      "after": [
+        "Player-wall collision uses the three V8 wall rectangles and axis-separated movement:"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "If the bullet spawn position overlaps a wall, the bullet disappears immediately."
+      ],
+      "after": [
+        "If the bullet spawn position overlaps any V8 wall, the bullet disappears immediately."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- Fixed walls"
+      ],
+      "after": [
+        "- The V8 fixed walls"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "The V8 fixed walls are:",
+        "- Wall A: `(150, 210)`, `190 × 45 px`",
+        "- Wall B: `(390, 300)`, `55 × 140 px`",
+        "- Wall C: `(490, 445)`, `145 × 45 px`"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "- Hits a wall."
+      ],
+      "after": [
+        "- Hits any V8 wall."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "Movement uses x-first, y-second axis-separated collision."
+      ],
+      "after": [
+        "Movement uses x-first, y-second axis-separated collision against the V8 walls and arena boundaries."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "Shooter movement also uses x-first, y-second collision handling."
+      ],
+      "after": [
+        "Shooter movement uses x-first, y-second collision handling against the V8 walls and arena boundaries."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "2. Test that segment against all fixed wall rectangles."
+      ],
+      "after": [
+        "2. Test that segment against all three V8 wall rectangles."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "If the bullet spawn position overlaps a wall, the bullet disappears immediately."
+      ],
+      "after": [
+        "If the bullet spawn position overlaps any V8 wall, the bullet disappears immediately."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "- Hit a wall."
+      ],
+      "after": [
+        "- Hit any V8 wall."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "At initialization, the game creates the interface areas, player, 3 Chasers, 3 Shooters, 3 fixed walls, bullet lists, timers, and all state variables."
+      ],
+      "after": [
+        "At initialization, the game creates the interface areas, player, 3 Chasers, 3 Shooters, the 3 V8 fixed walls, bullet lists, timers, and all state variables.",
+        "Initial walls:",
+        "- Wall A: `(150, 210)`, `190 × 45 px`",
+        "- Wall B: `(390, 300)`, `55 × 140 px`",
+        "- Wall C: `(490, 445)`, `145 × 45 px`"
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "2. Update player bullets and process collisions with walls, arena boundaries, and enemies. Apply enemy damage and immediately remove dead enemies.",
+        "3. Update surviving Chaser and Shooter movement, Shooter firing timers, line-of-sight checks, and enemy-bullet spawning.",
+        "4. Update enemy bullets and process collisions with walls, arena boundaries, and the player. Record enemy-bullet hits and remove colliding bullets."
+      ],
+      "after": [
+        "2. Update player bullets and process collisions with the V8 walls, arena boundaries, and enemies. Apply enemy damage and immediately remove dead enemies.",
+        "3. Update surviving Chaser and Shooter movement using the V8 walls, Shooter firing timers, line-of-sight checks against the V8 walls, and enemy-bullet spawning.",
+        "4. Update enemy bullets and process collisions with the V8 walls, arena boundaries, and the player. Record enemy-bullet hits and remove colliding bullets."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "- Preserve the walls."
+      ],
+      "after": [
+        "- Preserve the V8 walls."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [],
+      "after": [
+        "- Preserve the V8 walls."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [],
+      "after": [
+        "- All three V8 walls to their fixed positions and sizes."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "Walls block all character movement, all bullets, and Shooter line of sight. Other characters do not block Shooter line of sight."
+      ],
+      "after": [
+        "The V8 walls block all character movement, all bullets, and Shooter line of sight. Other characters do not block Shooter line of sight."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "arena_shooter_var07.D2.1.07",
+    "arena_shooter_var07.D2.5.05",
+    "arena_shooter_var07.D2.3.15"
+  ],
+  "added_checkpoint_ids": [
+    "arena_shooter_var07.D2.3.15"
+  ],
+  "base_checkpoints_sha256": "d6fae9aaf4efdeb69d045f4236cf99dbb29f890a51b0a1f431c7d23c35667a0e",
+  "checkpoints_sha256": "f7236c630721fa2b83d11808979b66de11ca5270f866584d8c955c0569a192d1"
+}

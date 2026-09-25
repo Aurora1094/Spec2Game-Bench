@@ -1,0 +1,131 @@
+{
+  "instance_id": "snake_var06",
+  "family_slug": "snake",
+  "variant_id": "var06",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/1_easy_Snake/1_easy_Snake_V7.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "The objective is to collect randomly spawned food while avoiding self-collision and the lethal left and right boundaries."
+      ],
+      "after": [
+        "The objective is to collect randomly spawned food while avoiding self-collision and the lethal top and bottom boundaries."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "Unlike conventional Snake games, this game uses asymmetric boundary behavior: crossing the top or bottom boundary wraps the snake to the opposite side, while crossing the left or right boundary immediately ends the game."
+      ],
+      "after": [
+        "Unlike conventional Snake games, this game uses asymmetric boundary behavior: crossing the left or right boundary wraps the snake to the opposite side, while crossing the top or bottom boundary immediately ends the game."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`Top/bottom wrap, left/right walls kill`"
+      ],
+      "after": [
+        "`Left/right wrap, top/bottom walls kill`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "If the snake crosses the left or right boundary or collides with a body cell that remains occupied after the current movement update, it dies and the game enters `game_over`."
+      ],
+      "after": [
+        "If the snake crosses the top or bottom boundary or collides with a body cell that remains occupied after the current movement update, it dies and the game enters `game_over`."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "The game enters `game_over` if the snake crosses the left or right boundary or collides with its own body according to the self-collision rule in Section 5.4."
+      ],
+      "after": [
+        "The game enters `game_over` if the snake crosses the top or bottom boundary or collides with its own body according to the self-collision rule in Section 5.4."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "- Top boundary: the snake re-enters from the bottom boundary in the same column.",
+        "- Bottom boundary: the snake re-enters from the top boundary in the same column.",
+        "- Left boundary: crossing it immediately causes `game_over`.",
+        "- Right boundary: crossing it immediately causes `game_over`.",
+        "Crossing the top or bottom boundary never causes Game Over."
+      ],
+      "after": [
+        "- Left boundary: the snake re-enters from the right boundary in the same row.",
+        "- Right boundary: the snake re-enters from the left boundary in the same row.",
+        "- Top boundary: crossing it immediately causes `game_over`.",
+        "- Bottom boundary: crossing it immediately causes `game_over`.",
+        "Crossing the left or right boundary never causes Game Over."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "2. Apply top/bottom wrapping if necessary.",
+        "3. Check whether the head has crossed the left or right boundary. If so, immediately enter `game_over`."
+      ],
+      "after": [
+        "2. Apply left/right wrapping if necessary.",
+        "3. Check whether the head has crossed the top or bottom boundary. If so, immediately enter `game_over`."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "When the snake crosses the top or bottom boundary, it wraps to the corresponding position on the opposite side.",
+        "When the snake crosses the left or right boundary or collides with a body cell that remains occupied after the movement update, the game enters `game_over`."
+      ],
+      "after": [
+        "When the snake crosses the left or right boundary, it wraps to the corresponding position on the opposite side.",
+        "When the snake crosses the top or bottom boundary or collides with a body cell that remains occupied after the movement update, the game enters `game_over`."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "`Top/bottom wrap, left/right walls kill`"
+      ],
+      "after": [
+        "`Left/right wrap, top/bottom walls kill`"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- The snake head crosses the left or right boundary."
+      ],
+      "after": [
+        "- The snake head crosses the top or bottom boundary."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "Crossing the top or bottom boundary does not end the game and instead wraps the snake to the corresponding position on the opposite side."
+      ],
+      "after": [
+        "Crossing the left or right boundary does not end the game and instead wraps the snake to the corresponding position on the opposite side."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "snake_var06.D2.3.08",
+    "snake_var06.D2.3.09",
+    "snake_var06.D2.5.01"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "c774c0fc0b96c633aa1e7103fbc3d2e9fdf4b008561d785560907ca5b0ba250d",
+  "checkpoints_sha256": "5208b45432eb5eed388898880d59eb8ec95372771245ddee51dffbca06adeb35"
+}

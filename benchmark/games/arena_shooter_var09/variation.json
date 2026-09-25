@@ -1,0 +1,221 @@
+{
+  "instance_id": "arena_shooter_var09",
+  "family_slug": "arena_shooter",
+  "variant_id": "var09",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/14_hard_Top-down Arena Shooter/14_hard_Top-down Arena Shooter_V10.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "The player's objective is to defeat all 6 enemies before HP reaches 0.",
+        "If all enemies are defeated while the player remains alive, the game enters Victory. If HP reaches 0, the game enters Game Over."
+      ],
+      "after": [
+        "The player's objective is to defeat all 6 enemies.",
+        "If Enemies reaches 0, the game enters Victory.",
+        "If HP reaches 0 while at least one enemy remains alive, the game enters Game Over.",
+        "Terminal conditions are resolved only after the current frame's enemy deaths and player damage have both been processed.",
+        "A custom rule in this version is that Victory has priority over Game Over when both terminal conditions become true during the same frame.",
+        "Therefore, if HP becomes 0 and Enemies becomes 0 during the same frame, the game enters Victory."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [],
+      "after": [
+        "If HP and Enemies both reach 0 in the same frame, Status becomes:",
+        "`Victory`"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`WASD: Move    Mouse: Aim    Left Click: Shoot`",
+        "`R: Reload    Defeat all enemies`"
+      ],
+      "after": [
+        "`WASD: Move Mouse: Aim Left Click: Shoot`",
+        "`R: Reload Defeat all enemies`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [],
+      "after": [
+        "If HP and Enemies both reach 0 during the same frame, the `victory` result is displayed."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "The game enters `victory` whenever terminal evaluation finds:",
+        "`Enemies = 0`",
+        "This includes the case where:",
+        "`HP = 0` and `Enemies = 0`",
+        "became true during the same frame.",
+        "The game enters `game_over` only when:",
+        "- `HP = 0`, and",
+        "- `Enemies > 0`"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "Terminal conditions are evaluated after the current frame's enemy deaths and player damage have been resolved.",
+        "Failure condition:",
+        "`HP = 0`"
+      ],
+      "after": [
+        "Terminal conditions are evaluated only after the current frame's enemy deaths and player damage have both been resolved."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [],
+      "after": [
+        "Game Over condition:",
+        "`HP = 0` while `Enemies > 0`"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "1. Game Over",
+        "2. Victory"
+      ],
+      "after": [
+        "1. Victory",
+        "2. Game Over"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "Therefore, if HP and Enemies both become 0 during the same frame, the game enters `game_over`."
+      ],
+      "after": [
+        "Therefore:",
+        "- If `Enemies = 0` and `HP > 0`, enter `victory`.",
+        "- If `Enemies = 0` and `HP = 0` in the same terminal evaluation, enter `victory`.",
+        "- If `HP = 0` and `Enemies > 0`, enter `game_over`.",
+        "- Otherwise, continue `playing`.",
+        "The priority change does not alter the order in which enemy deaths or player damage are processed during the frame."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "7. Determine terminal state using Failure-before-Victory priority.",
+        "This ordering ensures that a Shooter killed during Step 2 cannot move or fire during Step 3."
+      ],
+      "after": [
+        "7. Determine terminal state using Victory-before-Game-Over priority.",
+        "This ordering ensures that:",
+        "- A Shooter killed during Step 2 cannot move or fire during Step 3.",
+        "- Enemy deaths from Step 2 and player damage from Step 5 are both reflected in the Step 7 terminal evaluation.",
+        "- The terminal-priority change does not skip any player-damage processing that should occur during the frame."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "1. If HP = 0, enter `game_over`.",
+        "2. Otherwise, if Enemies = 0, enter `victory`."
+      ],
+      "after": [
+        "1. If Enemies = 0, enter `victory`.",
+        "2. Otherwise, if HP = 0, enter `game_over`."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "If HP = 0 and Enemies = 0 in the same frame, Game Over takes priority."
+      ],
+      "after": [
+        "If HP = 0 and Enemies = 0 during the same terminal evaluation, Victory takes priority.",
+        "For example, if during one frame:",
+        "1. A player bullet kills the final enemy during Step 2.",
+        "2. A previously existing enemy bullet hits the player during Step 4.",
+        "3. That damage reduces HP to 0 during Step 5.",
+        "4. Step 7 observes `Enemies = 0` and `HP = 0`.",
+        "The result is:",
+        "`victory`"
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [],
+      "after": [
+        "- Stop further damage."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [],
+      "after": [
+        "A Victory caused by simultaneous `HP = 0` and `Enemies = 0` uses the same terminal behavior as any other Victory."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [],
+      "after": [
+        "`game_over` can occur only if HP = 0 while at least one enemy remains alive at terminal evaluation."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "The player's goal is to defeat all 6 enemies while keeping HP above 0."
+      ],
+      "after": [
+        "The player's goal is to defeat all 6 enemies."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "Failure condition:",
+        "`HP = 0`"
+      ],
+      "after": []
+    },
+    {
+      "id": "change18",
+      "before": [
+        "`Enemies = 0` while HP remains above 0.",
+        "If HP and Enemies both become 0 during the same frame, Game Over takes priority."
+      ],
+      "after": [
+        "`Enemies = 0`",
+        "Game Over condition:",
+        "`HP = 0` while `Enemies > 0`",
+        "Terminal conditions are checked after the current frame's enemy deaths and player damage have both been processed.",
+        "Terminal priority is:",
+        "1. Victory",
+        "2. Game Over",
+        "3. Continue",
+        "Therefore:",
+        "- `Enemies = 0`, `HP > 0` → `victory`",
+        "- `Enemies = 0`, `HP = 0` → `victory`",
+        "- `Enemies > 0`, `HP = 0` → `game_over`",
+        "If HP and Enemies both become 0 during the same frame, Victory takes priority."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "arena_shooter_var09.D2.5.05",
+    "arena_shooter_var09.D2.5.16"
+  ],
+  "added_checkpoint_ids": [
+    "arena_shooter_var09.D2.5.16"
+  ],
+  "base_checkpoints_sha256": "d6fae9aaf4efdeb69d045f4236cf99dbb29f890a51b0a1f431c7d23c35667a0e",
+  "checkpoints_sha256": "61d6e2f9c6ed7a460777eb1f427773b7ab9bb699ea4c10908145864e0c25e67a"
+}

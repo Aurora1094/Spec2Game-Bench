@@ -1,0 +1,99 @@
+{
+  "instance_id": "arena_shooter_var01",
+  "family_slug": "arena_shooter",
+  "variant_id": "var01",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/14_hard_Top-down Arena Shooter/14_hard_Top-down Arena Shooter_V2.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "The player starts with 5 HP and a 6-round magazine."
+      ],
+      "after": [
+        "The player starts with 7 HP and a 6-round magazine."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "| HP | `(30, 28)` | `HP: 5/5` |"
+      ],
+      "after": [
+        "| HP | `(30, 28)` | `HP: 7/7` |"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`WASD: Move    Mouse: Aim    Left Click: Shoot`",
+        "`R: Reload    Defeat all enemies`"
+      ],
+      "after": [
+        "`WASD: Move Mouse: Aim Left Click: Shoot`",
+        "`R: Reload Defeat all enemies`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- Maximum HP: 5",
+        "- Initial HP: 5"
+      ],
+      "after": [
+        "- Maximum HP: 7",
+        "- Initial HP: 7"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "`HP = 5`"
+      ],
+      "after": [
+        "`HP = 7`"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "- HP: 5"
+      ],
+      "after": [
+        "- HP: 7"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Player position, HP, Ammo, Reload state, and invulnerability state."
+      ],
+      "after": [
+        "- Player position.",
+        "- HP to 7.",
+        "- Ammo to 6.",
+        "- Reload state and invulnerability state."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- `HP: X/5`"
+      ],
+      "after": [
+        "- `HP: X/7`"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "arena_shooter_var01.D2.1.02",
+    "arena_shooter_var01.D2.5.05",
+    "arena_shooter_var01.D2.5.10"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "d6fae9aaf4efdeb69d045f4236cf99dbb29f890a51b0a1f431c7d23c35667a0e",
+  "checkpoints_sha256": "abb481c8c34212884f6bd52bfa4ab613ad79ae90901c1ea0d631fdf3b43bcb0e"
+}

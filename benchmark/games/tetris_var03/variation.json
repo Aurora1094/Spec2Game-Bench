@@ -1,0 +1,133 @@
+{
+  "instance_id": "tetris_var03",
+  "family_slug": "tetris",
+  "variant_id": "var03",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/8_medium_tetris/8_medium_Tetris_V4.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "All tetrominoes spawn using `spawn_row = -1` and `spawn_col = 2`."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "- Current piece spawn position: top center of the board"
+      ],
+      "after": [
+        "- Current piece position: `spawn_row = -1, spawn_col = 2`"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- Spawns the current piece at the fixed spawn position."
+      ],
+      "after": [
+        "- Spawns the current piece at `spawn_row = -1, spawn_col = 2`."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "`spawn_col = 3`"
+      ],
+      "after": [
+        "`spawn_col = 2`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "2. Place the new current piece at `spawn_row = -1, spawn_col = 3`."
+      ],
+      "after": [
+        "2. Place the new current piece at `spawn_row = -1, spawn_col = 2`."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "After the new current piece is placed at the spawn position, check only its visible occupied cells against existing fixed blocks."
+      ],
+      "after": [
+        "After the new current piece is placed at `spawn_row = -1, spawn_col = 2`, check only its visible occupied cells against existing fixed blocks."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Current piece position: `spawn_row = -1, spawn_col = 3`"
+      ],
+      "after": [
+        "- Current piece position: `spawn_row = -1, spawn_col = 2`"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "7. Spawn the new current piece at the fixed spawn position."
+      ],
+      "after": [
+        "7. Spawn the new current piece at `spawn_row = -1, spawn_col = 2`."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "Board dimensions, cell size, tetromino types and colors, spawn position, rotation rule, row-clearing rule, and failure conditions remain fixed."
+      ],
+      "after": [
+        "Board dimensions, cell size, tetromino types and colors, rotation rule, row-clearing rule, and failure conditions remain fixed.",
+        "The spawn position remains fixed at:",
+        "`spawn_row = -1`",
+        "`spawn_col = 2`"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- ←: attempt to move 1 cell left.",
+        "- →: attempt to move 1 cell right.",
+        "- ↑: attempt to rotate 90° clockwise.",
+        "- ↓: attempt one additional downward movement."
+      ],
+      "after": [
+        "- `←`: attempt to move 1 cell left.",
+        "- `→`: attempt to move 1 cell right.",
+        "- `↑`: attempt to rotate 90° clockwise.",
+        "- `↓`: attempt one additional downward movement."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "Every current piece and promoted Next piece is spawned at:",
+        "`spawn_row = -1, spawn_col = 2`"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "Restart clears the board, resets Score and Lines to 0, generates new current and Next pieces, resets the automatic fall timer, and returns the game state to `playing`."
+      ],
+      "after": [
+        "Restart clears the board, resets Score and Lines to 0, generates new current and Next pieces, resets the automatic fall timer, spawns the new current piece at `spawn_row = -1, spawn_col = 2`, and returns the game state to `playing`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "tetris_var03.D2.1.06",
+    "tetris_var03.D2.3.07"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "9b869e2c2acb9eecb215d5d29bf1b3c0bfe88e8f64288d28331d5a79e22d62f0",
+  "checkpoints_sha256": "d514c244b7a1ef6b1b6a4581bdbf06d50e6827ecddbffe20edd985b0b4084582"
+}

@@ -1,0 +1,111 @@
+{
+  "instance_id": "space_invaders_var03",
+  "family_slug": "space_invaders",
+  "variant_id": "var03",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/6_medium_Space Invaders/6_medium_Space Invaders_V4.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "The player starts with 3 Lives. When an enemy bullet hits the player, one Life is lost and the player receives a temporary 1-second invulnerability period."
+      ],
+      "after": [
+        "The player starts with 5 Lives. When an enemy bullet hits the player, one Life is lost and the player receives a temporary 1-second invulnerability period."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "`Score: X    Lives: Y    Wave: Z/3`"
+      ],
+      "after": [
+        "`Score: X Lives: Y Wave: Z/3`"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`Score: 0    Lives: 3    Wave: 1/3`"
+      ],
+      "after": [
+        "`Score: 0 Lives: 5 Wave: 1/3`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "`Move: A/D    Shoot: Space`"
+      ],
+      "after": [
+        "`Move: A/D Shoot: Space`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Initial Lives: 3"
+      ],
+      "after": [
+        "- Initial Lives: 5"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "`Lives = 3`"
+      ],
+      "after": [
+        "`Lives = 5`"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Lives to 3."
+      ],
+      "after": [
+        "- Lives to 5."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- Lives: 3"
+      ],
+      "after": [
+        "- Lives: 5"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "`Score: X    Lives: Y    Wave: Z/3`",
+        "`Move: A/D    Shoot: Space`"
+      ],
+      "after": [
+        "`Score: X Lives: Y Wave: Z/3`",
+        "`Move: A/D Shoot: Space`"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "The player begins with 3 Lives. A valid enemy bullet hit removes one Life and starts 1 second of invulnerability."
+      ],
+      "after": [
+        "The player begins with 5 Lives. A valid enemy bullet hit removes one Life and starts 1 second of invulnerability."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "space_invaders_var03.D2.1.02",
+    "space_invaders_var03.D2.5.08"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "890569ecc6569c00ed27cde2047639245c470e1675b0f8be5b03b2fb1cf423d7",
+  "checkpoints_sha256": "c28bf05a43efd0bf5322a4dcd97df5222acf1269d312c471f05b1a0a13f8632f"
+}

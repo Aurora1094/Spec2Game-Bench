@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "slug": "space_invaders_var08",
+  "name": "Space Invaders",
+  "difficulty": "medium",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [],
+  "window_size": [
+    800,
+    600
+  ],
+  "source_audit": {
+    "docx_sha256": "96b31a17c30214e43e84ec09a2858129187352af04d3a3964c18ae99e08d616a",
+    "base_checkpoints_sha256": "890569ecc6569c00ed27cde2047639245c470e1675b0f8be5b03b2fb1cf423d7",
+    "checkpoint_count": 32
+  },
+  "family_slug": "space_invaders",
+  "variant_id": "var08",
+  "variation_types": [
+    "object_type",
+    "rule"
+  ]
+}

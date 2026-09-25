@@ -1,0 +1,85 @@
+{
+  "instance_id": "simple_platformer_var06",
+  "family_slug": "simple_platformer",
+  "variant_id": "var06",
+  "variation_types": [
+    "object_count",
+    "map"
+  ],
+  "source_path": "游戏规格说明（英文）/7_medium_Simple Platformer/7_medium_Simple Platformer_V7.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Spikes are fixed hazards:"
+      ],
+      "after": [
+        "The game contains five fixed spike hazards:"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [],
+      "after": [
+        "| Spike 4 | `(455, 520)` | `40 × 20 px` |",
+        "| Spike 5 | `(700, 520)` | `40 × 20 px` |"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "If the player rectangle overlaps any spike rectangle, Failure is triggered."
+      ],
+      "after": [
+        "If the player rectangle overlaps any of the five spike rectangles, Failure is triggered."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- Player overlaps any spike rectangle."
+      ],
+      "after": [
+        "- Player overlaps any of the five spike rectangles."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "At initialization, the game creates the interface, player, fixed platforms, moving platform, spikes, goal flag, and game state."
+      ],
+      "after": [
+        "At initialization, the game creates the interface, player, fixed platforms, moving platform, five spikes, goal flag, and game state."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "9. Detect spike collision, falling failure, and flag collision."
+      ],
+      "after": [
+        "9. Detect collision with any of the five spikes, falling failure, and flag collision."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- The player overlaps any spike rectangle."
+      ],
+      "after": [
+        "- The player overlaps any of the five spike rectangles."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "simple_platformer_var06.D2.1.06",
+    "simple_platformer_var06.D2.5.13"
+  ],
+  "added_checkpoint_ids": [
+    "simple_platformer_var06.D2.1.06",
+    "simple_platformer_var06.D2.5.13"
+  ],
+  "base_checkpoints_sha256": "4fa5974d0ef7ecb0bbcc914ed389e18e591a5da6fe64f3a9eec6440f604b89c9",
+  "checkpoints_sha256": "b39d92056581d5d05e6d1e9d07ed5ffa958662849fec114f048d547b34889a24"
+}

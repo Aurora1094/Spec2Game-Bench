@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 from typing import Any, Mapping
 
-from code2play.config.project import PROJECT_ROOT, games
+from code2play.config.project import PROJECT_ROOT
 from code2play.generation.prompt_builder import load_evaluator_checkpoints, load_spec
 
 
@@ -84,7 +84,8 @@ def human_review_policy_errors(
     if not isinstance(policy_games, Mapping):
         return [*errors, "human-review policy games must be an object"]
 
-    configured_games = games(config)
+    from code2play.config.project import all_instances
+    configured_games = all_instances(config)
     expected_slugs = {game.slug for game in configured_games}
     actual_slugs = {str(slug) for slug in policy_games}
     missing_slugs = sorted(expected_slugs - actual_slugs)

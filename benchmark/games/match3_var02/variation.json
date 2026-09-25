@@ -1,0 +1,121 @@
+{
+  "instance_id": "match3_var02",
+  "family_slug": "match3",
+  "variant_id": "var02",
+  "variation_types": [
+    "object_type"
+  ],
+  "source_path": "游戏规格说明（英文）/9_medium_Match-3/9_medium_Match-3_V3.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "The five fixed gem types are Red, Blue, Green, Yellow, and Purple, each with a distinct visual appearance."
+      ],
+      "after": [
+        "The six fixed gem types are Red, Blue, Green, Yellow, Purple, and Orange, each with a distinct visual appearance."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "The five gem types use:"
+      ],
+      "after": [
+        "The six gem types use:"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [],
+      "after": [
+        "| Orange | `#E67E22` | Triangle |"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [],
+      "after": [
+        "- Orange"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Generate a new full 8 × 8 board with no initial match."
+      ],
+      "after": [
+        "- Generate a new full 8 × 8 board with no initial match using the six fixed gem types."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [],
+      "after": [
+        "- Orange"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "Sequences of 4 or 5 gems are ordinary matches and do not create special gems."
+      ],
+      "after": [
+        "Sequences of 4 or 5 or more gems are ordinary matches and do not create special gems."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "Each new gem is independently selected from the five fixed gem types."
+      ],
+      "after": [
+        "Each new gem is independently selected from the six fixed gem types."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "At initialization, the game creates the interface and 8 × 8 board, generates a full board with no initial matches, sets Score and Moves to 0, clears the selection, and enters `waiting`."
+      ],
+      "after": [
+        "At initialization, the game creates the interface and 8 × 8 board, generates a full board with no initial matches using the six fixed gem types, sets Score and Moves to 0, clears the selection, and enters `waiting`."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "7. Refill empty cells from the top."
+      ],
+      "after": [
+        "7. Refill empty cells from the top using the six fixed gem types."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "After clearing, remaining gems fall within their columns, new gems refill the top, and any newly created matches are resolved automatically."
+      ],
+      "after": [
+        "After clearing, remaining gems fall within their columns, new gems selected from the six fixed gem types refill the top, and any newly created matches are resolved automatically."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "Restart immediately cancels any active resolving process, generates a new initial board without matches, resets Score and Moves, clears the selection, and returns the game to `waiting`."
+      ],
+      "after": [
+        "Restart immediately cancels any active resolving process, generates a new initial board without matches using the six fixed gem types, resets Score and Moves, clears the selection, and returns the game to `waiting`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "match3_var02.D2.1.02",
+    "match3_var02.D2.3.10"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "4c049d5c0f23d85abfa0cb642db6e2ae1a19aad04e27424be1cbeb5f7594f420",
+  "checkpoints_sha256": "f58c3ef175acc1cb82d2be04f4ad20ba3bca7df4a89bda0fbde5f89c54b254e8"
+}

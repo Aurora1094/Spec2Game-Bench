@@ -1,0 +1,578 @@
+{
+  "instance_id": "pipe_connection_var03",
+  "family_slug": "pipe_connection",
+  "variant_id": "var03",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/13_hard_Pipe Connection Puzzle/13_hard_Pipe Connection Puzzle_V4.docx",
+  "corrections": [
+    "Final DOCX takes precedence over spreadsheet draft differences."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "When the player is satisfied with the configuration, pressing Space submits the current solution and runs a complete water-flow check from the Source.",
+        "Reaching 30 Moves does not automatically cause Failure. It only prevents further pipe rotation. The player may still press Space to submit the current configuration."
+      ],
+      "after": [
+        "When the player is satisfied with the configuration, pressing Space submits the current configuration and runs a complete water-flow check from the Source.",
+        "If the submitted configuration is valid, the game is solved and enters the terminal `won` state.",
+        "If the submitted configuration is invalid, the game does not terminate. The player remains in `editing`, may continue rotating pipes while Moves < 30, and may press Space again to resubmit.",
+        "A failed submission does not reset pipe orientations or Moves.",
+        "Reaching 30 Moves does not automatically cause Failure. It only prevents further pipe rotation. The player may still press Space to evaluate or reevaluate the current configuration."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "Each independent invalid reachable outlet contributes exactly 1 Leak and displays a red X at that outlet."
+      ],
+      "after": [
+        "Each independent invalid reachable outlet contributes exactly 1 Leak and displays a red X at that outlet during submission evaluation."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "Leaks is not calculated continuously during editing. It is calculated only after Space is pressed and the submitted configuration is evaluated."
+      ],
+      "after": [
+        "During ordinary editing before any submission result is being displayed:",
+        "`Water: Off`",
+        "`Leaks: 0`",
+        "After Space is pressed, the current configuration is evaluated and Water becomes On.",
+        "If the submission fails, its Water, Leaks, blue highlights, red X marks, and Sink reached results remain visible while the player remains in `editing`.",
+        "If the player then performs a successful pipe rotation, all previous submission visualization and evaluation results are cleared before the new orientation is treated as the current editable configuration."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "After Space is pressed, pipe channels actually reached by water are highlighted in blue."
+      ],
+      "after": [
+        "Whenever Space is pressed, pipe channels actually reached by water in that submission are highlighted in blue."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "After a failed submission, the current blue highlights and red X marks remain visible until either:",
+        "- The player successfully rotates a pipe.",
+        "- Space is pressed again for a new submission.",
+        "- R restarts the game.",
+        "Before displaying the result of a new submission, all previous submission highlights and red X marks are cleared."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "During `editing`, the bottom area displays:",
+        "`Click pipe to rotate    Press Space to run water`",
+        "`Connect source to all sinks    Restart: R`",
+        "Both lines use a font size of 22 px and should be centered."
+      ],
+      "after": [
+        "During normal `editing` before a failed submission result is being displayed:",
+        "`Click pipe to rotate Press Space to run water`",
+        "`Connect source to all sinks Restart: R`",
+        "After a failed submission while the game remains in `editing`:",
+        "`Not solved - continue editing`",
+        "`Press Space to check again Restart: R`",
+        "Both editing message lines use a font size of 22 px and should be centered."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "During `failed`:",
+        "`Failed`",
+        "`Press R to Restart`",
+        "`Puzzle Solved!` and `Failed` use a font size of 40 px."
+      ],
+      "after": [
+        "`Puzzle Solved!` uses a font size of 40 px."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [],
+      "after": [
+        "There is no terminal `Failed` screen for an incorrect submission."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "The main game objects and state variables include the Source, Sinks, Straight Pipes, Corner Pipes, T Pipes, Cross Pipes, Leak, Blocks, Moves, Water, Leaks, Sink reached states, and game state."
+      ],
+      "after": [
+        "The main game objects and state variables include the Source, Sinks, Straight Pipes, Corner Pipes, T Pipes, Cross Pipes, Leak, Blocks, Moves, Water, Leaks, Sink reached states, last submission result, and game state."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "The Sink reached states describe only the most recently submitted configuration.",
+        "They are cleared before a new submission is evaluated and when a successful rotation invalidates a previous failed result."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "- The game remains in `editing`.",
+        "- Space may still be used to submit."
+      ],
+      "after": [
+        "- The game remains in `editing` unless already solved.",
+        "- Space may still be used to submit or resubmit the current configuration.",
+        "A failed submission does not change Moves."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "After Space is pressed during `editing`:",
+        "`Water = On`"
+      ],
+      "after": []
+    },
+    {
+      "id": "change13",
+      "before": [
+        "Leaks is calculated only during the submitted water-flow check."
+      ],
+      "after": [
+        "When Space is pressed during `editing`:",
+        "- Water becomes On.",
+        "- Leaks is recalculated from 0 using the current pipe configuration."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [],
+      "after": [
+        "After a failed submission:",
+        "- Water remains On.",
+        "- The calculated Leaks value remains visible.",
+        "- The corresponding blue highlights and red X marks remain visible.",
+        "When the player next successfully rotates a pipe:",
+        "- Water resets to Off.",
+        "- Leaks resets to 0.",
+        "- Sink reached states are cleared.",
+        "- Blue highlights are cleared.",
+        "- Red X marks are cleared.",
+        "- Then the selected pipe is rotated and Moves increases by 1."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "The game contains three states:"
+      ],
+      "after": [
+        "The game contains two main states:"
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "- `failed`",
+        "During `editing`, the player may rotate eligible pipes while Moves < 30 and may press Space to submit.",
+        "The game enters `won` when:"
+      ],
+      "after": [
+        "During `editing`:",
+        "- The player may rotate eligible pipes while Moves < 30.",
+        "- The player may press Space to submit at any time.",
+        "- A failed submission leaves the game in `editing`.",
+        "The game enters `won` only when:"
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "The game enters `failed` when:",
+        "- At least one Sink is not reached, or",
+        "- Leaks > 0.",
+        "Both `won` and `failed` are terminal for the current run."
+      ],
+      "after": [
+        "`won` is terminal for the current run.",
+        "An incorrect submission is not a terminal game state."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "Each successful rotation:",
+        "- Immediately updates the pipe orientation.",
+        "- Increases Moves by 1."
+      ],
+      "after": [
+        "If a previous failed-submission result is currently visible, a successful rotation first clears that previous evaluation:",
+        "- Set Water to Off.",
+        "- Set Leaks to 0.",
+        "- Clear both Sink reached states.",
+        "- Clear all blue water highlights.",
+        "- Clear all red X marks.",
+        "Then:",
+        "- Rotate the selected pipe 90° clockwise.",
+        "- Increase Moves by 1."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [],
+      "after": [
+        "- Does not clear a previously displayed failed submission result."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [],
+      "after": [
+        "A failed submission does not grant additional Moves and does not reset the Move limit."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "Space is effective only in `editing`.",
+        "When Space is pressed:",
+        "1. Set Water to On.",
+        "2. Stop further editing.",
+        "3. Run the complete Source-based water-flow check.",
+        "4. Calculate Leaks.",
+        "5. Record both Sink `reached` states.",
+        "6. Enter either `won` or `failed`.",
+        "A failed submission cannot be edited and resubmitted within the same run.",
+        "The player must press R to restart."
+      ],
+      "after": [
+        "Space is effective whenever the game is in `editing`, including after a previous failed submission and when Moves = 30.",
+        "Each time Space is pressed:",
+        "1. Clear all previous blue water highlights.",
+        "2. Clear all previous red X marks.",
+        "3. Reset Leaks to 0.",
+        "4. Clear both Sink `reached` states.",
+        "5. Set Water to On.",
+        "6. Run the complete Source-based water-flow check using the current pipe orientations.",
+        "7. Calculate Leaks.",
+        "8. Record both Sink `reached` states.",
+        "9. Resolve the current submission.",
+        "If:",
+        "- Sink 1 is reached,",
+        "- Sink 2 is reached, and",
+        "- Leaks = 0,",
+        "then:",
+        "- Enter `won`.",
+        "- Stop further editing and resubmission.",
+        "Otherwise:",
+        "- Remain in `editing`.",
+        "- Keep all current pipe orientations.",
+        "- Keep Moves unchanged.",
+        "- Keep Water On.",
+        "- Keep the newly calculated Leaks visible.",
+        "- Keep the current blue highlights and red X marks visible.",
+        "- Allow another submission.",
+        "- Allow additional rotations if Moves < 30.",
+        "Pressing Space repeatedly without changing the board reevaluates the same current configuration and therefore produces the same result."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "R is effective in `editing`, `won`, and `failed`."
+      ],
+      "after": [
+        "R is effective in both `editing` and `won`."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [],
+      "after": [
+        "- Clears any previous failed-submission result."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "Row 0: SRC-E | SV   | SV   | TNES | SV   | SNK-W",
+        "Row 1: BLK   | CNE  | TESW | SH   | BLK  | CES",
+        "Row 2: CSW   | BLK  | CNE  | SH   | TWNE | BLK",
+        "Row 3: BLK   | SV   | LEK  | SH   | CNE  | SV",
+        "Row 4: TESW  | BLK  | CES  | CES  | CWN  | BLK",
+        "Row 5: SH    | CNE  | BLK  | BLK  | CES  | SNK-W"
+      ],
+      "after": [
+        "Row 0: SRC-E | SV | SV | TNES | SV | SNK-W",
+        "Row 1: BLK | CNE | TESW | SH | BLK | CES",
+        "Row 2: CSW | BLK | CNE | SH | TWNE | BLK",
+        "Row 3: BLK | SV | LEK | SH | CNE | SV",
+        "Row 4: TESW | BLK | CES | CES | CWN | BLK",
+        "Row 5: SH | CNE | BLK | BLK | CES | SNK-W"
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [],
+      "after": [
+        "Each submission performs a fresh traversal.",
+        "Traversal state from an earlier failed submission is never reused."
+      ]
+    },
+    {
+      "id": "change26",
+      "before": [],
+      "after": [
+        "All invalid-outlet results are recalculated independently for every submission."
+      ]
+    },
+    {
+      "id": "change27",
+      "before": [
+        "A single outlet entering the Leak therefore contributes at most 1 to Leaks."
+      ],
+      "after": [
+        "A single outlet entering the Leak therefore contributes at most 1 to Leaks during one submission."
+      ]
+    },
+    {
+      "id": "change28",
+      "before": [],
+      "after": [
+        "Sink reached values are recalculated from false at every submission."
+      ]
+    },
+    {
+      "id": "change29",
+      "before": [],
+      "after": [
+        "Leaks never accumulates across separate submissions.",
+        "Each new submission begins with:",
+        "`Leaks = 0`",
+        "and calculates a new result from the current board."
+      ]
+    },
+    {
+      "id": "change30",
+      "before": [
+        "This shows that water physically reached that outlet even though propagation could not continue."
+      ],
+      "after": [
+        "After a failed submission, these results remain visible while the player decides how to modify the puzzle.",
+        "A successful rotation clears all old evaluation visualization before applying the new rotation.",
+        "A new Space submission also clears old evaluation visualization before drawing the new result."
+      ]
+    },
+    {
+      "id": "change31",
+      "before": [
+        "Victory:"
+      ],
+      "after": [
+        "Successful submission:"
+      ]
+    },
+    {
+      "id": "change32",
+      "before": [
+        "Failure:"
+      ],
+      "after": [
+        "- Enter `won`.",
+        "Unsuccessful submission:"
+      ]
+    },
+    {
+      "id": "change33",
+      "before": [
+        "No additional criteria are used."
+      ],
+      "after": [
+        "- Remain in `editing`.",
+        "An unsuccessful submission is not terminal.",
+        "The player may modify the board and submit again while Moves < 30.",
+        "If Moves = 30, the player cannot rotate further but may continue pressing Space to evaluate the current configuration.",
+        "No submission itself changes Moves."
+      ]
+    },
+    {
+      "id": "change34",
+      "before": [
+        "During `editing`, the player may rotate any eligible pipe while Moves < 30."
+      ],
+      "after": [
+        "During normal editing, the player may rotate any eligible pipe while Moves < 30."
+      ]
+    },
+    {
+      "id": "change35",
+      "before": [
+        "If Moves reaches 30:",
+        "- Further rotations stop.",
+        "- The game remains in `editing`.",
+        "- Space can still submit the current configuration.",
+        "- R can still restart."
+      ],
+      "after": [
+        "If no failed submission result is currently visible:",
+        "- Water remains Off.",
+        "- Leaks remains 0."
+      ]
+    },
+    {
+      "id": "change36",
+      "before": [
+        "1. Set Water to On.",
+        "2. Stop editing."
+      ],
+      "after": [
+        "1. Clear previous submission visualization and evaluation state.",
+        "2. Set Water to On."
+      ]
+    },
+    {
+      "id": "change37",
+      "before": [],
+      "after": [
+        "- Disable further rotation and resubmission."
+      ]
+    },
+    {
+      "id": "change38",
+      "before": [
+        "- Enter `failed`.",
+        "- Display `Failed`.",
+        "- Display `Press R to Restart`.",
+        "In both terminal states:",
+        "- Final pipe orientations remain visible.",
+        "- Blue water highlights remain visible.",
+        "- Red X marks remain visible.",
+        "- Final Leaks value remains visible.",
+        "- Further rotation and resubmission are disabled.",
+        "- Only R can restart."
+      ],
+      "after": [
+        "- Remain in `editing`.",
+        "- Display `Not solved - continue editing`.",
+        "- Display `Press Space to check again Restart: R`.",
+        "- Keep current pipe orientations.",
+        "- Keep Moves unchanged.",
+        "- Keep Water On.",
+        "- Keep the current Leaks value.",
+        "- Keep current blue highlights and red X marks.",
+        "If the player successfully rotates a pipe after an unsuccessful submission:",
+        "1. Clear previous water-flow results.",
+        "2. Set Water to Off.",
+        "3. Set Leaks to 0.",
+        "4. Clear both Sink reached states.",
+        "5. Clear blue highlights.",
+        "6. Clear red X marks.",
+        "7. Rotate the selected pipe.",
+        "8. Increase Moves by 1.",
+        "9. Continue normal `editing`.",
+        "If Moves reaches 30:",
+        "- Further rotations stop.",
+        "- The game remains in `editing`.",
+        "- Space can still submit or resubmit the current configuration.",
+        "- R can still restart.",
+        "Repeated unsuccessful submissions do not end the run."
+      ]
+    },
+    {
+      "id": "change39",
+      "before": [
+        "During editing:"
+      ],
+      "after": [
+        "During editing before submission:"
+      ]
+    },
+    {
+      "id": "change40",
+      "before": [
+        "Clicking a non-rotatable object or attempting another rotation after Moves reaches 30 does not change the board or Moves."
+      ],
+      "after": []
+    },
+    {
+      "id": "change41",
+      "before": [
+        "Victory requires:",
+        "- Both Sinks reached."
+      ],
+      "after": [
+        "A submission succeeds only when:",
+        "- Both Sinks are reached."
+      ]
+    },
+    {
+      "id": "change42",
+      "before": [
+        "Failure occurs if:",
+        "- At least one Sink is not reached, or",
+        "- Leaks > 0."
+      ],
+      "after": [
+        "If these conditions are satisfied:",
+        "- Enter `won`.",
+        "- Display `Puzzle Solved!`.",
+        "- Display `Press R to Restart`.",
+        "- Further editing and submission are disabled.",
+        "If a submission does not satisfy these conditions:",
+        "- The game remains in `editing`.",
+        "- Display `Not solved - continue editing`.",
+        "- Display `Press Space to check again Restart: R`.",
+        "- Keep the current water-flow result visible.",
+        "- Allow further rotations if Moves < 30.",
+        "- Allow Space to submit again.",
+        "When the player successfully rotates a pipe after a failed submission, the old water-flow result is cleared and Water returns to Off before the new editable configuration is shown."
+      ]
+    },
+    {
+      "id": "change43",
+      "before": [
+        "After `won`:",
+        "`Puzzle Solved!`",
+        "`Press R to Restart`",
+        "After `failed`:",
+        "`Failed`",
+        "`Press R to Restart`",
+        "Both terminal states disable further editing and resubmission.",
+        "R restores the initial map, clears all water-flow results, and returns the game to `editing`."
+      ],
+      "after": [
+        "At Moves = 30:",
+        "- Rotation is disabled.",
+        "- Space remains active.",
+        "- R remains active.",
+        "- The current configuration may still be submitted repeatedly.",
+        "There is no terminal `failed` state for an incorrect submission.",
+        "R restores the initial map, resets Moves, clears all water-flow results, and returns the game to `editing`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "pipe_connection_var03.D2.2.06",
+    "pipe_connection_var03.D2.3.09",
+    "pipe_connection_var03.D2.4.01",
+    "pipe_connection_var03.D2.4.02",
+    "pipe_connection_var03.D2.5.02",
+    "pipe_connection_var03.D2.5.03",
+    "pipe_connection_var03.D2.2.09",
+    "pipe_connection_var03.D2.2.10"
+  ],
+  "added_checkpoint_ids": [
+    "pipe_connection_var03.D2.2.09",
+    "pipe_connection_var03.D2.2.10"
+  ],
+  "base_checkpoints_sha256": "81842a961e20164b1af130002c9a8ab35beeedb93f7f148ef4bbafae418571f6",
+  "checkpoints_sha256": "2cbf75b648f02d415951dc64f76b8c61961f6570ee730cd7673c5c200f15f385"
+}

@@ -1,0 +1,300 @@
+{
+  "instance_id": "asteroids_var08",
+  "family_slug": "asteroids",
+  "variant_id": "var08",
+  "variation_types": [
+    "object_type",
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/4_easy_Asteroids/4_easy_Asteroids_V9.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Asteroids"
+      ],
+      "after": [
+        "Asteroids_V9"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [],
+      "after": [
+        "The game begins with 3 fixed Normal Asteroids. Subsequently spawned asteroids may be either Normal Asteroids with a radius of 25 px or Large Asteroids with a radius of 35 px."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "Asteroids are displayed as gray circles with a radius of 25 px.",
+        "The game begins with 3 fixed asteroids:"
+      ],
+      "after": [
+        "The game contains two asteroid sizes:",
+        "- Normal Asteroid: gray circle with radius 25 px.",
+        "- Large Asteroid: darker-gray or otherwise visually distinguishable circle with radius 35 px.",
+        "The game begins with 3 fixed Normal Asteroids:"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "Only subsequently spawned asteroids appear from the edges of the gameplay area. Asteroids do not split and do not actively chase the spaceship."
+      ],
+      "after": [
+        "Only subsequently spawned asteroids appear from the edges of the gameplay area. Each subsequently spawned asteroid is independently selected as a Normal Asteroid with 50% probability or a Large Asteroid with 50% probability.",
+        "Asteroids do not split and do not actively chase the spaceship."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "The top and bottom areas use a light-gray background, while the main gameplay area uses a black or dark-colored background. The spaceship may use blue, cyan, or white; bullets may use yellow or white; asteroids use gray. All text should use a high-contrast color.",
+        "At the start of the game, the spaceship is centered at `(300, 400)` and faces upward, the 3 initial asteroids are present, no bullets are present, the score is 0, and the normal gameplay instructions are displayed."
+      ],
+      "after": [
+        "The top and bottom areas use a light-gray background, while the main gameplay area uses a black or dark-colored background. The spaceship may use blue, cyan, or white; bullets may use yellow or white; asteroids use gray or dark gray. All text should use a high-contrast color.",
+        "At the start of the game, the spaceship is centered at `(300, 400)` and faces upward, the 3 initial Normal Asteroids are present, no bullets are present, the score is 0, and the normal gameplay instructions are displayed."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "Each asteroid:",
+        "- Has a radius of 25 px.",
+        "- Moves at approximately 80 px/s.",
+        "- Moves along a fixed velocity direction after spawning.",
+        "- Uses four-edge wrapping.",
+        "- Does not chase the player.",
+        "- Does not split when destroyed.",
+        "The game begins with 3 fixed asteroids, and at most 4 asteroids may exist simultaneously.",
+        "Subsequent asteroids are spawned from the edges of the gameplay area according to the rules in Section 5."
+      ],
+      "after": [
+        "Each asteroid has one of two sizes:",
+        "- Normal Asteroid: radius 25 px.",
+        "- Large Asteroid: radius 35 px.",
+        "All asteroids:",
+        "- Move at approximately 80 px/s.",
+        "- Move along a fixed velocity direction after spawning.",
+        "- Use four-edge wrapping.",
+        "- Do not chase the player.",
+        "- Do not split when destroyed.",
+        "The game begins with 3 fixed Normal Asteroids, and at most 4 asteroids may exist simultaneously.",
+        "Each subsequently spawned asteroid is independently selected as:",
+        "- Normal Asteroid: 50%",
+        "- Large Asteroid: 50%",
+        "An asteroid's size remains fixed for its entire lifetime."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "Each successfully destroyed asteroid increases the score by 1.",
+        "Score does not increase because of survival time, asteroid wrapping, or bullet expiration. The game does not record a separate high score."
+      ],
+      "after": [
+        "Each successfully destroyed asteroid increases the score by 1 regardless of asteroid size.",
+        "Score does not increase because of survival time, asteroid wrapping, or bullet expiration.",
+        "The game does not record a separate high score."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "The game begins with exactly 3 fixed asteroids:"
+      ],
+      "after": [
+        "The game begins with exactly 3 fixed Normal Asteroids:"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "Each initial asteroid has a radius of 25 px."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "A newly spawned asteroid is centered 25 px inward from the selected gameplay boundary:"
+      ],
+      "after": [
+        "For each new asteroid, independently select:",
+        "- Normal Asteroid with 50% probability.",
+        "- Large Asteroid with 50% probability.",
+        "The spawn position depends on the selected asteroid radius.",
+        "For a Normal Asteroid with radius 25 px:"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "For a Large Asteroid with radius 35 px:",
+        "| Spawn Edge | Center Coordinate |",
+        "|---|---|",
+        "| Left | `x = 35`, `135 ≤ y ≤ 665` |",
+        "| Right | `x = 565`, `135 ≤ y ≤ 665` |",
+        "| Top | `135 ≤ x ≤ 565`, `y = 135` |",
+        "| Bottom | `135 ≤ x ≤ 565`, `y = 665` |"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "The other velocity component may be randomized, but the overall speed should remain approximately 80 px/s."
+      ],
+      "after": [
+        "The other velocity component may be randomized, but the overall speed should remain approximately 80 px/s regardless of asteroid size."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "Bullet-asteroid collision uses circular distance-based detection.",
+        "A collision occurs when:"
+      ],
+      "after": [
+        "Bullet-asteroid collision uses circular distance-based detection based on the current asteroid's radius.",
+        "For a Normal Asteroid:"
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [],
+      "after": [
+        "For a Large Asteroid:",
+        "`distance(bullet_center, asteroid_center) < 39 px`",
+        "These thresholds equal the bullet radius of 4 px plus the corresponding asteroid radius."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [],
+      "after": [
+        "Both asteroid sizes award exactly 1 point when destroyed."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "Spaceship-asteroid collision also uses circular distance-based detection.",
+        "A collision occurs when:"
+      ],
+      "after": [
+        "Spaceship-asteroid collision also uses circular distance-based detection based on the current asteroid's radius.",
+        "For a Normal Asteroid:"
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [],
+      "after": [
+        "For a Large Asteroid:",
+        "`distance(spaceship_center, asteroid_center) < 53 px`",
+        "These thresholds equal the spaceship collision radius of 18 px plus the corresponding asteroid radius."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "At initialization, the game creates the window and interface areas, places the spaceship at `(300, 400)` facing up, sets the score to 0, clears the bullet list, creates the 3 fixed initial asteroids, initializes the firing cooldown and asteroid spawn-check timer, and enters `playing`."
+      ],
+      "after": [
+        "At initialization, the game creates the window and interface areas, places the spaceship at `(300, 400)` facing up, sets the score to 0, clears the bullet list, creates the 3 fixed initial Normal Asteroids, initializes the firing cooldown and asteroid spawn-check timer, and enters `playing`."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "- Asteroid 1: `(120, 220)`, velocity `(56, 56) px/s`",
+        "- Asteroid 2: `(500, 300)`, velocity `(-56, 56) px/s`",
+        "- Asteroid 3: `(250, 620)`, velocity `(56, -56) px/s`"
+      ],
+      "after": [
+        "- Asteroid 1: `(120, 220)`, velocity `(56, 56) px/s`, radius 25 px",
+        "- Asteroid 2: `(500, 300)`, velocity `(-56, 56) px/s`, radius 25 px",
+        "- Asteroid 3: `(250, 620)`, velocity `(56, -56) px/s`, radius 25 px"
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [],
+      "after": [
+        "Whenever a new asteroid is required, its size is independently selected using the 50% Normal / 50% Large probabilities. Its spawn position, visual radius, and collision thresholds use the rules associated with that size."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "1. Detect spaceship-asteroid collisions using the current positions."
+      ],
+      "after": [
+        "1. Detect spaceship-asteroid collisions using each asteroid's current radius."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "3. Otherwise, resolve bullet-asteroid collisions, remove hit bullets and asteroids, and increase the score for each successfully destroyed asteroid."
+      ],
+      "after": [
+        "3. Otherwise, resolve bullet-asteroid collisions using each asteroid's current radius, remove hit bullets and asteroids, and increase the score for each successfully destroyed asteroid."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "Pressing R fully reinitializes the game. The spaceship returns to `(300, 400)` facing up, score returns to 0, all bullets are cleared, the 3 fixed initial asteroids are restored, all relevant timers are reset, the normal gameplay instructions return, and the game state becomes `playing`."
+      ],
+      "after": [
+        "Pressing R fully reinitializes the game. The spaceship returns to `(300, 400)` facing up, score returns to 0, all bullets are cleared, the 3 fixed initial Normal Asteroids are restored, all relevant timers are reset, the normal gameplay instructions return, and the game state becomes `playing`."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [],
+      "after": [
+        "- Normal Asteroid radius: 25 px",
+        "- Large Asteroid radius: 35 px"
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [
+        "The top information area displays `Score: X`, beginning with `Score: 0`. Each asteroid successfully destroyed by a bullet increases X by 1."
+      ],
+      "after": [
+        "The top information area displays `Score: X`, beginning with `Score: 0`. Each asteroid successfully destroyed by a bullet increases X by 1 regardless of asteroid size."
+      ]
+    },
+    {
+      "id": "change26",
+      "before": [
+        "The only terminal gameplay condition is:",
+        "`distance(spaceship_center, asteroid_center) < 43 px`"
+      ],
+      "after": [
+        "The terminal collision threshold depends on the collided asteroid:",
+        "- Normal Asteroid: distance < 43 px",
+        "- Large Asteroid: distance < 53 px"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "asteroids_var08.D2.3.08",
+    "asteroids_var08.D2.3.10",
+    "asteroids_var08.D2.1.06",
+    "asteroids_var08.D2.3.11"
+  ],
+  "added_checkpoint_ids": [
+    "asteroids_var08.D2.1.06",
+    "asteroids_var08.D2.3.11"
+  ],
+  "base_checkpoints_sha256": "d50b680470c3c8924a22f5c3a03e1ceb524a55e81af4465fc04666d60d2662fc",
+  "checkpoints_sha256": "7374fcefc6b85ce14bc1361ff32c10edb11d431a0b0d56fdb7c9b4668b21c53d"
+}

@@ -1,0 +1,85 @@
+{
+  "instance_id": "asteroids_var03",
+  "family_slug": "asteroids",
+  "variant_id": "var03",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/4_easy_Asteroids/4_easy_Asteroids_V4.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Asteroids"
+      ],
+      "after": [
+        "Asteroids_V4"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "Only subsequently spawned asteroids appear from the edges of the gameplay area. Asteroids do not split and do not actively chase the spaceship."
+      ],
+      "after": [
+        "Only subsequently spawned asteroids appear from the edges of the gameplay area.",
+        "Asteroids do not split and do not actively chase the spaceship."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "Score does not increase because of survival time, asteroid wrapping, or bullet expiration. The game does not record a separate high score."
+      ],
+      "after": [
+        "Score does not increase because of survival time, asteroid wrapping, or bullet expiration.",
+        "The game does not record a separate high score."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "Space is used to fire. A shot succeeds only when the 0.25-second firing cooldown has ended."
+      ],
+      "after": [
+        "Space is used to fire. A shot succeeds only when the 0.15-second firing cooldown has ended."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- The 0.25-second firing cooldown begins."
+      ],
+      "after": [
+        "- The 0.15-second firing cooldown begins."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "- Firing cooldown: 0.25 seconds"
+      ],
+      "after": [
+        "- Firing cooldown: 0.15 seconds"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Firing cooldown: 0.25 seconds"
+      ],
+      "after": [
+        "- Firing cooldown: 0.15 seconds"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "asteroids_var03.D2.2.04",
+    "asteroids_var03.D2.2.05",
+    "asteroids_var03.D2.2.06"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "d50b680470c3c8924a22f5c3a03e1ceb524a55e81af4465fc04666d60d2662fc",
+  "checkpoints_sha256": "6645c70eb8b0c7a7981ab6f18ab9750d8e853f75fa53718f08581db3d187d40a"
+}

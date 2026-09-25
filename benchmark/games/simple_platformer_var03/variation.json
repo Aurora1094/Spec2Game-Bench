@@ -1,0 +1,54 @@
+{
+  "instance_id": "simple_platformer_var03",
+  "family_slug": "simple_platformer",
+  "variant_id": "var03",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/7_medium_Simple Platformer/7_medium_Simple Platformer_V4.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "- Gravity: 900 px/s²"
+      ],
+      "after": [
+        "- Gravity: 1100 px/s²"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "While airborne, gravity increases vertical velocity and downward velocity is clamped to a maximum of 600 px/s."
+      ],
+      "after": [
+        "While airborne, gravity increases vertical velocity by 1100 px/s² and downward velocity is clamped to a maximum of 600 px/s."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "6. Apply gravity and clamp falling speed to 600 px/s."
+      ],
+      "after": [
+        "6. Apply gravity at 1100 px/s² and clamp falling speed to 600 px/s."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- Gravity: 900 px/s²"
+      ],
+      "after": [
+        "- Gravity: 1100 px/s²"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "simple_platformer_var03.D2.3.01"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "4fa5974d0ef7ecb0bbcc914ed389e18e591a5da6fe64f3a9eec6440f604b89c9",
+  "checkpoints_sha256": "909e3b6fde6930d709d521a31f44e849d82679f06af3c9cf47e6629168247b7d"
+}

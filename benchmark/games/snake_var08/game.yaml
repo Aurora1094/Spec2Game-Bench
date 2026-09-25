@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "slug": "snake_var08",
+  "name": "Snake",
+  "difficulty": "easy",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [],
+  "window_size": [
+    600,
+    800
+  ],
+  "source_audit": {
+    "docx_sha256": "0173f42ffbbbf410965d5056c5a9e0ce513d2906e63606725ab1ddb561cf94f3",
+    "base_checkpoints_sha256": "c774c0fc0b96c633aa1e7103fbc3d2e9fdf4b008561d785560907ca5b0ba250d",
+    "checkpoint_count": 31
+  },
+  "family_slug": "snake",
+  "variant_id": "var08",
+  "variation_types": [
+    "object_type",
+    "rule"
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "instance_id": "mini_zelda_var02",
+  "family_slug": "mini_zelda",
+  "variant_id": "var02",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/15_hard_Mini Zelda-like Room Adventure/15_hard_Mini Zelda-like Room Adventure_V3.docx",
+  "corrections": [
+    "Final DOCX takes precedence over spreadsheet draft differences."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "Each attack lasts 0.20 seconds.",
+        "The minimum interval between attack starts is 0.30 seconds."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "A custom rule is the sequential dependency between Key 1 and Key 2. The player must first clear Room B to obtain Key 1 and unlock Room D, then clear Room D to obtain Key 2 and unlock Room E."
+      ],
+      "after": [
+        "Key 1 and Key 2 form a sequential dependency. The player must first clear Room B to obtain Key 1 and unlock Room D, then clear Room D to obtain Key 2 and unlock Room E."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`WASD: Move    Space: Attack`"
+      ],
+      "after": [
+        "`WASD: Move Space: Attack`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "          Room B",
+        "            |"
+      ],
+      "after": [
+        "       Room B",
+        "         |"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "            |",
+        "          Room E"
+      ],
+      "after": [
+        "         |",
+        "       Room E"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "`0.45 seconds`"
+      ],
+      "after": [
+        "`0.30 seconds`",
+        "A new attack can begin only when at least 0.30 seconds have elapsed since the previous attack started."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "The actual room transition is still performed during the unified room-transition stage."
+      ],
+      "after": [
+        "The actual room transition is performed during the unified room-transition stage."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- Right-side door → message appears to the left",
+        "- Bottom-side door → message appears above"
+      ],
+      "after": [
+        "- Right-side door message appears to the left.",
+        "- Bottom-side door message appears above."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- Preserve the existing 0.45-second attack cooldown."
+      ],
+      "after": [
+        "- Preserve the remaining attack-start cooldown."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- Attack cooldown"
+      ],
+      "after": [
+        "- Attack cooldown and remaining duration"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "2. Process a new Space key-down event and begin an attack if the attack cooldown allows it."
+      ],
+      "after": [
+        "2. Process a new Space key-down event and begin an attack if at least 0.30 seconds have elapsed since the previous attack start."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "mini_zelda_var02.D2.2.07",
+    "mini_zelda_var02.D2.5.02"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "6d064a9a7dc36ddc40e4609a9b9a0e6a89fe8f6b7b121d0a50edc6b186682597",
+  "checkpoints_sha256": "6823d8ef242b4683f1d76c34f0688f19cdada7640cb6e3ea650af11524b40e96"
+}

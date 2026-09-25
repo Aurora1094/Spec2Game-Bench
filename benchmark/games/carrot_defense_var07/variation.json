@@ -1,0 +1,472 @@
+{
+  "instance_id": "carrot_defense_var07",
+  "family_slug": "carrot_defense",
+  "variant_id": "var07",
+  "variation_types": [
+    "map",
+    "rule",
+    "combination"
+  ],
+  "source_path": "游戏规格说明（英文）/11_hard_Carrot Defense-like/11_hard_Carrot Defense-like_V8.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Carrot Defense-like is a single-level tower defense game. The player builds defensive towers on a fixed grid map to prevent enemies from following a predefined path and reaching the carrot target on the right side."
+      ],
+      "after": [
+        "Carrot Defense-like is a single-level tower defense game. The player builds defensive towers on a fixed grid map to prevent enemies from following one of two predefined branch routes and reaching the carrot target on the right side."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "The game contains 4 fixed waves. Enemies spawn in a predefined order and move along a fixed path toward the carrot."
+      ],
+      "after": [
+        "The game contains 4 fixed waves. Enemies spawn in a predefined order from one fixed entrance. After entering the map, enemies follow either an upper route or a lower route. The two routes merge again before reaching the carrot.",
+        "Enemies are assigned to the two routes according to their position in each Wave sequence. Odd-numbered enemies use the Upper Route, and even-numbered enemies use the Lower Route."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "During an active wave, N includes both enemies that have not yet spawned and enemies that are currently alive on the map."
+      ],
+      "after": [
+        "During an active wave, N includes all enemies that have not yet spawned and all enemies currently alive on either route."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "The fixed path follows these grid cells in order:"
+      ],
+      "after": [
+        "The map contains:",
+        "- One entrance at `(0,3)`",
+        "- One split point at `(3,3)`",
+        "- One Upper Route",
+        "- One Lower Route",
+        "- One merge point at `(8,3)`",
+        "- One carrot near `(11,3)`",
+        "The shared entrance section is:"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "(0,2) → (1,2) → (2,2) → (3,2) → (4,2) → (5,2)",
+        "                                             ↓",
+        "                                           (5,3)",
+        "                                             ↓",
+        "                                           (5,4)",
+        "                                             ↓",
+        "                                           (5,5)",
+        "                                             ↓",
+        "(6,5) → (7,5) → (8,5) → (9,5)",
+        "                              ↓",
+        "                            (9,4)",
+        "                              ↓",
+        "                            (9,3)",
+        "                              ↓",
+        "                          (10,3) → (11,3)"
+      ],
+      "after": [
+        "(0,3), (1,3), (2,3), (3,3)"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "Enemies enter from `(0,2)` and move through these cells in sequence until reaching the carrot near `(11,3)`.",
+        "Path cells cannot contain towers. Any non-path cell without an existing tower is buildable."
+      ],
+      "after": [
+        "The Upper Route follows these cells in order:",
+        "```text",
+        "(0,3), (1,3), (2,3), (3,3),",
+        "(3,2), (3,1),",
+        "(4,1), (5,1), (6,1), (7,1), (8,1),",
+        "(8,2), (8,3),",
+        "(9,3), (10,3), (11,3)",
+        "```",
+        "The Lower Route follows these cells in order:",
+        "```text",
+        "(0,3), (1,3), (2,3), (3,3),",
+        "(3,4), (3,5),",
+        "(4,5), (5,5), (6,5), (7,5), (8,5),",
+        "(8,4), (8,3),",
+        "(9,3), (10,3), (11,3)",
+        "```",
+        "The map structure can be represented as:",
+        "```text",
+        "                            (3,1) → (4,1) → (5,1) → (6,1) → (7,1) → (8,1)",
+        "                              ↑                                               ↓",
+        "                            (3,2)                                           (8,2)",
+        "                              ↑                                               ↓",
+        "(0,3) → (1,3) → (2,3) → (3,3)                                           (8,3) → (9,3) → (10,3) → (11,3)",
+        "                              ↓                                               ↑                         Carrot",
+        "                            (3,4)                                           (8,4)",
+        "                              ↓                                               ↑",
+        "                            (3,5) → (4,5) → (5,5) → (6,5) → (7,5) → (8,5)",
+        "```",
+        "Both complete routes contain 16 path cells from entrance to carrot.",
+        "The Upper Route and Lower Route are fixed. Enemies do not dynamically choose a route.",
+        "The split point `(3,3)` and merge point `(8,3)` may use small visual markers to make the route structure clear.",
+        "All cells belonging to either route are path cells and cannot contain towers.",
+        "Any cell that belongs to neither route and does not already contain a tower is buildable."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [],
+      "after": [
+        "Enemies from both routes ultimately reach the same carrot."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "The main game objects and state variables include the map grid, fixed path, carrot, Gold, towers, enemies, Waves, preparation state, current selection, and game state.",
+        "## 3.1 Map & Path"
+      ],
+      "after": [
+        "The main game objects and state variables include the map grid, Upper Route, Lower Route, carrot, Gold, towers, enemies, Waves, preparation state, current selection, and game state.",
+        "## 3.1 Map & Paths"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "Path cells are fixed and cannot contain towers.",
+        "Enemies move through the center points of the fixed path cells and cannot leave the path.",
+        "Each enemy maintains a path-progress value. A higher value means the enemy is closer to the carrot and is used for tower target selection."
+      ],
+      "after": [
+        "The common entrance is:",
+        "`(0,3)`",
+        "The routes split at:",
+        "`(3,3)`",
+        "The routes merge at:",
+        "`(8,3)`",
+        "The shared final path ends at:",
+        "`(11,3)`",
+        "All cells belonging to either complete route are fixed path cells and cannot contain towers.",
+        "Enemies move through the center points of cells on their assigned route and cannot switch routes between the split point and merge point.",
+        "Both routes contain the same number of path cells.",
+        "Each enemy maintains a path-progress value based on its position along its assigned complete route. A higher value means the enemy is closer to the carrot and is used for tower target selection."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "The damage rule is identical for enemies using either route."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "Towers may target enemies on either route whenever those enemies are within range."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "Each enemy stores one fixed route assignment:",
+        "- `upper_route`",
+        "- `lower_route`",
+        "The assigned route does not change during that enemy's lifetime."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "Enemies within a Wave spawn at fixed 0.8-second intervals.",
+        "A Wave ends only after every enemy assigned to that Wave has either:",
+        "- Been defeated, or",
+        "- Reached the carrot"
+      ],
+      "after": [
+        "Enemies within a Wave spawn from `(0,3)` at one global fixed interval of 0.8 seconds.",
+        "For each Wave:",
+        "- Enemy positions 1, 3, 5, 7, ... use the Upper Route.",
+        "- Enemy positions 2, 4, 6, 8, ... use the Lower Route.",
+        "There is still only one enemy spawn every 0.8 seconds."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [],
+      "after": [
+        "A Wave ends only after every enemy assigned to that Wave, across both routes, has either:",
+        "- Been defeated, or",
+        "- Reached the carrot"
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "1. The cell is not a path cell."
+      ],
+      "after": [
+        "1. The cell does not belong to the Upper Route or Lower Route."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "1. Path cell → `Cannot build on path`"
+      ],
+      "after": [
+        "1. Any path cell → `Cannot build on path`"
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "- Does not affect the path."
+      ],
+      "after": [
+        "- Does not affect either route."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [],
+      "after": [
+        "- Route-assignment sequence state"
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [],
+      "after": [
+        "After Restart, enemies again spawn from `(0,3)`, and the first enemy of Wave 1 is assigned to the Upper Route."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "Enemies spawn at path cell `(0,2)` and move through the fixed path toward `(11,3)`.",
+        "Movement speed depends on enemy type, and enemies cannot leave the path.",
+        "Path progress increases as an enemy moves toward the carrot and is used for tower targeting."
+      ],
+      "after": [
+        "All enemies spawn at `(0,3)`.",
+        "Enemies first move along the shared entrance section:",
+        "```text",
+        "(0,3), (1,3), (2,3), (3,3)",
+        "```",
+        "At `(3,3)`:",
+        "- Enemies assigned to the Upper Route move through the upper branch.",
+        "- Enemies assigned to the Lower Route move through the lower branch.",
+        "Upper branch:",
+        "```text",
+        "(3,3), (3,2), (3,1), (4,1), (5,1), (6,1), (7,1), (8,1), (8,2), (8,3)",
+        "```",
+        "Lower branch:",
+        "```text",
+        "(3,3), (3,4), (3,5), (4,5), (5,5), (6,5), (7,5), (8,5), (8,4), (8,3)",
+        "```",
+        "Both routes merge at `(8,3)`.",
+        "After the merge point, all enemies follow:",
+        "```text",
+        "(8,3), (9,3), (10,3), (11,3)",
+        "```",
+        "Enemies cannot switch routes between the split and merge points.",
+        "Movement speed depends on enemy type, and enemies cannot leave path cells.",
+        "Path progress increases as an enemy moves along its assigned complete route toward the carrot and is used for tower targeting."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "1. Find all valid enemies within its attack range."
+      ],
+      "after": [
+        "1. Find all valid enemies within its attack range, regardless of assigned route."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [],
+      "after": [
+        "The reward does not depend on assigned route."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "Enemies in the current Wave spawn sequentially every 0.8 seconds."
+      ],
+      "after": [
+        "Enemies in the current Wave spawn sequentially every 0.8 seconds from `(0,3)`.",
+        "Route assignment follows sequence position:",
+        "- Odd position → Upper Route",
+        "- Even position → Lower Route"
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "The Wave ends only when all assigned enemies have been resolved through defeat or reaching the carrot."
+      ],
+      "after": [
+        "The Wave ends only when all assigned enemies from both routes have been resolved through defeat or reaching the carrot."
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [
+        "At the beginning of each Wave, track whether any enemy reaches the carrot."
+      ],
+      "after": [
+        "At the beginning of each Wave, track whether any enemy from either route reaches the carrot."
+      ]
+    },
+    {
+      "id": "change26",
+      "before": [
+        "If carrot HP reaches 0 or below, however, Failure occurs immediately and no subsequent wave-end settlement is processed."
+      ],
+      "after": [
+        "If carrot HP reaches 0 or below, Failure occurs immediately and no subsequent wave-end settlement is processed."
+      ]
+    },
+    {
+      "id": "change27",
+      "before": [
+        "When every Wave 4 enemy has been resolved and carrot HP remains greater than 0:"
+      ],
+      "after": [
+        "When every Wave 4 enemy from both routes has been resolved and carrot HP remains greater than 0:"
+      ]
+    },
+    {
+      "id": "change28",
+      "before": [
+        "At initialization, the game creates the interface areas, 12 × 8 map, fixed path, carrot, Gold resource, tower list, enemy list, Wave state, timers, and current selection."
+      ],
+      "after": [
+        "At initialization, the game creates the interface areas, 12 × 8 map, shared entrance path, Upper Route, Lower Route, shared final path, carrot, Gold resource, tower list, enemy list, Wave state, route-assignment state, timers, and current selection."
+      ]
+    },
+    {
+      "id": "change29",
+      "before": [
+        "Wave 1 begins with enemies spawning in its fixed order at 0.8-second intervals."
+      ],
+      "after": [
+        "Wave 1 begins with enemies spawning from `(0,3)` in its fixed order at 0.8-second intervals.",
+        "The first enemy uses the Upper Route, the second uses the Lower Route, and route assignment continues alternating by sequence position."
+      ]
+    },
+    {
+      "id": "change30",
+      "before": [
+        "- Enemies move along the path."
+      ],
+      "after": [
+        "- Enemies move along their assigned route."
+      ]
+    },
+    {
+      "id": "change31",
+      "before": [
+        "N includes both enemies that have not yet spawned and enemies that are currently alive."
+      ],
+      "after": [
+        "N includes enemies that have not yet spawned and all enemies currently alive on either route."
+      ]
+    },
+    {
+      "id": "change32",
+      "before": [
+        "If all enemies in Waves 1–3 are resolved while carrot HP remains above 0:"
+      ],
+      "after": [
+        "If all enemies in Waves 1–3 from both routes are resolved while carrot HP remains above 0:"
+      ]
+    },
+    {
+      "id": "change33",
+      "before": [
+        "After Wave 4 is fully resolved while carrot HP remains above 0:"
+      ],
+      "after": [
+        "After all Wave 4 enemies from both routes are fully resolved while carrot HP remains above 0:"
+      ]
+    },
+    {
+      "id": "change34",
+      "before": [
+        "The player's goal is to use Gold effectively across all 4 Waves, build and adjust defensive towers, prevent enemies from reaching the carrot, and keep carrot HP above 0."
+      ],
+      "after": [
+        "The player's goal is to use Gold effectively across all 4 Waves, defend both branch routes, build and adjust defensive towers, prevent enemies from reaching the carrot, and keep carrot HP above 0."
+      ]
+    },
+    {
+      "id": "change35",
+      "before": [
+        "- Remaining enemies"
+      ],
+      "after": [
+        "- Remaining enemies across both routes"
+      ]
+    },
+    {
+      "id": "change36",
+      "before": [],
+      "after": [
+        "The map visually shows one entrance, one split point, two route branches, one merge point, and one carrot."
+      ]
+    },
+    {
+      "id": "change37",
+      "before": [
+        "When an enemy reaches the carrot, the carrot flashes, its HP bar decreases, and the top HP value updates."
+      ],
+      "after": [
+        "When an enemy from either route reaches the carrot, the carrot flashes, its HP bar decreases, and the top HP value updates."
+      ]
+    },
+    {
+      "id": "change38",
+      "before": [
+        "Victory occurs only after all Wave 4 enemies have been resolved while:"
+      ],
+      "after": [
+        "Victory occurs only after all Wave 4 enemies from both routes have been resolved while:"
+      ]
+    },
+    {
+      "id": "change39",
+      "before": [
+        "R fully restores Gold, carrot HP, Waves, towers, enemies, timers, selection state, and all other gameplay state."
+      ],
+      "after": [
+        "R fully restores Gold, carrot HP, Waves, towers, enemies, timers, route assignments, selection state, path state, and all other gameplay state."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "carrot_defense_var07.D2.1.01",
+    "carrot_defense_var07.D2.4.01",
+    "carrot_defense_var07.D2.4.07",
+    "carrot_defense_var07.D2.5.07",
+    "carrot_defense_var07.D2.4.08"
+  ],
+  "added_checkpoint_ids": [
+    "carrot_defense_var07.D2.4.07",
+    "carrot_defense_var07.D2.4.08",
+    "carrot_defense_var07.D2.5.07"
+  ],
+  "base_checkpoints_sha256": "763a94a35ba4ffa1473059ff4dc233b43d72a986810cc0d7664282192c535c37",
+  "checkpoints_sha256": "25d4ea8c279d512f6daf507a2bd88f82474bcaadced48a90d2cfbe8198787b27"
+}

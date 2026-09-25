@@ -1,0 +1,212 @@
+{
+  "instance_id": "whack_a_mole_var07",
+  "family_slug": "whack_a_mole",
+  "variant_id": "var07",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/3_easy_Whack-a-Hole/3_easy_Whack-a-Mole_V8.docx",
+  "corrections": [
+    "Mapped the Whack-a-Hole source folder to whack_a_mole."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Whack-a-Mole"
+      ],
+      "after": [
+        "Whack-a-Mole_V8"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "Each new mole is independently generated as a Normal Mole with 80% probability or a Golden Mole with 20% probability. The player's goal is to achieve the highest possible score before the 30-second countdown reaches 0.",
+        "The game has no fixed victory score, victory state, level transition, score penalty, or increasing difficulty."
+      ],
+      "after": [
+        "Each new mole is independently generated as a Normal Mole with 80% probability or a Golden Mole with 20% probability.",
+        "Invalid clicks reduce the score by 1. If an invalid click causes the score to become negative, the game immediately enters `game_over`.",
+        "The player's goal is to achieve the highest possible score before the 30-second countdown reaches 0 while avoiding invalid clicks.",
+        "The game has no fixed victory score, victory state, level transition, or increasing difficulty."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`Restart: R`"
+      ],
+      "after": [
+        "`Avoid wrong clicks    Restart: R`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "Holes do not move, disappear, change size, or award points. Clicking an empty hole has no effect on the score."
+      ],
+      "after": [
+        "Holes do not move, disappear, change size, or award points.",
+        "Clicking an empty hole is an invalid click and reduces the score by 1."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Empty hole, background, or UI area clicked: +0",
+        "- Click while no mole is visible: +0"
+      ],
+      "after": [
+        "- Empty hole clicked: -1",
+        "- Gameplay background clicked: -1",
+        "- Top information area clicked: -1",
+        "- Bottom instruction area clicked: -1",
+        "- Click while no mole is visible: -1"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "The game does not use negative scores or record a separate high score."
+      ],
+      "after": [
+        "If an invalid click causes Score to become less than 0, the game immediately enters `game_over`.",
+        "Negative scores are not retained as an ongoing gameplay state. The click that would reduce Score below 0 triggers `game_over` immediately.",
+        "The game does not record a separate high score."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "The initial state is `playing`. The game enters `game_over` when the countdown reaches 0."
+      ],
+      "after": [
+        "The initial state is `playing`.",
+        "The game enters `game_over` when:",
+        "- The countdown reaches 0.",
+        "- An invalid click causes Score to become less than 0."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "Clicks on empty holes, the gameplay background, the top information area, the bottom instruction area, or any location while no mole is visible have no effect.",
+        "Clicks during the 0.3-second waiting period also have no effect. Invalid clicks never increase or decrease the score."
+      ],
+      "after": [
+        "The following are invalid clicks:",
+        "- Clicking an empty hole.",
+        "- Clicking the gameplay background outside the current mole's clickable rectangle.",
+        "- Clicking the top information area.",
+        "- Clicking the bottom instruction area.",
+        "- Clicking while no mole is visible.",
+        "- Clicking during the 0.3-second waiting period.",
+        "Each invalid click immediately reduces Score by 1.",
+        "If the resulting Score is less than 0, the game immediately enters `game_over`."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "A click succeeds if the mouse-down position lies within this rectangle while the mole is active. Pixel-perfect shape detection is not required.",
+        "## 5.4 Countdown Priority",
+        "The 30-second countdown has priority over mole clicks, appearance timers, and spawn timers."
+      ],
+      "after": [
+        "A click succeeds only if the mouse-down position lies within this rectangle while the mole is active.",
+        "Any left-mouse-button down event that does not satisfy this condition while the game is `playing` is an invalid click and reduces Score by 1.",
+        "Pixel-perfect shape detection is not required.",
+        "## 5.4 Termination Priority",
+        "The 30-second countdown has highest priority over mole clicks, appearance timers, spawn timers, and score-based failure."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- A click occurring in the same frame in which Time reaches 0 does not award points."
+      ],
+      "after": [
+        "- A click occurring in the same frame in which Time reaches 0 does not award or deduct points."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "If Time remains above 0, click outcomes are then processed.",
+        "For an invalid click:",
+        "1. Reduce Score by 1.",
+        "2. Check whether Score is less than 0.",
+        "3. If Score < 0, immediately enter `game_over`.",
+        "4. If Score remains 0 or greater, continue gameplay normally."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "The game does not include HP, score penalties, combos, bomb moles, items, level transitions, increasing difficulty, or a victory state."
+      ],
+      "after": [
+        "The game does not include HP, combos, bomb moles, items, level transitions, increasing difficulty, or a victory state."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "If Time remains above 0, the game updates the current mole cycle. During a waiting period, the waiting timer advances until one mole is spawned. While a mole is visible, its appearance timer advances and valid mouse clicks are processed. A successful click updates the score, removes the mole, and starts a new 0.3-second waiting period. If the appearance duration expires first, the mole is removed without changing the score and the same waiting period begins.",
+        "After entering `game_over`, the current mole is removed, no new mole can spawn, mouse clicks no longer affect gameplay, Score remains fixed, Time remains 0, and the bottom instruction area displays `Game Over` and `Press R to Restart`."
+      ],
+      "after": [
+        "If Time remains above 0, mouse clicks are processed according to the valid-click and invalid-click rules.",
+        "A valid mole click awards the corresponding score, removes the mole, and starts a new 0.3-second waiting period.",
+        "An invalid click reduces Score by 1. If Score becomes less than 0, the game immediately enters `game_over` and does not process further gameplay outcomes for that frame.",
+        "If the game remains `playing`, the current mole cycle continues. During a waiting period, the waiting timer advances until one mole is spawned. While a mole is visible, its appearance timer advances. If the appearance duration expires before a successful click, the mole is removed without changing the score and the same waiting period begins.",
+        "After entering `game_over`:",
+        "- The current mole is removed.",
+        "- No new mole can spawn.",
+        "- Mouse clicks no longer affect gameplay.",
+        "- Mole-related timers stop updating.",
+        "- Score remains fixed.",
+        "- If termination occurred because Time reached 0, Time remains 0.",
+        "- If termination occurred because Score became negative while Time was still above 0, the remaining Time value is preserved.",
+        "- The bottom instruction area displays `Game Over` and `Press R to Restart`."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "The player's goal is to click as many moles as possible within 30 seconds and achieve the highest possible score. The game has no fixed victory score, victory state, or level-completion condition.",
+        "The top information area displays `Score: X`, starting from `Score: 0`. A Normal Mole awards +1 and a Golden Mole awards +3. Missed moles and invalid clicks do not change the score.",
+        "The remaining time is displayed as `Time: T`, starting from `Time: 30` and ending at `Time: 0`. T is always displayed as a non-negative whole number.",
+        "During `playing`, the bottom instruction area displays `Click the mole` and `Restart: R`. When Time reaches 0, the game enters `game_over`, the current mole disappears, Score stops changing, and the bottom area displays `Game Over` and `Press R to Restart`.",
+        "The Time = 0 termination takes priority over any click occurring during the same frame, so no additional score can be earned once the countdown has expired."
+      ],
+      "after": [
+        "The player's goal is to click as many moles as possible within 30 seconds and achieve the highest possible score while avoiding invalid clicks.",
+        "The top information area displays `Score: X`, starting from `Score: 0`. A Normal Mole awards +1 and a Golden Mole awards +3.",
+        "Each invalid click reduces Score by 1. Missing a mole does not change the score.",
+        "The remaining time is displayed as `Time: T`, starting from `Time: 30`. T is always displayed as a non-negative whole number.",
+        "During `playing`, the bottom instruction area displays `Click the mole` and `Avoid wrong clicks    Restart: R`.",
+        "The game enters `game_over` when:",
+        "- Time reaches 0.",
+        "- An invalid click causes Score to become less than 0.",
+        "Time = 0 has priority over any click occurring during the same frame, so no score increase, score deduction, or score-based failure is processed after the countdown expires.",
+        "After entering `game_over`, the current mole disappears, Score stops changing, and the bottom area displays `Game Over` and `Press R to Restart`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "whack_a_mole_var07.D2.2.02",
+    "whack_a_mole_var07.D2.2.03",
+    "whack_a_mole_var07.D2.3.10",
+    "whack_a_mole_var07.D2.5.09",
+    "whack_a_mole_var07.D2.5.10"
+  ],
+  "added_checkpoint_ids": [
+    "whack_a_mole_var07.D2.5.09",
+    "whack_a_mole_var07.D2.5.10"
+  ],
+  "base_checkpoints_sha256": "43d84d8468fbefa4975d64dd345cc4462cfd75494319b4b1da4704f95a3b403b",
+  "checkpoints_sha256": "0f161ae246d79d0320e5a8de54df943df9c7166950491f35b376137bcd25118c"
+}

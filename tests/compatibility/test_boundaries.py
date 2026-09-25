@@ -76,7 +76,7 @@ def test_benchmark_entry_rejects_old_batch_state_before_api_access(
     (run_dir / "run_state.json").write_text(
         json.dumps({"schema_version": 2}), encoding="utf-8"
     )
-    monkeypatch.delenv("DASHSCOPE_API_KEY", raising=False)
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
     with pytest.raises(ValueError, match="schema_version"):
         run_benchmark(workspace=run_dir.parents[1], run_id="old-run", resume=True)
 
@@ -230,50 +230,51 @@ def test_current_batch_matrix_can_be_combined_without_score_regression(
     assert combined["matrix"][0]["final_score"] == 68.5
 
 
-def test_default_openrouter_terra_generation_and_qwenvl_judge_routes() -> None:
+def test_default_openrouter_terra_generation_and_aws_mantle_judge_routes() -> None:
     config = load_config()
     configured_models = models(config)
     assert len(configured_models) == 1
-    assert configured_models[0].id == "gpt_5_6_terra"
-    assert configured_models[0].name == "GPT-5.6 Terra"
-    assert configured_models[0].provider == "openrouter"
-    assert configured_models[0].model == "openai/gpt-5.6-terra"
+    assert configured_models[0].id == "qwen3_7_plus"
+    assert configured_models[0].name == "Qwen3.7 Plus"
+    assert configured_models[0].provider == "alibaba_dashscope"
+    assert configured_models[0].model == "qwen3.7-plus"
     assert configured_models[0].api_style == "chat_completions"
-    assert configured_models[0].api_key_env == "OPENROUTER_API_KEY"
-    assert configured_models[0].base_url == "https://openrouter.ai/api/v1"
-    assert configured_models[0].reasoning == {"effort": "none"}
-    assert config["judge"]["policy"] == "openrouter_gpt56_terra_qwenvl_judge_v1"
+    assert configured_models[0].api_key_env == "DASHSCOPE_API_KEY"
+    assert configured_models[0].base_url == "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    assert config["judge"]["policy"] == "aws_mantle_vl_qwen235b_2507_text"
     assert config["judge"]["routing"]["roles"] == {
-        "text": "qwen_openrouter",
-        "vision": "qwen_vl_openrouter",
+        "text": "aws_mantle_qwen235b",
+        "vision": "aws_mantle_vl",
+        "contract": "aws_mantle_coder",
     }
     text_roles = {
         "action_compiler",
         "functionality",
         "specification_deviation",
         "code_quality",
-        "contract_generation",
     }
     for role, route in config["judge"]["routes"].items():
-        expected_model = (
-            "qwen/qwen3.7-plus"
-            if role in text_roles
-            else "qwen/qwen3-vl-235b-a22b-instruct"
-        )
+        if role in text_roles:
+            expected_model = "qwen.qwen3-235b-a22b-2507"
+        elif role == "contract_generation":
+            expected_model = "qwen.qwen3-coder-next"
+        else:
+            expected_model = "qwen.qwen3-vl-235b-a22b-instruct"
         assert route == {
-            "provider": "openrouter",
+            "provider": "aws_mantle",
             "model": expected_model,
             "api_style": "chat_completions",
             "enable_thinking": False,
             "max_output_tokens": route["max_output_tokens"],
         }
-    for profile in config["judge"]["routing"]["profiles"].values():
-        assert profile["api_key_env"] == "OPENROUTER_API_KEY"
+    profiles = config["judge"]["routing"]["profiles"]
+    assert profiles["aws_mantle_qwen235b"]["api_key_env"] == "AWS_MANTLE_API_KEY"
+    assert profiles["aws_mantle_coder"]["api_key_env"] == "AWS_MANTLE_API_KEY"
+    assert profiles["aws_mantle_vl"]["api_key_env"] == "AWS_MANTLE_API_KEY"
+    for profile in profiles.values():
+        assert profile["api_key_env"] == "AWS_MANTLE_API_KEY"
         assert profile["response_format"] == {"type": "json_object"}
-    assert config["judge"]["routing"]["profiles"]["qwen_openrouter"]["reasoning"] == {
-        "effort": "none",
-    }
-    assert "reasoning" not in config["judge"]["routing"]["profiles"]["qwen_vl_openrouter"]
+        assert "reasoning" not in profile
     assert not hasattr(dashscope, "create_compiler_judge")
     assert not hasattr(dashscope, "create_scoring_judge")
 
@@ -303,10 +304,13 @@ def test_old_cli_and_repository_runtime_boundaries_are_absent() -> None:
         "candidates",
         "questionnaires",
     }
+    skipped_parts = {".venv", ".git", "__pycache__", ".pytest_cache", "node_modules"}
     found = [
         path
         for path in PROJECT_ROOT.rglob("*")
-        if path.is_dir() and path.name in forbidden_dir_names
+        if path.is_dir()
+        and path.name in forbidden_dir_names
+        and not any(part in skipped_parts for part in path.parts)
     ]
     assert not found
     assert not (PROJECT_ROOT / "contracts").exists()

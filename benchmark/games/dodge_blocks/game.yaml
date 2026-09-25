@@ -1,12 +1,30 @@
-schema_version: 1
-slug: dodge_blocks
-name: "Dodge Blocks"
-difficulty: easy
-spec: spec.md
-checkpoints: checkpoints.jsonl
-variants: []
-window_size: [600, 800]
-source_audit:
-  docx_sha256: da89de26c5985c07e21abe05199c969e8c8f3f101608974e9a42676d065cbcc1
-  csv_sha256: c1a8a5a08a1046467587a91d04475518dde70410fe7999d2dea74d7720eb12d6
-  checkpoint_count: 32
+{
+  "schema_version": 1,
+  "slug": "dodge_blocks",
+  "name": "Dodge Blocks",
+  "difficulty": "easy",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [
+    "dodge_blocks_var01",
+    "dodge_blocks_var02",
+    "dodge_blocks_var03",
+    "dodge_blocks_var04",
+    "dodge_blocks_var05",
+    "dodge_blocks_var06",
+    "dodge_blocks_var07",
+    "dodge_blocks_var08",
+    "dodge_blocks_var09"
+  ],
+  "window_size": [
+    600,
+    800
+  ],
+  "source_audit": {
+    "docx_sha256": "da89de26c5985c07e21abe05199c969e8c8f3f101608974e9a42676d065cbcc1",
+    "csv_sha256": "c1a8a5a08a1046467587a91d04475518dde70410fe7999d2dea74d7720eb12d6",
+    "checkpoint_count": 32
+  },
+  "family_slug": "dodge_blocks",
+  "variant_id": "base"
+}

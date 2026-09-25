@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "slug": "farming_lite_var06",
+  "name": "Farming-lite",
+  "difficulty": "hard",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [],
+  "window_size": [
+    800,
+    600
+  ],
+  "source_audit": {
+    "docx_sha256": "5a049367e523be29851cc0c7e55d3fda1aae8e39d2e6eb31a48dbb99ba891b9b",
+    "base_checkpoints_sha256": "216ba3d8ea18719c2a19c1a40d9e1f270ce4c0ab2c6a8a8ac2e1e38ea0061256",
+    "checkpoint_count": 34
+  },
+  "family_slug": "farming_lite",
+  "variant_id": "var06",
+  "variation_types": [
+    "rule"
+  ]
+}

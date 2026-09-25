@@ -1,0 +1,265 @@
+{
+  "instance_id": "match3_var08",
+  "family_slug": "match3",
+  "variant_id": "var08",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/9_medium_Match-3/9_medium_Match-3_V9.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "If the resulting board contains at least one horizontal or vertical sequence of 3 or more gems of the same type, the swap is valid and remains in place."
+      ],
+      "after": [
+        "Two adjacent gems may be swapped only if their gem types are different.",
+        "If two adjacent gems have the same type, selecting them does not perform a swap.",
+        "For two adjacent gems of different types, if the resulting board contains at least one horizontal or vertical sequence of 3 or more gems of the same type, the swap is valid and remains in place."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "`Click two adjacent gems to swap`"
+      ],
+      "after": [
+        "`Click two adjacent different-type gems to swap`"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [],
+      "after": [
+        "- A same-type adjacent pair is selected."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- The player swaps two adjacent gems."
+      ],
+      "after": [
+        "- The player selects two adjacent gems of different types.",
+        "- Those gems are swapped."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "- Same-type adjacent selections."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "## 4.4 Swap Attempt",
+        "When the second clicked cell is adjacent to the selected cell:"
+      ],
+      "after": [
+        "## 4.4 Same-Type Adjacent Selection",
+        "If a cell is selected and the player clicks an adjacent cell containing the same logical gem type:",
+        "- Do not swap the two gems.",
+        "- Do not enter `resolving`.",
+        "- Do not change Score.",
+        "- Do not change Moves.",
+        "- Clear the current selection.",
+        "- Remain in `waiting`.",
+        "The board remains completely unchanged.",
+        "## 4.5 Swap Attempt",
+        "If the second clicked cell is adjacent to the selected cell and the two gems have different logical types:"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "Two adjacent gems of the same type may still be used in a swap attempt. The same whole-board validity rule applies.",
+        "## 4.5 Input During Resolving"
+      ],
+      "after": [
+        "## 4.6 Input During Resolving"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "## 4.6 Restart"
+      ],
+      "after": [
+        "## 4.7 Restart"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "## 5.4 Valid Swap",
+        "After two adjacent gems are swapped, the entire resulting board is checked."
+      ],
+      "after": [
+        "## 5.4 Swap Eligibility",
+        "Two cells may proceed to an actual swap only if:",
+        "1. They are adjacent.",
+        "2. Their logical gem types are different.",
+        "If adjacent gems have the same logical type:",
+        "- No swap is performed.",
+        "- The board is not checked for a resulting match.",
+        "- Score remains unchanged.",
+        "- Moves remains unchanged.",
+        "- Selection is cleared.",
+        "- Game state remains `waiting`.",
+        "## 5.5 Valid Swap",
+        "After two eligible adjacent gems of different types are swapped, the entire resulting board is checked."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "Because the board is stable before each player action, any match detected after the swap results from the new board configuration produced by that swap.",
+        "## 5.5 Resolving Order"
+      ],
+      "after": [
+        "Because the board is stable before each player action, any match detected after an eligible swap results from the new board configuration produced by that swap.",
+        "## 5.6 Resolving Order"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "## 5.6 Simultaneous Clearing"
+      ],
+      "after": [
+        "## 5.7 Simultaneous Clearing"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "## 5.7 Falling"
+      ],
+      "after": [
+        "## 5.8 Falling"
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "## 5.8 Refilling"
+      ],
+      "after": [
+        "## 5.9 Refilling"
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "## 5.9 Automatic Chains"
+      ],
+      "after": [
+        "## 5.10 Automatic Chains"
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "## 5.10 Stable Board"
+      ],
+      "after": [
+        "## 5.11 Stable Board"
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "The stable board is not required to contain a valid swap.",
+        "## 5.11 Dead Board Behavior",
+        "If the current stable board contains no swap capable of producing a match:"
+      ],
+      "after": [
+        "The stable board is not required to contain an eligible valid swap.",
+        "## 5.12 Dead Board Behavior",
+        "If the current stable board contains no allowed swap capable of producing a match:"
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "The player may continue attempting swaps or press R manually.",
+        "## 5.12 Excluded Mechanics"
+      ],
+      "after": [
+        "The player may continue selecting gems or press R manually.",
+        "## 5.13 Excluded Mechanics"
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "While `waiting`, the player may select a gem, cancel a selection, replace a selection with another non-adjacent gem, or attempt an adjacent swap.",
+        "For an adjacent swap:"
+      ],
+      "after": [
+        "While `waiting`, the player may select a gem, cancel a selection, replace a selection with another non-adjacent gem, or select an adjacent gem.",
+        "If the adjacent gem has the same logical type:",
+        "1. Do not swap the gems.",
+        "2. Keep the board unchanged.",
+        "3. Keep Score and Moves unchanged.",
+        "4. Clear selection.",
+        "5. Remain in `waiting`.",
+        "If the adjacent gem has a different logical type:"
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "The game has no automatic terminal state and does not end or reshuffle when the board has no valid swap."
+      ],
+      "after": [
+        "The game has no automatic terminal state and does not end or reshuffle when the board has no valid allowed swap."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "The player's goal is to create horizontal or vertical matches of 3 or more identical gems by swapping adjacent gems, clear as many gems as possible, and achieve a higher Score."
+      ],
+      "after": [
+        "The player's goal is to create horizontal or vertical matches of 3 or more identical gems by swapping adjacent gems of different types, clear as many gems as possible, and achieve a higher Score."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "For a valid swap:"
+      ],
+      "after": [
+        "If two selected adjacent gems have the same logical type:",
+        "- No swap occurs.",
+        "- Score remains unchanged.",
+        "- Moves remains unchanged.",
+        "- Selection is cleared.",
+        "- The game remains in `waiting`.",
+        "For a valid different-type swap:"
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "For an invalid swap:"
+      ],
+      "after": [
+        "For an invalid different-type swap:"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "match3_var08.D2.2.05",
+    "match3_var08.D2.2.06"
+  ],
+  "added_checkpoint_ids": [
+    "match3_var08.D2.2.06"
+  ],
+  "base_checkpoints_sha256": "4c049d5c0f23d85abfa0cb642db6e2ae1a19aad04e27424be1cbeb5f7594f420",
+  "checkpoints_sha256": "f6cd20e5b9ddb87e4073d1b555ffe054792e1e44aa1d21c7518e7a58b37312b5"
+}

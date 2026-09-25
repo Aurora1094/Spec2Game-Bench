@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "slug": "match3_var03",
+  "name": "Match-3",
+  "difficulty": "medium",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [],
+  "window_size": [
+    600,
+    800
+  ],
+  "source_audit": {
+    "docx_sha256": "1faa39c0b306a51272f4589086b383502a785912aff89f5ad6463b481de72994",
+    "base_checkpoints_sha256": "4c049d5c0f23d85abfa0cb642db6e2ae1a19aad04e27424be1cbeb5f7594f420",
+    "checkpoint_count": 32
+  },
+  "family_slug": "match3",
+  "variant_id": "var03",
+  "variation_types": [
+    "parameter"
+  ]
+}

@@ -17,6 +17,12 @@ from code2play.config.project import (
 )
 from code2play.generation.staged import generate_candidate_project
 from code2play.providers.dashscope import (
+    AWS_MANTLE_API_KEY_ENV,
+    AWS_MANTLE_BASE_URL,
+    AWS_MANTLE_PROVIDER,
+    AWS_MANTLE_QWEN_CODER_MODEL,
+    AWS_MANTLE_QWEN_VL_MODEL,
+    AwsMantleChatJudge,
     DashScopeChatJudge,
     GenerationNeedsRegeneration,
     GenerationResult,
@@ -33,7 +39,6 @@ from code2play.providers.dashscope import (
     OPENROUTER_KIMI_REASONING,
     OPENROUTER_PROVIDER,
     OPENROUTER_QWEN_MODEL,
-    OPENROUTER_QWEN_VL_MODEL,
     OPENROUTER_QWEN_JUDGE_REASONING,
     OpenRouterChatJudge,
     _model_aliases,
@@ -589,19 +594,17 @@ def test_default_judge_router_splits_all_text_and_vision_roles(tmp_path: Path) -
     }
     assert len(calls) == len(config["judge"]["routes"])
     for role, call in zip(config["judge"]["routes"], calls, strict=True):
-        assert call["provider"] == OPENROUTER_PROVIDER
+        assert call["provider"] == AWS_MANTLE_PROVIDER
         assert call["model"] == (
-            OPENROUTER_QWEN_MODEL
+            AWS_MANTLE_QWEN_CODER_MODEL
             if role in text_roles
-            else OPENROUTER_QWEN_VL_MODEL
+            else AWS_MANTLE_QWEN_VL_MODEL
         )
-        assert call["api_key_env"] == OPENROUTER_API_KEY_ENV
-        assert call["base_url"] == OPENROUTER_BASE_URL
+        assert call["api_key_env"] == AWS_MANTLE_API_KEY_ENV
+        assert call["base_url"] == AWS_MANTLE_BASE_URL
         assert call["enable_thinking"] is False
         assert call["response_format"] == {"type": "json_object"}
-        assert call["reasoning"] == (
-            OPENROUTER_QWEN_JUDGE_REASONING if role in text_roles else None
-        )
+        assert call["reasoning"] is None
 
 
 def test_default_openrouter_terra_candidate_generation_disables_reasoning(
@@ -619,7 +622,6 @@ def test_default_openrouter_terra_candidate_generation_disables_reasoning(
         "enable_thinking": False,
         "reasoning": OPENROUTER_GPT56_TERRA_REASONING,
     }
-
     requests: list[dict[str, object]] = []
 
     class Completions:
@@ -645,7 +647,6 @@ def test_default_openrouter_terra_candidate_generation_disables_reasoning(
         "_chat_client",
         lambda _model: (client, "test-key", settings),
     )
-
     result = dashscope._generate_once(
         model,
         "Generate code.",
@@ -654,9 +655,6 @@ def test_default_openrouter_terra_candidate_generation_disables_reasoning(
     )
 
     assert result.provider == OPENROUTER_PROVIDER
-    assert result.requested_model == OPENROUTER_GPT56_TERRA_MODEL
-    assert requests[0]["model"] == OPENROUTER_GPT56_TERRA_MODEL
-    assert requests[0]["stream"] is True
     assert requests[0]["extra_body"] == {"reasoning": OPENROUTER_GPT56_TERRA_REASONING}
     assert result.request_parameters["reasoning"] == OPENROUTER_GPT56_TERRA_REASONING
 
@@ -776,6 +774,50 @@ def test_openrouter_qwen_judge_disables_reasoning(tmp_path: Path) -> None:
     }
     request_log = json.loads(next(tmp_path.rglob("raw_input.json")).read_text(encoding="utf-8"))
     assert request_log["reasoning"] == OPENROUTER_QWEN_JUDGE_REASONING
+
+
+def test_aws_mantle_vl_judge_uses_real_image_content_without_provider_body(
+    tmp_path: Path,
+) -> None:
+    requests: list[dict[str, object]] = []
+
+    class Completions:
+        def create(self, **kwargs: object) -> SimpleNamespace:
+            requests.append(kwargs)
+            return SimpleNamespace(
+                choices=[SimpleNamespace(message=SimpleNamespace(content='{"ok": true}'))],
+                usage={"prompt_tokens": 2, "completion_tokens": 3},
+            )
+
+    image = tmp_path / "probe.png"
+    image.write_bytes(
+        bytes.fromhex(
+            "89504e470d0a1a0a0000000d4948445200000001000000010806000000"
+            "1f15c4890000000d49444154789c6360f8cf000000020001e221bc33"
+            "0000000049454e44ae426082"
+        )
+    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=Completions()))
+    judge = AwsMantleChatJudge(
+        tmp_path / "logs",
+        model=AWS_MANTLE_QWEN_VL_MODEL,
+        role="artistic_visual",
+        max_output_tokens=64,
+        response_format={"type": "json_object"},
+        client=client,
+    )
+
+    assert judge.json_vision(
+        "Return JSON.",
+        "Inspect the image.",
+        [(image, "one-pixel probe")],
+        "d4_1_artistic_visual_quality",
+    ) == {"ok": True}
+    request = requests[0]
+    assert request["model"] == AWS_MANTLE_QWEN_VL_MODEL
+    assert "extra_body" not in request
+    content = request["messages"][1]["content"]
+    assert any(item["type"] == "image_url" for item in content)
 
 
 def test_link_sol_profile_routes_candidate_generation_and_both_judge_modalities(

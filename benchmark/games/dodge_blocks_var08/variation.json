@@ -1,0 +1,141 @@
+{
+  "instance_id": "dodge_blocks_var08",
+  "family_slug": "dodge_blocks",
+  "variant_id": "var08",
+  "variation_types": [
+    "object_type",
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/2_easy_Dodge Blocks/2_easy_Dodge Blocks_V9.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "Obstacles may fall at two different fixed speeds. Each newly spawned obstacle is independently selected to be either a normal obstacle falling at 200 px/s or a fast obstacle falling at 300 px/s."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "- Uses red or dark red."
+      ],
+      "after": []
+    },
+    {
+      "id": "change03",
+      "before": [],
+      "after": [
+        "Each newly spawned obstacle is independently selected as:",
+        "- Normal obstacle: 50% probability, red, falling speed 200 px/s",
+        "- Fast obstacle: 50% probability, dark red or purple, falling speed 300 px/s",
+        "The two obstacle types must be visually distinguishable."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "Each obstacle is a hazardous 40 × 40 px block that spawns at a random horizontal position and moves vertically downward at a fixed speed."
+      ],
+      "after": [
+        "Each obstacle is a hazardous 40 × 40 px block that spawns at a random horizontal position and moves vertically downward at one of two fixed speeds.",
+        "Each new obstacle independently has:",
+        "- 50% probability of being a normal obstacle with falling speed 200 px/s.",
+        "- 50% probability of being a fast obstacle with falling speed 300 px/s.",
+        "Normal obstacles use red.",
+        "Fast obstacles use dark red or purple so that the two types are visually distinguishable.",
+        "Once an obstacle is spawned, its assigned type and falling speed remain unchanged until it is removed."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Change their falling speed."
+      ],
+      "after": [
+        "- Change their assigned falling speed."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [],
+      "after": [
+        "Each new obstacle is independently assigned one type:",
+        "- 50% probability: normal obstacle, 200 px/s",
+        "- 50% probability: fast obstacle, 300 px/s"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "Each obstacle moves vertically downward at a fixed speed of 200 px/s.",
+        "Obstacles do not move horizontally, track the player, accelerate, or change speed."
+      ],
+      "after": [
+        "Each obstacle moves vertically downward at the fixed speed assigned when it is spawned:",
+        "- Normal obstacle: 200 px/s",
+        "- Fast obstacle: 300 px/s",
+        "An obstacle's assigned speed does not change during its lifetime.",
+        "Obstacles do not move horizontally, track the player, or accelerate."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "The game does not include differently sized obstacles, special obstacles, obstacle acceleration, or increasing difficulty."
+      ],
+      "after": [
+        "The game does not include differently sized obstacles, additional special obstacles, obstacle acceleration, or increasing difficulty."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "If the player's rectangle overlaps any obstacle rectangle, the game immediately enters `game_over`."
+      ],
+      "after": [
+        "If the player's rectangle overlaps any normal or fast obstacle rectangle, the game immediately enters `game_over`.",
+        "Both obstacle types have the same collision consequence."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "The obstacle spawn timer advances continuously. Exactly one obstacle is created whenever the fixed 1-second spawn interval is reached, and each active obstacle moves downward at 200 px/s."
+      ],
+      "after": [
+        "The obstacle spawn timer advances continuously. Exactly one obstacle is created whenever the fixed 1-second spawn interval is reached. Its type is selected using the defined 50% / 50% probability, and it moves downward at its assigned speed."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "- Obstacle falling speed: 200 px/s"
+      ],
+      "after": [
+        "- Normal obstacle falling speed: 200 px/s",
+        "- Fast obstacle falling speed: 300 px/s"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "After a collision, the game immediately enters `game_over` and displays:"
+      ],
+      "after": [
+        "After a collision with either obstacle type, the game immediately enters `game_over` and displays:"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "dodge_blocks_var08.D2.3.03",
+    "dodge_blocks_var08.D2.4.04",
+    "dodge_blocks_var08.D2.3.07"
+  ],
+  "added_checkpoint_ids": [
+    "dodge_blocks_var08.D2.3.07"
+  ],
+  "base_checkpoints_sha256": "49ce18ae41ba1d7c6ead6d9e52bdbc10b7447961c50d8924076bc487b8706308",
+  "checkpoints_sha256": "44b8b8ed75a536fe5d4e119d9457961968113c90394416d09b98fd9ce5f69ecc"
+}

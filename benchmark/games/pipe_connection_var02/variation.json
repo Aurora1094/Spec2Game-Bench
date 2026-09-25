@@ -1,0 +1,136 @@
+{
+  "instance_id": "pipe_connection_var02",
+  "family_slug": "pipe_connection",
+  "variant_id": "var02",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/13_hard_Pipe Connection Puzzle/13_hard_Pipe Connection Puzzle_V3.docx",
+  "corrections": [
+    "Final DOCX takes precedence over spreadsheet draft differences."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "The player may perform at most 30 successful pipe rotations. Each valid rotation increases Moves by 1."
+      ],
+      "after": [
+        "The player may perform at most 30 successful pipe rotations.",
+        "Each valid rotation rotates the selected rotatable pipe by 90° counterclockwise and increases Moves by 1."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "`Click pipe to rotate    Press Space to run water`",
+        "`Connect source to all sinks    Restart: R`"
+      ],
+      "after": [
+        "`Click pipe to rotate Press Space to run water`",
+        "`Connect source to all sinks Restart: R`"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "Each successful 90° clockwise rotation of a rotatable pipe:"
+      ],
+      "after": [
+        "Each successful 90° counterclockwise rotation of a rotatable pipe:"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "While the game is `editing` and Moves < 30, left-clicking a Straight Pipe, Corner Pipe, or T Pipe rotates it 90° clockwise."
+      ],
+      "after": [
+        "While the game is `editing` and Moves < 30, left-clicking a Straight Pipe, Corner Pipe, or T Pipe rotates it 90° counterclockwise."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "`CNE → CES → CSW → CWN → CNE`"
+      ],
+      "after": [
+        "`CNE → CWN → CSW → CES → CNE`"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "`TNES → TESW → TSWN → TWNE → TNES`"
+      ],
+      "after": [
+        "`TNES → TWNE → TSWN → TESW → TNES`",
+        "Each transition above represents one 90° counterclockwise rotation."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "Row 0: SRC-E | SV   | SV   | TNES | SV   | SNK-W",
+        "Row 1: BLK   | CNE  | TESW | SH   | BLK  | CES",
+        "Row 2: CSW   | BLK  | CNE  | SH   | TWNE | BLK",
+        "Row 3: BLK   | SV   | LEK  | SH   | CNE  | SV",
+        "Row 4: TESW  | BLK  | CES  | CES  | CWN  | BLK",
+        "Row 5: SH    | CNE  | BLK  | BLK  | CES  | SNK-W"
+      ],
+      "after": [
+        "Row 0: SRC-E | SV | SV | TNES | SV | SNK-W",
+        "Row 1: BLK | CNE | TESW | SH | BLK | CES",
+        "Row 2: CSW | BLK | CNE | SH | TWNE | BLK",
+        "Row 3: BLK | SV | LEK | SH | CNE | SV",
+        "Row 4: TESW | BLK | CES | CES | CWN | BLK",
+        "Row 5: SH | CNE | BLK | BLK | CES | SNK-W"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "During `editing`, the player may rotate any eligible pipe while Moves < 30."
+      ],
+      "after": [
+        "During `editing`, the player may rotate any eligible pipe 90° counterclockwise while Moves < 30."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "Restart restores the same fixed puzzle."
+      ],
+      "after": [
+        "Restart restores the same fixed puzzle and all pipes return to their original initial orientations."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "The player's goal is to configure the fixed pipe network within at most 30 successful rotations so that Source water reaches both Sinks without producing any invalid Source-reachable outlet."
+      ],
+      "after": [
+        "The player's goal is to configure the fixed pipe network within at most 30 successful counterclockwise rotations so that Source water reaches both Sinks without producing any invalid Source-reachable outlet."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "- Each successful pipe rotation immediately updates its orientation."
+      ],
+      "after": [
+        "- Each successful pipe rotation turns the selected pipe 90° counterclockwise."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "pipe_connection_var02.D2.2.02",
+    "pipe_connection_var02.D2.2.09"
+  ],
+  "added_checkpoint_ids": [
+    "pipe_connection_var02.D2.2.09"
+  ],
+  "base_checkpoints_sha256": "81842a961e20164b1af130002c9a8ab35beeedb93f7f148ef4bbafae418571f6",
+  "checkpoints_sha256": "0910dbc0a8766c4e707ca890f20eed8adcabbb964ccc71744bf901bdde0aa41a"
+}

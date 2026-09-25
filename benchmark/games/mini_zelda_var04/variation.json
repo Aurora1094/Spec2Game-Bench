@@ -1,0 +1,208 @@
+{
+  "instance_id": "mini_zelda_var04",
+  "family_slug": "mini_zelda",
+  "variant_id": "var04",
+  "variation_types": [
+    "object_type"
+  ],
+  "source_path": "游戏规格说明（英文）/15_hard_Mini Zelda-like Room Adventure/15_hard_Mini Zelda-like Room Adventure_V5.docx",
+  "corrections": [
+    "Final DOCX takes precedence over spreadsheet draft differences."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "Room B contains one Slime and one Guard.",
+        "Room D contains one Slime and two Guards."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "`WASD: Move    Space: Attack`"
+      ],
+      "after": [
+        "`WASD: Move Space: Attack`"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "          Room B",
+        "            |"
+      ],
+      "after": [
+        "       Room B",
+        "         |"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "            |",
+        "          Room E"
+      ],
+      "after": [
+        "         |",
+        "       Room E"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Slime B2: `(580, 250)`"
+      ],
+      "after": [
+        "- Guard B1: `(580, 250)`",
+        "Guard B1 patrol settings:",
+        "- Patrol x: 580",
+        "- Patrol y range: 170–280",
+        "- Initial direction: down"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "After both Slimes are defeated, Key 1 spawns at:"
+      ],
+      "after": [
+        "Guard B1's complete circular collision shape remains clear of both fixed obstacles throughout its initial patrol route.",
+        "After Slime B1 and Guard B1 are defeated, Key 1 spawns at:"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [],
+      "after": [
+        "Guard B1:",
+        "- Initial center: `(580, 250)`",
+        "- Patrol x: 580",
+        "- Patrol y range: 170–280",
+        "- Initial direction: down"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "During `patrol`, the Guard moves vertically along its fixed route and reverses immediately at the endpoints."
+      ],
+      "after": [
+        "During `patrol`, each Guard moves vertically along its own fixed route and reverses immediately at the endpoints."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "Guard B1 remains permanently assigned to Room B.",
+        "Guard D1 and Guard D2 remain permanently assigned to Room D."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- Spawn condition: both Room B Slimes are dead"
+      ],
+      "after": [
+        "- Spawn condition: Slime B1 and Guard B1 are both dead"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "- Spawn condition: Room D Slime and both Guards are dead"
+      ],
+      "after": [
+        "- Spawn condition: Room D Slime and both Room D Guards are dead"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "- Right-side door → message appears to the left",
+        "- Bottom-side door → message appears above"
+      ],
+      "after": [
+        "- Right-side door message appears to the left.",
+        "- Bottom-side door message appears above."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [],
+      "after": [
+        "This persistence applies to Guard B1 in Room B as well as both Guards in Room D."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "6. Check combat-room completion and spawn the corresponding Key if required."
+      ],
+      "after": [
+        "6. Check combat-room completion:",
+        "   - In Room B, spawn Key 1 if Slime B1 and Guard B1 are both dead.",
+        "   - In Room D, spawn Key 2 if Slime D1, Guard D1, and Guard D2 are all dead."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "3. Defeat Slime B1 and Slime B2."
+      ],
+      "after": [
+        "3. Defeat Slime B1 and Guard B1."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "- Defeat both Slimes."
+      ],
+      "after": [
+        "- Defeat Slime B1 and Guard B1."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "- Defeat the Room D Slime and both Guards."
+      ],
+      "after": [
+        "- Defeat the Room D Slime and both Room D Guards."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [],
+      "after": [
+        "- Key 1 spawns only after both Room B enemies are dead.",
+        "- Key 2 spawns only after all three Room D enemies are dead."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "- Room B Slimes restored at initial positions with 2 HP"
+      ],
+      "after": [
+        "- Slime B1 restored to `(220, 250)` with 2 HP",
+        "- Guard B1 restored to `(580, 250)`, 3 HP, `patrol`, moving down",
+        "- Guard B1 patrol route restored to x = 580, y = 170–280"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "mini_zelda_var04.D2.1.08",
+    "mini_zelda_var04.D2.3.12",
+    "mini_zelda_var04.D2.5.02",
+    "mini_zelda_var04.D2.4.08"
+  ],
+  "added_checkpoint_ids": [
+    "mini_zelda_var04.D2.4.08"
+  ],
+  "base_checkpoints_sha256": "6d064a9a7dc36ddc40e4609a9b9a0e6a89fe8f6b7b121d0a50edc6b186682597",
+  "checkpoints_sha256": "f11386c45b44d31a6e9587dde1ac1477ff7449bd2ab0c154120e18bfbfefde36"
+}

@@ -1,0 +1,217 @@
+{
+  "instance_id": "carrot_defense_var05",
+  "family_slug": "carrot_defense",
+  "variant_id": "var05",
+  "variation_types": [
+    "map",
+    "combination"
+  ],
+  "source_path": "游戏规格说明（英文）/11_hard_Carrot Defense-like/11_hard_Carrot Defense-like_V6.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Carrot Defense-like"
+      ],
+      "after": [
+        "Carrot Defense-like_V6"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "Carrot Defense-like is a single-level tower defense game. The player builds defensive towers on a fixed grid map to prevent enemies from following a predefined path and reaching the carrot target on the right side."
+      ],
+      "after": [
+        "Carrot Defense-like is a single-level tower defense game. The player builds defensive towers on a fixed grid map to prevent enemies from following a predefined path and reaching the carrot target on the lower-right side."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "(0,2) → (1,2) → (2,2) → (3,2) → (4,2) → (5,2)",
+        "                                             ↓",
+        "                                           (5,3)",
+        "                                             ↓",
+        "                                           (5,4)",
+        "                                             ↓",
+        "                                           (5,5)",
+        "                                             ↓",
+        "(6,5) → (7,5) → (8,5) → (9,5)"
+      ],
+      "after": [
+        "(0,2) (1,2) (2,2) (3,2) (4,2)"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "                            (9,4)"
+      ],
+      "after": [
+        "                            (4,3)"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "                            (9,3)"
+      ],
+      "after": [
+        "                            (4,4)"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "                          (10,3) → (11,3)"
+      ],
+      "after": [
+        "                            (4,5) (5,5) (6,5) (7,5) (8,5)",
+        "                                                ↓",
+        "                                              (8,6) (9,6) (10,6) (11,6)"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "Enemies enter from `(0,2)` and move through these cells in sequence until reaching the carrot near `(11,3)`."
+      ],
+      "after": [
+        "The ordered path-cell sequence is:",
+        "```text",
+        "(0,2), (1,2), (2,2), (3,2), (4,2),",
+        "(4,3), (4,4), (4,5),",
+        "(5,5), (6,5), (7,5), (8,5),",
+        "(8,6), (9,6), (10,6), (11,6)",
+        "```",
+        "Enemies enter from `(0,2)` and move through these cells in sequence until reaching the carrot near `(11,6)`.",
+        "The carrot endpoint at `(11,6)` should be visually positioned in the lower-right part of the grid."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "The carrot is located near `(11,3)` and uses an orange body with green leaves."
+      ],
+      "after": [
+        "The carrot is located near `(11,6)` and uses an orange body with green leaves."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "The HP bar must remain fully visible inside or immediately adjacent to the map area despite the carrot's lower-right position."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "The path starts at `(0,2)` and ends at `(11,6)`."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "Enemies within a Wave spawn at fixed 0.8-second intervals."
+      ],
+      "after": [
+        "Enemies within a Wave spawn at fixed 0.8-second intervals from entrance `(0,2)`."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "The carrot returns to `(11,6)`, and enemies again use the fixed path from `(0,2)` to `(11,6)`."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "Enemies spawn at path cell `(0,2)` and move through the fixed path toward `(11,3)`."
+      ],
+      "after": [
+        "Enemies spawn at path cell `(0,2)` and move through the fixed path toward `(11,6)`."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "Enemies in the current Wave spawn sequentially every 0.8 seconds."
+      ],
+      "after": [
+        "Enemies in the current Wave spawn sequentially every 0.8 seconds from `(0,2)`."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "If carrot HP reaches 0 or below, however, Failure occurs immediately and no subsequent wave-end settlement is processed."
+      ],
+      "after": [
+        "If carrot HP reaches 0 or below, Failure occurs immediately and no subsequent wave-end settlement is processed."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "At initialization, the game creates the interface areas, 12 × 8 map, fixed path, carrot, Gold resource, tower list, enemy list, Wave state, timers, and current selection."
+      ],
+      "after": [
+        "At initialization, the game creates the interface areas, 12 × 8 map, fixed path from `(0,2)` to `(11,6)`, carrot at `(11,6)`, Gold resource, tower list, enemy list, Wave state, timers, and current selection."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "Wave 1 begins with enemies spawning in its fixed order at 0.8-second intervals."
+      ],
+      "after": [
+        "Wave 1 begins with enemies spawning from `(0,2)` in its fixed order at 0.8-second intervals."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "When an enemy reaches the carrot, it is removed, damages the carrot, provides no Gold, and makes the current Wave ineligible for Perfect Wave."
+      ],
+      "after": [
+        "When an enemy reaches the carrot at `(11,6)`, it is removed, damages the carrot, provides no Gold, and makes the current Wave ineligible for Perfect Wave."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "The player's goal is to use Gold effectively across all 4 Waves, build and adjust defensive towers, prevent enemies from reaching the carrot, and keep carrot HP above 0."
+      ],
+      "after": [
+        "The player's goal is to use Gold effectively across all 4 Waves, build and adjust defensive towers, prevent enemies from reaching the carrot at the lower-right endpoint, and keep carrot HP above 0."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "R fully restores Gold, carrot HP, Waves, towers, enemies, timers, selection state, and all other gameplay state."
+      ],
+      "after": [
+        "R fully restores Gold, carrot HP, Waves, towers, enemies, timers, selection state, carrot position, map-path state, and all other gameplay state."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "carrot_defense_var05.D2.1.01",
+    "carrot_defense_var05.D2.4.01",
+    "carrot_defense_var05.D2.4.07",
+    "carrot_defense_var05.D2.5.07"
+  ],
+  "added_checkpoint_ids": [
+    "carrot_defense_var05.D2.4.07",
+    "carrot_defense_var05.D2.5.07"
+  ],
+  "base_checkpoints_sha256": "763a94a35ba4ffa1473059ff4dc233b43d72a986810cc0d7664282192c535c37",
+  "checkpoints_sha256": "1a46b7b909df601998d55eff154817182bedd46f738ce37fe153d517cd99e9a6"
+}

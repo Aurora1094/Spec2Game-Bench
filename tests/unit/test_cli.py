@@ -26,7 +26,7 @@ def test_local_smoke_command_does_not_require_api_key(capsys) -> None:
     assert '"status": "passed"' in capsys.readouterr().out
 
 
-def test_live_preflight_checks_openrouter_text_and_vision_routes(
+def test_live_preflight_checks_locked_contract_and_vision_routes(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
@@ -49,7 +49,11 @@ def test_live_preflight_checks_openrouter_text_and_vision_routes(
             purpose: str,
         ) -> dict[str, bool]:
             assert len(images) == 1
-            assert images[0][0].read_bytes().startswith(b"\x89PNG")
+            png = images[0][0].read_bytes()
+            assert png.startswith(b"\x89PNG\r\n\x1a\n")
+            assert int.from_bytes(png[16:20], "big") == 32
+            assert int.from_bytes(png[20:24], "big") == 32
+            assert png[24:26] == b"\x08\x02"  # 8-bit RGB
             calls.append((self.role, purpose))
             return {"ok": True}
 
@@ -60,14 +64,15 @@ def test_live_preflight_checks_openrouter_text_and_vision_routes(
         def for_role(self, role: str) -> FakeJudge:
             return FakeJudge(role)
 
-    monkeypatch.setenv("OPENROUTER_API_KEY", "test-openrouter-key")
+    monkeypatch.setenv("AWS_MANTLE_API_KEY", "test-aws-mantle-key")
+    monkeypatch.setenv("DASHSCOPE_API_KEY", "test-dashscope-key")
     monkeypatch.setattr(providers, "JudgeRouter", FakeRouter)
 
     assert main(["--workspace", str(tmp_path), "preflight", "--live"]) == 0
     payload = json.loads(capsys.readouterr().out)
-    assert payload["api_key_envs"] == ["OPENROUTER_API_KEY"]
-    assert payload["judge_routes"]["contract_generation"]["model"] == "qwen/qwen3.7-plus"
-    assert payload["judge_routes"]["artistic_visual"]["model"] == "qwen/qwen3-vl-235b-a22b-instruct"
+    assert payload["api_key_envs"] == ["AWS_MANTLE_API_KEY", "DASHSCOPE_API_KEY"]
+    assert payload["judge_routes"]["contract_generation"]["model"] == "qwen.qwen3-coder-next"
+    assert payload["judge_routes"]["artistic_visual"]["model"] == "qwen.qwen3-vl-235b-a22b-instruct"
     assert payload["live_api_check"] is True
     assert calls == [
         ("contract_generation", "d4_contract_preflight"),
@@ -75,12 +80,13 @@ def test_live_preflight_checks_openrouter_text_and_vision_routes(
     ]
 
 
-def test_live_preflight_rejects_missing_openrouter_key(
+def test_live_preflight_rejects_missing_aws_mantle_key(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    monkeypatch.setenv("AWS_MANTLE_API_KEY", "")
+    monkeypatch.setenv("DASHSCOPE_API_KEY", "")
 
     assert main(["--workspace", str(tmp_path), "preflight", "--live"]) == 2
-    assert "Missing Judge API key environment variable(s): OPENROUTER_API_KEY" in capsys.readouterr().out
+    assert "Missing Judge API key environment variable(s): AWS_MANTLE_API_KEY, DASHSCOPE_API_KEY" in capsys.readouterr().out

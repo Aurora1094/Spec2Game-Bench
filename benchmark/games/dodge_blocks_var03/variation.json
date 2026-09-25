@@ -1,0 +1,55 @@
+{
+  "instance_id": "dodge_blocks_var03",
+  "family_slug": "dodge_blocks",
+  "variant_id": "var03",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/2_easy_Dodge Blocks/2_easy_Dodge Blocks_V4.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Exactly one new obstacle is spawned every 1 second while the game state is `playing`."
+      ],
+      "after": [
+        "Exactly one new obstacle is spawned every 0.75 seconds while the game state is `playing`."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "The 1-second spawn interval remains fixed and does not change according to elapsed time, score, or survival duration."
+      ],
+      "after": [
+        "The 0.75-second spawn interval remains fixed and does not change according to elapsed time, score, or survival duration."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "The obstacle spawn timer advances continuously. Exactly one obstacle is created whenever the fixed 1-second spawn interval is reached, and each active obstacle moves downward at 200 px/s."
+      ],
+      "after": [
+        "The obstacle spawn timer advances continuously. Exactly one obstacle is created whenever the fixed 0.75-second spawn interval is reached, and each active obstacle moves downward at 200 px/s."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- Obstacle spawn interval: 1 second"
+      ],
+      "after": [
+        "- Obstacle spawn interval: 0.75 seconds"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "dodge_blocks_var03.D2.3.01",
+    "dodge_blocks_var03.D2.4.03"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "49ce18ae41ba1d7c6ead6d9e52bdbc10b7447961c50d8924076bc487b8706308",
+  "checkpoints_sha256": "3b4e9f6d662213e304e05393a330e4b91d8004275c6f89481e388c28b1afd628"
+}

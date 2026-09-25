@@ -1,0 +1,453 @@
+{
+  "instance_id": "tetris_var08",
+  "family_slug": "tetris",
+  "variant_id": "var08",
+  "variation_types": [
+    "rule",
+    "interface"
+  ],
+  "source_path": "游戏规格说明（英文）/8_medium_tetris/8_medium_Tetris_V9.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "The interface uses a left-right layout. The board is displayed on the left, while the information area on the right displays Score, Lines, the Next piece preview, control instructions, and Game Over feedback."
+      ],
+      "after": [
+        "Each non-O current piece may perform at most 4 successful clockwise rotations before it locks.",
+        "Invalid rotation attempts do not count toward the limit.",
+        "The O piece remains unchanged when the up arrow key is pressed and does not consume the rotation limit.",
+        "The rotation counter resets whenever a new current piece is spawned.",
+        "The information area displays the number of successful rotations used by the current piece as:",
+        "`Rotations: X/4`",
+        "The interface uses a left-right layout. The board is displayed on the left, while the information area on the right displays Score, Lines, Rotations, the Next piece preview, control instructions, and Game Over feedback."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "| `Score: X` | `(400, 100)` | 32 px |",
+        "| `Lines: X` | `(400, 145)` | 32 px |",
+        "| `Next` | `(400, 220)` | 32 px |"
+      ],
+      "after": [
+        "| `Score: X` | `(400, 100)` | 30 px |",
+        "| `Lines: X` | `(400, 140)` | 30 px |",
+        "| `Rotations: X/4` | `(400, 180)` | 22 px |",
+        "| `Next` | `(400, 225)` | 30 px |"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "| `Move: ← / →` | `(400, 410)` | 22 px |",
+        "| `Rotate: ↑` | `(400, 440)` | 22 px |",
+        "| `Soft Drop: ↓` | `(400, 470)` | 22 px |",
+        "| `Restart: R` | `(400, 500)` | 22 px |"
+      ],
+      "after": [
+        "| `Move: ← / →` | `(400, 410)` | 21 px |",
+        "| `Rotate: ↑` | `(400, 440)` | 21 px |",
+        "| `Soft Drop: ↓` | `(400, 470)` | 21 px |",
+        "| `Restart: R` | `(400, 500)` | 21 px |",
+        "For an O current piece, the display remains:",
+        "`Rotations: 0/4`",
+        "because pressing the up arrow key does not produce a successful rotation."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "After the game enters `game_over`, the information area continues to display the final Score, Lines, and Next piece."
+      ],
+      "after": [
+        "After the game enters `game_over`, the information area continues to display the final Score, Lines, Rotations, and Next piece."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "- Successful rotations used by current piece: 0",
+        "- Rotations display: `Rotations: 0/4`"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "The main game objects and state variables include the board, current piece, Next piece, fixed blocks, Score, Lines, automatic fall timer, and game state."
+      ],
+      "after": [
+        "The main game objects and state variables include the board, current piece, Next piece, fixed blocks, Score, Lines, current-piece rotation counter, automatic fall timer, and game state."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [],
+      "after": [
+        "- Successful rotation count"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- Rotate clockwise."
+      ],
+      "after": [
+        "- Rotate clockwise subject to the per-piece rotation limit."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "3. A new `next_piece` is randomly generated.",
+        "4. The Next preview is updated."
+      ],
+      "after": [
+        "3. Its successful rotation count is reset to 0.",
+        "4. The Rotations display becomes `Rotations: 0/4`.",
+        "5. A new `next_piece` is randomly generated.",
+        "6. The Next preview is updated."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "## 3.7 Game State"
+      ],
+      "after": [
+        "## 3.7 Rotation Counter",
+        "Each current piece has:",
+        "`successful_rotations = 0`",
+        "For non-O tetrominoes, the maximum is:",
+        "`4`",
+        "The information area displays:",
+        "`Rotations: successful_rotations/4`",
+        "A rotation increases `successful_rotations` by 1 only when:",
+        "- The current piece is not O.",
+        "- `successful_rotations < 4`.",
+        "- The rotated position is valid.",
+        "- The rotation is actually applied.",
+        "If a rotation is invalid, the counter does not change.",
+        "If `successful_rotations = 4`, pressing the up arrow key does not rotate the current piece and does not change the counter.",
+        "For the O piece:",
+        "- Pressing the up arrow key does not change its shape or orientation.",
+        "- The action does not increase `successful_rotations`.",
+        "- The display remains `Rotations: 0/4`.",
+        "The counter resets to 0 whenever a new current piece is spawned.",
+        "## 3.8 Game State"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "During `playing`, the current piece automatically falls and the player can move, rotate, and soft-drop it."
+      ],
+      "after": [
+        "During `playing`, the current piece automatically falls and the player can move, soft-drop, and rotate it subject to the rotation limit."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "## 3.8 Tetromino Representation"
+      ],
+      "after": [
+        "## 3.9 Tetromino Representation"
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "If the rotated position is valid, apply the rotation.",
+        "If invalid, keep the current position and orientation unchanged.",
+        "The O piece remains unchanged after rotation."
+      ],
+      "after": [
+        "For a non-O piece, rotation is attempted only when:",
+        "`successful_rotations < 4`",
+        "If the rotated position is valid:",
+        "- Apply the rotation.",
+        "- Increase `successful_rotations` by 1.",
+        "- Immediately update `Rotations: X/4`.",
+        "If the rotated position is invalid:",
+        "- Keep the current position and orientation unchanged.",
+        "- Do not increase `successful_rotations`.",
+        "- Keep the Rotations display unchanged.",
+        "If:",
+        "`successful_rotations = 4`",
+        "the up arrow key has no effect on the current piece, and the display remains:",
+        "`Rotations: 4/4`",
+        "For the O piece:",
+        "- The piece remains unchanged.",
+        "- Pressing up does not increase `successful_rotations`.",
+        "- The display remains `Rotations: 0/4`."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "- Rotation occurs only on a new key-down event."
+      ],
+      "after": [
+        "- Rotation is processed only on a new key-down event."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [],
+      "after": [
+        "- The per-piece rotation limit still applies."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [],
+      "after": [
+        "- Resets `successful_rotations` to 0.",
+        "- Sets the Rotations display to `Rotations: 0/4`."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [],
+      "after": [
+        "Each newly spawned current piece starts with:",
+        "`successful_rotations = 0`",
+        "The information area displays:",
+        "`Rotations: 0/4`"
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [],
+      "after": [
+        "- A rotation request rejected because the 4-rotation limit has been reached."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "Except for O, all tetrominoes rotate clockwise using the 4 × 4 local matrix."
+      ],
+      "after": [
+        "Except for O, tetrominoes rotate clockwise using the 4 × 4 local matrix."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "The O piece remains unchanged after rotation.",
+        "If the rotated position would extend beyond the left or right board boundary, extend below the board, or overlap a fixed block, the rotation fails."
+      ],
+      "after": [
+        "Before attempting the transformed position, check:",
+        "`successful_rotations < 4`",
+        "If the limit has already been reached:",
+        "- No rotation is attempted.",
+        "- The current orientation remains unchanged.",
+        "- The counter remains 4.",
+        "- The display remains `Rotations: 4/4`.",
+        "If the transformed position is valid:",
+        "- Apply the rotation.",
+        "- Increase `successful_rotations` by 1.",
+        "- Update the Rotations display immediately.",
+        "If the transformed position would extend beyond the left or right board boundary, extend below the board, or overlap a fixed block:",
+        "- The rotation fails.",
+        "- Keep the existing position and orientation.",
+        "- Do not increase `successful_rotations`.",
+        "- Keep the Rotations display unchanged.",
+        "The O piece remains unchanged after an up-arrow input, does not consume a rotation, and keeps the display at `Rotations: 0/4`."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [],
+      "after": [
+        "Its successful rotation count remains part of the final current-piece state until the next current piece is created."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "3. Randomly generate a new `next_piece`.",
+        "4. Update the Next preview."
+      ],
+      "after": [
+        "3. Set the new current piece's `successful_rotations = 0`.",
+        "4. Update the Rotations display to `Rotations: 0/4`.",
+        "5. Randomly generate a new `next_piece`.",
+        "6. Update the Next preview."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [],
+      "after": [
+        "Reaching 4 successful rotations is not a Failure condition."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "At initialization, the game creates the 600 × 800 px window, board area, information area, empty 10 × 20 board, Score, Lines, current piece, Next piece, automatic fall timer, and game state."
+      ],
+      "after": [
+        "At initialization, the game creates the 600 × 800 px window, board area, information area, empty 10 × 20 board, Score, Lines, current piece, Next piece, current-piece rotation counter, automatic fall timer, and game state."
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [],
+      "after": [
+        "- `successful_rotations = 0`",
+        "- Rotations display: `Rotations: 0/4`"
+      ]
+    },
+    {
+      "id": "change26",
+      "before": [
+        "The player may also move it left or right, rotate it clockwise, or perform soft drops. Every proposed move or rotation is validated before being applied.",
+        "If a horizontal movement or rotation is invalid, the operation is ignored."
+      ],
+      "after": [
+        "The player may also move it left or right, rotate it clockwise, or perform soft drops.",
+        "A non-O piece may complete at most 4 successful rotations before locking.",
+        "Each successful valid rotation increases the current-piece counter by 1 and immediately updates `Rotations: X/4`.",
+        "Invalid rotations do not increase the counter.",
+        "O-piece up-arrow inputs do not change the counter.",
+        "After 4 successful rotations, further up-arrow inputs have no effect until the current piece locks and a new current piece is spawned.",
+        "Every proposed movement or eligible rotation is validated before being applied.",
+        "If a horizontal movement or eligible rotation is invalid, the operation is ignored."
+      ]
+    },
+    {
+      "id": "change27",
+      "before": [
+        "8. Generate a new `next_piece`.",
+        "9. Update the Next preview.",
+        "10. Check the new current piece for visible-cell overlap with fixed blocks.",
+        "11. If such an overlap exists, enter `game_over`."
+      ],
+      "after": [
+        "8. Reset its successful rotation counter to 0.",
+        "9. Update the Rotations display to `Rotations: 0/4`.",
+        "10. Generate a new `next_piece`.",
+        "11. Update the Next preview.",
+        "12. Check the new current piece for visible-cell overlap with fixed blocks.",
+        "13. If such an overlap exists, enter `game_over`."
+      ]
+    },
+    {
+      "id": "change28",
+      "before": [],
+      "after": [
+        "- Final `Rotations: X/4` remains visible."
+      ]
+    },
+    {
+      "id": "change29",
+      "before": [
+        "Pressing R fully resets the board, Score, Lines, current piece, Next piece, automatic fall timer, and game state."
+      ],
+      "after": [
+        "Pressing R fully resets the board, Score, Lines, current piece, Next piece, successful rotation counter, automatic fall timer, and game state."
+      ]
+    },
+    {
+      "id": "change30",
+      "before": [
+        "Board dimensions, cell size, tetromino types and colors, spawn position, rotation rule, row-clearing rule, and failure conditions remain fixed."
+      ],
+      "after": [
+        "Board dimensions, cell size, tetromino types and colors, spawn position, row-clearing rule, and failure conditions remain fixed."
+      ]
+    },
+    {
+      "id": "change31",
+      "before": [],
+      "after": [
+        "`Rotations: X/4`"
+      ]
+    },
+    {
+      "id": "change32",
+      "before": [],
+      "after": [
+        "`Rotations: X/4` displays the number of successful rotations used by the current piece."
+      ]
+    },
+    {
+      "id": "change33",
+      "before": [
+        "- ←: attempt to move 1 cell left.",
+        "- →: attempt to move 1 cell right.",
+        "- ↑: attempt to rotate 90° clockwise.",
+        "- ↓: attempt one additional downward movement.",
+        "Invalid horizontal movement or rotation has no effect."
+      ],
+      "after": [
+        "- `←`: attempt to move 1 cell left.",
+        "- `→`: attempt to move 1 cell right.",
+        "- `↑`: attempt to rotate 90° clockwise, subject to the current-piece rotation limit.",
+        "- `↓`: attempt one additional downward movement.",
+        "Each non-O current piece may complete at most 4 successful rotations.",
+        "Each successful rotation immediately increases the Rotations display by 1.",
+        "Invalid rotation attempts do not consume the limit and do not change the display.",
+        "The O piece does not rotate, does not consume the limit, and displays:",
+        "`Rotations: 0/4`",
+        "After 4 successful rotations:",
+        "`Rotations: 4/4`",
+        "Further up-arrow inputs have no effect until a new current piece appears.",
+        "Invalid horizontal movement has no effect."
+      ]
+    },
+    {
+      "id": "change34",
+      "before": [
+        "After a successful lock and row-clear process, the previous Next piece becomes the current piece and a new Next piece is generated."
+      ],
+      "after": [
+        "After a successful lock and row-clear process, the previous Next piece becomes the current piece, its successful rotation counter starts at 0, the display returns to `Rotations: 0/4`, and a new Next piece is generated."
+      ]
+    },
+    {
+      "id": "change35",
+      "before": [],
+      "after": [
+        "Using all 4 successful rotations does not cause Game Over."
+      ]
+    },
+    {
+      "id": "change36",
+      "before": [],
+      "after": [
+        "The final Rotations value remains visible."
+      ]
+    },
+    {
+      "id": "change37",
+      "before": [
+        "Restart clears the board, resets Score and Lines to 0, generates new current and Next pieces, resets the automatic fall timer, and returns the game state to `playing`."
+      ],
+      "after": [
+        "Restart clears the board, resets Score and Lines to 0, generates new current and Next pieces, resets the current-piece rotation counter to 0, resets the automatic fall timer, and returns the game state to `playing`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "tetris_var08.D2.2.01",
+    "tetris_var08.D2.2.03",
+    "tetris_var08.D2.1.07",
+    "tetris_var08.D2.2.07",
+    "tetris_var08.D2.3.09"
+  ],
+  "added_checkpoint_ids": [
+    "tetris_var08.D2.1.07",
+    "tetris_var08.D2.2.07",
+    "tetris_var08.D2.3.09"
+  ],
+  "base_checkpoints_sha256": "9b869e2c2acb9eecb215d5d29bf1b3c0bfe88e8f64288d28331d5a79e22d62f0",
+  "checkpoints_sha256": "ef3eb00213f510e5bc4df5e606b831331fba7d1e392e16d1636cb6a7d4bd381a"
+}

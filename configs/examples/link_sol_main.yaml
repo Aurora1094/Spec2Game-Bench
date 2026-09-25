@@ -24,6 +24,22 @@ generation:
     - id: main
       target: main.py
       max_output_tokens: 2000
+  difficulty_overrides:
+    hard:
+      total_max_output_tokens: 31000
+      stages:
+        - id: state
+          target: state.py
+          max_output_tokens: 5000
+        - id: game
+          target: game.py
+          max_output_tokens: 14000
+        - id: rendering
+          target: rendering.py
+          max_output_tokens: 10000
+        - id: main
+          target: main.py
+          max_output_tokens: 2000
 
 judge:
   policy: link_sol_single_pass_v1
@@ -72,7 +88,7 @@ judge:
       model: gpt-5.6-sol
       api_style: chat_completions
       enable_thinking: false
-      max_output_tokens: 6000
+      max_output_tokens: 24000
     functionality:
       provider: link_openai
       model: gpt-5.6-sol

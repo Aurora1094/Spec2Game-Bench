@@ -1,0 +1,210 @@
+{
+  "instance_id": "farming_lite_var04",
+  "family_slug": "farming_lite",
+  "variant_id": "var04",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/12_hard_Farming-lite/12_hard_Farming-lite_V5.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Farming-lite is a simplified farming management game with a fixed 8-day operating cycle. The player buys seeds, plants crops, waters them, waits for them to grow, harvests mature crops, and earns Gold.",
+        "The game does not use traditional Victory or Failure conditions. The player's objective is to manage the farm efficiently across 8 days, accumulate Gold, and increase the number of harvested crops.",
+        "After Day 8 ends, the game enters a settlement state and displays the final Gold amount together with the total numbers of Carrots and Pumpkins harvested."
+      ],
+      "after": [
+        "Farming-lite is a simplified farming management game with a fixed 10-day operating cycle.",
+        "The player buys seeds, plants crops, waters them, waits for them to grow, harvests mature crops, and earns Gold.",
+        "The game does not use traditional Victory or Failure conditions. The player's objective is to manage the farm efficiently across 10 days, accumulate Gold, and increase the number of harvested crops.",
+        "After Day 10 ends, the game enters a settlement state and displays the final Gold amount together with the total numbers of Carrots and Pumpkins harvested."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "- `Day: D/8`"
+      ],
+      "after": [
+        "- `Day: D/10`"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "N is the cumulative number of harvested crops, including both manually harvested crops and mature crops automatically harvested during the Day 8 final settlement."
+      ],
+      "after": [
+        "N is the cumulative number of harvested crops, including both manually harvested crops and mature crops automatically harvested during the Day 10 final settlement."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "`Left Click: Use    Right Click: Cancel`"
+      ],
+      "after": [
+        "`Left Click: Use Right Click: Cancel`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "Mature crops automatically harvested during Day 8 final settlement provide the same normal harvest value."
+      ],
+      "after": [
+        "Mature crops automatically harvested during Day 10 final settlement provide the same normal harvest value."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "The game lasts exactly 8 Days."
+      ],
+      "after": [
+        "The game lasts exactly 10 Days."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "For Days 1–7, the game then advances to the next Day and resets Time to 30 seconds.",
+        "For Day 8, the game proceeds to final settlement."
+      ],
+      "after": [
+        "For Days 1–9, the game then advances to the next Day and resets Time to 30 seconds.",
+        "For Day 10, the game proceeds to final settlement."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "Both manual and Day 8 automatic harvests count toward these totals."
+      ],
+      "after": [
+        "Both manual and Day 10 automatic harvests count toward these totals."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "After the Day 8 final settlement is completed, the game enters `settlement`."
+      ],
+      "after": [
+        "After the Day 10 final settlement is completed, the game enters `settlement`."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "6. If the current Day is Day 1–7, increase Day by 1 and reset Time to 30 seconds.",
+        "7. If the current Day is Day 8, proceed directly to final settlement."
+      ],
+      "after": [
+        "6. If the current Day is Day 1–9, increase Day by 1 and reset Time to 30 seconds.",
+        "7. If the current Day is Day 10, proceed directly to final settlement."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "When the Day 8 countdown reaches 0, final settlement is executed exactly once."
+      ],
+      "after": [
+        "When the Day 10 countdown reaches 0, final settlement is executed exactly once."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "1. Perform the normal Day 8 growth settlement."
+      ],
+      "after": [
+        "1. Perform the normal Day 10 growth settlement."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "Therefore, a crop that becomes mature during the Day 8 growth settlement is included in the automatic final harvest."
+      ],
+      "after": [
+        "Therefore, a crop that becomes mature during the Day 10 growth settlement is included in the automatic final harvest."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "The farming session terminates only after completing the 8-day cycle."
+      ],
+      "after": [
+        "The farming session terminates only after completing the 10-day cycle."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "For Days 1–7:"
+      ],
+      "after": [
+        "For Days 1–9:"
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "For Day 8:",
+        "- Complete the Day 8 growth settlement."
+      ],
+      "after": [
+        "For Day 10:",
+        "- Complete the Day 10 growth settlement."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "The player's goal is to manage the 8-day farming cycle effectively by purchasing seeds, planting crops, watering them, and harvesting mature crops to accumulate Gold and increase crop harvest counts."
+      ],
+      "after": [
+        "The player's goal is to manage the 10-day farming cycle effectively by purchasing seeds, planting crops, watering them, and harvesting mature crops to accumulate Gold and increase crop harvest counts."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "`Left Click: Use    Right Click: Cancel`"
+      ],
+      "after": [
+        "`Left Click: Use Right Click: Cancel`"
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "1. Day 8 reaches Time = 0.",
+        "2. The Day 8 growth settlement is completed."
+      ],
+      "after": [
+        "1. Day 10 reaches Time = 0.",
+        "2. The Day 10 growth settlement is completed."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "farming_lite_var04.D2.1.03",
+    "farming_lite_var04.D2.4.03",
+    "farming_lite_var04.D2.5.01",
+    "farming_lite_var04.D2.5.02",
+    "farming_lite_var04.D2.5.03",
+    "farming_lite_var04.D2.5.04",
+    "farming_lite_var04.D2.4.07"
+  ],
+  "added_checkpoint_ids": [
+    "farming_lite_var04.D2.4.07"
+  ],
+  "base_checkpoints_sha256": "216ba3d8ea18719c2a19c1a40d9e1f270ce4c0ab2c6a8a8ac2e1e38ea0061256",
+  "checkpoints_sha256": "232574f8a1767fd13694f66828a9b2adbc03ea1b412a84220a63e6fd8186a650"
+}

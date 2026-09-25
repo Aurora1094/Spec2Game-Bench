@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "slug": "simple_platformer_var06",
+  "name": "Simple Platformer",
+  "difficulty": "medium",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [],
+  "window_size": [
+    800,
+    600
+  ],
+  "source_audit": {
+    "docx_sha256": "7efb25b8cd29ac387fe3b72d6005f1c6a5cbf4ff94103a4205065d5db55db27f",
+    "base_checkpoints_sha256": "4fa5974d0ef7ecb0bbcc914ed389e18e591a5da6fe64f3a9eec6440f604b89c9",
+    "checkpoint_count": 32
+  },
+  "family_slug": "simple_platformer",
+  "variant_id": "var06",
+  "variation_types": [
+    "object_count",
+    "map"
+  ]
+}

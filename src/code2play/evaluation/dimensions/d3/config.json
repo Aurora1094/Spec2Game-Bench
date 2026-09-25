@@ -51,18 +51,15 @@
     ]
   },
   "semantic_judge": {
-    "policy": "openrouter_gpt56_terra_qwenvl_judge_v1",
+    "policy": "aws_mantle_vl_qwen235b_2507_text",
     "region": "us-east-1",
     "stateless": true,
     "max_output_tokens": 1200,
     "temperature": 0.0,
-    "provider": "openrouter",
-    "model": "qwen/qwen3.7-plus",
+    "provider": "aws_mantle",
+    "model": "qwen.qwen3-235b-a22b-2507",
     "api": "chat_completions",
     "enable_thinking": false,
-    "reasoning": {
-      "effort": "none"
-    },
     "criterion_scale_max": 100,
     "repetitions": 1,
     "aggregation": "single_valid_response"

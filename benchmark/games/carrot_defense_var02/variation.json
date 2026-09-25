@@ -1,0 +1,91 @@
+{
+  "instance_id": "carrot_defense_var02",
+  "family_slug": "carrot_defense",
+  "variant_id": "var02",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/11_hard_Carrot Defense-like/11_hard_Carrot Defense-like_V3.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Carrot Defense-like"
+      ],
+      "after": [
+        "Carrot Defense-like_V3"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "(0,2) → (1,2) → (2,2) → (3,2) → (4,2) → (5,2)",
+        "                                             ↓",
+        "                                           (5,3)",
+        "                                             ↓",
+        "                                           (5,4)",
+        "                                             ↓",
+        "                                           (5,5)",
+        "                                             ↓",
+        "(6,5) → (7,5) → (8,5) → (9,5)"
+      ],
+      "after": [
+        "(0,2) (1,2) (2,2) (3,2) (4,2) (5,2)"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "                            (9,4)"
+      ],
+      "after": [
+        "                            (5,3)"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "                            (9,3)"
+      ],
+      "after": [
+        "                            (5,4)"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "                          (10,3) → (11,3)"
+      ],
+      "after": [
+        "                            (5,5)",
+        "                              ↓",
+        "(6,5) (7,5) (8,5) (9,5)",
+        "                  ↑",
+        "                (9,4)",
+        "                  ↑",
+        "                (9,3) (10,3) (11,3)"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "| Fast | 30 | 90 px/s | 1 | 12 Gold | Smaller red circle or red circle with speed trails |",
+        "| Tank | 100 | 40 px/s | 2 | 25 Gold | Larger dark-gray rectangle or circle |"
+      ],
+      "after": [
+        "| Fast | 30 | 110 px/s | 1 | 12 Gold | Smaller red circle or red circle with speed trails |",
+        "| Tank | 130 | 40 px/s | 2 | 25 Gold | Larger dark-gray rectangle or circle |"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "carrot_defense_var02.D2.4.02",
+    "carrot_defense_var02.D2.1.08"
+  ],
+  "added_checkpoint_ids": [
+    "carrot_defense_var02.D2.1.08"
+  ],
+  "base_checkpoints_sha256": "763a94a35ba4ffa1473059ff4dc233b43d72a986810cc0d7664282192c535c37",
+  "checkpoints_sha256": "de027aa2995d342f879bb7da6b4264d75dfc62a4861e58664c181eab37f59a4e"
+}

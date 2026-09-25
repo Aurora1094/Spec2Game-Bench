@@ -1,12 +1,30 @@
-schema_version: 1
-slug: asteroids
-name: "Asteroids"
-difficulty: easy
-spec: spec.md
-checkpoints: checkpoints.jsonl
-variants: []
-window_size: [600, 800]
-source_audit:
-  docx_sha256: ca5e1458ff7c845aaf7f142117b3d13380f773dead1ab07f3e25f62368313687
-  csv_sha256: 5f811af9f189e6a7eb0d8541d5d1897aff174e1e72fc2c476d965791042b00bd
-  checkpoint_count: 33
+{
+  "schema_version": 1,
+  "slug": "asteroids",
+  "name": "Asteroids",
+  "difficulty": "easy",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [
+    "asteroids_var01",
+    "asteroids_var02",
+    "asteroids_var03",
+    "asteroids_var04",
+    "asteroids_var05",
+    "asteroids_var06",
+    "asteroids_var07",
+    "asteroids_var08",
+    "asteroids_var09"
+  ],
+  "window_size": [
+    600,
+    800
+  ],
+  "source_audit": {
+    "docx_sha256": "ca5e1458ff7c845aaf7f142117b3d13380f773dead1ab07f3e25f62368313687",
+    "csv_sha256": "5f811af9f189e6a7eb0d8541d5d1897aff174e1e72fc2c476d965791042b00bd",
+    "checkpoint_count": 33
+  },
+  "family_slug": "asteroids",
+  "variant_id": "base"
+}

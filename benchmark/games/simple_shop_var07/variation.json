@@ -1,0 +1,256 @@
+{
+  "instance_id": "simple_shop_var07",
+  "family_slug": "simple_shop",
+  "variant_id": "var07",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/10_medium_Simple Shop Management/10_medium_Simple Shop Management_V8.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Simple Shop Management"
+      ],
+      "after": [
+        "Simple Shop Management_V8"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "The player manages inventory by clicking product-specific restock buttons. Each successful restock adds exactly 3 units of the selected product and deducts a fixed restocking cost."
+      ],
+      "after": [
+        "The player manages inventory by clicking product-specific restock buttons.",
+        "Each successful restock adds a product-specific amount:",
+        "- Apple: +2",
+        "- Bread: +3",
+        "- Milk: +4",
+        "Each successful restock deducts the corresponding fixed restocking cost.",
+        "The maximum Stock remains 9 for all products."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "| Restock Apple | `(40, 630)` | `160 × 60 px` | Apple icon, `Restock Apple`, `Cost: 6` |",
+        "| Restock Bread | `(220, 630)` | `160 × 60 px` | Bread icon, `Restock Bread`, `Cost: 9` |",
+        "| Restock Milk | `(400, 630)` | `160 × 60 px` | Milk icon, `Restock Milk`, `Cost: 12` |",
+        "Each button uses a product icon on the left and two text lines on the right."
+      ],
+      "after": [
+        "| Restock Apple | `(40, 630)` | `160 × 60 px` | Apple icon, `Restock Apple`, `+2`, `Cost: 6` |",
+        "| Restock Bread | `(220, 630)` | `160 × 60 px` | Bread icon, `Restock Bread`, `+3`, `Cost: 9` |",
+        "| Restock Milk | `(400, 630)` | `160 × 60 px` | Milk icon, `Restock Milk`, `+4`, `Cost: 12` |",
+        "Each button uses a product icon and clearly displays the product-specific restock amount and cost."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "| Apple | 3 | 9 | +3 | 6 | 4 |"
+      ],
+      "after": [
+        "| Apple | 3 | 9 | +2 | 6 | 4 |"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "| Milk | 3 | 9 | +3 | 12 | 8 |"
+      ],
+      "after": [
+        "| Milk | 3 | 9 | +4 | 12 | 8 |"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "Successful restock:",
+        "`Stock += 3`"
+      ],
+      "after": [
+        "Successful Apple restock:",
+        "`Apple Stock += 2`",
+        "Successful Bread restock:",
+        "`Bread Stock += 3`",
+        "Successful Milk restock:",
+        "`Milk Stock += 4`"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "`Stock -= 1`"
+      ],
+      "after": [
+        "`Requested Stock -= 1`"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "2. Current Stock is at most 6."
+      ],
+      "after": [
+        "2. Current Stock is low enough that the complete restock amount does not exceed Maximum Stock.",
+        "The fixed conditions are:",
+        "- Apple: `Money ≥ 6` and `Stock ≤ 7`",
+        "- Bread: `Money ≥ 9` and `Stock ≤ 6`",
+        "- Milk: `Money ≥ 12` and `Stock ≤ 5`"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- Stock increases by 3.",
+        "- Money decreases by the Restock Cost."
+      ],
+      "after": [
+        "- Apple Stock increases by 2, Bread Stock increases by 3, or Milk Stock increases by 4.",
+        "- Money decreases by the corresponding Restock Cost."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "A restock is never partially applied."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "A successful restock requires:",
+        "`Money ≥ Restock Cost`"
+      ],
+      "after": [
+        "Apple restock succeeds only if:",
+        "`Money ≥ 6`"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "`Stock ≤ 6`",
+        "If both conditions are satisfied:",
+        "- Stock increases by 3.",
+        "- Money decreases by the corresponding cost.",
+        "If either condition is not satisfied:"
+      ],
+      "after": [
+        "`Apple Stock ≤ 7`",
+        "If successful:",
+        "- Apple Stock += 2",
+        "- Money -= 6",
+        "Bread restock succeeds only if:",
+        "`Money ≥ 9`",
+        "and:",
+        "`Bread Stock ≤ 6`",
+        "If successful:",
+        "- Bread Stock += 3",
+        "- Money -= 9",
+        "Milk restock succeeds only if:",
+        "`Money ≥ 12`",
+        "and:",
+        "`Milk Stock ≤ 5`",
+        "If successful:",
+        "- Milk Stock += 4",
+        "- Money -= 12",
+        "If either condition for the selected product is not satisfied:"
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "Each successful restock adds exactly:",
+        "`+3 Stock`",
+        "Fixed restocking costs:",
+        "- Apple: 6",
+        "- Bread: 9",
+        "- Milk: 12",
+        "A restock succeeds only if:"
+      ],
+      "after": [
+        "Product-specific restocking rules are:",
+        "| Product | Restock Amount | Restock Cost | Maximum Stock | Restock Allowed When |",
+        "|---|---:|---:|---:|---|",
+        "| Apple | +2 | 6 | 9 | `Stock ≤ 7` |",
+        "| Bread | +3 | 9 | 9 | `Stock ≤ 6` |",
+        "| Milk | +4 | 12 | 9 | `Stock ≤ 5` |",
+        "A restock also requires:"
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "and:",
+        "`Stock ≤ 6`"
+      ],
+      "after": []
+    },
+    {
+      "id": "change15",
+      "before": [
+        "- Stock += 3",
+        "- Money -= Cost"
+      ],
+      "after": [
+        "- Stock increases by the full product-specific amount.",
+        "- Money decreases by the fixed cost."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [],
+      "after": [
+        "If the full restock amount would exceed 9, the restock fails completely."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "3. Otherwise, process valid restock clicks."
+      ],
+      "after": [
+        "3. Otherwise, process valid restock clicks using the selected product's fixed Restock Amount, Restock Cost, and Maximum Stock condition."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "- Initial and maximum Stock",
+        "- Restock quantities"
+      ],
+      "after": [
+        "- Initial Stock",
+        "- Maximum Stock: 9",
+        "- Restock quantities: Apple +2, Bread +3, Milk +4"
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "Successful restocking immediately increases the corresponding Stock by 3 and deducts its fixed cost from Money."
+      ],
+      "after": [
+        "Successful restocking changes inventory by:",
+        "- Apple: +2 Stock for Cost 6",
+        "- Bread: +3 Stock for Cost 9",
+        "- Milk: +4 Stock for Cost 12",
+        "Maximum Stock is 9 for all products.",
+        "A restock that would exceed the maximum Stock fails completely."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "simple_shop_var07.D2.2.01",
+    "simple_shop_var07.D2.3.09",
+    "simple_shop_var07.D2.4.03"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "92690470632ad35064fdea71202df38a8d1a3a60254bb79bf23c97bab356f2f3",
+  "checkpoints_sha256": "1c3e13eb9d1721ab25c41830498a439c303a7a8542a22ae6ba9ab14db7223027"
+}

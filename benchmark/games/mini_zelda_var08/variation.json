@@ -1,0 +1,282 @@
+{
+  "instance_id": "mini_zelda_var08",
+  "family_slug": "mini_zelda",
+  "variant_id": "var08",
+  "variation_types": [
+    "rule"
+  ],
+  "source_path": "游戏规格说明（英文）/15_hard_Mini Zelda-like Room Adventure/15_hard_Mini Zelda-like Room Adventure_V9.docx",
+  "corrections": [
+    "Final DOCX takes precedence over spreadsheet draft differences."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "`Room A → Room C → Room B → obtain Key 1 → Room C → unlock Room D → obtain Key 2 → Room C → unlock Room E → open the treasure chest → Victory`"
+      ],
+      "after": [
+        "`Room A → Room C → Room B → obtain Key 1 → Room C → unlock Room D → defeat Guard D1 and Guard D2 → obtain Key 2 → Room C → unlock Room E → open the treasure chest → Victory`"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [],
+      "after": [
+        "Key 2 spawns after Guard D1 and Guard D2 are both defeated.",
+        "Slime D1 does not need to be defeated for Key 2 to spawn.",
+        "If Slime D1 is still alive after Key 2 appears, it remains an active enemy."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "A custom rule is the sequential dependency between Key 1 and Key 2. The player must first clear Room B to obtain Key 1 and unlock Room D, then clear Room D to obtain Key 2 and unlock Room E."
+      ],
+      "after": [
+        "Key 1 and Key 2 form a sequential dependency. The player must first clear Room B to obtain Key 1 and unlock Room D, then defeat both Room D Guards to obtain Key 2 and unlock Room E."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "`WASD: Move    Space: Attack`"
+      ],
+      "after": [
+        "`WASD: Move Space: Attack`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "          Room B",
+        "            |"
+      ],
+      "after": [
+        "       Room B",
+        "         |"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "            |",
+        "          Room E"
+      ],
+      "after": [
+        "         |",
+        "       Room E"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "After all 3 enemies are defeated, Key 2 spawns at:"
+      ],
+      "after": [
+        "After Guard D1 and Guard D2 are both defeated, Key 2 spawns at:"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [],
+      "after": [
+        "Slime D1 is not part of the Key 2 spawn condition.",
+        "If Slime D1 is still alive after Key 2 appears:",
+        "- It remains active.",
+        "- It continues moving toward the player.",
+        "- It continues dealing contact damage.",
+        "- It may still be attacked and defeated.",
+        "- It is not removed or disabled."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "Slime D1 remains active after Key 2 has spawned if it is still alive."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "A living Slime D1 remains assigned to Room D even after Key 2 has been collected."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "- Spawn condition: Room D Slime and both Guards are dead"
+      ],
+      "after": [
+        "- Spawn condition: Guard D1 and Guard D2 are both dead"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "Slime D1 is not checked when determining whether Key 2 should spawn.",
+        "Key 2 may therefore spawn while Slime D1 remains alive."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [],
+      "after": [
+        "A Key may spawn only once.",
+        "If Key 2 has already spawned, leaving and re-entering Room D does not create another Key 2.",
+        "If Key 2 has already been collected, `key2_collected = true` prevents it from spawning again."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [],
+      "after": [
+        "Collecting Key 2 does not affect Slime D1."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "The actual room transition is still performed during the unified room-transition stage."
+      ],
+      "after": [
+        "The actual room transition is performed during the unified room-transition stage."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "- Right-side door → message appears to the left",
+        "- Bottom-side door → message appears above"
+      ],
+      "after": [
+        "- Right-side door message appears to the left.",
+        "- Bottom-side door message appears above."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [],
+      "after": [
+        "If the player leaves Room D after collecting Key 2 while Slime D1 is still alive:",
+        "- Slime D1 remains alive.",
+        "- Its HP is preserved.",
+        "- Its current position is preserved.",
+        "- It stops updating while Room D is not current.",
+        "- It resumes from the preserved state when the player returns.",
+        "Key 2 does not respawn after being collected."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "6. Check combat-room completion and spawn the corresponding Key if required."
+      ],
+      "after": [
+        "6. Check Key-spawn conditions:",
+        "   - In Room B, spawn Key 1 when both Slimes are dead.",
+        "   - In Room D, spawn Key 2 when Guard D1 and Guard D2 are both dead."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [],
+      "after": [
+        "If the final living Guard is killed in Step 5:",
+        "- Key 2 may spawn in Step 6 during the same frame.",
+        "- If the player overlaps Key 2, it may be collected in Step 7.",
+        "- If Slime D1 is alive, it still updates in Step 8.",
+        "- Slime D1 may still deal contact damage in Step 9."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "8. Defeat Slime D1, Guard D1, and Guard D2."
+      ],
+      "after": [
+        "8. Defeat Guard D1 and Guard D2."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "10. Return to Room C.",
+        "11. Use Key 2 to permanently unlock Room E.",
+        "12. Enter Room E.",
+        "13. Contact the final treasure chest.",
+        "14. Open the chest and obtain the treasure.",
+        "15. Enter Victory if HP remains above 0."
+      ],
+      "after": [
+        "10. Slime D1 may either be defeated or left alive.",
+        "11. Return to Room C.",
+        "12. Use Key 2 to permanently unlock Room E.",
+        "13. Enter Room E.",
+        "14. Contact the final treasure chest.",
+        "15. Open the chest and obtain the treasure.",
+        "16. Enter Victory if HP remains above 0."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "- Defeat both Slimes."
+      ],
+      "after": [
+        "- Defeat both Room B Slimes."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "- Defeat the Room D Slime and both Guards."
+      ],
+      "after": [
+        "- Defeat Guard D1 and Guard D2."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [],
+      "after": [
+        "Defeating Slime D1 is not required for progression after Room D becomes accessible.",
+        "If Slime D1 remains alive:",
+        "- It continues to behave normally while Room D is current.",
+        "- It remains dangerous after Key 2 spawns.",
+        "- Its state persists if the player leaves Room D.",
+        "- It may still be defeated later."
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [],
+      "after": [
+        "- Key 1 spawns after both Room B Slimes are dead.",
+        "- Key 2 spawns after both Room D Guards are dead."
+      ]
+    },
+    {
+      "id": "change26",
+      "before": [
+        "- Room D Slime restored at `(600, 450)` with 2 HP"
+      ],
+      "after": [
+        "- Slime D1 restored at `(600, 450)` with 2 HP"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "mini_zelda_var08.D2.3.13",
+    "mini_zelda_var08.D2.5.02",
+    "mini_zelda_var08.D2.3.21"
+  ],
+  "added_checkpoint_ids": [
+    "mini_zelda_var08.D2.3.21"
+  ],
+  "base_checkpoints_sha256": "6d064a9a7dc36ddc40e4609a9b9a0e6a89fe8f6b7b121d0a50edc6b186682597",
+  "checkpoints_sha256": "0ebcf2a2966ab5c9a0fad7aa65052606de58a6eb5fb3ac4ba13a33404722acc2"
+}

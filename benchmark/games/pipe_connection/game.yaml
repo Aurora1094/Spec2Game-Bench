@@ -1,12 +1,30 @@
-schema_version: 1
-slug: pipe_connection
-name: "Pipe Connection Puzzle"
-difficulty: hard
-spec: spec.md
-checkpoints: checkpoints.jsonl
-variants: []
-window_size: [600, 800]
-source_audit:
-  docx_sha256: 2b8cf4432f77437de2e31f49fb005e9a8f8ca3c7966bf0f46771fa8c2f81c5ea
-  csv_sha256: 0bfe2625f705e7c6c2dbb8da819b526748e99030739ccdd5b37b9d250659d63f
-  checkpoint_count: 36
+{
+  "schema_version": 1,
+  "slug": "pipe_connection",
+  "name": "Pipe Connection Puzzle",
+  "difficulty": "hard",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [
+    "pipe_connection_var01",
+    "pipe_connection_var02",
+    "pipe_connection_var03",
+    "pipe_connection_var04",
+    "pipe_connection_var05",
+    "pipe_connection_var06",
+    "pipe_connection_var07",
+    "pipe_connection_var08",
+    "pipe_connection_var09"
+  ],
+  "window_size": [
+    600,
+    800
+  ],
+  "source_audit": {
+    "docx_sha256": "2b8cf4432f77437de2e31f49fb005e9a8f8ca3c7966bf0f46771fa8c2f81c5ea",
+    "csv_sha256": "0bfe2625f705e7c6c2dbb8da819b526748e99030739ccdd5b37b9d250659d63f",
+    "checkpoint_count": 36
+  },
+  "family_slug": "pipe_connection",
+  "variant_id": "base"
+}

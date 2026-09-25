@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "slug": "arena_shooter_var09",
+  "name": "Top-down Arena Shooter",
+  "difficulty": "hard",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [],
+  "window_size": [
+    800,
+    700
+  ],
+  "source_audit": {
+    "docx_sha256": "e26f18337dc3e8dc76befdc99c4d95171479bebdb60df4dc5af6a946eb5ebfe3",
+    "base_checkpoints_sha256": "d6fae9aaf4efdeb69d045f4236cf99dbb29f890a51b0a1f431c7d23c35667a0e",
+    "checkpoint_count": 52
+  },
+  "family_slug": "arena_shooter",
+  "variant_id": "var09",
+  "variation_types": [
+    "rule"
+  ]
+}

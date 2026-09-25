@@ -1,0 +1,139 @@
+{
+  "instance_id": "arena_shooter_var02",
+  "family_slug": "arena_shooter",
+  "variant_id": "var02",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/14_hard_Top-down Arena Shooter/14_hard_Top-down Arena Shooter_V3.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "The player starts with 5 HP and a 6-round magazine.",
+        "Reloading is an active mechanic: pressing R while Ammo is below 6 begins a 1.5-second Reload. During Reload, the player may continue moving and aiming but cannot shoot."
+      ],
+      "after": [
+        "The player starts with 5 HP and an 8-round magazine.",
+        "Reloading is an active mechanic: pressing R while Ammo is below 8 begins a 1.5-second Reload. During Reload, the player may continue moving and aiming but cannot shoot."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "| Ammo | `(200, 28)` | `Ammo: 6/6` |"
+      ],
+      "after": [
+        "| Ammo | `(200, 28)` | `Ammo: 8/8` |"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`WASD: Move    Mouse: Aim    Left Click: Shoot`",
+        "`R: Reload    Defeat all enemies`"
+      ],
+      "after": [
+        "`WASD: Move Mouse: Aim Left Click: Shoot`",
+        "`R: Reload Defeat all enemies`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- Magazine capacity: 6",
+        "- Initial Ammo: 6"
+      ],
+      "after": [
+        "- Magazine capacity: 8",
+        "- Initial Ammo: 8"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "The player may Reload an unlimited number of times, but each completed Reload restores Ammo only to 6."
+      ],
+      "after": [
+        "The player may Reload an unlimited number of times, but each completed Reload restores Ammo only to 8."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "- Ammo < 6"
+      ],
+      "after": [
+        "- Ammo < 8"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Ammo becomes 6."
+      ],
+      "after": [
+        "- Ammo becomes 8."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "Pressing R with Ammo = 6 has no effect."
+      ],
+      "after": [
+        "Pressing R with Ammo = 8 has no effect."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- Ammo: 6"
+      ],
+      "after": [
+        "- Ammo: 8"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- Player position, HP, Ammo, Reload state, and invulnerability state."
+      ],
+      "after": [
+        "- Player position.",
+        "- HP to 5.",
+        "- Ammo to 8.",
+        "- Reload state and invulnerability state."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "- `Ammo: X/6`"
+      ],
+      "after": [
+        "- `Ammo: X/8`"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "Reload displays `Reloading...` and restores Ammo to 6 only after the full 1.5-second Reload completes."
+      ],
+      "after": [
+        "Reload displays `Reloading...` and restores Ammo to 8 only after the full 1.5-second Reload completes."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "arena_shooter_var02.D2.1.03",
+    "arena_shooter_var02.D2.2.06",
+    "arena_shooter_var02.D2.2.08",
+    "arena_shooter_var02.D2.5.05",
+    "arena_shooter_var02.D2.5.11"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "d6fae9aaf4efdeb69d045f4236cf99dbb29f890a51b0a1f431c7d23c35667a0e",
+  "checkpoints_sha256": "c4a919117b936c4de7d89644d9447de2e0a4b09c5f082fa5bcef1982b7f05aba"
+}

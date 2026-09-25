@@ -1,0 +1,71 @@
+{
+  "instance_id": "whack_a_mole_var04",
+  "family_slug": "whack_a_mole",
+  "variant_id": "var04",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/3_easy_Whack-a-Hole/3_easy_Whack-a-Mole_V5.docx",
+  "corrections": [
+    "Mapped the Whack-a-Hole source folder to whack_a_mole."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Whack-a-Mole"
+      ],
+      "after": [
+        "Whack-a-Mole_V5"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "Each new mole is independently generated as a Normal Mole with 80% probability or a Golden Mole with 20% probability. The player's goal is to achieve the highest possible score before the 30-second countdown reaches 0."
+      ],
+      "after": [
+        "Each new mole is independently generated as a Normal Mole with 65% probability or a Golden Mole with 35% probability. The player's goal is to achieve the highest possible score before the 30-second countdown reaches 0."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- Normal Mole: 80%",
+        "- Golden Mole: 20%",
+        "The 20% Golden Mole probability does not imply exactly one Golden Mole in every five spawns."
+      ],
+      "after": [
+        "- Normal Mole: 65%",
+        "- Golden Mole: 35%",
+        "The 35% Golden Mole probability does not imply any fixed number of Golden Moles within a given number of spawns."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "The game contains no difficulty progression. Total duration remains 30 seconds, both initial and between-mole waiting periods remain 0.3 seconds, Normal Mole duration remains 1.0 second, Golden Mole duration remains 0.6 seconds, and Golden Mole probability remains 20%."
+      ],
+      "after": [
+        "The game contains no difficulty progression. Total duration remains 30 seconds, both initial and between-mole waiting periods remain 0.3 seconds, Normal Mole duration remains 1.0 second, Golden Mole duration remains 0.6 seconds, and Golden Mole probability remains 35%."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "During `playing`, the bottom instruction area displays `Click the mole` and `Restart: R`. When Time reaches 0, the game enters `game_over`, the current mole disappears, Score stops changing, and the bottom area displays `Game Over` and `Press R to Restart`."
+      ],
+      "after": [
+        "During `playing`, the bottom instruction area displays `Click the mole` and `Restart: R`.",
+        "When Time reaches 0, the game enters `game_over`, the current mole disappears, Score stops changing, and the bottom area displays `Game Over` and `Press R to Restart`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "whack_a_mole_var04.D2.3.01",
+    "whack_a_mole_var04.D2.4.03"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "43d84d8468fbefa4975d64dd345cc4462cfd75494319b4b1da4704f95a3b403b",
+  "checkpoints_sha256": "64897229ec518c468f25587d14df29459192c55d69859b4268500e8ffefa7e87"
+}

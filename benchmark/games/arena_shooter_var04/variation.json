@@ -1,0 +1,146 @@
+{
+  "instance_id": "arena_shooter_var04",
+  "family_slug": "arena_shooter",
+  "variant_id": "var04",
+  "variation_types": [
+    "object_count"
+  ],
+  "source_path": "游戏规格说明（英文）/14_hard_Top-down Arena Shooter/14_hard_Top-down Arena Shooter_V5.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "- 3 Chasers",
+        "- 3 Shooters"
+      ],
+      "after": [
+        "- 4 Chasers",
+        "- 2 Shooters"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [],
+      "after": [
+        "The six enemy initial centers are fixed and do not overlap the player, each other, or any wall."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`WASD: Move    Mouse: Aim    Left Click: Shoot`",
+        "`R: Reload    Defeat all enemies`"
+      ],
+      "after": [
+        "`WASD: Move Mouse: Aim Left Click: Shoot`",
+        "`R: Reload Defeat all enemies`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "The game contains exactly 3 Chasers."
+      ],
+      "after": [
+        "The game contains exactly 4 Chasers."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "- Chaser 4: `(665, 500)`"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "The game contains exactly 3 Shooters."
+      ],
+      "after": [
+        "The game contains exactly 2 Shooters."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Shooter 3: `(665, 500)`"
+      ],
+      "after": []
+    },
+    {
+      "id": "change08",
+      "before": [
+        "Each Shooter has an independent 1.5-second firing timer."
+      ],
+      "after": [
+        "Each of the 2 Shooters has an independent 1.5-second firing timer."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "At initialization, the game creates the interface areas, player, 3 Chasers, 3 Shooters, 3 fixed walls, bullet lists, timers, and all state variables."
+      ],
+      "after": [
+        "At initialization, the game creates the interface areas, player, 4 Chasers, 2 Shooters, 3 fixed walls, bullet lists, timers, and all state variables."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- Chasers: 3, each at 2 HP",
+        "- Shooters: 3, each at 3 HP",
+        "- Shooter firing timers: 0"
+      ],
+      "after": [
+        "- Chasers: 4, each at 2 HP",
+        "- Shooters: 2, each at 3 HP",
+        "- Shooter firing timers: 0 for each Shooter"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "The fixed enemy initial centers are:",
+        "- Chaser 1: `(110, 145)`",
+        "- Chaser 2: `(690, 145)`",
+        "- Chaser 3: `(135, 500)`",
+        "- Chaser 4: `(665, 500)`",
+        "- Shooter 1: `(610, 245)`",
+        "- Shooter 2: `(210, 335)`"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "- All Chaser positions and HP.",
+        "- All Shooter positions, HP, and firing timers."
+      ],
+      "after": [
+        "- All 4 Chaser positions and HP.",
+        "- Both Shooter positions, HP, and firing timers."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [],
+      "after": [
+        "The enemy composition is:",
+        "- 4 Chasers",
+        "- 2 Shooters"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "arena_shooter_var04.D2.1.05",
+    "arena_shooter_var04.D2.1.06",
+    "arena_shooter_var04.D2.5.05",
+    "arena_shooter_var04.D2.5.13"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "d6fae9aaf4efdeb69d045f4236cf99dbb29f890a51b0a1f431c7d23c35667a0e",
+  "checkpoints_sha256": "41e9270b0140e3b5bd51f34dba9a96ef227c366680850b9a0b7a00aa84972f3c"
+}

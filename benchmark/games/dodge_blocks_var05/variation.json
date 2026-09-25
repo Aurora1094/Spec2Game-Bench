@@ -1,0 +1,92 @@
+{
+  "instance_id": "dodge_blocks_var05",
+  "family_slug": "dodge_blocks",
+  "variant_id": "var05",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/2_easy_Dodge Blocks/2_easy_Dodge Blocks_V6.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Dodge Blocks"
+      ],
+      "after": [
+        "Dodge Blocks V6"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "After a successful dash, the ability enters a 2-second cooldown. Pressing Space while Dash is cooling down or while no horizontal direction key is held has no effect and does not start or restart the cooldown."
+      ],
+      "after": [
+        "After a successful dash, the ability enters a 1-second cooldown. Pressing Space while Dash is cooling down or while no horizontal direction key is held has no effect and does not start or restart the cooldown."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`Dash: Ready` indicates that Dash is available. `Dash: Cooling` indicates that the 2-second cooldown is active."
+      ],
+      "after": [
+        "`Dash: Ready` indicates that Dash is available. `Dash: Cooling` indicates that the 1-second cooldown is active."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "After a successful dash, Dash becomes `cooling`, a 2-second cooldown begins, and the UI displays `Dash: Cooling`."
+      ],
+      "after": [
+        "After a successful dash, Dash becomes `cooling`, a 1-second cooldown begins, and the UI displays `Dash: Cooling`."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "After a successful dash, Dash becomes `cooling` and a 2-second cooldown begins."
+      ],
+      "after": [
+        "After a successful dash, Dash becomes `cooling` and a 1-second cooldown begins."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "4. Start a 2-second cooldown."
+      ],
+      "after": [
+        "4. Start a 1-second cooldown."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Dash cooldown: 2 seconds"
+      ],
+      "after": [
+        "- Dash cooldown: 1 second"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "The Dash display shows either `Dash: Ready` or `Dash: Cooling`. Only a successful dash starts the 2-second cooldown."
+      ],
+      "after": [
+        "The Dash display shows either `Dash: Ready` or `Dash: Cooling`. Only a successful dash starts the 1-second cooldown."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "dodge_blocks_var05.D2.2.05",
+    "dodge_blocks_var05.D2.3.04",
+    "dodge_blocks_var05.D2.3.05"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "49ce18ae41ba1d7c6ead6d9e52bdbc10b7447961c50d8924076bc487b8706308",
+  "checkpoints_sha256": "8ca2f27765089af1703257db815ae071922880456318a72f7d25dd0509d58a95"
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "slug": "tetris_var02",
+  "name": "Tetris",
+  "difficulty": "medium",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [],
+  "window_size": [
+    600,
+    800
+  ],
+  "source_audit": {
+    "docx_sha256": "b84e99a143bd7dfd43c3c07d4978c4ddda78ec7af677606be2d5b2d7c8d25646",
+    "base_checkpoints_sha256": "9b869e2c2acb9eecb215d5d29bf1b3c0bfe88e8f64288d28331d5a79e22d62f0",
+    "checkpoint_count": 32
+  },
+  "family_slug": "tetris",
+  "variant_id": "var02",
+  "variation_types": [
+    "parameter"
+  ]
+}

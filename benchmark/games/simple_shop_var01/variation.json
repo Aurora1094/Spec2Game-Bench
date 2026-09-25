@@ -1,0 +1,205 @@
+{
+  "instance_id": "simple_shop_var01",
+  "family_slug": "simple_shop",
+  "variant_id": "var01",
+  "variation_types": [
+    "object_type",
+    "interface"
+  ],
+  "source_path": "游戏规格说明（英文）/10_medium_Simple Shop Management/10_medium_Simple Shop Management_V2.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Simple Shop Management is a simplified resource-management and shop-operation game. The player runs a small shop and manages Money, Time, Missed customers, and the inventory of three products: Apple, Bread, and Milk."
+      ],
+      "after": [
+        "Simple Shop Management is a simplified resource-management and shop-operation game. The player runs a small shop and manages Money, Time, Missed customers, and the inventory of four products: Apple, Bread, Milk, and Orange."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "- Three product shelves"
+      ],
+      "after": [
+        "- Four product shelves"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "The three shelves are fixed:"
+      ],
+      "after": [
+        "The four shelves are fixed:"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "| Apple Shelf | `(60, 140)` | `140 × 120 px` | Apple icon, `Apple`, `Stock: X` |",
+        "| Bread Shelf | `(230, 140)` | `140 × 120 px` | Bread icon, `Bread`, `Stock: X` |",
+        "| Milk Shelf | `(400, 140)` | `140 × 120 px` | Milk icon, `Milk`, `Stock: X` |"
+      ],
+      "after": [
+        "| Apple Shelf | `(30, 140)` | `120 × 120 px` | Apple icon, `Apple`, `Stock: X` |",
+        "| Bread Shelf | `(170, 140)` | `120 × 120 px` | Bread icon, `Bread`, `Stock: X` |",
+        "| Milk Shelf | `(310, 140)` | `120 × 120 px` | Milk icon, `Milk`, `Stock: X` |",
+        "| Orange Shelf | `(450, 140)` | `120 × 120 px` | Orange icon, `Orange`, `Stock: X` |"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "- Orange: orange-colored round fruit with a small green leaf."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [],
+      "after": [
+        "- `Wants: Orange`"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "During `open`, it displays three clickable restock buttons:"
+      ],
+      "after": [
+        "During `open`, it displays four clickable restock buttons:"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "| Restock Apple | `(40, 630)` | `160 × 60 px` | Apple icon, `Restock Apple`, `Cost: 6` |",
+        "| Restock Bread | `(220, 630)` | `160 × 60 px` | Bread icon, `Restock Bread`, `Cost: 9` |",
+        "| Restock Milk | `(400, 630)` | `160 × 60 px` | Milk icon, `Restock Milk`, `Cost: 12` |"
+      ],
+      "after": [
+        "| Restock Apple | `(20, 625)` | `125 × 70 px` | Apple icon, `Restock Apple`, `Cost: 6` |",
+        "| Restock Bread | `(160, 625)` | `125 × 70 px` | Bread icon, `Restock Bread`, `Cost: 9` |",
+        "| Restock Milk | `(300, 625)` | `125 × 70 px` | Milk icon, `Restock Milk`, `Cost: 12` |",
+        "| Restock Orange | `(440, 625)` | `125 × 70 px` | Orange icon, `Restock Orange`, `Cost: 8` |"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "The game contains exactly three products:"
+      ],
+      "after": [
+        "The game contains exactly four products:"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "| Orange | 3 | 9 | +3 | 8 | 5 |"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "- Orange: 3"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "- Apple: 1/3",
+        "- Bread: 1/3",
+        "- Milk: 1/3"
+      ],
+      "after": [
+        "- Apple: 1/4",
+        "- Bread: 1/4",
+        "- Milk: 1/4",
+        "- Orange: 1/4"
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "The left mouse button is used to click the three restock buttons."
+      ],
+      "after": [
+        "The left mouse button is used to click the four restock buttons."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [],
+      "after": [
+        "- Orange Stock = 3"
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [],
+      "after": [
+        "- Orange: 8"
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [],
+      "after": [
+        "- Orange: 5"
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "The game does not include employees, decoration, multi-day operation, price adjustment, customer queues, multiple simultaneous customers, customer patience, satisfaction, advertising, random events, upgrades, loans, debt, discounts, promotions, complex routing, or additional products."
+      ],
+      "after": [
+        "The game does not include employees, decoration, multi-day operation, price adjustment, customer queues, multiple simultaneous customers, customer patience, satisfaction, advertising, random events, upgrades, loans, debt, discounts, promotions, complex routing, or additional products beyond Apple, Bread, Milk, and Orange."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [],
+      "after": [
+        "- Orange Stock: 3"
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "5. If the spawn timer expires, spawn one customer and assign one random request."
+      ],
+      "after": [
+        "5. If the spawn timer expires, spawn one customer and assign one random request from the four products."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "Each active customer enters from the left, moves toward the counter, and displays a fixed request bubble."
+      ],
+      "after": [
+        "Each active customer enters from the left, moves toward the counter, and displays a fixed request bubble for Apple, Bread, Milk, or Orange."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "simple_shop_var01.D2.1.01",
+    "simple_shop_var01.D2.2.06",
+    "simple_shop_var01.D2.3.02",
+    "simple_shop_var01.D2.1.08",
+    "simple_shop_var01.D2.2.10"
+  ],
+  "added_checkpoint_ids": [
+    "simple_shop_var01.D2.1.08",
+    "simple_shop_var01.D2.2.10"
+  ],
+  "base_checkpoints_sha256": "92690470632ad35064fdea71202df38a8d1a3a60254bb79bf23c97bab356f2f3",
+  "checkpoints_sha256": "18d7bbcc2a74b0d9c9d25e92f8833368046c7754e7c22fb7f3ad8f53a68228e8"
+}

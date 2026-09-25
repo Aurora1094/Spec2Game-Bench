@@ -1,0 +1,282 @@
+{
+  "instance_id": "farming_lite_var05",
+  "family_slug": "farming_lite",
+  "variant_id": "var05",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/12_hard_Farming-lite/12_hard_Farming-lite_V6.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Farming-lite is a simplified farming management game with a fixed 8-day operating cycle. The player buys seeds, plants crops, waters them, waits for them to grow, harvests mature crops, and earns Gold."
+      ],
+      "after": [
+        "Farming-lite is a simplified farming management game with a fixed 8-day operating cycle.",
+        "The player buys seeds, plants crops, waters them, waits for them to grow, harvests mature crops, and earns Gold."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "- Carrot: cheaper, matures faster, lower harvest value.",
+        "- Pumpkin: more expensive, matures more slowly, higher harvest value."
+      ],
+      "after": [
+        "- Carrot: cheaper and faster-growing.",
+        "- Pumpkin: more expensive, slower-growing, and higher-value.",
+        "Carrots require 3 effective growth events to mature.",
+        "Pumpkins require 5 effective growth events to mature."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "Carrot has 3 stages:"
+      ],
+      "after": [
+        "Carrot has 4 stages:"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- Stage 1: larger green leaf cluster; still no clear Carrot body.",
+        "- Stage 2: mature; orange Carrot body with green leaves.",
+        "Pumpkin has 5 stages:"
+      ],
+      "after": [
+        "- Stage 1: larger green leaf cluster; no visible orange root.",
+        "- Stage 2: very small orange root begins to appear beneath the larger leaves.",
+        "- Stage 3: mature; clearly visible orange Carrot body with green leaves.",
+        "Pumpkin has 6 stages:"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Stage 3: small orange Pumpkin fruit appears beside the vine.",
+        "- Stage 4: mature; large orange Pumpkin with darker curved lines or stripes."
+      ],
+      "after": [
+        "- Stage 3: small flower or bud appears on the vine.",
+        "- Stage 4: small orange Pumpkin fruit appears beside the vine.",
+        "- Stage 5: mature; large orange Pumpkin with darker curved lines or stripes."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "`Left Click: Use    Right Click: Cancel`"
+      ],
+      "after": [
+        "`Left Click: Use Right Click: Cancel`"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "| Carrot | 8 Gold | 2 | Stage 2 | 18 Gold |",
+        "| Pumpkin | 18 Gold | 4 | Stage 4 | 50 Gold |"
+      ],
+      "after": [
+        "| Carrot | 8 Gold | 3 | Stage 3 | 18 Gold |",
+        "| Pumpkin | 18 Gold | 5 | Stage 5 | 50 Gold |"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "A Carrot becomes mature at Stage 2.",
+        "A Pumpkin becomes mature at Stage 4."
+      ],
+      "after": [
+        "A Carrot becomes mature at Stage 3.",
+        "A Pumpkin becomes mature at Stage 5.",
+        "Growth stages never increase beyond the crop's mature stage."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "After Restart, Carrots again require 3 effective growth events and Pumpkins require 5 effective growth events to mature."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- If the new stage reaches the mature stage → mark mature"
+      ],
+      "after": [
+        "- If the new stage reaches the crop's mature stage → mark mature",
+        "Carrot progression is:",
+        "`Stage 0 → Stage 1 → Stage 2 → Stage 3 (Mature)`",
+        "Therefore, a Carrot requires exactly 3 effective growth events after planting to become mature.",
+        "Pumpkin progression is:",
+        "`Stage 0 → Stage 1 → Stage 2 → Stage 3 → Stage 4 → Stage 5 (Mature)`",
+        "Therefore, a Pumpkin requires exactly 5 effective growth events after planting to become mature."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "Once a crop reaches its mature stage, its stage no longer changes."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "2. Increase the stage of each watered immature crop by 1."
+      ],
+      "after": [
+        "2. Increase the stage of each watered immature crop by exactly 1."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "4. Mark crops that have reached their mature stage as mature.",
+        "5. Clear the watered state of every plot.",
+        "6. If the current Day is Day 1–7, increase Day by 1 and reset Time to 30 seconds.",
+        "7. If the current Day is Day 8, proceed directly to final settlement."
+      ],
+      "after": [
+        "4. Mark Carrots reaching Stage 3 as mature.",
+        "5. Mark Pumpkins reaching Stage 5 as mature.",
+        "6. Clear the watered state of every plot.",
+        "7. If the current Day is Day 1–7, increase Day by 1 and reset Time to 30 seconds.",
+        "8. If the current Day is Day 8, proceed directly to final settlement."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "2. Identify all crops that are mature after that growth settlement.",
+        "3. Automatically harvest all mature crops.",
+        "4. Add each harvested crop's normal value to Gold.",
+        "5. Increase total harvested count.",
+        "6. Increase the corresponding Carrot or Pumpkin count.",
+        "7. Clear all automatically harvested plots.",
+        "8. Leave immature crops without final earnings.",
+        "9. Enter `settlement`.",
+        "Therefore, a crop that becomes mature during the Day 8 growth settlement is included in the automatic final harvest."
+      ],
+      "after": [
+        "2. Increase each watered immature crop by one stage.",
+        "3. Mark Carrots reaching Stage 3 as mature.",
+        "4. Mark Pumpkins reaching Stage 5 as mature.",
+        "5. Identify all crops that are mature after that growth settlement.",
+        "6. Automatically harvest all mature crops.",
+        "7. Add each harvested crop's normal value to Gold.",
+        "8. Increase total harvested count.",
+        "9. Increase the corresponding Carrot or Pumpkin count.",
+        "10. Clear all automatically harvested plots.",
+        "11. Leave immature crops without final earnings.",
+        "12. Enter `settlement`.",
+        "Therefore:",
+        "- A Carrot that changes from Stage 2 to Stage 3 during Day 8 settlement is automatically harvested.",
+        "- A Pumpkin that changes from Stage 4 to Stage 5 during Day 8 settlement is automatically harvested.",
+        "Any crop that remains below its mature stage after the Day 8 growth event provides no final earnings."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "If the newly planted crop is watered before that Day ends, it can still receive that Day's growth event."
+      ],
+      "after": [
+        "If the newly planted crop is watered before that Day ends, it can receive one growth event during that Day's settlement.",
+        "A newly planted Carrot cannot become mature until it has received 3 effective growth events.",
+        "A newly planted Pumpkin cannot become mature until it has received 5 effective growth events."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [],
+      "after": [
+        "A Carrot is mature only at Stage 3.",
+        "A Pumpkin is mature only at Stage 5."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [],
+      "after": [
+        "At each end-of-day settlement:",
+        "- A watered immature crop advances exactly one stage.",
+        "- An unwatered immature crop remains at its current stage.",
+        "- Carrot becomes mature only after reaching Stage 3.",
+        "- Pumpkin becomes mature only after reaching Stage 5."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "3. Clear all watered states."
+      ],
+      "after": [
+        "3. Update crop maturity.",
+        "4. Clear all watered states."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [],
+      "after": [
+        "Because crop maturation requires more growth events in this version:",
+        "- Carrots require 3 effective watered Days to mature.",
+        "- Pumpkins require 5 effective watered Days to mature."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "- Growth stages"
+      ],
+      "after": [
+        "- Each crop growth stage"
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [],
+      "after": [
+        "Carrot uses Stages 0–3.",
+        "Pumpkin uses Stages 0–5."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "`Left Click: Use    Right Click: Cancel`"
+      ],
+      "after": [
+        "`Left Click: Use Right Click: Cancel`"
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "2. The Day 8 growth settlement is completed."
+      ],
+      "after": [
+        "2. The Day 8 growth settlement is completed using the updated mature-stage rules."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "farming_lite_var05.D2.4.04",
+    "farming_lite_var05.D2.4.05",
+    "farming_lite_var05.D2.4.06",
+    "farming_lite_var05.D2.3.10"
+  ],
+  "added_checkpoint_ids": [
+    "farming_lite_var05.D2.3.10"
+  ],
+  "base_checkpoints_sha256": "216ba3d8ea18719c2a19c1a40d9e1f270ce4c0ab2c6a8a8ac2e1e38ea0061256",
+  "checkpoints_sha256": "8105c25cfa766eef938a66565cc26ac68ae08a2763600d299ba14167b2693599"
+}

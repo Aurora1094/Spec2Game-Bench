@@ -1,0 +1,128 @@
+{
+  "instance_id": "space_invaders_var07",
+  "family_slug": "space_invaders",
+  "variant_id": "var07",
+  "variation_types": [
+    "object_count"
+  ],
+  "source_path": "游戏规格说明（英文）/6_medium_Space Invaders/6_medium_Space Invaders_V8.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "During each enemy firing event, up to two different surviving enemies fire simultaneously."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "`Score: X    Lives: Y    Wave: Z/3`"
+      ],
+      "after": [
+        "`Score: X Lives: Y Wave: Z/3`"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`Score: 0    Lives: 3    Wave: 1/3`"
+      ],
+      "after": [
+        "`Score: 0 Lives: 3 Wave: 1/3`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "`Move: A/D    Shoot: Space`"
+      ],
+      "after": [
+        "`Move: A/D Shoot: Space`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "During a normal firing event, two enemy bullets may be spawned simultaneously from two different surviving enemies."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [],
+      "after": [
+        "Multiple enemy bullets spawned during the same firing event behave independently."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [],
+      "after": [
+        "If multiple enemy bullets overlap the spaceship during the same frame while the player is initially not invulnerable, the first valid hit reduces Lives by 1 and starts invulnerability. Any additional overlapping enemy bullets are removed without further reducing Lives."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "1. Select one surviving enemy uniformly at random.",
+        "2. Spawn exactly one enemy bullet from the bottom center of that enemy.",
+        "3. Reset the wave firing timer.",
+        "Only one enemy fires during each firing event.",
+        "If no surviving enemies remain, no enemy bullet is fired."
+      ],
+      "after": [
+        "1. Count the surviving enemies.",
+        "2. If at least two enemies survive, uniformly select two different surviving enemies without replacement.",
+        "3. Spawn one enemy bullet from the bottom center of each selected enemy.",
+        "4. If exactly one enemy survives, spawn one bullet from that enemy instead.",
+        "5. If no enemies survive, spawn no enemy bullet.",
+        "6. Reset the wave firing timer.",
+        "A surviving enemy cannot be selected twice in the same firing event.",
+        "Therefore:",
+        "- 2 or more surviving enemies → exactly 2 bullets are spawned.",
+        "- 1 surviving enemy → exactly 1 bullet is spawned.",
+        "- 0 surviving enemies → no bullet is spawned."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "If multiple bullets overlap the player during the same frame, collision outcomes are processed using the current invulnerability state after each hit. Therefore, at most one Life can be lost during a frame from enemy bullets."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "Whenever an enemy firing event occurs and at least two enemies remain, two different enemies are selected and each fires one bullet."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "`Score: X    Lives: Y    Wave: Z/3`",
+        "`Move: A/D    Shoot: Space`"
+      ],
+      "after": [
+        "`Score: X Lives: Y Wave: Z/3`",
+        "`Move: A/D Shoot: Space`"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "During each firing event, two different surviving enemies fire simultaneously whenever at least two enemies remain."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "space_invaders_var07.D2.4.01"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "890569ecc6569c00ed27cde2047639245c470e1675b0f8be5b03b2fb1cf423d7",
+  "checkpoints_sha256": "2d12d3e7df3bdf59b558c4bd13127c6d63bcc009cdc7babc098366015129d6de"
+}

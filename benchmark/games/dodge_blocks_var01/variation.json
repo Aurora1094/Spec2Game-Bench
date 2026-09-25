@@ -1,0 +1,55 @@
+{
+  "instance_id": "dodge_blocks_var01",
+  "family_slug": "dodge_blocks",
+  "variant_id": "var01",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/2_easy_Dodge Blocks/2_easy_Dodge Blocks_V2.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "- Movement speed: 300 px/s"
+      ],
+      "after": [
+        "- Movement speed: 360 px/s"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "The movement speed is fixed at 300 px/s."
+      ],
+      "after": [
+        "The movement speed is fixed at 360 px/s."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "The player's normal horizontal movement speed is fixed at 300 px/s. Movement does not accelerate or decelerate over time."
+      ],
+      "after": [
+        "The player's normal horizontal movement speed is fixed at 360 px/s. Movement does not accelerate or decelerate over time."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "- Player movement speed: 300 px/s"
+      ],
+      "after": [
+        "- Player movement speed: 360 px/s"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "dodge_blocks_var01.D2.2.01",
+    "dodge_blocks_var01.D2.4.05"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "49ce18ae41ba1d7c6ead6d9e52bdbc10b7447961c50d8924076bc487b8706308",
+  "checkpoints_sha256": "31e44fc35b625833b4adcd382f5f5a138b3fa62ec64a03c479940fed1a3d9455"
+}

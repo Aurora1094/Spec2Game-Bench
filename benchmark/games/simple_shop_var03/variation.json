@@ -1,0 +1,86 @@
+{
+  "instance_id": "simple_shop_var03",
+  "family_slug": "simple_shop",
+  "variant_id": "var03",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/10_medium_Simple Shop Management/10_medium_Simple Shop Management_V4.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "The selling prices are:",
+        "- Apple: 5",
+        "- Bread: 8",
+        "- Milk: 10"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "| Apple | 3 | 9 | +3 | 6 | 4 |",
+        "| Bread | 3 | 9 | +3 | 9 | 6 |",
+        "| Milk | 3 | 9 | +3 | 12 | 8 |"
+      ],
+      "after": [
+        "| Apple | 3 | 9 | +3 | 6 | 5 |",
+        "| Bread | 3 | 9 | +3 | 9 | 8 |",
+        "| Milk | 3 | 9 | +3 | 12 | 10 |"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "- Apple: 4",
+        "- Bread: 6",
+        "- Milk: 8"
+      ],
+      "after": [
+        "- Apple: 5",
+        "- Bread: 8",
+        "- Milk: 10"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "7. If the customer reaches checkout while Time remains above 0, process the sale or Missed result."
+      ],
+      "after": [
+        "7. If the customer reaches checkout while Time remains above 0, process the sale or Missed result using the fixed selling prices."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Selling prices"
+      ],
+      "after": [
+        "- Selling prices: Apple 5, Bread 8, Milk 10"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "If the requested item is available at checkout, Stock decreases by 1 and Money increases by the corresponding selling price. If it is unavailable, Missed increases by 1."
+      ],
+      "after": [
+        "If the requested item is available at checkout:",
+        "- Apple sale: Stock -1, Money +5",
+        "- Bread sale: Stock -1, Money +8",
+        "- Milk sale: Stock -1, Money +10",
+        "If it is unavailable, Missed increases by 1."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "simple_shop_var03.D2.3.05",
+    "simple_shop_var03.D2.4.04"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "92690470632ad35064fdea71202df38a8d1a3a60254bb79bf23c97bab356f2f3",
+  "checkpoints_sha256": "ceecc0db8c129de8b0bc5b75b0655d3c45cf0e3f5a02682b14306a5ba21bb617"
+}

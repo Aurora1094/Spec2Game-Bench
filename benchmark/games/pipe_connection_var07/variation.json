@@ -1,0 +1,236 @@
+{
+  "instance_id": "pipe_connection_var07",
+  "family_slug": "pipe_connection",
+  "variant_id": "var07",
+  "variation_types": [
+    "map",
+    "combination"
+  ],
+  "source_path": "游戏规格说明（英文）/13_hard_Pipe Connection Puzzle/13_hard_Pipe Connection Puzzle_V8.docx",
+  "corrections": [
+    "Final DOCX takes precedence over spreadsheet draft differences."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "In this version, the Source is fixed at `(0,2)` and has an east-facing outlet."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "- Position: `(0,0)`"
+      ],
+      "after": [
+        "- Position: `(0,2)`"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [],
+      "after": [
+        "The cell `(0,0)`, which contains the Source in the base version, contains an ordinary `SV` Straight Pipe in this version."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "`Click pipe to rotate    Press Space to run water`",
+        "`Connect source to all sinks    Restart: R`"
+      ],
+      "after": [
+        "`Click pipe to rotate Press Space to run water`",
+        "`Connect source to all sinks Restart: R`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Position: `(0,0)`"
+      ],
+      "after": [
+        "- Position: `(0,2)`"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "The fixed Leak is at:"
+      ],
+      "after": [
+        "The fixed Leak remains at:"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "Clicking Source, Sink, Leak, Block, or Cross Pipe:"
+      ],
+      "after": [
+        "The `SV` Straight Pipe at `(0,0)` is an ordinary rotatable pipe.",
+        "Clicking Source at `(0,2)`, Sink, Leak, Block, or Cross Pipe:"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- Restores all pipes to their fixed initial orientations."
+      ],
+      "after": [
+        "- Restores the V8 fixed map and all pipe initial orientations.",
+        "- Restores the Source to `(0,2)`.",
+        "- Restores the ordinary `SV` Straight Pipe at `(0,0)`."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "Row 0: SRC-E | SV   | SV   | TNES | SV   | SNK-W",
+        "Row 1: BLK   | CNE  | TESW | SH   | BLK  | CES",
+        "Row 2: CSW   | BLK  | CNE  | SH   | TWNE | BLK",
+        "Row 3: BLK   | SV   | LEK  | SH   | CNE  | SV",
+        "Row 4: TESW  | BLK  | CES  | CES  | CWN  | BLK",
+        "Row 5: SH    | CNE  | BLK  | BLK  | CES  | SNK-W"
+      ],
+      "after": [
+        "Row 0: SV | SV | SRC-E | TNES | SV | SNK-W",
+        "Row 1: BLK | CNE | TESW | SH | BLK | CES",
+        "Row 2: CSW | BLK | CNE | SH | TWNE | BLK",
+        "Row 3: BLK | SV | LEK | SH | CNE | SV",
+        "Row 4: TESW | BLK | CES | CES | CWN | BLK",
+        "Row 5: SH | CNE | BLK | BLK | CES | SNK-W"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- Source: `(0,0)`"
+      ],
+      "after": [
+        "- Source: `(0,2)`"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "Compared with the base map:",
+        "- `(0,2)` contains the fixed `SRC-E` Source instead of an `SV` Straight Pipe.",
+        "- `(0,0)` contains an ordinary rotatable `SV` Straight Pipe instead of the Source."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "Water propagation begins from the Source's E outlet."
+      ],
+      "after": [
+        "Water propagation begins from the Source's E outlet at `(0,2)`."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "For example, if the current pipe has an E outlet, the cell to its right must have a W connection for water to enter it."
+      ],
+      "after": [
+        "The Source initially directs water toward `(0,3)`.",
+        "For water to enter `(0,3)`, that pipe must have a W connection."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "Only connections actually reachable from the Source participate in water evaluation."
+      ],
+      "after": [
+        "Only connections actually reachable from the Source at `(0,2)` participate in water evaluation."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "If an outlet points directly into the fixed Leak cell:"
+      ],
+      "after": [
+        "If an outlet points directly into the fixed Leak cell at `(3,2)`:"
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "At initialization, the game creates the interface areas and fixed 6 × 6 board.",
+        "All pipes use their predefined initial orientations."
+      ],
+      "after": [
+        "At initialization, the game creates the interface areas and the V8 fixed 6 × 6 board."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [],
+      "after": [
+        "- Source: `(0,2)`",
+        "- Sink 1: `(0,5)`",
+        "- Sink 2: `(5,5)`",
+        "- Leak: `(3,2)`"
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [],
+      "after": [
+        "The ordinary `SV` pipe at `(0,0)` may rotate.",
+        "The Source at `(0,2)` cannot rotate."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "3. Begin propagation from the Source's E outlet."
+      ],
+      "after": [
+        "3. Begin propagation from the Source's E outlet at `(0,2)`."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [
+        "Restart restores the same fixed puzzle."
+      ],
+      "after": [
+        "Restart restores the V8 fixed puzzle."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "The player's goal is to configure the fixed pipe network within at most 30 successful rotations so that Source water reaches both Sinks without producing any invalid Source-reachable outlet."
+      ],
+      "after": [
+        "The player's goal is to configure the fixed pipe network within at most 30 successful rotations so that water from the Source at `(0,2)` reaches both Sinks without producing any invalid Source-reachable outlet."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "R restores the initial map, clears all water-flow results, and returns the game to `editing`."
+      ],
+      "after": [
+        "R restores the V8 initial map, clears all water-flow results, and returns the game to `editing`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "pipe_connection_var07.D2.1.01",
+    "pipe_connection_var07.D2.1.04",
+    "pipe_connection_var07.D2.2.07",
+    "pipe_connection_var07.D2.3.01",
+    "pipe_connection_var07.D2.5.04"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "81842a961e20164b1af130002c9a8ab35beeedb93f7f148ef4bbafae418571f6",
+  "checkpoints_sha256": "b33fe63eec116ca76ee7f7da8be591f42d9c844779b33cc2e7375ea5725b60c3"
+}

@@ -1,0 +1,168 @@
+{
+  "instance_id": "farming_lite_var03",
+  "family_slug": "farming_lite",
+  "variant_id": "var03",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/12_hard_Farming-lite/12_hard_Farming-lite_V4.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Farming-lite is a simplified farming management game with a fixed 8-day operating cycle. The player buys seeds, plants crops, waters them, waits for them to grow, harvests mature crops, and earns Gold."
+      ],
+      "after": [
+        "Farming-lite is a simplified farming management game with a fixed 8-day operating cycle.",
+        "The player buys seeds, plants crops, waters them, waits for them to grow, harvests mature crops, and earns Gold.",
+        "Each Day lasts 25 seconds."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [],
+      "after": [
+        "At the beginning of each Day, Time is reset to 25 seconds and counts down toward 0."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`Left Click: Use    Right Click: Cancel`"
+      ],
+      "after": [
+        "`Left Click: Use Right Click: Cancel`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "`30 seconds`"
+      ],
+      "after": [
+        "`25 seconds`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "Each Day begins with:",
+        "`Time = 25 seconds`"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "For Days 1–7, the game then advances to the next Day and resets Time to 30 seconds."
+      ],
+      "after": [
+        "For Days 1–7, the game then advances to the next Day and resets Time to 25 seconds."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Time to 30 seconds"
+      ],
+      "after": [
+        "- Time to 25 seconds"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "Each Day lasts 30 seconds."
+      ],
+      "after": [
+        "Each Day lasts 25 seconds."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "6. If the current Day is Day 1–7, increase Day by 1 and reset Time to 30 seconds."
+      ],
+      "after": [
+        "6. If the current Day is Day 1–7, increase Day by 1 and reset Time to 25 seconds."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "Each Day, including Day 8, uses a 25-second countdown."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "- Time: 30 seconds"
+      ],
+      "after": [
+        "- Time: 25 seconds"
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "While `running`, Time continuously decreases."
+      ],
+      "after": [
+        "While `running`, Time continuously decreases from 25 seconds toward 0 during each Day."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "- Reset Time to 30 seconds."
+      ],
+      "after": [
+        "- Reset Time to 25 seconds."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "Pressing R fully restores the initial game state and begins again from Day 1."
+      ],
+      "after": [
+        "Pressing R fully restores the initial game state, including `Time = 25 seconds`, and begins again from Day 1."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [],
+      "after": [
+        "Each Day provides 25 seconds for normal player operations before the end-of-day settlement begins."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "`Left Click: Use    Right Click: Cancel`"
+      ],
+      "after": [
+        "`Left Click: Use Right Click: Cancel`"
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "1. Day 8 reaches Time = 0."
+      ],
+      "after": [
+        "1. Day 8 reaches Time = 0 after its 25-second countdown."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "farming_lite_var03.D2.1.04",
+    "farming_lite_var03.D2.4.03",
+    "farming_lite_var03.D2.5.08"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "216ba3d8ea18719c2a19c1a40d9e1f270ce4c0ab2c6a8a8ac2e1e38ea0061256",
+  "checkpoints_sha256": "8180c72bf926497d4597c116094509372ac38d1c2393b34ec07690732c2cd243"
+}

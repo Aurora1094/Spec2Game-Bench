@@ -1,0 +1,110 @@
+{
+  "instance_id": "simple_shop_var06",
+  "family_slug": "simple_shop",
+  "variant_id": "var06",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/10_medium_Simple Shop Management/10_medium_Simple Shop Management_V7.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "Each product has a maximum Stock of 12."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "| Apple | 3 | 9 | +3 | 6 | 4 |",
+        "| Bread | 3 | 9 | +3 | 9 | 6 |",
+        "| Milk | 3 | 9 | +3 | 12 | 8 |"
+      ],
+      "after": [
+        "| Apple | 3 | 12 | +3 | 6 | 4 |",
+        "| Bread | 3 | 12 | +3 | 9 | 6 |",
+        "| Milk | 3 | 12 | +3 | 12 | 8 |"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`0 ≤ Stock ≤ 9`"
+      ],
+      "after": [
+        "`0 ≤ Stock ≤ 12`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "2. Current Stock is at most 6."
+      ],
+      "after": [
+        "2. Current Stock is at most 9."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "`Stock ≤ 6`"
+      ],
+      "after": [
+        "`Stock ≤ 9`"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "`Stock ≤ 6`"
+      ],
+      "after": [
+        "`Stock ≤ 9`"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "Stock never exceeds 9."
+      ],
+      "after": [
+        "Stock never exceeds 12."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- Initial and maximum Stock"
+      ],
+      "after": [
+        "- Initial Stock",
+        "- Maximum Stock: 12 for all products"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "Each product may hold at most 12 units."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "A restock is allowed only when the current Stock is at most 9."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "simple_shop_var06.D2.1.02",
+    "simple_shop_var06.D2.2.01",
+    "simple_shop_var06.D2.3.09",
+    "simple_shop_var06.D2.3.10"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "92690470632ad35064fdea71202df38a8d1a3a60254bb79bf23c97bab356f2f3",
+  "checkpoints_sha256": "974cb22a538c888aae03ae82cd498b1ece0327aecd67690a8586b51a9d5649d8"
+}

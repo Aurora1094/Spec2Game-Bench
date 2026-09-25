@@ -1,0 +1,60 @@
+{
+  "instance_id": "maze_runner_var02",
+  "family_slug": "maze_runner",
+  "variant_id": "var02",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/5_easy_Maze Runner/5_easy_Maze Runner_V3.docx",
+  "corrections": [
+    "Restored unchanged canonical maze spacing; this variant changes no map cells."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "A custom rule in this game is held-key movement. When an arrow key changes from not pressed to pressed, one movement attempt occurs immediately. If the same key remains held, additional movement attempts occur at fixed 0.15-second intervals rather than every frame."
+      ],
+      "after": [
+        "A custom rule in this game is held-key movement. When an arrow key changes from not pressed to pressed, one movement attempt occurs immediately. If the same key remains held, additional movement attempts occur at fixed 0.10-second intervals rather than every frame."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "If the same arrow key remains held, the game waits 0.15 seconds after the initial attempt and then performs additional movement attempts at fixed 0.15-second intervals."
+      ],
+      "after": [
+        "If the same arrow key remains held, the game waits 0.10 seconds after the initial attempt and then performs additional movement attempts at fixed 0.10-second intervals."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "2. If the same key remains held, subsequent attempts occur every 0.15 seconds.",
+        "The 0.15-second interval remains fixed throughout the game and does not change according to remaining Time, Steps, or player position."
+      ],
+      "after": [
+        "2. If the same key remains held, subsequent attempts occur every 0.10 seconds.",
+        "The 0.10-second interval remains fixed throughout the game and does not change according to remaining Time, Steps, or player position."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "The maze layout, total duration of 30 seconds, movement-repeat interval of 0.15 seconds, player starting position, and exit position remain fixed for every run."
+      ],
+      "after": [
+        "The maze layout, total duration of 30 seconds, movement-repeat interval of 0.10 seconds, player starting position, and exit position remain fixed for every run."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "maze_runner_var02.D2.2.02",
+    "maze_runner_var02.D2.4.05",
+    "maze_runner_var02.D2.5.02"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "659d95d6f6fbf5d28e2f1218a27a388c877902d15ab34e4657048c01d38d9b51",
+  "checkpoints_sha256": "caf16986adb7cbef0b70755cfaaf5f441d210f4aadd22ff61b6a57691b04768f"
+}

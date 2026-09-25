@@ -1,0 +1,446 @@
+{
+  "instance_id": "match3_var09",
+  "family_slug": "match3",
+  "variant_id": "var09",
+  "variation_types": [
+    "rule",
+    "object_type",
+    "combination"
+  ],
+  "source_path": "游戏规格说明（英文）/9_medium_Match-3/9_medium_Match-3_V10.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Match-3"
+      ],
+      "after": [
+        "Match-3_V10"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "If the resulting board contains at least one horizontal or vertical sequence of 3 or more gems of the same type, the swap is valid and remains in place."
+      ],
+      "after": [
+        "If the resulting board contains at least one horizontal or vertical sequence of 4 or more gems of the same type, the swap is valid and remains in place."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "The five fixed gem types are Red, Blue, Green, Yellow, and Purple, each with a distinct visual appearance.",
+        "At the start of the game, the board is randomly generated as a full 8 × 8 board with no horizontal or vertical match of 3 or more identical gems.",
+        "A custom mechanic is automatic chain clearing. After a valid player swap, clearing, falling, and refilling repeat automatically until the board contains no match."
+      ],
+      "after": [
+        "The six fixed gem types are Red, Blue, Green, Yellow, Purple, and Orange, each with a distinct visual appearance.",
+        "At the start of the game, the board is randomly generated as a full 8 × 8 board with no horizontal or vertical match of 4 or more identical gems.",
+        "Sequences of exactly 3 identical gems do not count as matches.",
+        "A custom mechanic is automatic chain clearing. After a valid player swap, clearing, falling, and refilling repeat automatically until the board contains no horizontal or vertical match of 4 or more."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "The five gem types use:"
+      ],
+      "after": [
+        "The six gem types use:"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [],
+      "after": [
+        "| Orange | `#E67E22` | Triangle |"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "`Only valid matches stay    Restart: R`"
+      ],
+      "after": [
+        "`Only matches of 4+ stay    Restart: R`"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Initial matches: none"
+      ],
+      "after": [
+        "- Initial matches of 4 or more: none"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- Free of horizontal or vertical matches of 3 or more."
+      ],
+      "after": [
+        "- Free of horizontal or vertical matches of 4 or more.",
+        "Sequences of exactly 3 identical gems may exist on a stable board."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "- Orange"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- The resulting board contains at least one valid match."
+      ],
+      "after": [
+        "- The resulting board contains at least one horizontal or vertical match of 4 or more."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "2. Check the entire resulting board for horizontal or vertical matches of 3 or more."
+      ],
+      "after": [
+        "2. Check the entire resulting board for horizontal or vertical matches of 4 or more."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "If no match exists:"
+      ],
+      "after": [
+        "If no match of 4 or more exists:"
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [],
+      "after": [
+        "A resulting sequence of exactly 3 identical gems does not make the swap valid."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "- Generate a new full 8 × 8 board with no initial match."
+      ],
+      "after": [
+        "- Generate a new full 8 × 8 board with no initial horizontal or vertical match of 4 or more using the six fixed gem types."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "The initial board must contain no horizontal or vertical sequence of 3 or more identical gems."
+      ],
+      "after": [
+        "- Orange",
+        "The initial board must contain no horizontal or vertical sequence of 4 or more identical gems.",
+        "Sequences of exactly 3 identical gems are allowed."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "- No match exists."
+      ],
+      "after": [
+        "- No match of 4 or more exists."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "A horizontal match consists of 3 or more consecutive gems of the same type in one row.",
+        "A vertical match consists of 3 or more consecutive gems of the same type in one column."
+      ],
+      "after": [
+        "A horizontal match consists of 4 or more consecutive gems of the same type in one row.",
+        "A vertical match consists of 4 or more consecutive gems of the same type in one column."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "Sequences of 4 or 5 gems are ordinary matches and do not create special gems."
+      ],
+      "after": [
+        "A sequence of exactly 3 identical gems does not count as a match.",
+        "Sequences of 4, 5, 6, 7, or 8 identical gems are ordinary matches and do not create special gems."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [
+        "All horizontal and vertical matches must be identified before clearing begins."
+      ],
+      "after": [
+        "All horizontal and vertical matches of 4 or more must be identified before clearing begins."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [],
+      "after": [
+        "Sequences of exactly 3 identical gems are ignored."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "If at least one match exists anywhere on the board:"
+      ],
+      "after": [
+        "If at least one horizontal or vertical match of 4 or more exists anywhere on the board:"
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "If no match exists:"
+      ],
+      "after": [
+        "If no match of 4 or more exists:"
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "Because the board is stable before each player action, any match detected after the swap results from the new board configuration produced by that swap."
+      ],
+      "after": [
+        "A board containing only sequences of exactly 3 identical gems does not make the swap valid.",
+        "Because the board is stable before each player action, any match of 4 or more detected after the swap results from the new board configuration produced by that swap."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "1. Detect all current matches across the board."
+      ],
+      "after": [
+        "1. Detect all current horizontal and vertical matches of 4 or more across the board."
+      ]
+    },
+    {
+      "id": "change25",
+      "before": [
+        "7. Detect matches again."
+      ],
+      "after": [
+        "7. Detect matches of 4 or more again."
+      ]
+    },
+    {
+      "id": "change26",
+      "before": [
+        "9. When no match remains, return to `waiting`."
+      ],
+      "after": [
+        "9. When no match of 4 or more remains, return to `waiting`."
+      ]
+    },
+    {
+      "id": "change27",
+      "before": [
+        "Each new gem is independently selected from the five fixed gem types."
+      ],
+      "after": [
+        "Each new gem is independently selected from the six fixed gem types."
+      ]
+    },
+    {
+      "id": "change28",
+      "before": [
+        "If refilling creates one or more matches, those matches are handled as automatic chains."
+      ],
+      "after": [
+        "If refilling creates one or more horizontal or vertical matches of 4 or more, those matches are handled as automatic chains.",
+        "Sequences of exactly 3 identical gems remain on the board."
+      ]
+    },
+    {
+      "id": "change29",
+      "before": [
+        "If any match exists:"
+      ],
+      "after": [
+        "If any horizontal or vertical match of 4 or more exists:"
+      ]
+    },
+    {
+      "id": "change30",
+      "before": [
+        "- Refill."
+      ],
+      "after": [
+        "- Refill using the six fixed gem types."
+      ]
+    },
+    {
+      "id": "change31",
+      "before": [
+        "This process continues until no match remains."
+      ],
+      "after": [
+        "This process continues until no match of 4 or more remains."
+      ]
+    },
+    {
+      "id": "change32",
+      "before": [
+        "- No horizontal match of 3 or more exists.",
+        "- No vertical match of 3 or more exists."
+      ],
+      "after": [
+        "- No horizontal match of 4 or more exists.",
+        "- No vertical match of 4 or more exists.",
+        "Sequences of exactly 3 identical gems are permitted on a stable board."
+      ]
+    },
+    {
+      "id": "change33",
+      "before": [
+        "If the current stable board contains no swap capable of producing a match:"
+      ],
+      "after": [
+        "If the current stable board contains no swap capable of producing a match of 4 or more:"
+      ]
+    },
+    {
+      "id": "change34",
+      "before": [
+        "At initialization, the game creates the interface and 8 × 8 board, generates a full board with no initial matches, sets Score and Moves to 0, clears the selection, and enters `waiting`."
+      ],
+      "after": [
+        "At initialization, the game creates the interface and 8 × 8 board, generates a full board with no initial horizontal or vertical matches of 4 or more using the six fixed gem types, sets Score and Moves to 0, clears the selection, and enters `waiting`."
+      ]
+    },
+    {
+      "id": "change35",
+      "before": [
+        "3. If no match exists, revert the swap, keep Score and Moves unchanged, clear selection, and remain in `waiting`.",
+        "4. If at least one match exists, retain the swap, increase Moves by 1, clear selection, and enter `resolving`."
+      ],
+      "after": [
+        "3. If no horizontal or vertical match of 4 or more exists, revert the swap, keep Score and Moves unchanged, clear selection, and remain in `waiting`.",
+        "4. If at least one match of 4 or more exists, retain the swap, increase Moves by 1, clear selection, and enter `resolving`."
+      ]
+    },
+    {
+      "id": "change36",
+      "before": [
+        "1. Detect all horizontal and vertical matches."
+      ],
+      "after": [
+        "1. Detect all horizontal and vertical matches of 4 or more."
+      ]
+    },
+    {
+      "id": "change37",
+      "before": [
+        "7. Refill empty cells from the top.",
+        "8. Check the entire board again."
+      ],
+      "after": [
+        "7. Refill empty cells from the top using the six fixed gem types.",
+        "8. Check the entire board again for matches of 4 or more."
+      ]
+    },
+    {
+      "id": "change38",
+      "before": [],
+      "after": [
+        "Sequences of exactly 3 identical gems remain on the board and do not trigger resolving."
+      ]
+    },
+    {
+      "id": "change39",
+      "before": [
+        "The player's goal is to create horizontal or vertical matches of 3 or more identical gems by swapping adjacent gems, clear as many gems as possible, and achieve a higher Score."
+      ],
+      "after": [
+        "The player's goal is to create horizontal or vertical matches of 4 or more identical gems by swapping adjacent gems, clear as many gems as possible, and achieve a higher Score."
+      ]
+    },
+    {
+      "id": "change40",
+      "before": [],
+      "after": [
+        "The six fixed gem types are:",
+        "- Red",
+        "- Blue",
+        "- Green",
+        "- Yellow",
+        "- Purple",
+        "- Orange"
+      ]
+    },
+    {
+      "id": "change41",
+      "before": [],
+      "after": [
+        "- The resulting board contains at least one horizontal or vertical match of 4 or more."
+      ]
+    },
+    {
+      "id": "change42",
+      "before": [],
+      "after": [
+        "- No horizontal or vertical match of 4 or more exists."
+      ]
+    },
+    {
+      "id": "change43",
+      "before": [],
+      "after": [
+        "A sequence of exactly 3 identical gems does not count as a match and does not trigger clearing."
+      ]
+    },
+    {
+      "id": "change44",
+      "before": [
+        "After clearing, remaining gems fall within their columns, new gems refill the top, and any newly created matches are resolved automatically."
+      ],
+      "after": [
+        "After clearing, remaining gems fall within their columns, new gems selected from the six fixed gem types refill the top, and any newly created matches of 4 or more are resolved automatically."
+      ]
+    },
+    {
+      "id": "change45",
+      "before": [
+        "Restart immediately cancels any active resolving process, generates a new initial board without matches, resets Score and Moves, clears the selection, and returns the game to `waiting`."
+      ],
+      "after": [
+        "Restart immediately cancels any active resolving process, generates a new initial board without horizontal or vertical matches of 4 or more using the six fixed gem types, resets Score and Moves, clears the selection, and returns the game to `waiting`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "match3_var09.D2.1.02",
+    "match3_var09.D2.1.03",
+    "match3_var09.D2.3.01",
+    "match3_var09.D2.3.02",
+    "match3_var09.D2.3.03",
+    "match3_var09.D2.3.04",
+    "match3_var09.D2.3.05",
+    "match3_var09.D2.3.06",
+    "match3_var09.D2.3.10",
+    "match3_var09.D2.4.02",
+    "match3_var09.D2.5.03",
+    "match3_var09.D2.3.11"
+  ],
+  "added_checkpoint_ids": [
+    "match3_var09.D2.3.11"
+  ],
+  "base_checkpoints_sha256": "4c049d5c0f23d85abfa0cb642db6e2ae1a19aad04e27424be1cbeb5f7594f420",
+  "checkpoints_sha256": "29834abcc91fb54e55d069a0d92d3035b3cca35cf97c6ad9f969f6d224bff7b4"
+}

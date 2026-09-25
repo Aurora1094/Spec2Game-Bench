@@ -1,0 +1,211 @@
+{
+  "instance_id": "mini_zelda_var07",
+  "family_slug": "mini_zelda",
+  "variant_id": "var07",
+  "variation_types": [
+    "map"
+  ],
+  "source_path": "游戏规格说明（英文）/15_hard_Mini Zelda-like Room Adventure/15_hard_Mini Zelda-like Room Adventure_V8.docx",
+  "corrections": [
+    "Final DOCX takes precedence over spreadsheet draft differences."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "Room D contains three fixed obstacles that shape movement, enemy pursuit, and sword line blocking."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "A custom rule is the sequential dependency between Key 1 and Key 2. The player must first clear Room B to obtain Key 1 and unlock Room D, then clear Room D to obtain Key 2 and unlock Room E."
+      ],
+      "after": [
+        "Key 1 and Key 2 form a sequential dependency. The player must first clear Room B to obtain Key 1 and unlock Room D, then clear Room D to obtain Key 2 and unlock Room E."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "`WASD: Move    Space: Attack`"
+      ],
+      "after": [
+        "`WASD: Move Space: Attack`"
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "          Room B",
+        "            |"
+      ],
+      "after": [
+        "       Room B",
+        "         |"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "            |",
+        "          Room E"
+      ],
+      "after": [
+        "         |",
+        "       Room E"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "| D1 | `(410, 190)` | `70 × 110 px` |",
+        "| D2 | `(410, 400)` | `70 × 110 px` |",
+        "| D3 | `(535, 310)` | `90 × 80 px` |"
+      ],
+      "after": [
+        "| D1 | `(390, 180)` | `80 × 90 px` |",
+        "| D2 | `(390, 430)` | `80 × 90 px` |",
+        "| D3 | `(540, 310)` | `100 × 70 px` |",
+        "The fixed obstacles do not overlap:",
+        "- Room D entry spawn `(95,350)`",
+        "- Slime D1 `(600,450)`",
+        "- Guard D1 patrol route",
+        "- Guard D2 patrol route",
+        "- Key 2 spawn position `(600,240)`",
+        "The upper area can be reached by moving around the upper side of the fixed obstacles.",
+        "The lower area can be reached by moving around the lower side of the fixed obstacles."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [],
+      "after": [
+        "In Room D, collision uses the fixed obstacles defined in Section 3.6."
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [],
+      "after": [
+        "In Room D, the blocking obstacles are:",
+        "- D1: `(390,180)`, `80 × 90 px`",
+        "- D2: `(390,430)`, `80 × 90 px`",
+        "- D3: `(540,310)`, `100 × 70 px`"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [],
+      "after": [
+        "Slime D1 uses the Room D obstacles defined in Section 3.6 for movement collision."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [],
+      "after": [
+        "The Room D fixed obstacles do not intersect either patrol route."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "Chase movement uses x-first, y-second collision."
+      ],
+      "after": [
+        "Chase movement uses x-first, y-second collision against the fixed Room D obstacles."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [],
+      "after": [
+        "The Key 2 spawn rectangle does not overlap any Room D fixed obstacle."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "The actual room transition is still performed during the unified room-transition stage."
+      ],
+      "after": [
+        "The actual room transition is performed during the unified room-transition stage."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "- Right-side door → message appears to the left",
+        "- Bottom-side door → message appears above"
+      ],
+      "after": [
+        "- Right-side door message appears to the left.",
+        "- Bottom-side door message appears above."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [],
+      "after": [
+        "   - For Room D, use the fixed obstacles defined in Section 3.6."
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [
+        "5. If the attack remains active, update the attack area and process enemy hits, HP reduction, and deaths."
+      ],
+      "after": [
+        "5. If the attack remains active, update the attack area and process enemy hits, HP reduction, and deaths. Room D sword blocking uses the fixed obstacles defined in Section 3.6."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "8. Update AI and movement for surviving enemies in the current room."
+      ],
+      "after": [
+        "8. Update AI and movement for surviving enemies in the current room. Room D enemy movement uses the fixed obstacles defined in Section 3.6."
+      ]
+    },
+    {
+      "id": "change18",
+      "before": [
+        "8. Defeat Slime D1, Guard D1, and Guard D2."
+      ],
+      "after": [
+        "8. Navigate around the fixed Room D obstacles and defeat Slime D1, Guard D1, and Guard D2."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [],
+      "after": [
+        "- Navigate the fixed Room D obstacle layout."
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [],
+      "after": [
+        "- Room D obstacles restored to:",
+        "  - D1 `(390,180)`, `80 × 90 px`",
+        "  - D2 `(390,430)`, `80 × 90 px`",
+        "  - D3 `(540,310)`, `100 × 70 px`"
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "mini_zelda_var07.D2.5.02",
+    "mini_zelda_var07.D2.1.13",
+    "mini_zelda_var07.D2.3.21"
+  ],
+  "added_checkpoint_ids": [
+    "mini_zelda_var07.D2.1.13",
+    "mini_zelda_var07.D2.3.21"
+  ],
+  "base_checkpoints_sha256": "6d064a9a7dc36ddc40e4609a9b9a0e6a89fe8f6b7b121d0a50edc6b186682597",
+  "checkpoints_sha256": "9e26451dc703ab4a62507578400abd64e47be951ab4c165edb29fe1a2df224a7"
+}

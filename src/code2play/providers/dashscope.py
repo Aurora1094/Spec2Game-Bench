@@ -41,6 +41,13 @@ OPENROUTER_QWEN_JUDGE_REASONING = {"effort": "none"}
 _LEGACY_OPENROUTER_QWEN_JUDGE_REASONING = {"effort": "minimal", "exclude": True}
 OPENROUTER_API_KEY_ENV = "OPENROUTER_API_KEY"
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+AWS_MANTLE_PROVIDER = "aws_mantle"
+AWS_MANTLE_API_STYLE = "chat_completions"
+AWS_MANTLE_API_KEY_ENV = "AWS_MANTLE_API_KEY"
+AWS_MANTLE_BASE_URL = "https://bedrock-mantle.us-east-1.api.aws/v1"
+AWS_MANTLE_QWEN_CODER_MODEL = "qwen.qwen3-coder-next"
+AWS_MANTLE_QWEN_235B_2507_MODEL = "qwen.qwen3-235b-a22b-2507"
+AWS_MANTLE_QWEN_VL_MODEL = "qwen.qwen3-vl-235b-a22b-instruct"
 LINK_OPENAI_PROVIDER = "link_openai"
 LINK_OPENAI_MODEL = "gpt-5.6-sol"
 LINK_OPENAI_API_STYLE = "chat_completions"
@@ -50,7 +57,12 @@ MAX_JUDGE_OUTPUT_TOKENS = 6000
 JUDGE_TEMPERATURE = 0.0
 PANEL_POLICY = "single_qwen37_plus_stateless"
 
-_SECRET_ENV_NAMES = ("DASHSCOPE_API_KEY", "OPENROUTER_API_KEY", LINK_OPENAI_API_KEY_ENV)
+_SECRET_ENV_NAMES = (
+    "DASHSCOPE_API_KEY",
+    "OPENROUTER_API_KEY",
+    AWS_MANTLE_API_KEY_ENV,
+    LINK_OPENAI_API_KEY_ENV,
+)
 _DIMENSION_NAMES = {
     "D2.1": "game element modeling",
     "D2.2": "interaction modeling",
@@ -432,7 +444,7 @@ def _permanent_judge_configuration_error(exc: BaseException) -> bool:
 
 
 def candidate_generation_settings(model: Any) -> dict[str, Any]:
-    """Resolve one explicitly supported candidate-generation endpoint."""
+    """Resolve a candidate endpoint independently of the Judge policy."""
 
     provider = str(getattr(model, "provider", ""))
     requested_model = str(getattr(model, "model", ""))
@@ -454,32 +466,14 @@ def candidate_generation_settings(model: Any) -> dict[str, Any]:
                     "https://dashscope.aliyuncs.com/compatible-mode/v1",
                 )
             ),
-            "enable_thinking": True,
-        }
-    if (provider, requested_model) == (OPENROUTER_PROVIDER, OPENROUTER_QWEN_MODEL):
-        return {
-            "provider": provider,
-            "model": requested_model,
-            "api_style": api_style,
-            "api_key_env": str(configured_key_env or OPENROUTER_API_KEY_ENV),
-            "base_url": str(
-                configured_base_url
-                or os.getenv("OPENROUTER_BASE_URL", OPENROUTER_BASE_URL)
-            ),
             "enable_thinking": False,
         }
-    if (provider, requested_model) == (OPENROUTER_PROVIDER, OPENROUTER_KIMI_CODE_MODEL):
+    if provider == OPENROUTER_PROVIDER:
+        if not re.fullmatch(r"[A-Za-z0-9._-]+/[A-Za-z0-9._:/-]+", requested_model):
+            raise ValueError("OpenRouter candidates require a vendor/model API ID")
         configured_reasoning = getattr(model, "reasoning", None)
-        reasoning = (
-            dict(configured_reasoning)
-            if isinstance(configured_reasoning, Mapping)
-            else dict(OPENROUTER_KIMI_REASONING)
-        )
-        if reasoning != OPENROUTER_KIMI_REASONING:
-            raise ValueError(
-                "Kimi K2.7 Code candidate reasoning must use minimal effort "
-                "with reasoning output excluded"
-            )
+        if configured_reasoning is not None and not isinstance(configured_reasoning, Mapping):
+            raise ValueError("Candidate reasoning must be a mapping")
         return {
             "provider": provider,
             "model": requested_model,
@@ -490,31 +484,7 @@ def candidate_generation_settings(model: Any) -> dict[str, Any]:
                 or os.getenv("OPENROUTER_BASE_URL", OPENROUTER_BASE_URL)
             ),
             "enable_thinking": False,
-            "reasoning": reasoning,
-        }
-    if (provider, requested_model) == (OPENROUTER_PROVIDER, OPENROUTER_GPT56_TERRA_MODEL):
-        configured_reasoning = getattr(model, "reasoning", None)
-        reasoning = (
-            dict(configured_reasoning)
-            if isinstance(configured_reasoning, Mapping)
-            else dict(OPENROUTER_GPT56_TERRA_REASONING)
-        )
-        if reasoning != OPENROUTER_GPT56_TERRA_REASONING:
-            raise ValueError(
-                "GPT-5.6 Terra candidate reasoning must be disabled with "
-                "{'effort': 'none'}"
-            )
-        return {
-            "provider": provider,
-            "model": requested_model,
-            "api_style": api_style,
-            "api_key_env": str(configured_key_env or OPENROUTER_API_KEY_ENV),
-            "base_url": str(
-                configured_base_url
-                or os.getenv("OPENROUTER_BASE_URL", OPENROUTER_BASE_URL)
-            ),
-            "enable_thinking": False,
-            "reasoning": reasoning,
+            **({"reasoning": dict(configured_reasoning)} if configured_reasoning else {}),
         }
     if (provider, requested_model) == (LINK_OPENAI_PROVIDER, LINK_OPENAI_MODEL):
         return {
@@ -529,10 +499,7 @@ def candidate_generation_settings(model: Any) -> dict[str, Any]:
             "enable_thinking": False,
         }
     raise ValueError(
-        "Candidate generation only supports "
-        "alibaba_dashscope/qwen3.7-plus, openrouter/qwen/qwen3.7-plus, "
-        "openrouter/moonshotai/kimi-k2.7-code, openrouter/openai/gpt-5.6-terra, "
-        "or link_openai/gpt-5.6-sol"
+        "Candidate generation supports OpenRouter models, DashScope Qwen and Link Sol"
     )
 
 
@@ -582,7 +549,7 @@ def _generate_once(
     if isinstance(reasoning, Mapping):
         request_kwargs["extra_body"] = {"reasoning": dict(reasoning)}
     elif settings["provider"] == DASHSCOPE_PROVIDER:
-        request_kwargs["extra_body"] = {"enable_thinking": True}
+        request_kwargs["extra_body"] = {"enable_thinking": bool(settings.get("enable_thinking", False))}
     response = client.chat.completions.create(**request_kwargs)
     parts: list[str] = []
     usage: dict[str, Any] | None = None
@@ -884,12 +851,9 @@ def _generation_attempt_record(
 def _request_log_directory(log_root: Path, purpose: str) -> tuple[Path, str]:
     """Create a collision-free, filesystem-safe directory for one Judge call."""
 
-    safe_purpose = re.sub(r"[^A-Za-z0-9._-]+", "_", str(purpose)).strip("._-")
-    safe_purpose = safe_purpose[:96] or "request"
-    request_id = (
-        f"{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')}"
-        f"-{uuid4().hex[:12]}-{safe_purpose}"
-    )
+    # Purpose and timestamps live in request metadata, not in the path. A full
+    # UUID keeps names bounded without sacrificing concurrent-call uniqueness.
+    request_id = uuid4().hex
     call_dir = log_root / request_id
     call_dir.mkdir(parents=True, exist_ok=False)
     return call_dir, request_id
@@ -1256,6 +1220,55 @@ class OpenRouterChatJudge(OpenAICompatibleChatJudge):
         )
 
 
+class AwsMantleChatJudge(OpenAICompatibleChatJudge):
+    """AWS Bedrock Mantle OpenAI-compatible Judge endpoint."""
+
+    _SUPPORTED_MODELS = frozenset(
+        {
+            AWS_MANTLE_QWEN_CODER_MODEL,
+            AWS_MANTLE_QWEN_235B_2507_MODEL,
+            AWS_MANTLE_QWEN_VL_MODEL,
+        }
+    )
+
+    def __init__(
+        self,
+        log_dir: Path,
+        *,
+        model: str = AWS_MANTLE_QWEN_CODER_MODEL,
+        max_output_tokens: int = MAX_JUDGE_OUTPUT_TOKENS,
+        enable_thinking: bool = False,
+        attempts: int = 2,
+        retry_delays_seconds: Sequence[float] = (2,),
+        role: str = "scoring",
+        response_format: Mapping[str, Any] | None = None,
+        client: Any | None = None,
+        base_url: str | None = None,
+        api_key_env: str = AWS_MANTLE_API_KEY_ENV,
+    ) -> None:
+        if model not in self._SUPPORTED_MODELS:
+            raise ValueError(
+                "AWS Mantle Judge only supports qwen.qwen3-coder-next, "
+                "qwen.qwen3-235b-a22b-2507, and "
+                "qwen.qwen3-vl-235b-a22b-instruct"
+            )
+        super().__init__(
+            log_dir,
+            provider=AWS_MANTLE_PROVIDER,
+            model=model,
+            api_style=AWS_MANTLE_API_STYLE,
+            api_key_env=api_key_env,
+            base_url=base_url or os.getenv("AWS_MANTLE_BASE_URL", AWS_MANTLE_BASE_URL),
+            max_output_tokens=max_output_tokens,
+            enable_thinking=enable_thinking,
+            attempts=attempts,
+            retry_delays_seconds=retry_delays_seconds,
+            role=role,
+            response_format=response_format,
+            client=client,
+        )
+
+
 class LinkOpenAIChatJudge(OpenAICompatibleChatJudge):
     """Link's OpenAI-compatible endpoint for the fixed GPT-5.6 Sol trial."""
 
@@ -1354,6 +1367,20 @@ def create_judge(
             client=client,
             base_url=base_url,
             api_key_env=api_key_env or OPENROUTER_API_KEY_ENV,
+        )
+    if provider == AWS_MANTLE_PROVIDER:
+        return AwsMantleChatJudge(
+            log_dir,
+            model=model,
+            max_output_tokens=max_output_tokens,
+            enable_thinking=enable_thinking,
+            attempts=attempts,
+            retry_delays_seconds=retry_delays_seconds,
+            role=role,
+            response_format=response_format,
+            client=client,
+            base_url=base_url,
+            api_key_env=api_key_env or AWS_MANTLE_API_KEY_ENV,
         )
     if provider == LINK_OPENAI_PROVIDER:
         return LinkOpenAIChatJudge(
@@ -1498,10 +1525,18 @@ class RoutedSemanticJudge:
 
 
 __all__ = [
+    "AWS_MANTLE_API_KEY_ENV",
+    "AWS_MANTLE_API_STYLE",
+    "AWS_MANTLE_BASE_URL",
+    "AWS_MANTLE_PROVIDER",
+    "AWS_MANTLE_QWEN_CODER_MODEL",
+    "AWS_MANTLE_QWEN_235B_2507_MODEL",
+    "AWS_MANTLE_QWEN_VL_MODEL",
     "DASHSCOPE_API_STYLE",
     "DASHSCOPE_MODEL",
     "DASHSCOPE_PROVIDER",
     "DashScopeChatJudge",
+    "AwsMantleChatJudge",
     "GenerationNeedsRegeneration",
     "GenerationOutputInvalid",
     "GenerationResult",

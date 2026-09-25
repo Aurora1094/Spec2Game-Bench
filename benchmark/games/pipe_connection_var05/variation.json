@@ -1,0 +1,247 @@
+{
+  "instance_id": "pipe_connection_var05",
+  "family_slug": "pipe_connection",
+  "variant_id": "var05",
+  "variation_types": [
+    "map",
+    "combination"
+  ],
+  "source_path": "游戏规格说明（英文）/13_hard_Pipe Connection Puzzle/13_hard_Pipe Connection Puzzle_V6.docx",
+  "corrections": [
+    "Final DOCX takes precedence over spreadsheet draft differences."
+  ],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [],
+      "after": [
+        "The fixed Leak is located at `(2,0)`."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "- Position: `(3,2)`"
+      ],
+      "after": [
+        "- Position: `(2,0)`"
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [],
+      "after": [
+        "The cell `(3,2)`, which is the Leak position in the base map, is an ordinary rotatable `CSW` Corner Pipe in this version."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "`Click pipe to rotate    Press Space to run water`",
+        "`Connect source to all sinks    Restart: R`"
+      ],
+      "after": [
+        "`Click pipe to rotate Press Space to run water`",
+        "`Connect source to all sinks Restart: R`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "`(3,2)`"
+      ],
+      "after": [
+        "`(2,0)`"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [],
+      "after": [
+        "The cell `(3,2)` is not a Leak in this version.",
+        "It contains a rotatable `CSW` Corner Pipe."
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "Clicking Source, Sink, Leak, Block, or Cross Pipe:"
+      ],
+      "after": [
+        "The `CSW` Corner Pipe at `(3,2)` is an ordinary rotatable pipe.",
+        "Clicking Source, Sink, Leak at `(2,0)`, Block, or Cross Pipe:"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "- Restores all pipes to their fixed initial orientations."
+      ],
+      "after": [
+        "- Restores the V6 fixed map and all pipe initial orientations.",
+        "- Restores the Leak to `(2,0)`.",
+        "- Restores the `CSW` Corner Pipe to `(3,2)`."
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "Row 0: SRC-E | SV   | SV   | TNES | SV   | SNK-W",
+        "Row 1: BLK   | CNE  | TESW | SH   | BLK  | CES",
+        "Row 2: CSW   | BLK  | CNE  | SH   | TWNE | BLK",
+        "Row 3: BLK   | SV   | LEK  | SH   | CNE  | SV",
+        "Row 4: TESW  | BLK  | CES  | CES  | CWN  | BLK",
+        "Row 5: SH    | CNE  | BLK  | BLK  | CES  | SNK-W"
+      ],
+      "after": [
+        "Row 0: SRC-E | SV | SV | TNES | SV | SNK-W",
+        "Row 1: BLK | CNE | TESW | SH | BLK | CES",
+        "Row 2: LEK | BLK | CNE | SH | TWNE | BLK",
+        "Row 3: BLK | SV | CSW | SH | CNE | SV",
+        "Row 4: TESW | BLK | CES | CES | CWN | BLK",
+        "Row 5: SH | CNE | BLK | BLK | CES | SNK-W"
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- Leak: `(3,2)`"
+      ],
+      "after": [
+        "- Leak: `(2,0)`"
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [],
+      "after": [
+        "Compared with the base map:",
+        "- `(2,0)` is the fixed Leak instead of `CSW`.",
+        "- `(3,2)` is a rotatable `CSW` Corner Pipe instead of the Leak."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "A traversal can be represented by the directed transition used to enter or leave a pipe.",
+        "The same directed connection must not be processed repeatedly, but the same pipe may still participate through another valid incoming connection when required by the network structure."
+      ],
+      "after": [
+        "The same directed connection must not be processed repeatedly."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "- Into the fixed Leak."
+      ],
+      "after": [
+        "- Into the fixed Leak at `(2,0)`."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [],
+      "after": [
+        "The ordinary pipe at `(3,2)` is evaluated using normal bidirectional pipe-connection rules."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "If an outlet points directly into the fixed Leak cell:"
+      ],
+      "after": [
+        "If an outlet points directly into the fixed Leak cell at `(2,0)`:"
+      ]
+    },
+    {
+      "id": "change16",
+      "before": [],
+      "after": [
+        "The cell `(3,2)` has no special Leak behavior."
+      ]
+    },
+    {
+      "id": "change17",
+      "before": [
+        "This shows that water physically reached that outlet even though propagation could not continue."
+      ],
+      "after": []
+    },
+    {
+      "id": "change18",
+      "before": [
+        "At initialization, the game creates the interface areas and fixed 6 × 6 board.",
+        "All pipes use their predefined initial orientations."
+      ],
+      "after": [
+        "At initialization, the game creates the interface areas and the V6 fixed 6 × 6 board."
+      ]
+    },
+    {
+      "id": "change19",
+      "before": [],
+      "after": [
+        "- Source: `(0,0)`",
+        "- Sink 1: `(0,5)`",
+        "- Sink 2: `(5,5)`",
+        "- Leak: `(2,0)`"
+      ]
+    },
+    {
+      "id": "change20",
+      "before": [],
+      "after": [
+        "The ordinary `CSW` Corner Pipe at `(3,2)` is rotatable.",
+        "The Leak at `(2,0)` is fixed and cannot rotate."
+      ]
+    },
+    {
+      "id": "change21",
+      "before": [
+        "Restart restores the same fixed puzzle."
+      ],
+      "after": [
+        "Restart restores the V6 fixed puzzle."
+      ]
+    },
+    {
+      "id": "change22",
+      "before": [
+        "The player's goal is to configure the fixed pipe network within at most 30 successful rotations so that Source water reaches both Sinks without producing any invalid Source-reachable outlet."
+      ],
+      "after": [
+        "The player's goal is to configure the fixed pipe network within at most 30 successful rotations so that Source water reaches both Sinks without producing any invalid Source-reachable outlet, including any outlet entering the Leak at `(2,0)`."
+      ]
+    },
+    {
+      "id": "change23",
+      "before": [
+        "An outlet that enters the fixed Leak contributes exactly 1 Leak and is not double-counted as both Leak-cell entry and missing reverse connection."
+      ],
+      "after": [
+        "An outlet that enters the fixed Leak at `(2,0)` contributes exactly 1 Leak and is not double-counted as both Leak-cell entry and missing reverse connection."
+      ]
+    },
+    {
+      "id": "change24",
+      "before": [
+        "R restores the initial map, clears all water-flow results, and returns the game to `editing`."
+      ],
+      "after": [
+        "R restores the V6 initial map, clears all water-flow results, and returns the game to `editing`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "pipe_connection_var05.D2.1.03",
+    "pipe_connection_var05.D2.1.04",
+    "pipe_connection_var05.D2.2.07",
+    "pipe_connection_var05.D2.3.06",
+    "pipe_connection_var05.D2.5.04"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "81842a961e20164b1af130002c9a8ab35beeedb93f7f148ef4bbafae418571f6",
+  "checkpoints_sha256": "75eed1f0ec2ef4d78891351d5ac936f335de786ad35c6d5823bf9c015cb49a43"
+}

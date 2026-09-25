@@ -4,8 +4,10 @@ from collections import Counter
 import json
 from pathlib import Path
 
+import pytest
+
 from code2play.cli import _mock_contract_generator
-from code2play.config.project import game_by_slug, load_config
+from code2play.config.project import game_by_slug, load_config, select_run_config
 from code2play.d4.contracts import build_round_contracts
 from code2play.execution.candidate_project import CandidateProject
 from code2play.human_review.artifacts import (
@@ -43,9 +45,10 @@ def _candidate(path: Path) -> None:
     )
 
 
-def test_human_export_separates_public_package_and_private_mapping(tmp_path: Path) -> None:
-    config = load_config()
-    game = game_by_slug(config, "snake")
+@pytest.mark.parametrize("slug", ["snake", "snake_var09", "whack_a_mole_var06", "mini_zelda_var09"])
+def test_human_export_separates_public_package_and_private_mapping(tmp_path: Path, slug: str) -> None:
+    config = select_run_config(load_config(), track="full150")
+    game = game_by_slug(config, slug)
     round_dir = tmp_path / "round"
     build_round_contracts(
         round_dir,
@@ -60,7 +63,8 @@ def test_human_export_separates_public_package_and_private_mapping(tmp_path: Pat
     candidate_sha = CandidateProject(candidate_dir).project_sha256()
     trace_path = task_dir / "evaluation" / "trace.json"
     _write_json(trace_path, {"status": "completed", "cases": []})
-    checkpoint_id = "snake.D2.1.02"
+    from code2play.human_review.policy import load_human_review_policy
+    checkpoint_id = load_human_review_policy(config)["games"][slug]["d2_anchor_ids"][0]
     _write_json(
         task_dir / "evaluation" / "d2.json",
         {"evidence": {"checkpoint_results": [{"id": checkpoint_id, "earned": 2, "possible": 2, "trace_path": str(trace_path)}]}},
@@ -71,8 +75,8 @@ def test_human_export_separates_public_package_and_private_mapping(tmp_path: Pat
     )
     _write_json(task_dir / "evaluation" / "d4.json", {})
     _write_json(task_dir / "evaluation" / "d4_question_pack.json", {"status": "candidate_evidence_unavailable", "questions": [], "evidence": [], "candidate_failures": []})
-    _write_json(task_dir / "evaluation" / "d4_sample_manifest.json", {"d4_contract_path": str(round_dir / "contracts" / "snake.json")})
-    _write_json(task_dir / "summary.json", {"task": {"game": "snake", "model": "secret-candidate", "candidate_project_sha256": candidate_sha}})
+    _write_json(task_dir / "evaluation" / "d4_sample_manifest.json", {"d4_contract_path": str(round_dir / "contracts" / f"{slug}.json")})
+    _write_json(task_dir / "summary.json", {"task": {"game": slug, "model": "secret-candidate", "candidate_project_sha256": candidate_sha}})
 
     export = export_blind_bundle(task_dir, tmp_path / "questionnaires", blind_id="candidate-001")
     assert export["validation"]["status"] == "passed"
@@ -81,7 +85,7 @@ def test_human_export_separates_public_package_and_private_mapping(tmp_path: Pat
     assert validate_blind_bundle(public)["status"] == "passed"
     public_text = (public / "items.jsonl").read_text(encoding="utf-8")
     assert "secret-candidate" not in public_text
-    assert "snake.D2.1.01" not in public_text
+    assert f"{slug}.D2." not in public_text
     assert '"automatic_score"' not in public_text
     assert private.read_text(encoding="utf-8").find("secret-candidate") >= 0
 

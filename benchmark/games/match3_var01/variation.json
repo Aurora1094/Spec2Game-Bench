@@ -1,0 +1,171 @@
+{
+  "instance_id": "match3_var01",
+  "family_slug": "match3",
+  "variant_id": "var01",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/9_medium_Match-3/9_medium_Match-3_V2.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "Match-3"
+      ],
+      "after": [
+        "Match-3_V2"
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "The game uses a fixed 8 × 8 board. Each stable cell contains exactly one gem."
+      ],
+      "after": [
+        "The game uses a fixed 7 × 7 board. Each stable cell contains exactly one gem."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "At the start of the game, the board is randomly generated as a full 8 × 8 board with no horizontal or vertical match of 3 or more identical gems."
+      ],
+      "after": [
+        "At the start of the game, the board is randomly generated as a full 7 × 7 board with no horizontal or vertical match of 3 or more identical gems."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "The 8 × 8 board is centered within this area:",
+        "- Top-left coordinate: `(60, 160)`",
+        "- Size: 480 × 480 px",
+        "- Bottom-right coordinate: `(540, 640)`"
+      ],
+      "after": [
+        "The 7 × 7 board is centered within this area:",
+        "- Top-left coordinate: `(90, 190)`",
+        "- Size: 420 × 420 px",
+        "- Bottom-right coordinate: `(510, 610)`"
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- Bottom-right cell: `(7, 7)`"
+      ],
+      "after": [
+        "- Bottom-right cell: `(6, 6)`"
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "`x = 60 + col × 60`",
+        "`y = 160 + row × 60`"
+      ],
+      "after": [
+        "`x = 90 + col × 60`",
+        "`y = 190 + row × 60`"
+      ]
+    },
+    {
+      "id": "change07",
+      "before": [
+        "- Board: full 8 × 8"
+      ],
+      "after": [
+        "- Board: full 7 × 7"
+      ]
+    },
+    {
+      "id": "change08",
+      "before": [
+        "`8 × 8 = 64`"
+      ],
+      "after": [
+        "`7 × 7 = 49`"
+      ]
+    },
+    {
+      "id": "change09",
+      "before": [
+        "- 8 × 8."
+      ],
+      "after": [
+        "- 7 × 7."
+      ]
+    },
+    {
+      "id": "change10",
+      "before": [
+        "- Generate a new full 8 × 8 board with no initial match."
+      ],
+      "after": [
+        "- Generate a new full 7 × 7 board with no initial match."
+      ]
+    },
+    {
+      "id": "change11",
+      "before": [
+        "The game uses a fixed 8 × 8 board."
+      ],
+      "after": [
+        "The game uses a fixed 7 × 7 board."
+      ]
+    },
+    {
+      "id": "change12",
+      "before": [
+        "Sequences of 4 or 5 gems are ordinary matches and do not create special gems."
+      ],
+      "after": [
+        "Sequences of 4 or 5 or more gems are ordinary matches and do not create special gems."
+      ]
+    },
+    {
+      "id": "change13",
+      "before": [
+        "- All 64 cells contain gems."
+      ],
+      "after": [
+        "- All 49 cells contain gems."
+      ]
+    },
+    {
+      "id": "change14",
+      "before": [
+        "At initialization, the game creates the interface and 8 × 8 board, generates a full board with no initial matches, sets Score and Moves to 0, clears the selection, and enters `waiting`."
+      ],
+      "after": [
+        "At initialization, the game creates the interface and 7 × 7 board, generates a full board with no initial matches, sets Score and Moves to 0, clears the selection, and enters `waiting`."
+      ]
+    },
+    {
+      "id": "change15",
+      "before": [
+        "Restart immediately cancels any active resolving process, generates a new initial board without matches, resets Score and Moves, clears the selection, and returns the game to `waiting`."
+      ],
+      "after": [
+        "Restart immediately cancels any active resolving process, generates a new initial 7 × 7 board without matches, resets Score and Moves, clears the selection, and returns the game to `waiting`."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "match3_var01.D2.1.01",
+    "match3_var01.D2.1.02",
+    "match3_var01.D2.1.03",
+    "match3_var01.D2.1.04",
+    "match3_var01.D2.1.05",
+    "match3_var01.D2.1.06",
+    "match3_var01.D2.4.02",
+    "match3_var01.D2.5.03",
+    "match3_var01.D2.1.07"
+  ],
+  "added_checkpoint_ids": [
+    "match3_var01.D2.1.07"
+  ],
+  "base_checkpoints_sha256": "4c049d5c0f23d85abfa0cb642db6e2ae1a19aad04e27424be1cbeb5f7594f420",
+  "checkpoints_sha256": "dd932c004e2ad154a0b1d7dcf3dc6bf1b099c2db0e8c6cd7ca5df96141e3194d"
+}

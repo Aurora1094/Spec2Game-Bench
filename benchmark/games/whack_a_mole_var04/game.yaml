@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "slug": "whack_a_mole_var04",
+  "name": "Whack-a-Mole",
+  "difficulty": "easy",
+  "spec": "spec.md",
+  "checkpoints": "checkpoints.jsonl",
+  "variants": [],
+  "window_size": [
+    600,
+    800
+  ],
+  "source_audit": {
+    "docx_sha256": "802bdf83ffb55a8bee53d4e1abb926daf635c343d5e0a2e4a23c8057399795f8",
+    "base_checkpoints_sha256": "43d84d8468fbefa4975d64dd345cc4462cfd75494319b4b1da4704f95a3b403b",
+    "checkpoint_count": 34
+  },
+  "family_slug": "whack_a_mole",
+  "variant_id": "var04",
+  "variation_types": [
+    "parameter"
+  ]
+}

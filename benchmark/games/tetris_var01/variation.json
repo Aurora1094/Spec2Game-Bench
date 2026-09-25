@@ -1,0 +1,80 @@
+{
+  "instance_id": "tetris_var01",
+  "family_slug": "tetris",
+  "variant_id": "var01",
+  "variation_types": [
+    "parameter"
+  ],
+  "source_path": "游戏规格说明（英文）/8_medium_tetris/8_medium_Tetris_V2.docx",
+  "corrections": [],
+  "source_changes": [
+    {
+      "id": "change01",
+      "before": [
+        "A successful soft drop does not reset the 0.6-second automatic fall timer."
+      ],
+      "after": [
+        "A successful soft drop does not reset the 0.45-second automatic fall timer."
+      ]
+    },
+    {
+      "id": "change02",
+      "before": [
+        "The current piece automatically attempts to move downward by 1 cell every 0.6 seconds."
+      ],
+      "after": [
+        "The current piece automatically attempts to move downward by 1 cell every 0.45 seconds."
+      ]
+    },
+    {
+      "id": "change03",
+      "before": [
+        "While `playing`, the current piece automatically attempts to fall once every 0.6 seconds."
+      ],
+      "after": [
+        "While `playing`, the current piece automatically attempts to fall once every 0.45 seconds."
+      ]
+    },
+    {
+      "id": "change04",
+      "before": [
+        "The automatic fall interval remains fixed at 0.6 seconds throughout the game."
+      ],
+      "after": [
+        "The automatic fall interval remains fixed at 0.45 seconds throughout the game."
+      ]
+    },
+    {
+      "id": "change05",
+      "before": [
+        "- ←: attempt to move 1 cell left.",
+        "- →: attempt to move 1 cell right.",
+        "- ↑: attempt to rotate 90° clockwise.",
+        "- ↓: attempt one additional downward movement."
+      ],
+      "after": [
+        "- `←`: attempt to move 1 cell left.",
+        "- `→`: attempt to move 1 cell right.",
+        "- `↑`: attempt to rotate 90° clockwise.",
+        "- `↓`: attempt one additional downward movement."
+      ]
+    },
+    {
+      "id": "change06",
+      "before": [
+        "Every 0.6 seconds, the current piece automatically attempts to move downward by 1 cell."
+      ],
+      "after": [
+        "Every 0.45 seconds, the current piece automatically attempts to move downward by 1 cell."
+      ]
+    }
+  ],
+  "changed_checkpoint_ids": [
+    "tetris_var01.D2.2.06",
+    "tetris_var01.D2.4.01",
+    "tetris_var01.D2.4.02"
+  ],
+  "added_checkpoint_ids": [],
+  "base_checkpoints_sha256": "9b869e2c2acb9eecb215d5d29bf1b3c0bfe88e8f64288d28331d5a79e22d62f0",
+  "checkpoints_sha256": "ea10c5e8f221e9fa70b87df18590f2448c001693afc96cbb743a5f2915d9605d"
+}
