@@ -52,6 +52,7 @@ def assemble_result(
 ) -> dict[str, Any]:
     d1 = _number(d1_detail.get("score")) or 0.0
     gate = bool(d1_detail.get("gate_pass"))
+    gate_factor = min(1.0, max(0.0, (d1 - 40.0) / 20.0))
 
     if d2_detail is not None:
         raw_d2 = _number(d2_detail.get("score"))
@@ -84,15 +85,13 @@ def assemble_result(
 
     contributions: dict[str, float | None] = {
         "D1": d1 * WEIGHTS["D1"],
-        "D2": (d2 * WEIGHTS["D2"] if gate and d2 is not None else 0.0),
-        "D3": (d3 * WEIGHTS["D3"] if gate and d3 is not None else (0.0 if not gate else None)),
+        "D2": (d2 * WEIGHTS["D2"] * gate_factor if d2 is not None else 0.0),
+        "D3": (d3 * WEIGHTS["D3"] * gate_factor if d3 is not None else None),
         "D4": (
             None
             if not d4_configured
             else (
-                0.0
-                if not gate
-                else (None if d4 is None else d4 * WEIGHTS["D4"])
+                None if d4 is None else d4 * WEIGHTS["D4"] * gate_factor
             )
         ),
     }
@@ -106,16 +105,17 @@ def assemble_result(
         official_total: float | None = None
     elif not d4_configured:
         official_total: float | None = None
-    elif not gate:
-        official_total = round(contributions["D1"] or 0.0, 6)
     elif any(value is None for value in (d2, d3, d4)):
         official_total = None
     else:
         official_total = round(
             d1 * WEIGHTS["D1"]
-            + d2 * WEIGHTS["D2"]
-            + d3 * WEIGHTS["D3"]
-            + d4 * WEIGHTS["D4"],
+            + gate_factor
+            * (
+                d2 * WEIGHTS["D2"]
+                + d3 * WEIGHTS["D3"]
+                + d4 * WEIGHTS["D4"]
+            ),
             6,
         )
 
@@ -133,6 +133,7 @@ def assemble_result(
                 "status": "completed",
                 "score": d1,
                 "gate_pass": gate,
+                "gate_factor": gate_factor,
                 "weighted_contribution": contributions["D1"],
                 "detail": d1_detail,
             },
@@ -174,7 +175,8 @@ def assemble_result(
         "official_total": official_total,
         "status": result_status,
         "formula": (
-            "Final = 0.20*D1 + Gate_D1*(0.50*D2 + 0.15*D3 + 0.15*D4); "
+            "g(D1) = clip((D1 - 40) / 20, 0, 1); "
+            "Final = 0.20*D1 + g(D1)*(0.50*D2 + 0.15*D3 + 0.15*D4); "
             "D2-D4 are measured regardless of the D1 gate when valid evidence is available; "
             "games without configured D4 have no official total and weights are not renormalized"
         ),
