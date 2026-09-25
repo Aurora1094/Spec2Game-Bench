@@ -1,6 +1,6 @@
-# Code2Play-Bench
+# Spec2Game-Bench
 
-Code2Play-Bench is an execution-grounded benchmark for testing whether large
+Code2Play-Bench is the benchmark implementation for testing whether large
 language models can translate detailed natural-language game specifications
 into complete, playable Pygame projects. It evaluates the whole artifact and
 its interaction trace rather than an isolated function or a single code
@@ -307,13 +307,13 @@ design and public/private boundary.
 
 ## Citation
 
-If you use Code2Play-Bench, please cite the accompanying benchmark paper and
+If you use Spec2Game-Bench, please cite the accompanying benchmark paper and
 link to this repository:
 
 ```bibtex
-@misc{code2playbench,
+@misc{spec2gamebench,
   title  = {Spec2Game Benchmark: Can LLMs Generate Complete Playable Games from Specifications?},
-  author = {Code2Play-Bench Authors},
+  author = {Spec2Game-Bench Authors},
   year   = {2026},
   url    = {https://github.com/Aurora1094/Spec2Game-Bench}
 }
