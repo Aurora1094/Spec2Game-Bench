@@ -58,7 +58,7 @@ python main.py human validate --bundle-dir PATH/public/candidate-001
 ```
 
 Public item ordering, scales, `rateability`, cannot-rate distinction, and
-response-template row ordering match the Code2Play-Bench questionnaire contract.
+response-template row ordering match the Spec2Game-Bench questionnaire contract.
 Each image or text artifact is content-addressed by SHA256 and referenced by a
 relative path. The public `items.jsonl` and response-template fields remain
 unchanged, so a client that renders them dynamically needs no schema update.

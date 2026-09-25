@@ -1,6 +1,6 @@
 # Evaluation protocol
 
-This document describes the locked evaluation semantics used by Code2Play-
+This document describes the locked evaluation semantics used by Spec2Game-
 Bench. The protocol evaluates a generated project from three evidence sources:
 the submitted source, isolated runtime traces, and visual evidence captured
 from the running game.

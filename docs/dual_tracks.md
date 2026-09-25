@@ -1,7 +1,7 @@
 # Core-15 and Full-150
 
-Code2Play-Bench exposes two independent evaluation tracks over the same
-versioned catalog. The candidate model is selected from the `models` section
+Spec2Game-Bench exposes two independent evaluation tracks over the same
+checked-in catalog. The candidate model is selected from the `models` section
 of a runtime configuration. Judge routing is configured separately and is
 locked into the run manifest.
 

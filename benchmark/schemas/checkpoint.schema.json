@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Code2Play checkpoint",
+  "title": "Spec2Game checkpoint",
   "type": "object",
   "required": ["id", "game_slug", "dimension", "item", "objective", "initial_state", "trigger", "expected_transition", "detection_method", "score_rubric"],
   "properties": {

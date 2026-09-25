@@ -109,7 +109,7 @@ _D43_LIFECYCLE_TERMS = (
 )
 
 GENERATOR_INSTRUCTIONS = """
-You design the game-level evaluator contract for one Code2Play-Bench game.
+You design the game-level evaluator contract for one Spec2Game-Bench game.
 The supplied specification and eligible dynamic interaction requirements are
 the only source material. Return one JSON object only. Extract explicit
 screenshot-judgeable art requirements, the player goal, legal gameplay

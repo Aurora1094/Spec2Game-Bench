@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "code2play-bench"
+name = "spec2game-bench"
 version = "1.0.0"
-description = "Code2Play-Bench: a 15-game staged code generation benchmark"
+description = "Spec2Game-Bench: a 15-game staged code generation benchmark"
 requires-python = ">=3.10"
 dependencies = [
   "openai>=1.30",

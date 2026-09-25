@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Code2Play round D4 contract",
+  "title": "Spec2Game round D4 contract",
   "type": "object",
   "required": ["schema_version", "contract_version", "design_version", "policy", "round_id", "game_slug", "target", "allowed_operations", "art_direction", "art_sample_size", "sample_seed", "d4_3", "input_sha256", "checkpoint_jsonl_sha256", "generator", "contract_sha256"],
   "properties": {

@@ -125,7 +125,7 @@ def test_current_report_preserves_official_score_and_uses_current_names(
     summary = json.loads(Path(paths["summary_json"]).read_text(encoding="utf-8"))
     scorecard = Path(paths["scorecard_md"]).read_text(encoding="utf-8")
     assert summary["official_total"] == 68.5
-    assert "# Code2Play-Bench scorecard" in scorecard
+    assert "# Spec2Game-Bench scorecard" in scorecard
     assert "GameLLM-Benchmark" not in scorecard
     assert "PILOT_JUDGE_" not in scorecard
 

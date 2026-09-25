@@ -1,6 +1,6 @@
 # Spec2Game-Bench
 
-Code2Play-Bench is the benchmark implementation for testing whether large
+Spec2Game-Bench is the benchmark implementation for testing whether large
 language models can translate detailed natural-language game specifications
 into complete, playable Pygame projects. It evaluates the whole artifact and
 its interaction trace rather than an isolated function or a single code
@@ -144,8 +144,10 @@ dependencies from the repository root:
 python -m pip install -e '.[dev]'
 ```
 
-The package installs the `code2play` console entry point. `python main.py ...`
-is equivalent when working from a source checkout.
+The distribution and catalog are named `spec2game-bench`. The package keeps
+the existing `code2play` Python namespace, console entry point, and
+`CODE2PLAY_*` environment-variable prefix for backward compatibility.
+`python main.py ...` is equivalent when working from a source checkout.
 
 ## Running the benchmark
 
@@ -221,7 +223,7 @@ requests it.
 ## Repository layout
 
 ```text
-Code2Play-Bench/
+Spec2Game-Bench/
 |-- benchmark/                  # Catalog, specifications, checkpoints, schemas
 |-- configs/examples/           # Reproducible runtime configurations
 |-- docs/                       # Protocol, track, data, D4, and review docs
@@ -268,7 +270,7 @@ To rebuild the catalog from an external source directory:
 
 ```bash
 python scripts/convert_benchmark_data.py \
-  --source /path/to/Code2Play-source \
+  --source /path/to/Spec2Game-source \
   --project .
 python main.py validate
 ```

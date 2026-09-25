@@ -1,5 +1,5 @@
 schema_version: 3
-project_name: Code2Play-Bench
+project_name: Spec2Game-Bench
 catalog_path: benchmark/catalog.yaml
 region: us-east-1
 

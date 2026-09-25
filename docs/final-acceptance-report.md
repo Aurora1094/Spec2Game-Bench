@@ -1,17 +1,17 @@
-# Code2Play-Bench Final Acceptance Report
+# Spec2Game-Bench Final Acceptance Report
 
 Date: 2026-08-29
 
 ## Scope
 
 This report covers the local final acceptance of the standalone
-Code2Play-Bench project. It does not include a real Qwen request, a benchmark
+Spec2Game-Bench project. It does not include a real Qwen request, a benchmark
 run, an upload, or a Git commit.
 
 ## Delivered Layout
 
 ```text
-Code2Play-Bench/
+Spec2Game-Bench/
   benchmark/
     catalog.yaml
     conversion_audit.json
@@ -32,7 +32,7 @@ repository has no `runs/`, `rounds/`, root `contracts/`, `ckpt/`,
 
 ## Pilot Boundary and Module Mapping
 
-| Pilot artifact | Current Code2Play-Bench owner | Result |
+| Pilot artifact | Current Spec2Game-Bench owner | Result |
 |---|---|---|
 | `project_config.py` | `config/project.py` | Current catalog and locked runtime policy |
 | `benchmark_runner.py` | `execution/benchmark.py` | Current schema-v3 resumable batch/task state |
@@ -120,4 +120,4 @@ No upload, `git commit`, `git push`, or Pilot modification was performed in
 this acceptance round. Temporary mock rounds, conversion outputs, and tooling
 caches were kept outside the repository; pre-existing project-local caches
 were moved to the external temporary cache archive
-`Code2Play-Bench-ignored-caches-20260829`.
+`Spec2Game-Bench-ignored-caches-20260829`.

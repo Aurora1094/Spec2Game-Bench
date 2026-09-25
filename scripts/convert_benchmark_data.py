@@ -212,7 +212,7 @@ def convert(source_dir: Path, project_dir: Path) -> dict[str, Any]:
             totals[dimension] = totals.get(dimension, 0) + count
     catalog = {
         "schema_version": 1,
-        "catalog_id": "code2play-bench-v1",
+        "catalog_id": "spec2game-bench",
         "game_count": len(catalog_games),
         "checkpoint_count": total,
         "dimensions": totals,

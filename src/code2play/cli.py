@@ -1,4 +1,4 @@
-"""Command-line entry points for Code2Play-Bench.
+"""Command-line entry points for Spec2Game-Bench.
 
 The CLI keeps benchmark artifacts outside the repository.  Commands that need
 the paid provider say so explicitly in the help and all local validation and
@@ -398,7 +398,7 @@ def cmd_preflight(args: argparse.Namespace) -> int:
         )
         router.for_role("contract_generation").json_text(
             "Return one JSON object with an ok boolean.",
-            '{"request": "Code2Play-Bench live connectivity check"}',
+            '{"request": "Spec2Game-Bench live connectivity check"}',
             "d4_contract_preflight",
         )
         with tempfile.NamedTemporaryFile(
@@ -415,7 +415,7 @@ def cmd_preflight(args: argparse.Namespace) -> int:
         try:
             router.for_role("artistic_visual").json_vision(
                 "Return one JSON object with an ok boolean.",
-                '{"request": "Code2Play-Bench visual live connectivity check"}',
+                '{"request": "Spec2Game-Bench visual live connectivity check"}',
                 [(probe_path, "RGB preflight image")],
                 "d4_1_artistic_visual_quality",
             )
@@ -724,7 +724,7 @@ def cmd_report(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="code2play", description="Code2Play-Bench benchmark CLI")
+    parser = argparse.ArgumentParser(prog="code2play", description="Spec2Game-Bench benchmark CLI")
     parser.add_argument("--config", dest="config_path", default=str(DEFAULT_CONFIG), help="config YAML path")
     parser.add_argument("--workspace", default=None, help="external absolute artifact workspace")
     commands = parser.add_subparsers(dest="command", required=True)

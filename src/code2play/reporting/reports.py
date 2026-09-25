@@ -1,4 +1,4 @@
-"""Deterministic JSON, CSV, and Markdown reports for Code2Play-Bench.
+"""Deterministic JSON, CSV, and Markdown reports for Spec2Game-Bench.
 
 The reporting layer consumes the current pipeline result schema. Reporting
 never invents a score: absent and not-configured values stay
@@ -122,7 +122,7 @@ _LEGACY_MATRIX_KEYS = _LEGACY_RESULT_KEYS - {"final_score"}
 
 
 def validate_current_report(result: Mapping[str, Any]) -> dict[str, Any]:
-    """Reject pre-Code2Play-Bench report shapes at the reporting boundary."""
+    """Reject pre-Spec2Game-Bench report shapes at the reporting boundary."""
 
     normalized = _mapping(result)
     if normalized.get("schema_version") != 1:
@@ -448,7 +448,7 @@ def _scorecard_markdown(result: Mapping[str, Any], rows: Sequence[Mapping[str, A
     d4_contract = _d4_contract_provenance(result)
     judge = _judge_provenance(result)
     lines = [
-        "# Code2Play-Bench scorecard",
+        "# Spec2Game-Bench scorecard",
         "",
         f"- Game: {_fmt(identity['game'])}",
         f"- Candidate model: {_fmt(identity['model'])}",
@@ -868,7 +868,7 @@ def write_batch_reports(run_dir: Path | str, task_records: Sequence[Mapping[str,
     rows = [item["flat"] for item in normalized]
     _write_csv(matrix_csv, rows, BATCH_CSV_FIELDS)
     lines = [
-        "# Code2Play-Bench matrix",
+        "# Spec2Game-Bench matrix",
         "",
         f"- Judge policy: {batch_judge['policy']}",
         f"- Judge model: {batch_judge['model']}",
@@ -1306,7 +1306,7 @@ def write_multi_run_reports(
     )
     _write_csv(judge_csv, judge_rows, judge_fields)
     lines = [
-        "# Code2Play-Bench multi-run aggregate",
+        "# Spec2Game-Bench multi-run aggregate",
         "",
         f"- Judge policy: {combined_policy}",
         f"- Independent runs: {len(run_summaries)}",
@@ -1337,7 +1337,7 @@ def write_multi_run_reports(
         )
     aggregate_md.write_text("\n".join(lines) + "\n", encoding="utf-8")
     summary_lines = [
-        "# Code2Play-Bench multi-run summary",
+        "# Spec2Game-Bench multi-run summary",
         "",
         f"- Judge policy: {combined_policy}",
         f"- Independent runs: {len(run_summaries)}",
