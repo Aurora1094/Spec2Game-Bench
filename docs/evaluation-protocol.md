@@ -1,74 +1,202 @@
 # Evaluation protocol
 
-The benchmark preserves the locked scoring semantics while expanding the game
-catalog to 15 games. The official score is:
+This document describes the locked evaluation semantics used by Code2Play-
+Bench. The protocol evaluates a generated project from three evidence sources:
+the submitted source, isolated runtime traces, and visual evidence captured
+from the running game.
+
+## Official score
+
+Each dimension is normalized to a 0-100 scale. The official score is:
 
 ```text
 g(D1) = clip((D1 - 40) / 20, 0, 1)
 Final = 0.20*D1 + g(D1)*(0.50*D2 + 0.15*D3 + 0.15*D4)
 ```
 
-D1 controls score contributions only through a continuous factor. D2, D3, and
-D4 are measured for diagnosis whenever the candidate can produce valid evidence.
-A missing valid dimension keeps the official total incomplete rather than
-silently treating it as zero. All four weights are fixed and are not
-renormalized.
+`g(D1)` is a continuous contribution factor. It controls how much D2-D4
+contribute to the official total; it does not prevent those dimensions from
+being measured. Whenever valid evidence is available, D2, D3, and D4 are
+evaluated for diagnosis even when D1 is below the contribution threshold.
 
-## Generation
+The four weights are fixed. If a valid dimension is missing, the official total
+is `null`/incomplete rather than silently treating the dimension as zero or
+renormalizing the remaining weights. A judge or transport gap is recorded as
+an evaluation gap and can be resumed under the same locked policy.
 
-Candidate source is produced by four sequential Qwen calls:
+## Dimensions
 
-1. `state.py`, maximum 3,000 output tokens
-2. `game.py`, maximum 7,000 output tokens
-3. `rendering.py`, maximum 4,000 output tokens
-4. `main.py`, maximum 2,000 output tokens
+### D1: Executability
 
-The generation protocol uses temperature 0.2, two technical attempts, one
-two-second retry delay, no stop-on-truncation policy, zero semantic retries,
-and a 16,000-token total budget. Later prompts receive locked source files and
-API summaries from earlier stages. Generated source is diagnosed and hashed at
-each boundary; retries are transport retries, not score-based code repairs.
+D1 is a deterministic runtime and interface probe. The candidate must create a
+Pygame surface, process events, expose the required adapter, and remain
+responsive within the configured sampling timeout. The default sampling
+timeout is 45 seconds per worker case.
 
-## Candidate isolation
+### D2: Specification realization
 
-The candidate package is validated as exactly five files and copied into an
-isolated subprocess working directory. Its RPC adapter exposes only
-`init`, `action`, `snapshot`, `render`, and `close`. State snapshots are
-redacted and required to be JSON serializable. Evaluator-only checkpoint IDs,
-rubrics, contracts, scoring prompts, and judge outputs are written only after
-candidate processes exit.
+D2 evaluates the behavior described by the task specification with compiled
+actions and checkpoint-level evidence. Its five subdimensions are:
 
-## Judges and sampling
+| Subdimension | Focus |
+| --- | --- |
+| D2.1 | Game element modeling |
+| D2.2 | Interaction modeling |
+| D2.3 | Rule and mechanism modeling |
+| D2.4 | Dynamic evolution |
+| D2.5 | Goal and termination modeling |
 
-All candidate generation, action compilation, functionality scoring,
-specification-deviation scoring, code-quality scoring, artistic scoring,
-dynamic visual scoring, contract generation, and visual-question generation
-route to the single locked model:
+Each checkpoint has an initial state, trigger, expected transition, detection
+method, and rubric. Scores are normalized within each subdimension and then
+combined with equal weight across D2.1-D2.5. The raw runtime trace remains
+unchanged; D4 may reuse eligible dynamic evidence but does not rewrite D2.
+
+### D3: Code quality
+
+D3 combines deterministic source-level checks with one locked semantic judging
+pass over the candidate source. The semantic request contains only the source
+and the public D3 criteria; it does not expose the candidate model, other
+dimensions, private checkpoint IDs, or prior scores. A complete official D3
+score requires all five configured D3 criteria.
+
+### D4: User-facing quality
+
+D4 has three visual subdimensions:
+
+- **D4.1** evaluates the contract-selected screenshot set for static visual
+  quality.
+- **D4.2** evaluates chronological frames from compiled dynamic traces for
+  feedback and state-change quality.
+- **D4.3** selects two deterministic, materially distinct frames from the
+  contract-selected D2.2 evidence, generates exactly two visual questions, and
+  evaluates the resulting answers.
+
+D4.1 is normalized by its two-point rubric; D4.2 and D4.3 are normalized by
+their five-point rubrics. The three normalized subdimensions are averaged
+equally to form D4.
+
+## Candidate generation
+
+Candidate source is generated by four sequential calls:
+
+| Stage | Target | Normal maximum | Hard maximum |
+| --- | --- | ---: | ---: |
+| 1 | `state.py` | 4,000 output tokens | 5,000 output tokens |
+| 2 | `game.py` | 7,000 output tokens | 14,000 output tokens |
+| 3 | `rendering.py` | 5,000 output tokens | 10,000 output tokens |
+| 4 | `main.py` | 2,000 output tokens | 2,000 output tokens |
+
+The normal and Hard total caps are 18,000 and 31,000 output tokens,
+respectively. Generation temperature is `0.2`. Each stage allows at most two
+technical attempts with a two-second retry delay. Truncation detection is
+enabled; a truncated or otherwise incomplete stage is marked
+`needs_regeneration`. Semantic repair attempts and execution-guided iterative
+repair are disabled.
+
+Later stages receive only the locked source files and API summaries required by
+the public generation contract. The final candidate is exactly:
 
 ```text
-provider: alibaba_dashscope
-model: qwen3.7-plus
-api_style: chat_completions
+candidate/
+  __init__.py
+  state.py
+  game.py
+  rendering.py
+  main.py
 ```
 
-Judge temperature is 0.0, stateless, with one valid scoring response. The
-action compiler and visual evaluator receive only the evidence and public
-context needed for their role. API keys are environment-only and logs redact
-authorization data.
+The required factory is `create_gamebench_adapter(seed=0)`. The adapter
+implements `init`, `action`, `snapshot`, `render`, and `close`.
 
-## D4
+## Candidate isolation and evidence boundaries
 
-D4.1 evaluates the screenshot set selected by the locked contract. D4.2 uses
-the real compiled dynamic checkpoint traces and chronological frames. D4.3
-selects two deterministic materially distinct frames from contract-selected
-D2.2 sources, then asks Qwen to write exactly two questions. Local validation
-fixes the question text, option order, answer binding, image binding, hashes,
-and source slots. A judge or transport failure is a D4 judge gap, never a
-candidate failure.
+Before sampling, the validated candidate package is copied into an empty,
+isolated subprocess working directory. The RPC adapter exposes only the five
+public operations. Candidate snapshots must be JSON serializable, and the
+runtime environment is sanitized before launch.
 
-## CLI lifecycle
+The candidate never receives evaluator-only checkpoint IDs, D4 contracts,
+rubrics, scoring prompts, judge outputs, or answer keys. Evaluator artifacts
+are persisted only after candidate processes exit. Every candidate snapshot,
+stage output, and evaluation record is content-hashed and bound to the task
+state.
 
-`contract build` locks the round before `benchmark` creates candidates. Resume
-checks the round ID, contract manifest hash, normalized policy hash, generation
-contract hashes, candidate hash, and evaluation policy. Any drift requires a
-new run or task directory; old artifacts are not upgraded in place.
+## Judge routing and sampling
+
+The checked-in example configuration uses AWS Bedrock Mantle with role-specific
+Qwen models:
+
+| Role | Provider | Model |
+| --- | --- | --- |
+| Action compiler | AWS Bedrock Mantle | `qwen.qwen3-235b-a22b-2507` |
+| D2 functionality and specification scoring | AWS Bedrock Mantle | `qwen.qwen3-235b-a22b-2507` |
+| D3 code-quality judging | AWS Bedrock Mantle | `qwen.qwen3-235b-a22b-2507` |
+| D4.1 and D4.2 visual judging | AWS Bedrock Mantle | `qwen.qwen3-vl-235b-a22b-instruct` |
+| D4.3 question generation and answering | AWS Bedrock Mantle | `qwen.qwen3-vl-235b-a22b-instruct` |
+| D4 contract generation | AWS Bedrock Mantle | `qwen.qwen3-coder-next` |
+
+Judge temperature is `0.0`, requests are stateless, and explicit reasoning is
+disabled. The routing policy allows one valid scoring response. API keys are
+read from `AWS_MANTLE_API_KEY` and are never written to artifacts or logs.
+
+The candidate model is configured independently. The default example uses
+Qwen3.7 Plus through Alibaba DashScope and reads `DASHSCOPE_API_KEY`.
+
+## D4 round contracts
+
+D4 contracts are round-scoped. `contract build` generates one contract per
+catalog game before candidate generation. The request contains only the public
+game specification and eligible public D2.2 checkpoint fields. It does not
+contain candidate source, screenshots, prior scores, or judge outputs.
+
+Each contract records the round ID, input hashes, generator identity, prompt
+version, and contract hash. A canonical contract manifest records all games in
+catalog order and its own SHA256. The same manifest is required for every
+candidate and repetition in the round.
+
+The candidate never receives its contract. D4 sampling reuses the locked
+contract and records its path and hashes in evaluator-only manifests. Screenshots,
+dynamic traces, and visual-question evidence remain candidate-specific.
+
+See [D4 round contracts](d4-round-contracts.md) for the manifest layout and
+validation rules.
+
+## Artifact lifecycle and resume policy
+
+The lifecycle is:
+
+1. `contract build` creates and validates the round contracts.
+2. `benchmark` locks the selected track, model, policy, and generation
+   contract before producing a candidate.
+3. The candidate is sampled in isolation and its runtime evidence is persisted.
+4. D1-D4 evaluation artifacts and the official score are written after the
+   candidate process exits.
+5. Track reports aggregate only tasks with compatible policy and manifest
+   identities.
+
+Resume checks the round ID, contract manifest hash, normalized policy hash,
+generation-contract hashes, candidate hash, and evaluation policy. A mismatch
+requires a new run or task directory; old artifacts are not upgraded in place.
+
+`needs_rescore` resumes missing evaluation stages under the same candidate
+snapshot. `needs_regeneration` requires an explicit `--resume-generation` and
+preserves completed earlier stages. Technical retries are transport or
+completeness retries, not score-based code edits.
+
+## Reproducibility inputs
+
+The minimum software inputs for a local run are Python 3.10+, Pygame 2.5 or
+newer, the checked-in catalog and schemas, and the configuration file used to
+lock the run. Set `CODE2PLAY_PYTHON` when candidate workers must use a specific
+Python executable. Keep all mutable runs, contracts, and reports in an
+external directory selected by `CODE2PLAY_WORKSPACE` or `--workspace`.
+
+The following commands validate the checked-in policy without making paid
+requests:
+
+```bash
+python main.py validate
+python main.py smoke
+python -m pytest -q
+python -m ruff check src scripts main.py tests
+```

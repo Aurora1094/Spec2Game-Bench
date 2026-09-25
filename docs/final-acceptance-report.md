@@ -40,11 +40,11 @@ repository has no `runs/`, `rounds/`, root `contracts/`, `ckpt/`,
 | `evaluation_pipeline.py`, `scoring.py` | `evaluation/pipeline.py`, `evaluation/scoring.py` | Current D1-D4 assembly and official-total semantics |
 | `protocol_policy.py`, `protocol_sampling.py`, `safe_artifacts.py` | corresponding `execution/` modules | Protocol-v4 execution, sampling, and artifact safety |
 | `prompt_builder.py`, `staged_generation.py`, `request_planning.py` | `generation/prompt_builder.py`, `generation/staged.py`, `planning/requests.py` | Current prompt, staged generation, and no-send planning |
-| `generation_clients.py`, `llm_clients/client_*` | `providers/dashscope.py` | Qwen/DashScope only; OpenAI-compatible SDK is transport only |
+| `generation_clients.py`, `llm_clients/client_*` | `providers/dashscope.py` | Provider and role routing for the configured candidate and AWS Mantle judges; the OpenAI-compatible SDK is transport only |
 | `reporting.py` | `reporting/reports.py` | Current report schema; legacy report inputs are rejected |
 | `human_review/web_server.py` | `human_review/artifacts.py` plus `human export`/`human validate` | Static public/private questionnaire packages; no service command |
 | `evaluator/contracts/d4/v5`, `v6`, `v7` | `d4/contracts.py` and round-scoped `round_v1` contracts | Old versions rejected; no old contract directory retained |
-| `aws_credentials.py` | environment-only `DASHSCOPE_API_KEY` handling | No repository credential module |
+| `aws_credentials.py` | environment-only provider-key handling | No repository credential module |
 
 The read-only Pilot checkout remains clean at `009464c`; no Pilot file was
 changed.
@@ -84,9 +84,10 @@ Kept: `validate`, `preflight`, `contract build`, `benchmark`, `evaluate`,
 `plan`, `smoke`, `human export`, and `human validate`.
 
 Removed: `human-serve`, `human-response-validate`, legacy D4 contract
-directories, uncalled compiler/scoring judge constructors, and non-Qwen model
-routes. `SemanticJudge`, `JudgeRouter`, test injection, and the
-OpenAI-compatible DashScope transport remain intentionally supported.
+directories, and uncalled compiler/scoring judge constructors. The current
+runtime uses the locked role-specific candidate and AWS Mantle judge routes.
+`SemanticJudge`, `JudgeRouter`, test injection, and the OpenAI-compatible
+provider transport remain intentionally supported.
 
 ## Verification Results
 
@@ -106,7 +107,7 @@ OpenAI-compatible DashScope transport remain intentionally supported.
 
 ## Live-Service Risk
 
-No real DashScope/Qwen call was made. Local preflight confirmed only that a
+No real provider call was made. Local preflight confirmed only that a
 credential is configured and deliberately reported `live_api_check: false`.
 The remaining operational evidence must be gathered later in an explicitly
 authorized external workspace: one paid preflight request, real candidate

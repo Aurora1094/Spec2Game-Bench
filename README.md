@@ -1,152 +1,111 @@
 # Code2Play-Bench
 
-Code2Play-Bench is a reproducible benchmark for staged Python game generation.
-The checked-in benchmark contains 15 game specifications and 537 evaluator
-checkpoints. Candidate generation, action compilation, D1-D4 semantic judging,
-round-contract generation, and dynamic visual-question generation all use
-`alibaba_dashscope/qwen3.7-plus`.
+Code2Play-Bench is an execution-grounded benchmark for testing whether large
+language models can translate detailed natural-language game specifications
+into complete, playable Pygame projects. It evaluates the whole artifact and
+its interaction trace rather than an isolated function or a single code
+snippet.
 
-## Quick start
+The benchmark is organized around 15 game families. Each family has one
+canonical task and nine controlled variants that change rules, parameters,
+maps, object types, or combinations of these factors. The variants are
+designed to test specification following when the requested behavior differs
+from familiar game conventions.
 
-PowerShell:
+## Contents
 
-```powershell
-python -m pip install -e ".[dev]"
-python main.py validate
-python main.py smoke
-```
+- [Benchmark at a glance](#benchmark-at-a-glance)
+- [Evaluation tracks](#evaluation-tracks)
+- [Evaluation](#evaluation)
+- [Generation protocol](#generation-protocol)
+- [Installation](#installation)
+- [Running the benchmark](#running-the-benchmark)
+- [Repository layout](#repository-layout)
+- [Data and artifacts](#data-and-artifacts)
+- [Human review export](#human-review-export)
+- [Documentation](#documentation)
+- [Citation](#citation)
 
-Bash:
+## Benchmark at a glance
 
-```bash
-python -m pip install -e '.[dev]'
-python main.py validate
-python main.py smoke
-```
+| Property | Value |
+| --- | --- |
+| Game families | 15 |
+| Difficulty split | 5 Easy, 5 Medium, 5 Hard |
+| Canonical tasks | 15 |
+| Controlled variants | 135 (9 per family) |
+| Core-15 instances | 15 canonical tasks |
+| Full-150 instances | 15 canonical tasks + 135 variants |
+| Canonical checkpoints | 537 |
+| Full-150 checkpoints | 5,475 |
+| Evaluation dimensions | D1-D4 |
+| Candidate output | Five-file Python project |
+| Generation protocol | Four sequential source stages |
 
-The console entry point is equivalent after installation:
+The checked-in catalog is ordered and hash-audited. It contains the complete
+specification and checkpoint data needed to reproduce the benchmark definition;
+generated candidates and evaluation traces are kept in an external workspace.
 
-```text
-code2play validate
-python main.py validate
-```
+## Evaluation tracks
 
-`validate` and the default `smoke` command make no paid API request. Use
-`smoke --live` only when a real provider check is wanted.
+Core-15 and Full-150 are separate evaluation tracks. A model generates a new
+candidate for every instance in the selected track; candidates, sampling
+traces, compiler outputs, and scores are not reused across tracks.
 
-## Provider and workspace
+| Track | Instances | Intended use | Aggregation |
+| --- | ---: | --- | --- |
+| **Core-15** | 15 canonical tasks | Broad model comparison at fixed task coverage | Equal mean over the 15 canonical tasks |
+| **Full-150** | 150 tasks | Robustness to controlled specification changes | Equal mean over 10 instances within each family, then equal mean over 15 families |
 
-The API key is read only from `DASHSCOPE_API_KEY`; it is never written to a
-config file or artifact. The OpenAI-compatible client is used only as the
-DashScope transport. No alternate model adapter or AWS credential module is
-part of this project.
+For Full-150, the base task and its nine variants form one family. A complete
+Full-150 run therefore supports both overall scoring and within-family
+variant-versus-canonical analysis.
 
-All mutable experiment artifacts belong in an external workspace. Set the
-workspace explicitly or use `CODE2PLAY_WORKSPACE`:
+## Evaluation
 
-```powershell
-$env:DASHSCOPE_API_KEY = "..."
-$env:CODE2PLAY_WORKSPACE = "C:\data\Code2Play-Workspace"
-python main.py contract build --round-id round-001
-python main.py benchmark --run-id main_r1 --round-id round-001
-```
+Each generated project is evaluated with source, runtime, and visual evidence.
 
-```bash
-export DASHSCOPE_API_KEY='...'
-export CODE2PLAY_WORKSPACE=/data/Code2Play-Workspace
-python main.py contract build --round-id round-001
-python main.py benchmark --run-id main_r1 --round-id round-001
-```
+| Dimension | What it measures |
+| --- | --- |
+| **D1: Executability** | Whether the submitted project satisfies the runtime and interface contract. |
+| **D2: Specification realization** | Whether the implemented game state, interactions, rules, dynamics, and termination behavior match the specification. D2 is decomposed into D2.1-D2.5. |
+| **D3: Code quality** | Structural and semantic quality of the generated source. |
+| **D4: User-facing quality** | Static appearance, dynamic feedback, and visual-question evidence from the running game. |
 
-The workspace contains `private-configs/`, `rounds/<round-id>/`,
-`runs/<run-id>/`, `candidates/`, and `questionnaires/`. The repository never
-creates root-level `runs/`, checkpoint exports, rendered prompts, or candidate
-projects.
-
-## Project structure
-
-The repository keeps benchmark definitions and source code in Git. Generated
-contracts, candidates, evaluation traces, reports, and questionnaire bundles
-are written to the external workspace described above.
-
-```text
-Code2Play-Bench/
-|-- benchmark/                  # Official benchmark data and schemas
-|   |-- catalog.yaml            # Ordered list of the 15 games
-|   |-- games/<game-slug>/      # Per-game specification and checkpoints
-|   |   |-- game.yaml
-|   |   |-- spec.md
-|   |   `-- checkpoints.jsonl
-|   |-- schemas/                # JSON schemas for benchmark artifacts
-|   `-- conversion_audit.json   # Source-data conversion hashes
-|-- configs/examples/           # Reproducible configuration examples
-|-- docs/                       # Protocol, data, D4, and questionnaire docs
-|-- experiments/                # Benchmark launch scripts
-|-- scripts/                    # Source-data conversion utilities
-|-- src/code2play/
-|   |-- cli.py                  # Command-line interface
-|   |-- config/                 # Configuration and workspace resolution
-|   |-- generation/              # Staged candidate generation and prompts
-|   |-- execution/              # Isolation, sampling, and benchmark runner
-|   |-- evaluation/             # D1-D4 evaluation and score assembly
-|   |-- d4/                     # D4 contracts, visual evidence, and questions
-|   |-- providers/              # DashScope/Qwen provider integration
-|   |-- human_review/            # Blind questionnaire export and validation
-|   |-- planning/               # No-send and live request plans
-|   `-- reporting/              # Machine-readable reports
-|-- tests/
-|   |-- unit/                   # Unit tests for individual modules
-|   |-- integration/            # End-to-end CLI and pipeline tests
-|   `-- compatibility/          # Boundary and policy compatibility tests
-|-- main.py                     # Source-tree CLI entry point
-|-- pyproject.toml              # Package metadata and dependencies
-`-- README.md
-```
-
-Generated artifacts are stored outside the repository:
+The official score uses the locked continuous D1 contribution factor:
 
 ```text
-Code2Play-Workspace/
-|-- private-configs/
-|-- rounds/<round-id>/          # Locked D4 contracts and manifest
-|-- runs/<run-id>/              # Candidates, traces, evaluations, and reports
-|-- candidates/                 # Candidate project artifacts
-`-- questionnaires/             # Public blind bundles and private mappings
+g(D1) = clip((D1 - 40) / 20, 0, 1)
+Final = 0.20*D1 + g(D1)*(0.50*D2 + 0.15*D3 + 0.15*D4)
 ```
 
-## Commands
+D1 controls the contribution of D2-D4 through `g(D1)`. D2-D4 are still
+measured for diagnosis whenever valid evidence exists. If a valid dimension is
+missing, the official total remains incomplete; the fixed weights are never
+renormalized. See [Evaluation protocol](docs/evaluation-protocol.md) for the
+full evidence and resume semantics.
 
-```text
-code2play validate
-code2play preflight [--live]
-code2play contract build [--round-id ID]
-code2play benchmark [--game SLUG] [--run-id ID] [--round-id ID]
-code2play evaluate --game SLUG --candidate PATH
-code2play plan [--game SLUG] [--candidate PATH]
-code2play smoke [--live]
-code2play human export --task-dir PATH --output-dir PATH
-code2play human validate --bundle-dir PATH
-```
+## Generation protocol
 
-`contract build` creates and validates one D4 contract for every game before a
-benchmark run. `contract build --mock` is a local fixture mode only and must
-not be used for official results. `plan` without `--candidate` writes a
-no-send logical request plan; the candidate form samples a real candidate and
-therefore requires the API key.
+Candidate source is generated in four locked stages. Later stages receive the
+source and API summaries required by the public generation contract from
+earlier stages.
 
-For a focused live trial, keep the round contract fixed and select one game:
+| Stage | Output file | Normal limit | Hard limit |
+| --- | --- | ---: | ---: |
+| 1 | `state.py` | 4,000 tokens | 5,000 tokens |
+| 2 | `game.py` | 7,000 tokens | 14,000 tokens |
+| 3 | `rendering.py` | 5,000 tokens | 10,000 tokens |
+| 4 | `main.py` | 2,000 tokens | 2,000 tokens |
+| **Total** |  | **18,000** | **31,000** |
 
-```powershell
-python main.py benchmark --game snake --run-id snake_trial_001 --round-id round-live-003
-```
+The default candidate in `configs/examples/qwen37_main.yaml` is Qwen3.7 Plus
+through Alibaba DashScope. Generation uses temperature `0.2`, at most two
+technical attempts per stage, a two-second retry delay, truncation detection,
+and zero semantic repair attempts. Technical retries do not receive execution
+feedback or score-based code repairs.
 
-There is no questionnaire server and no command that validates or collects
-filled human responses. The human-review surface is limited to anonymous
-export and public-package integrity validation.
-
-## Candidate interface
-
-Every candidate is exactly this five-file package:
+Every candidate is validated as exactly this package:
 
 ```text
 candidate/
@@ -157,63 +116,205 @@ candidate/
   main.py
 ```
 
-The required factory is `create_gamebench_adapter(seed=0)`. The returned
-adapter implements `init`, `action`, `snapshot`, `render`, and `close`.
-State snapshots must be JSON serializable. Generation is performed in this
-order, with the locked dependency source injected only into later stages:
-`state.py`, `game.py`, `rendering.py`, `main.py`.
+The adapter must expose `init`, `action`, `snapshot`, `render`, and `close`.
+Candidate processes run in isolated working directories, and evaluator-only
+checkpoint IDs, contracts, prompts, and judge outputs are written after the
+candidate process exits.
 
-## Data and evaluation
+### Judge routing
 
-The official data files are under `benchmark/games/<slug>/`. `spec.md`
-preserves the DOCX body, while `checkpoints.jsonl` is the normalized source
-of truth for all checkpoint fields and rubrics. The original DOCX and CSV
-files remain external and are represented by hashes in
-`benchmark/conversion_audit.json`. See [data-format.md](docs/data-format.md).
+The example configuration routes evaluation roles as follows:
 
-The official score uses D1-D4 weights `0.20/0.50/0.15/0.15`. D1 controls
-contributions only; D2-D4 are still measured when valid evidence exists. The
-sampling worker copies candidates into an isolated working directory and
-candidate code never receives checkpoint IDs, contracts, scoring prompts, or
-judge artifacts. See [evaluation-protocol.md](docs/evaluation-protocol.md).
+| Role | Model | Provider |
+| --- | --- | --- |
+| Action compilation, D2, and D3 | `qwen.qwen3-235b-a22b-2507` | AWS Bedrock Mantle |
+| D4 visual scoring and visual questions | `qwen.qwen3-vl-235b-a22b-instruct` | AWS Bedrock Mantle |
+| D4 contract generation | `qwen.qwen3-coder-next` | AWS Bedrock Mantle |
 
-D4 contracts are generated from only the public game specification and
-checkpoint JSONL at the start of each main-experiment round. A manifest hash
-locks those contracts for every candidate and repetition in that round. See
-[d4-round-contracts.md](docs/d4-round-contracts.md).
+Judge temperature is `0.0`, requests are stateless, and explicit reasoning is
+disabled. The routing policy is locked into the run and recorded with its
+manifest.
 
-## Re-converting source data
+## Installation
 
-The converter requires the external source directory containing the 15 DOCX
-and 15 CSV files. It does not copy those files into the repository:
+The project requires Python 3.10 or newer. Install the package and development
+dependencies from the repository root:
 
-```powershell
-python scripts/convert_benchmark_data.py `
-  --source "C:\path\to\Code2Play bench" `
-  --project .
+```bash
+python -m pip install -e '.[dev]'
 ```
+
+The package installs the `code2play` console entry point. `python main.py ...`
+is equivalent when working from a source checkout.
+
+## Running the benchmark
+
+All mutable outputs should be placed outside the Git checkout. Set a workspace
+explicitly with `CODE2PLAY_WORKSPACE` or pass `--workspace`.
+
+### Local validation
+
+These commands do not make paid provider requests:
+
+```bash
+python main.py validate
+python main.py smoke
+python main.py preflight
+python -m pytest -q
+python -m ruff check src scripts main.py tests
+```
+
+`smoke` and `preflight` use deterministic local checks unless `--live` is
+specified. A live preflight and an official benchmark require the credentials
+for the selected candidate and the locked AWS Mantle judges.
+
+### Official run
+
+For the checked-in example configuration, set:
+
+```bash
+export DASHSCOPE_API_KEY='...'
+export AWS_MANTLE_API_KEY='...'
+export CODE2PLAY_WORKSPACE=/path/to/Code2Play-Workspace
+```
+
+On PowerShell, use `$env:NAME = '...'` instead. The candidate key changes with
+the selected model configuration; judge requests use `AWS_MANTLE_API_KEY` in
+the example configuration.
+
+Build and lock the D4 contracts before generating candidates:
+
+```bash
+python main.py contract build --track full150 --round-id study
+```
+
+Then run either track:
+
+```bash
+python main.py benchmark \
+  --model qwen3_7_plus \
+  --track core15 \
+  --run-id qwen-core \
+  --round-id study
+
+python main.py benchmark \
+  --model qwen3_7_plus \
+  --track full150 \
+  --run-id qwen-full \
+  --round-id study
+```
+
+Use `--game` and `--variant` for a focused trial. `contract build --mock` is
+available for local schema and lock tests only; mock contracts are not official
+benchmark evidence. A run can be inspected or summarized without executing
+new tasks:
+
+```bash
+python main.py status --run-id qwen-full
+python main.py report --run-ids qwen-core qwen-full
+```
+
+The resume policy distinguishes missing evaluation results from an incomplete
+generation stage. Use `--resume-generation` only when the run state explicitly
+requests it.
+
+## Repository layout
+
+```text
+Code2Play-Bench/
+|-- benchmark/                  # Catalog, specifications, checkpoints, schemas
+|-- configs/examples/           # Reproducible runtime configurations
+|-- docs/                       # Protocol, track, data, D4, and review docs
+|-- experiments/                # Experiment launch helpers
+|-- scripts/                    # Source-data conversion and maintenance tools
+|-- src/code2play/
+|   |-- config/                 # Catalog, policy, and workspace resolution
+|   |-- generation/             # Staged generation and prompt contracts
+|   |-- execution/              # Isolation, sampling, and resumable runs
+|   |-- evaluation/             # D1-D4 evaluation and score assembly
+|   |-- d4/                     # Round contracts and visual questions
+|   |-- providers/              # Provider and role routing
+|   |-- human_review/           # Blind questionnaire export and validation
+|   |-- planning/               # No-send and live request plans
+|   `-- reporting/              # Track reports and budget summaries
+|-- tests/                      # Unit, integration, and compatibility tests
+|-- main.py                     # Source-checkout CLI entry point
+|-- pyproject.toml              # Package metadata and dependencies
+`-- README.md
+```
+
+Generated candidates, contracts, traces, reports, and questionnaire bundles
+are written under the external workspace:
+
+```text
+Code2Play-Workspace/
+|-- private-configs/
+|-- rounds/<round-id>/          # Locked D4 contracts and manifest
+|-- runs/<run-id>/              # Candidates, traces, evaluations, reports
+|-- candidates/                 # Candidate snapshots
+`-- questionnaires/             # Public blind bundles and private mappings
+```
+
+## Data and artifacts
+
+The checked-in `benchmark/` directory contains the normalized public catalog.
+Each instance includes a specification, a game configuration, and
+`checkpoints.jsonl`. The canonical catalog has 537 checkpoints; the expanded
+Full-150 catalog has 5,475. `benchmark/conversion_audit.json` records source
+file hashes and conversion counts. Original DOCX and CSV files remain external
+and are not copied into the repository.
+
+To rebuild the catalog from an external source directory:
 
 ```bash
 python scripts/convert_benchmark_data.py \
-  --source '/path/to/Code2Play bench' \
+  --source /path/to/Code2Play-source \
   --project .
+python main.py validate
 ```
 
-After conversion, run `python main.py validate` and `python -m pytest -q`.
+The D4 contract is generated once per game at the beginning of a round from
+the public specification and eligible checkpoint fields. Its manifest and
+input hashes are locked before candidate generation; candidates never receive
+the contract or evaluator-only artifacts. See
+[D4 round contracts](docs/d4-round-contracts.md).
 
-## Human export
+## Human review export
 
-Human evidence is built from a completed task, then split into a public blind
-bundle and a private mapping. Public assets are content-addressed and checked
-for hash, path, ordering, scale, rateability, candidate/model leaks, automatic
-scores, judge outputs, and answer keys. See
-[questionnaire-export.md](docs/questionnaire-export.md).
+Human review is an export-only sidecar. It creates an anonymous public bundle
+and a private mapping for internal audit; it does not host a server or alter
+automatic scores.
 
-The public questionnaire is available at
-[Code2Play Questionnaire](https://aurora1094.github.io/Code2Play.github.io/).
+```bash
+python main.py human export \
+  --task-dir /path/to/task \
+  --output-dir /path/to/questionnaire-round \
+  --blind-id candidate-001
+python main.py human validate \
+  --bundle-dir /path/to/questionnaire-round/public/candidate-001
+```
 
-## Compatibility
+See [questionnaire export](docs/questionnaire-export.md) for the fixed item
+design and public/private boundary.
 
-This repository is the new 15-game benchmark contract. Old runs, checkpoints,
-reports, and embedded D4 contracts are intentionally incompatible and are not
-migrated. Use a new external run ID and round ID.
+## Documentation
+
+- [Evaluation protocol](docs/evaluation-protocol.md)
+- [Core-15 and Full-150](docs/dual_tracks.md)
+- [Data format](docs/data-format.md)
+- [D4 round contracts](docs/d4-round-contracts.md)
+- [Questionnaire export](docs/questionnaire-export.md)
+
+## Citation
+
+If you use Code2Play-Bench, please cite the accompanying benchmark paper and
+link to this repository:
+
+```bibtex
+@misc{code2playbench,
+  title  = {Spec2Game Benchmark: Can LLMs Generate Complete Playable Games from Specifications?},
+  author = {Code2Play-Bench Authors},
+  year   = {2026},
+  url    = {https://github.com/Aurora1094/Code2Play-Bench}
+}
+```

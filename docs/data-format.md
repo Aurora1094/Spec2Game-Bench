@@ -1,10 +1,12 @@
 # Data format
 
 The checked-in catalog is `benchmark/catalog.yaml`. It is serialized as
-canonical JSON that is valid YAML, so it can be consumed by either YAML or JSON
-loaders without changing ordering or hashes.
+canonical JSON that is also valid YAML, so YAML and JSON loaders preserve the
+same ordering and hashes.
 
-Each catalog entry contains:
+## Catalog entries
+
+Each canonical family entry contains:
 
 ```yaml
 slug: snake
@@ -17,21 +19,40 @@ checkpoint_count: 29
 dimension_counts: {D2.1: 5, D2.2: 3, D2.3: 10, D2.4: 3, D2.5: 8}
 ```
 
-Every game directory contains `game.yaml`, `spec.md`, and
-`checkpoints.jsonl`. `game.yaml` reserves `variants: []`; variants are not
-silently inferred or added.
+Every instance directory contains `game.yaml`, `spec.md`, and
+`checkpoints.jsonl`. Canonical entries reserve the ordered list of their nine
+variant slugs. Variant entries have `variant_id` and `family_slug` fields and
+do not infer additional variants at load time.
+
+The complete catalog contains 15 canonical instances and 135 variants. The
+canonical checkpoint totals are:
+
+| Dimension | Checkpoints |
+| --- | ---: |
+| D2.1 | 97 |
+| D2.2 | 94 |
+| D2.3 | 150 |
+| D2.4 | 66 |
+| D2.5 | 130 |
+| **Total** | **537** |
+
+Across Full-150, the corresponding totals are D2.1 `992`, D2.2 `952`, D2.3
+`1,540`, D2.4 `672`, and D2.5 `1,319`, for `5,475` checkpoints in total.
 
 ## Specifications
 
-`spec.md` starts with project metadata frontmatter and then the DOCX paragraph
-body. The body is retained as UTF-8 text, including titles, lists, code spans,
-numbers, and English or Chinese source values. The evaluator requires ordered
-sections `# 1` through `# 7`. D4 is not embedded in the specification; its
-contract is round-scoped.
+`spec.md` begins with project metadata frontmatter and then preserves the
+source document body as UTF-8 text. Paragraph order, headings, lists, code
+spans, numbers, and source-language values are retained. The evaluator expects
+the ordered specification sections `# 1` through `# 7`.
+
+D4 is not embedded in an instance specification. Its visual contract is
+generated and locked at round scope from the public specification and eligible
+checkpoint fields.
 
 ## Checkpoint JSONL
 
-Each line is one object with these fields:
+Each line in `checkpoints.jsonl` is one checkpoint object:
 
 ```json
 {
@@ -49,27 +70,38 @@ Each line is one object with these fields:
 }
 ```
 
-The source CSV mapping is:
+The converter maps the source spreadsheet fields for checkpoint ID, project
+item, test objective, initial state, trigger/event, expected transition,
+detection method, and the 0/1/2-point rubric to the normalized fields above.
+The dimension is derived from the checkpoint ID and checked against the source
+row. IDs are unique, use the game slug prefix, and are ordered by D2.1 through
+D2.5 within each instance.
 
-| Source column | JSONL field |
-| --- | --- |
-| `Checkpoint ID` | `id` |
-| `项目` | `item` |
-| `测试目标` | `objective` |
-| `Initial State` | `initial_state` |
-| `Trigger/Event` | `trigger` |
-| `Expected Transition` | `expected_transition` |
-| `检测方式` | `detection_method` |
-| `0分`, `1分`, `2分` | `score_rubric.0`, `.1`, `.2` |
+## Variants
 
-The dimension is derived from the ID and checked against the explicit source
-row. IDs are unique, use the game slug prefix, and are grouped in D2.1 through
-D2.5 order. The official totals are 537 checkpoints: D2.1=97, D2.2=94,
-D2.3=150, D2.4=66, and D2.5=130.
+Variant directories use the same three-file instance format. Their
+`variation.json` records the source difference, changed or added checkpoints,
+and the canonical correspondence. Variation types include parameter, rule,
+map, object type, object count, and combinations of these categories.
 
-## Audit
+The final submitted JSONL is the evaluation source of truth. Variant import
+and audit scripts can reconstruct the checked-in files from an external source
+archive, but official evaluation does not call a model to generate rubrics or
+checkpoint definitions.
 
-`benchmark/conversion_audit.json` records each external DOCX/CSV filename and
-SHA256, the converted specification-body hash, row count, and per-dimension
-counts. Source files are deliberately not copied into this repository. Run
-`python main.py validate` after any conversion.
+## Conversion audit
+
+`benchmark/conversion_audit.json` records each external specification and
+checkpoint source filename and SHA256, the converted specification-body hash,
+row count, and per-dimension counts. Source archives are deliberately kept
+outside the repository.
+
+After importing or rebuilding data, run:
+
+```bash
+python main.py validate
+```
+
+Validation checks catalog order, instance counts, checkpoint schemas, ID
+prefixes, dimension totals, specification sections, conversion hashes, prompt
+contracts, and the locked evaluation policy.
