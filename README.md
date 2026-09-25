@@ -315,6 +315,6 @@ link to this repository:
   title  = {Spec2Game Benchmark: Can LLMs Generate Complete Playable Games from Specifications?},
   author = {Code2Play-Bench Authors},
   year   = {2026},
-  url    = {https://github.com/Aurora1094/Code2Play-Bench}
+  url    = {https://github.com/Aurora1094/Spec2Game-Bench}
 }
 ```
