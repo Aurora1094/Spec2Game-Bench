@@ -5,11 +5,20 @@
 </p>
 
 <p align="center">
+  <a href="https://arxiv.org/abs/2610.04253">Paper</a> &middot;
+  <a href="https://arxiv.org/abs/2610.04253">arXiv</a> &middot;
+  <a href="docs/">Docs</a> &middot;
+  <a href="benchmark/">Dataset</a> &middot;
+  <a href="#results-from-the-paper">Leaderboard / Results</a>
+</p>
+
+<p align="center">
   <a href="https://arxiv.org/abs/2610.04253"><img src="https://img.shields.io/badge/Paper-2610.04253-b31b1b.svg" alt="Paper: arXiv 2610.04253"></a>
   <a href="pyproject.toml"><img src="https://img.shields.io/badge/Python-3.10%2B-3776AB.svg" alt="Python 3.10+"></a>
   <a href="docs/"><img src="https://img.shields.io/badge/Docs-Documentation-0A7EA4.svg" alt="Documentation"></a>
   <a href="benchmark/"><img src="https://img.shields.io/badge/Dataset-Benchmark-2E8B57.svg" alt="Dataset"></a>
   <a href="#results-from-the-paper"><img src="https://img.shields.io/badge/Results-Paper-6F42C1.svg" alt="Results from the paper"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-4E5D6C.svg" alt="Apache-2.0 license"></a>
 </p>
 
 **Paper:** *Spec2Game: Can LLMs Generate Complete Playable Games from Detailed Specifications?*
@@ -30,6 +39,7 @@ The benchmark contains 15 game families and 150 task instances. Each family has 
 - [Documentation](#documentation)
 - [Limitations and scope](#limitations-and-scope)
 - [Citation](#citation)
+- [License](#license)
 
 ## At a glance
 
@@ -117,6 +127,9 @@ The project requires Python 3.10 or newer. Install the package and development d
 python -m pip install -e '.[dev]'
 ```
 
+The canonical installed command is `spec2game`. The previous `code2play`
+command remains available as a compatibility alias for existing scripts.
+
 Run deterministic local checks without paid provider requests:
 
 ```bash
@@ -127,7 +140,7 @@ python -m pytest -q
 python -m ruff check src scripts main.py tests
 ```
 
-`smoke` and `preflight` use local checks unless `--live` is specified. All mutable outputs should be written outside the Git checkout with `CODE2PLAY_WORKSPACE` or `--workspace`.
+`smoke` and `preflight` use local checks unless `--live` is specified. All mutable outputs should be written outside the Git checkout with `SPEC2GAME_WORKSPACE` or `--workspace`. The previous `CODE2PLAY_WORKSPACE` name remains accepted for existing runs.
 
 ## Official evaluation
 
@@ -166,10 +179,12 @@ Spec2Game-Bench/
 |-- docs/                       # Protocol, track, data, D4, and review docs
 |-- experiments/                # Experiment launch helpers
 |-- scripts/                    # Source-data conversion and maintenance tools
-|-- src/code2play/              # Generation, execution, evaluation, and reporting
+|-- src/spec2game/              # Generation, execution, evaluation, and reporting
 |-- tests/                      # Unit, integration, and compatibility tests
 |-- main.py                     # Source-checkout CLI entry point
 |-- pyproject.toml              # Package metadata and dependencies
+|-- CITATION.cff                # Machine-readable citation metadata
+|-- LICENSE                     # Apache-2.0 license
 `-- README.md
 ```
 
@@ -195,6 +210,9 @@ Spec2Game-Bench/
 
 If you use Spec2Game-Bench, please cite:
 
+The repository also provides the same metadata in [CITATION.cff](CITATION.cff)
+for GitHub's citation tools and other reference managers.
+
 ```bibtex
 @article{cai2026spec2game,
   title         = {Spec2Game: Can LLMs Generate Complete Playable Games from Detailed Specifications?},
@@ -206,4 +224,8 @@ If you use Spec2Game-Bench, please cite:
   url           = {https://arxiv.org/abs/2610.04253}
 }
 ```
+
+## License
+
+Spec2Game-Bench is released under the [Apache License 2.0](LICENSE).
 

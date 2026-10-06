@@ -19,7 +19,7 @@ Spec2Game-Bench/
   configs/
   docs/
   scripts/convert_benchmark_data.py
-  src/code2play/
+  src/spec2game/
     config/ d4/ evaluation/ execution/ generation/
     human_review/ planning/ providers/ reporting/
   tests/unit/ tests/integration/ tests/compatibility/
@@ -101,7 +101,7 @@ provider transport remain intentionally supported.
 | `python main.py preflight` | Passed, `live_api_check: false` |
 | External-workspace `contract build --mock --round-id round-001` | Passed; 15 contracts locked |
 | Mock benchmark orchestration round binding | Passed; all 15 task calls shared one round ID and manifest hash |
-| Installed `code2play validate` vs `python main.py validate` | Structurally identical JSON |
+| Installed `spec2game validate` vs `python main.py validate` | Structurally identical JSON |
 | Human export/validate integration | Public/private boundary, assets, order, blank template, leak checks, and tamper rejection passed |
 | Compatibility integration | Old D4 versions, old run state, and old report inputs rejected |
 

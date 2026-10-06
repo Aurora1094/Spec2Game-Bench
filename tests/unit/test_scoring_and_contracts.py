@@ -5,9 +5,9 @@ from pathlib import Path
 
 import pytest
 
-from code2play.cli import EXPECTED_SLUGS, _mock_contract_generator
-from code2play.config.project import games, load_config
-from code2play.d4.contracts import (
+from spec2game.cli import EXPECTED_SLUGS, _mock_contract_generator
+from spec2game.config.project import games, load_config
+from spec2game.d4.contracts import (
     D4_CONTRACT_VERSION,
     _normalize_generated_body,
     build_round_contracts,
@@ -16,7 +16,7 @@ from code2play.d4.contracts import (
     normalize_spec_operation_policy,
     validate_round_manifest,
 )
-from code2play.evaluation.scoring import assemble_result
+from spec2game.evaluation.scoring import assemble_result
 
 
 def test_official_weights_and_soft_d1_contribution_gate() -> None:
@@ -148,8 +148,8 @@ def test_round_contracts_are_generated_once_and_hash_locked(tmp_path: Path) -> N
 def test_legacy_contract_fields_are_normalized_to_the_locked_schema() -> None:
     config = load_config()
     game = next(item for item in games(config) if item.slug == "snake")
-    from code2play.generation.prompt_builder import load_evaluator_checkpoints, load_spec
-    from code2play.d4.contracts import eligible_d43_checkpoints
+    from spec2game.generation.prompt_builder import load_evaluator_checkpoints, load_spec
+    from spec2game.d4.contracts import eligible_d43_checkpoints
 
     checkpoints = load_evaluator_checkpoints(load_spec(game.spec))
     eligible = eligible_d43_checkpoints(checkpoints)
@@ -177,7 +177,7 @@ def test_legacy_contract_fields_are_normalized_to_the_locked_schema() -> None:
 def test_contract_generation_rejects_verbose_art_direction_before_persisting() -> None:
     config = load_config()
     game = next(item for item in games(config) if item.slug == "snake")
-    from code2play.generation.prompt_builder import load_evaluator_checkpoints, load_spec
+    from spec2game.generation.prompt_builder import load_evaluator_checkpoints, load_spec
 
     checkpoints = load_evaluator_checkpoints(load_spec(game.spec))
     eligible = eligible_d43_checkpoints(checkpoints)
@@ -211,8 +211,8 @@ def test_contract_generation_rejects_verbose_art_direction_before_persisting() -
 def test_contract_requires_two_distinct_gameplay_operations() -> None:
     config = load_config()
     game = next(item for item in games(config) if item.slug == "snake")
-    from code2play.generation.prompt_builder import load_evaluator_checkpoints, load_spec
-    from code2play.d4.contracts import eligible_d43_checkpoints
+    from spec2game.generation.prompt_builder import load_evaluator_checkpoints, load_spec
+    from spec2game.d4.contracts import eligible_d43_checkpoints
 
     checkpoints = load_evaluator_checkpoints(load_spec(game.spec))
     eligible = eligible_d43_checkpoints(checkpoints)
@@ -258,7 +258,7 @@ def test_whack_a_mole_target_policy_uses_two_game_semantic_operations(
 ) -> None:
     config = load_config()
     game = next(item for item in games(config) if item.slug == "whack_a_mole")
-    from code2play.generation.prompt_builder import load_evaluator_checkpoints, load_spec
+    from spec2game.generation.prompt_builder import load_evaluator_checkpoints, load_spec
 
     spec = load_spec(game.spec)
     checkpoints = load_evaluator_checkpoints(spec)

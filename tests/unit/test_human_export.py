@@ -6,17 +6,17 @@ from pathlib import Path
 
 import pytest
 
-from code2play.cli import _mock_contract_generator
-from code2play.config.project import game_by_slug, load_config, select_run_config
-from code2play.d4.contracts import build_round_contracts
-from code2play.execution.candidate_project import CandidateProject
-from code2play.human_review.artifacts import (
+from spec2game.cli import _mock_contract_generator
+from spec2game.config.project import game_by_slug, load_config, select_run_config
+from spec2game.d4.contracts import build_round_contracts
+from spec2game.execution.candidate_project import CandidateProject
+from spec2game.human_review.artifacts import (
     SOURCE_RELATIVE,
     build_human_evidence,
     export_blind_bundle,
     validate_blind_bundle,
 )
-from code2play.human_review.policy import HUMAN_REVIEW_CONSTRUCT_COUNTS, HUMAN_REVIEW_DESIGN_ID
+from spec2game.human_review.policy import HUMAN_REVIEW_CONSTRUCT_COUNTS, HUMAN_REVIEW_DESIGN_ID
 
 
 def _write_json(path: Path, value: object) -> None:
@@ -63,7 +63,7 @@ def test_human_export_separates_public_package_and_private_mapping(tmp_path: Pat
     candidate_sha = CandidateProject(candidate_dir).project_sha256()
     trace_path = task_dir / "evaluation" / "trace.json"
     _write_json(trace_path, {"status": "completed", "cases": []})
-    from code2play.human_review.policy import load_human_review_policy
+    from spec2game.human_review.policy import load_human_review_policy
     checkpoint_id = load_human_review_policy(config)["games"][slug]["d2_anchor_ids"][0]
     _write_json(
         task_dir / "evaluation" / "d2.json",

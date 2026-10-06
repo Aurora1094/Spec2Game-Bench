@@ -7,20 +7,21 @@ from types import SimpleNamespace
 
 import pytest
 
-import code2play.providers.dashscope as dashscope
-from code2play.config.project import (
+import spec2game.providers.dashscope as dashscope
+from spec2game.config.project import (
     ModelConfig,
     game_by_slug,
     load_config,
     models,
     require_locked_runtime_policy,
 )
-from code2play.generation.staged import generate_candidate_project
-from code2play.providers.dashscope import (
+from spec2game.generation.staged import generate_candidate_project
+from spec2game.providers.dashscope import (
     AWS_MANTLE_API_KEY_ENV,
     AWS_MANTLE_BASE_URL,
     AWS_MANTLE_PROVIDER,
     AWS_MANTLE_QWEN_CODER_MODEL,
+    AWS_MANTLE_QWEN_235B_2507_MODEL,
     AWS_MANTLE_QWEN_VL_MODEL,
     AwsMantleChatJudge,
     DashScopeChatJudge,
@@ -590,14 +591,15 @@ def test_default_judge_router_splits_all_text_and_vision_roles(tmp_path: Path) -
         "functionality",
         "specification_deviation",
         "code_quality",
-        "contract_generation",
     }
     assert len(calls) == len(config["judge"]["routes"])
     for role, call in zip(config["judge"]["routes"], calls, strict=True):
         assert call["provider"] == AWS_MANTLE_PROVIDER
         assert call["model"] == (
-            AWS_MANTLE_QWEN_CODER_MODEL
+            AWS_MANTLE_QWEN_235B_2507_MODEL
             if role in text_roles
+            else AWS_MANTLE_QWEN_CODER_MODEL
+            if role == "contract_generation"
             else AWS_MANTLE_QWEN_VL_MODEL
         )
         assert call["api_key_env"] == AWS_MANTLE_API_KEY_ENV
@@ -607,11 +609,18 @@ def test_default_judge_router_splits_all_text_and_vision_roles(tmp_path: Path) -
         assert call["reasoning"] is None
 
 
-def test_default_openrouter_terra_candidate_generation_disables_reasoning(
+def test_openrouter_terra_candidate_generation_disables_reasoning(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    config = load_config()
-    model = models(config)[0]
+    model = ModelConfig(
+        id="gpt_5_6_terra",
+        name="GPT-5.6 Terra",
+        provider=OPENROUTER_PROVIDER,
+        model=OPENROUTER_GPT56_TERRA_MODEL,
+        api_key_env=OPENROUTER_API_KEY_ENV,
+        base_url=OPENROUTER_BASE_URL,
+        reasoning=OPENROUTER_GPT56_TERRA_REASONING,
+    )
     settings = candidate_generation_settings(model)
     assert settings == {
         "provider": OPENROUTER_PROVIDER,

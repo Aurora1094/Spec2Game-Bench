@@ -6,7 +6,7 @@ import sys
 
 import pytest
 
-from code2play.config.project import PROJECT_ROOT
+from spec2game.config.project import PROJECT_ROOT
 
 
 SCRIPTS = PROJECT_ROOT / "scripts"

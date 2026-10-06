@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 import pytest
 
-from code2play.cli import CHECKPOINT_CJK_RE, validate_benchmark
-from code2play.config.project import PROJECT_ROOT, games, load_config
-from code2play.generation.prompt_builder import validate_all_prompts
-from code2play.config.variants import carrot_paths, combat_layout, maze_layout, pipe_layout
+from spec2game.cli import CHECKPOINT_CJK_RE, validate_benchmark
+from spec2game.config.project import PROJECT_ROOT, games, load_config, resolve_workspace
+from spec2game.generation.prompt_builder import validate_all_prompts
+from spec2game.config.variants import carrot_paths, combat_layout, maze_layout, pipe_layout
 
 
 def test_catalog_has_fifteen_games_and_locked_checkpoint_totals() -> None:
@@ -73,3 +74,11 @@ def test_variant_layout_checks_detect_corruption_and_blocked_spawns():
     zelda = (root / "mini_zelda_var07/spec.md").read_text(encoding="utf-8")
     with pytest.raises(ValueError, match="overlaps"):
         combat_layout(zelda.replace("(390, 180)", "(90, 300)"), "mini_zelda")
+
+
+def test_legacy_workspace_environment_name_remains_supported(monkeypatch, tmp_path: Path) -> None:
+    legacy_workspace = tmp_path / "legacy-workspace"
+    monkeypatch.delenv("SPEC2GAME_WORKSPACE", raising=False)
+    monkeypatch.setenv("CODE2PLAY_WORKSPACE", str(legacy_workspace))
+
+    assert resolve_workspace() == legacy_workspace.resolve()

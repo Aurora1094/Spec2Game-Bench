@@ -7,13 +7,13 @@ from types import SimpleNamespace
 
 import pytest
 
-from code2play.cli import _mock_contract_generator, main
-from code2play.config.project import (games, load_config, normalized_policy_sha256,
+from spec2game.cli import _mock_contract_generator, main
+from spec2game.config.project import (games, load_config, normalized_policy_sha256,
                                       require_locked_runtime_policy, select_run_config, task_storage_dir)
-from code2play.d4.contracts import ContractsIncomplete, build_round_contracts, validate_round_manifest
-from code2play.execution import benchmark
-from code2play.providers.dashscope import JudgeAttemptsExhausted, candidate_generation_settings
-from code2play.reporting.tracks import api_usage, combined_report, inspect_run
+from spec2game.d4.contracts import ContractsIncomplete, build_round_contracts, validate_round_manifest
+from spec2game.execution import benchmark
+from spec2game.providers.dashscope import JudgeAttemptsExhausted, candidate_generation_settings
+from spec2game.reporting.tracks import api_usage, combined_report, inspect_run
 
 
 def put(path, value):
@@ -37,7 +37,7 @@ def test_tracks_select_models_independently_of_judge_and_preserve_resume_identit
     alternate = select_run_config(original, model_id="other_candidate")
     require_locked_runtime_policy(alternate)
     assert alternate["judge"] == selected["judge"]
-    from code2play.config.project import models
+    from spec2game.config.project import models
     assert candidate_generation_settings(models(alternate)[0])["model"] == second["model"]
     assert len(select_run_config(original, model_id="other_candidate", track="full150", game_slug="snake")["games"]) == 10
     assert select_run_config(original, model_id="other_candidate", track="full150", game_slug="snake", variant_id="var09")["games"][0]["slug"] == "snake_var09"
@@ -212,7 +212,7 @@ def test_plan_and_budget_are_offline_and_evaluate_requires_one_instance(monkeypa
 
 
 def test_contract_recovers_interruption_between_manifest_and_pointer(tmp_path, monkeypatch):
-    from code2play.d4 import contracts
+    from spec2game.d4 import contracts
     config = select_run_config(load_config(), game_slug="snake")
     root = tmp_path / "publish-interrupted"
     writer = contracts._write_json
@@ -236,7 +236,7 @@ def test_contract_recovers_interruption_between_manifest_and_pointer(tmp_path, m
 
 
 def test_long_workspace_and_long_purposes_do_not_expand_request_names(tmp_path, monkeypatch):
-    from code2play.providers.dashscope import OpenRouterChatJudge
+    from spec2game.providers.dashscope import OpenRouterChatJudge
     monkeypatch.setenv("OPENROUTER_API_KEY", "test-key")
     root = tmp_path / ("workspace" * 8) / "model_calls" / "functionality"
 
@@ -260,8 +260,8 @@ def test_long_workspace_and_long_purposes_do_not_expand_request_names(tmp_path, 
 
 
 def test_budget_uses_instance_workload_and_shared_contracts_once(tmp_path):
-    from code2play.reporting.budget import project_budget
-    from code2play.providers.dashscope import resolve_judge_route
+    from spec2game.reporting.budget import project_budget
+    from spec2game.providers.dashscope import resolve_judge_route
     root = tmp_path / "runs/pilot"
     config, state = make_scored_run(root, "core15", subset=True)
     task = task_storage_dir(root, state["matrix"][0]["task_id"])
@@ -318,7 +318,7 @@ def test_usage_uses_optional_provider_image_token_breakdown(tmp_path):
 
 
 def test_budget_does_not_price_unexecuted_judging_as_a_full_workload(tmp_path):
-    from code2play.reporting.budget import project_budget
+    from spec2game.reporting.budget import project_budget
     root = tmp_path / "runs/adapter-failed"
     config, state = make_scored_run(root, "core15", subset=True)
     task = task_storage_dir(root, state["matrix"][0]["task_id"])

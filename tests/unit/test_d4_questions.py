@@ -5,17 +5,17 @@ from pathlib import Path
 import pytest
 from PIL import Image
 
-from code2play.config.project import game_by_slug, load_config
-from code2play.d4.contracts import build_round_contracts
-from code2play.d4.questions import (
+from spec2game.config.project import game_by_slug, load_config
+from spec2game.d4.contracts import build_round_contracts
+from spec2game.d4.questions import (
     _normalize_options,
     _question_operations,
     build_d43_question_pack_single_pass,
     validate_d43_question_pack,
 )
-from code2play.cli import _mock_contract_generator
-from code2play.generation.prompt_builder import load_spec
-from code2play.providers.dashscope import OPENROUTER_QWEN_VL_MODEL
+from spec2game.cli import _mock_contract_generator
+from spec2game.generation.prompt_builder import load_spec
+from spec2game.providers.dashscope import OPENROUTER_QWEN_VL_MODEL
 
 
 class _QuestionGenerator:

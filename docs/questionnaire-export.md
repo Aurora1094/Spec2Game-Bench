@@ -32,8 +32,8 @@ After a task has produced its evaluation artifacts:
 
 ```powershell
 python main.py human export `
-  --task-dir "C:\data\Code2Play-Workspace\runs\main_r1\tasks\snake__qwen3_7_plus__r01" `
-  --output-dir "C:\data\Code2Play-Workspace\questionnaires\round-001" `
+  --task-dir "C:\data\Spec2Game-Workspace\runs\main_r1\tasks\snake__qwen3_7_plus__r01" `
+  --output-dir "C:\data\Spec2Game-Workspace\questionnaires\round-001" `
   --blind-id candidate-001
 ```
 

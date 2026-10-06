@@ -5,17 +5,17 @@ from pathlib import Path
 
 import pytest
 
-from code2play.cli import EXPECTED_SLUGS, _mock_contract_generator, build_parser
-from code2play.config.project import games, load_config, models
-from code2play.d4.contracts import build_round_contracts, validate_d4_contract
-from code2play.evaluation.scoring import assemble_result
-from code2play.execution.benchmark import (
+from spec2game.cli import EXPECTED_SLUGS, _mock_contract_generator, build_parser
+from spec2game.config.project import games, load_config, models
+from spec2game.d4.contracts import build_round_contracts, validate_d4_contract
+from spec2game.evaluation.scoring import assemble_result
+from spec2game.execution.benchmark import (
     run_benchmark,
     validate_batch_state,
     validate_task_state,
 )
-from code2play.providers import dashscope
-from code2play.reporting.reports import (
+from spec2game.providers import dashscope
+from spec2game.reporting.reports import (
     score_item_rows,
     validate_current_report,
     write_multi_run_reports,
@@ -222,7 +222,7 @@ def test_current_batch_matrix_can_be_combined_without_score_regression(
         },
     }
     run_dir = tmp_path / "run-001"
-    from code2play.reporting.reports import write_batch_reports
+    from spec2game.reporting.reports import write_batch_reports
 
     write_batch_reports(run_dir, [record])
     outputs = write_multi_run_reports(tmp_path / "combined", [run_dir])
@@ -284,9 +284,9 @@ def test_default_openrouter_terra_generation_and_aws_mantle_judge_routes() -> No
         if "from openai import" in path.read_text(encoding="utf-8")
         or "import openai" in path.read_text(encoding="utf-8")
     }
-    assert provider_paths == {PROJECT_ROOT / "src" / "code2play" / "providers" / "dashscope.py"}
+    assert provider_paths == {PROJECT_ROOT / "src" / "spec2game" / "providers" / "dashscope.py"}
     assert "compatible-mode" in (
-        PROJECT_ROOT / "src" / "code2play" / "providers" / "dashscope.py"
+        PROJECT_ROOT / "src" / "spec2game" / "providers" / "dashscope.py"
     ).read_text(encoding="utf-8")
 
 

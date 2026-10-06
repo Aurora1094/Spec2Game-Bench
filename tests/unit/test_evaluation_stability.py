@@ -8,7 +8,7 @@ import re
 
 import pytest
 
-from code2play.evaluation.dimensions.d2.protocol_evaluator import (
+from spec2game.evaluation.dimensions.d2.protocol_evaluator import (
     D2_BATCH_MAX_CHECKPOINTS,
     D2_BATCH_TARGET_PROMPT_CHARS,
     MAX_CHECKPOINT_JUDGE_PROMPT_CHARS,
@@ -16,14 +16,14 @@ from code2play.evaluation.dimensions.d2.protocol_evaluator import (
     _judge_dimension_batch,
     _partition_dimension_batches,
 )
-from code2play.evaluation.pipeline import _run_stage
-from code2play.execution import candidate_project as candidate_project_module
-from code2play.execution.candidate_project import (
+from spec2game.evaluation.pipeline import _run_stage
+from spec2game.execution import candidate_project as candidate_project_module
+from spec2game.execution.candidate_project import (
     BENCHMARK_INIT_SOURCE,
     CandidateProject,
     PROJECT_FILES,
 )
-from code2play.execution.protocol_sampling import (
+from spec2game.execution.protocol_sampling import (
     _ordered_d4_2_records,
     _protocol_failure_phase,
 )
