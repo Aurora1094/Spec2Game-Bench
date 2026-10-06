@@ -182,4 +182,7 @@ def _rows(path: Path) -> list[dict]:
 
 
 def _sha(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    # The checked-in lineage hashes were generated from CRLF text files.
+    # Canonicalize line endings so validation is identical on Windows and CI.
+    data = path.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return hashlib.sha256(data.replace(b"\n", b"\r\n")).hexdigest()
