@@ -47,7 +47,9 @@ Dataset = "https://github.com/Aurora1094/Spec2Game-Bench/tree/main/benchmark"
 [project.optional-dependencies]
 dev = [
   "pytest>=8.0",
-  "ruff>=0.6",
+  "ruff==0.15.22",
+  "radon==6.0.1",
+  "bandit==1.9.4",
 ]
 
 [project.scripts]
