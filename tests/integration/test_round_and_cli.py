@@ -11,14 +11,14 @@ import sysconfig
 
 import pytest
 
-from code2play.cli import _mock_contract_generator
-from code2play.config.project import game_by_slug, games, load_config, models
-from code2play.d4.contracts import (
+from spec2game.cli import _mock_contract_generator
+from spec2game.config.project import game_by_slug, games, load_config, models
+from spec2game.d4.contracts import (
     build_round_contracts,
     manifest_sha256,
     validate_round_manifest,
 )
-from code2play.execution import benchmark as benchmark_module
+from spec2game.execution import benchmark as benchmark_module
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -431,8 +431,8 @@ def test_generation_gap_skips_generation_and_evaluation_until_explicit_resume(
     assert json.loads((task_dir / "summary.json").read_text(encoding="utf-8"))["status"] == "needs_regeneration"
 
 
-def _installed_console_script() -> Path | None:
-    found = shutil.which("code2play")
+def _installed_console_script(command: str = "spec2game") -> Path | None:
+    found = shutil.which(command)
     if found:
         return Path(found)
     roots: list[Path] = []
@@ -447,7 +447,7 @@ def _installed_console_script() -> Path | None:
         )
     )
     for root in roots:
-        for name in ("code2play.exe", "code2play.cmd", "code2play"):
+        for name in (f"{command}.exe", f"{command}.cmd", command):
             candidate = root / name
             if candidate.is_file():
                 return candidate
@@ -457,7 +457,7 @@ def _installed_console_script() -> Path | None:
 def test_main_and_installed_console_entrypoint_have_matching_core_behavior() -> None:
     script = _installed_console_script()
     if script is None:
-        pytest.skip("installed code2play console script is unavailable")
+        pytest.skip("installed spec2game console script is unavailable")
     main_result = _run_cli("validate")
     console_result = subprocess.run(
         [str(script), "validate"],
@@ -471,3 +471,20 @@ def test_main_and_installed_console_entrypoint_have_matching_core_behavior() -> 
     main_payload = _payload(main_result)
     console_payload = json.loads(console_result.stdout)
     assert console_payload == main_payload
+
+
+def test_legacy_code2play_console_alias_has_matching_core_behavior() -> None:
+    script = _installed_console_script("code2play")
+    if script is None:
+        pytest.skip("installed code2play compatibility alias is unavailable")
+    main_result = _run_cli("validate")
+    console_result = subprocess.run(
+        [str(script), "validate"],
+        cwd=PROJECT_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert main_result.returncode == 0, main_result.stderr
+    assert console_result.returncode == 0, console_result.stderr
+    assert json.loads(console_result.stdout) == _payload(main_result)

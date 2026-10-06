@@ -6,6 +6,27 @@ build-backend = "setuptools.build_meta"
 name = "spec2game-bench"
 version = "1.0.0"
 description = "Spec2Game-Bench: a 15-game staged code generation benchmark"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+  {name = "Yixue Cai"},
+  {name = "Yuzhe Zhao"},
+  {name = "Hanxiang Chao"},
+  {name = "Qingsen Ma"},
+  {name = "Ziheng Xiong"},
+  {name = "Jinhu Qi"},
+  {name = "Irwin King"},
+]
+keywords = ["large language models", "code generation", "benchmark", "game generation", "specification realization"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Testing",
+]
 requires-python = ">=3.10"
 dependencies = [
   "openai>=1.30",
@@ -16,6 +37,13 @@ dependencies = [
   "jsonschema>=4.20",
 ]
 
+[project.urls]
+Homepage = "https://github.com/Aurora1094/Spec2Game-Bench"
+Repository = "https://github.com/Aurora1094/Spec2Game-Bench"
+Documentation = "https://github.com/Aurora1094/Spec2Game-Bench/tree/main/docs"
+Paper = "https://arxiv.org/abs/2610.04253"
+Dataset = "https://github.com/Aurora1094/Spec2Game-Bench/tree/main/benchmark"
+
 [project.optional-dependencies]
 dev = [
   "pytest>=8.0",
@@ -23,7 +51,9 @@ dev = [
 ]
 
 [project.scripts]
-code2play = "code2play.cli:main"
+spec2game = "spec2game.cli:main"
+# Compatibility alias for scripts written against releases before the rename.
+code2play = "spec2game.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -32,7 +62,7 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [tool.setuptools.package-data]
-code2play = [
+spec2game = [
   "evaluation/dimensions/d3/config.json",
   "generation/templates/*.md",
 ]

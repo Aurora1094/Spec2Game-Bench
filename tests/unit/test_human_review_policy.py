@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import json
 
-from code2play.config.project import all_instances, load_config
-from code2play.generation.prompt_builder import load_evaluator_checkpoints, load_spec
-from code2play.human_review.policy import (
+from spec2game.config.project import all_instances, load_config
+from spec2game.generation.prompt_builder import load_evaluator_checkpoints, load_spec
+from spec2game.human_review.policy import (
     D2_DIMENSIONS,
     HUMAN_REVIEW_ITEM_COUNT,
     HUMAN_REVIEW_POLICY_PATH,

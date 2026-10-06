@@ -187,9 +187,11 @@ completeness retries, not score-based code edits.
 
 The minimum software inputs for a local run are Python 3.10+, Pygame 2.5 or
 newer, the checked-in catalog and schemas, and the configuration file used to
-lock the run. Set `CODE2PLAY_PYTHON` when candidate workers must use a specific
+lock the run. Set `SPEC2GAME_PYTHON` when candidate workers must use a specific
 Python executable. Keep all mutable runs, contracts, and reports in an
-external directory selected by `CODE2PLAY_WORKSPACE` or `--workspace`.
+external directory selected by `SPEC2GAME_WORKSPACE` or `--workspace`. The
+legacy `CODE2PLAY_PYTHON` and `CODE2PLAY_WORKSPACE` names remain accepted for
+existing runs.
 
 The following commands validate the checked-in policy without making paid
 requests:

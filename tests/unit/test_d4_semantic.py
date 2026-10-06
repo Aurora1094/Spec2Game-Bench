@@ -5,9 +5,9 @@ from pathlib import Path
 
 import pytest
 
-import code2play.evaluation.dimensions.d4.semantic_ux as semantic_ux
-from code2play.d4.contracts import D4_CONTRACT_DESIGN_VERSION
-from code2play.evaluation.dimensions.d4.semantic_ux import (
+import spec2game.evaluation.dimensions.d4.semantic_ux as semantic_ux
+from spec2game.d4.contracts import D4_CONTRACT_DESIGN_VERSION
+from spec2game.evaluation.dimensions.d4.semantic_ux import (
     D42_MAX_TRANSITIONS_PER_BATCH,
     _evaluate_d42,
     _payload_sha256,

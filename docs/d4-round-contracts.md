@@ -61,6 +61,6 @@ candidate-specific.
 
 The default local smoke command uses deterministic mock contract output only
 to test schema and lock behavior. Mock contracts are not official benchmark
-evidence. Use `AWS_MANTLE_API_KEY` and `code2play contract build` for an
+evidence. Use `AWS_MANTLE_API_KEY` and `spec2game contract build` for an
 official round. The contract route is `qwen.qwen3-coder-next` in the checked-in
 configuration.

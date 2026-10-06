@@ -6,9 +6,9 @@ from typing import Any
 
 import pytest
 
-from code2play.execution.protocol_sampling import _compile_checkpoint_programs
-from code2play.evaluation.checkpoint_compiler import compile_checkpoint_program_batch
-from code2play.providers.dashscope import JudgeAttemptsExhausted
+from spec2game.execution.protocol_sampling import _compile_checkpoint_programs
+from spec2game.evaluation.checkpoint_compiler import compile_checkpoint_program_batch
+from spec2game.providers.dashscope import JudgeAttemptsExhausted
 
 
 class _RemoteProtocolError(Exception):

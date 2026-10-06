@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-import code2play.providers.dashscope as providers
-from code2play.cli import build_parser, main
+import spec2game.providers.dashscope as providers
+from spec2game.cli import build_parser, main
 
 
 def test_cli_exposes_required_commands_and_no_response_collection_commands() -> None:

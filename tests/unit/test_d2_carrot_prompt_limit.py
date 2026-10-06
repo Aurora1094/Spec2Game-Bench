@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from code2play.evaluation.dimensions.d2.protocol_evaluator import (
+from spec2game.evaluation.dimensions.d2.protocol_evaluator import (
     CARROT_DEFENSE_MAX_CHECKPOINT_JUDGE_PROMPT_CHARS,
     MAX_CHECKPOINT_JUDGE_PROMPT_CHARS,
     _is_carrot_defense_checkpoint,

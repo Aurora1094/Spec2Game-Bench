@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from code2play.planning.requests import _compiler_usage
+from spec2game.planning.requests import _compiler_usage
 
 
 def test_compiler_usage_accumulates_all_attempt_usage_from_request_result(

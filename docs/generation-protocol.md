@@ -47,7 +47,8 @@ model configuration, rather than by evaluator feedback.
 ## Workspace and reproducibility
 
 Mutable candidates, traces, and reports are stored outside the Git checkout
-under the workspace selected by `CODE2PLAY_WORKSPACE` or `--workspace`. The
+under the workspace selected by `SPEC2GAME_WORKSPACE` or `--workspace`. The
+legacy `CODE2PLAY_WORKSPACE` name remains accepted for existing runs. The
 run manifest records the selected model configuration, track, round, prompt
 and contract hashes, retry policy, and output paths. Re-running an official
 track must use a fresh run ID and must not reuse candidates or scores from a

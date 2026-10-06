@@ -1,4 +1,4 @@
-"""Thin source-checkout forwarder for the ``code2play`` CLI."""
+"""Thin source-checkout forwarder for the ``spec2game`` CLI."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 
-from code2play.cli import main
+from spec2game.cli import main
 
 
 if __name__ == "__main__":
