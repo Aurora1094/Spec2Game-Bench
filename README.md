@@ -1,28 +1,25 @@
 # Spec2Game-Bench
 
-Spec2Game-Bench is the benchmark implementation for testing whether large
-language models can translate detailed natural-language game specifications
-into complete, playable Pygame projects. It evaluates the whole artifact and
-its interaction trace rather than an isolated function or a single code
-snippet.
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
 
-The benchmark is organized around 15 game families. Each family has one
-canonical task and nine controlled variants that change rules, parameters,
-maps, object types, or combinations of these factors. The variants are
-designed to test specification following when the requested behavior differs
-from familiar game conventions.
+**[Paper](https://arxiv.org/abs/2610.04253)** &nbsp; **[arXiv: 2610.04253](https://arxiv.org/abs/2610.04253)** &nbsp; **[Documentation](docs/)** &nbsp; **[Dataset](benchmark/)** &nbsp; **[Leaderboard](#results-and-leaderboard)**
+
+Spec2Game-Bench is a benchmark for testing whether large language models can translate detailed natural-language game specifications into complete, playable Pygame projects. It evaluates the whole artifact and its interaction trace rather than an isolated function or a single code snippet.
+
+The benchmark is organized around 15 game families. Each family has one canonical task and nine controlled variants that change rules, parameters, maps, object types, or combinations of these factors. The variants test specification following when the requested behavior differs from familiar game conventions.
 
 ## Contents
 
 - [Benchmark at a glance](#benchmark-at-a-glance)
 - [Evaluation tracks](#evaluation-tracks)
 - [Evaluation](#evaluation)
-- [Generation protocol](#generation-protocol)
-- [Installation](#installation)
+- [Quick start](#quick-start)
+- [Generation and judging](#generation-and-judging)
 - [Running the benchmark](#running-the-benchmark)
 - [Repository layout](#repository-layout)
 - [Data and artifacts](#data-and-artifacts)
 - [Human review export](#human-review-export)
+- [Results and leaderboard](#results-and-leaderboard)
 - [Documentation](#documentation)
 - [Citation](#citation)
 
@@ -82,58 +79,38 @@ Final = 0.20*D1 + g(D1)*(0.50*D2 + 0.15*D3 + 0.15*D4)
 D1 controls the contribution of D2-D4 through `g(D1)`. D2-D4 are still
 measured for diagnosis whenever valid evidence exists. If a valid dimension is
 missing, the official total remains incomplete; the fixed weights are never
-renormalized. See [Evaluation protocol](docs/evaluation-protocol.md) for the
-full evidence and resume semantics.
+renormalized. See [Evaluation protocol](docs/evaluation-protocol.md) for full
+evidence and resume semantics.
 
-## Generation protocol
+## Quick start
 
-Candidate source is generated in four locked stages. Later stages receive the
-source and API summaries required by the public generation contract from
-earlier stages.
+The local checks below do not make paid provider requests:
 
-| Stage | Output file | Normal limit | Hard limit |
-| --- | --- | ---: | ---: |
-| 1 | `state.py` | 4,000 tokens | 5,000 tokens |
-| 2 | `game.py` | 7,000 tokens | 14,000 tokens |
-| 3 | `rendering.py` | 5,000 tokens | 10,000 tokens |
-| 4 | `main.py` | 2,000 tokens | 2,000 tokens |
-| **Total** |  | **18,000** | **31,000** |
-
-The default candidate in `configs/examples/qwen37_main.yaml` is Qwen3.7 Plus
-through Alibaba DashScope. Generation uses temperature `0.2`, at most two
-technical attempts per stage, a two-second retry delay, truncation detection,
-and zero semantic repair attempts. Technical retries do not receive execution
-feedback or score-based code repairs.
-
-Every candidate is validated as exactly this package:
-
-```text
-candidate/
-  __init__.py
-  state.py
-  game.py
-  rendering.py
-  main.py
+```bash
+python -m pip install -e '.[dev]'
+python main.py validate
+python main.py smoke
+python main.py preflight
+python -m pytest -q
+python -m ruff check src scripts main.py tests
 ```
 
-The adapter must expose `init`, `action`, `snapshot`, `render`, and `close`.
-Candidate processes run in isolated working directories, and evaluator-only
-checkpoint IDs, contracts, prompts, and judge outputs are written after the
-candidate process exits.
+`smoke` and `preflight` use deterministic local checks unless `--live` is
+specified. A live preflight and an official benchmark require credentials for
+the selected candidate and the locked AWS Mantle judges.
 
-### Judge routing
+## Generation and judging
 
-The example configuration routes evaluation roles as follows:
+Candidate source is generated in four locked stages (`state.py`, `game.py`,
+`rendering.py`, and `main.py`) and validated as a five-file Python project.
+The default example uses Qwen3.7 Plus through Alibaba DashScope. The complete
+stage limits, retry policy, candidate interface, and isolation rules are in
+[Generation protocol](docs/generation-protocol.md).
 
-| Role | Model | Provider |
-| --- | --- | --- |
-| Action compilation, D2, and D3 | `qwen.qwen3-235b-a22b-2507` | AWS Bedrock Mantle |
-| D4 visual scoring and visual questions | `qwen.qwen3-vl-235b-a22b-instruct` | AWS Bedrock Mantle |
-| D4 contract generation | `qwen.qwen3-coder-next` | AWS Bedrock Mantle |
-
-Judge temperature is `0.0`, requests are stateless, and explicit reasoning is
-disabled. The routing policy is locked into the run and recorded with its
-manifest.
+Evaluation roles, model routing, temperature, stateless request policy, and
+run-manifest requirements are documented in [Judge routing](docs/judge-routing.md).
+The D4 contract lifecycle and evaluator-only boundary are documented in
+[D4 round contracts](docs/d4-round-contracts.md).
 
 ## Installation
 
@@ -154,62 +131,29 @@ the existing `code2play` Python namespace, console entry point, and
 All mutable outputs should be placed outside the Git checkout. Set a workspace
 explicitly with `CODE2PLAY_WORKSPACE` or pass `--workspace`.
 
-### Local validation
-
-These commands do not make paid provider requests:
-
-```bash
-python main.py validate
-python main.py smoke
-python main.py preflight
-python -m pytest -q
-python -m ruff check src scripts main.py tests
-```
-
-`smoke` and `preflight` use deterministic local checks unless `--live` is
-specified. A live preflight and an official benchmark require the credentials
-for the selected candidate and the locked AWS Mantle judges.
-
-### Official run
-
-For the checked-in example configuration, set:
+For the checked-in example configuration, set the candidate and judge keys and
+then build the D4 contracts before generating candidates:
 
 ```bash
 export DASHSCOPE_API_KEY='...'
 export AWS_MANTLE_API_KEY='...'
 export CODE2PLAY_WORKSPACE=/path/to/Code2Play-Workspace
-```
 
-On PowerShell, use `$env:NAME = '...'` instead. The candidate key changes with
-the selected model configuration; judge requests use `AWS_MANTLE_API_KEY` in
-the example configuration.
-
-Build and lock the D4 contracts before generating candidates:
-
-```bash
 python main.py contract build --track full150 --round-id study
-```
-
-Then run either track:
-
-```bash
 python main.py benchmark \
   --model qwen3_7_plus \
   --track core15 \
   --run-id qwen-core \
   --round-id study
-
-python main.py benchmark \
-  --model qwen3_7_plus \
-  --track full150 \
-  --run-id qwen-full \
-  --round-id study
 ```
 
-Use `--game` and `--variant` for a focused trial. `contract build --mock` is
-available for local schema and lock tests only; mock contracts are not official
-benchmark evidence. A run can be inspected or summarized without executing
-new tasks:
+On PowerShell, use `$env:NAME = '...'` instead. The candidate key changes with
+the selected model configuration; judge requests use `AWS_MANTLE_API_KEY` in
+the example configuration. Use `--track full150` for the Full-150 run and
+`--game`/`--variant` for a focused trial. `contract build --mock` is available
+for local schema and lock tests only; mock contracts are not official evidence.
+
+A run can be inspected without executing new tasks:
 
 ```bash
 python main.py status --run-id qwen-full
@@ -275,17 +219,12 @@ python scripts/convert_benchmark_data.py \
 python main.py validate
 ```
 
-The D4 contract is generated once per game at the beginning of a round from
-the public specification and eligible checkpoint fields. Its manifest and
-input hashes are locked before candidate generation; candidates never receive
-the contract or evaluator-only artifacts. See
-[D4 round contracts](docs/d4-round-contracts.md).
-
 ## Human review export
 
 Human review is an export-only sidecar. It creates an anonymous public bundle
 and a private mapping for internal audit; it does not host a server or alter
-automatic scores.
+automatic scores. See [Questionnaire export](docs/questionnaire-export.md) for
+the fixed item design and public/private boundary.
 
 ```bash
 python main.py human export \
@@ -296,27 +235,37 @@ python main.py human validate \
   --bundle-dir /path/to/questionnaire-round/public/candidate-001
 ```
 
-See [questionnaire export](docs/questionnaire-export.md) for the fixed item
-design and public/private boundary.
+## Results and leaderboard
+
+Official benchmark results and the public leaderboard will be linked here with
+the paper release. Until then, use the reporting commands above for local run
+summaries. Results from mock contracts or partial runs should not be reported
+as official benchmark evidence.
 
 ## Documentation
 
 - [Evaluation protocol](docs/evaluation-protocol.md)
+- [Generation protocol](docs/generation-protocol.md)
+- [Judge routing](docs/judge-routing.md)
 - [Core-15 and Full-150](docs/dual_tracks.md)
 - [Data format](docs/data-format.md)
 - [D4 round contracts](docs/d4-round-contracts.md)
 - [Questionnaire export](docs/questionnaire-export.md)
+- [Final acceptance report](docs/final-acceptance-report.md)
 
 ## Citation
 
 If you use Spec2Game-Bench, please cite the accompanying benchmark paper and
-link to this repository:
+link to this repository. The accompanying preprint is available at
+<https://arxiv.org/abs/2610.04253>.
 
 ```bibtex
 @misc{spec2gamebench,
   title  = {Spec2Game Benchmark: Can LLMs Generate Complete Playable Games from Specifications?},
   author = {Spec2Game-Bench Authors},
   year   = {2026},
-  url    = {https://github.com/Aurora1094/Spec2Game-Bench}
+  url    = {https://github.com/Aurora1094/Spec2Game-Bench},
+  eprint = {2610.04253},
+  archivePrefix = {arXiv}
 }
 ```
