@@ -40,13 +40,9 @@ The benchmark contains 15 game families and 150 task instances. Each family has 
 | Complexity levels | Easy, Medium, Hard; 5 families per level |
 | Core-15 track | 15 canonical tasks |
 | Full-150 track | All 150 task instances |
-| Formal candidate projects | 3,330 from 14 LLMs |
 | Candidate split | 630 Core-15 + 2,700 Full-150 |
 | Checkpoints | 537 canonical; 5,475 expanded catalog |
-| Evaluation dimensions | D1-D4 |
 | Human assessment | 585 generated projects |
-| Ablation studies | 2 |
-| Candidate output | Five-file Python project |
 
 ## Benchmark design
 
