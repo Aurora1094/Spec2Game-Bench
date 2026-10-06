@@ -7,8 +7,6 @@
 <p align="center">
   <a href="https://arxiv.org/abs/2610.04253"><img src="https://img.shields.io/badge/Paper-2610.04253-b31b1b.svg" alt="Paper: arXiv 2610.04253"></a>
   <a href="pyproject.toml"><img src="https://img.shields.io/badge/Python-3.10%2B-3776AB.svg" alt="Python 3.10+"></a>
-  <a href="docs/"><img src="https://img.shields.io/badge/Docs-Documentation-0A7EA4.svg" alt="Documentation"></a>
-  <a href="benchmark/"><img src="https://img.shields.io/badge/Dataset-Benchmark-2E8B57.svg" alt="Dataset"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-4E5D6C.svg" alt="Apache-2.0 license"></a>
   <a href="https://github.com/Aurora1094/Spec2Game-Bench/actions/workflows/ci.yml"><img src="https://github.com/Aurora1094/Spec2Game-Bench/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI tests"></a>
 </p>
