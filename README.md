@@ -1,4 +1,4 @@
-# Spec2Game-Bench
+
 
 <p align="center">
   <img src="assets/spec2game-logo.png" alt="Spec2Game-Bench logo" width="560">
