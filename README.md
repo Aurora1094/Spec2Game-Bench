@@ -1,8 +1,10 @@
 # Spec2Game-Bench
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
-
-**[Paper](https://arxiv.org/abs/2610.04253)** &nbsp; **[arXiv: 2610.04253](https://arxiv.org/abs/2610.04253)** &nbsp; **[Documentation](docs/)** &nbsp; **[Dataset](benchmark/)** &nbsp; **[Leaderboard](#results-and-leaderboard)**
+[![Paper](https://img.shields.io/badge/Paper-2610.04253-b31b1b.svg)](https://arxiv.org/abs/2610.04253)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg)](pyproject.toml)
+[![Docs](https://img.shields.io/badge/Docs-Documentation-0A7EA4.svg)](docs/)
+[![Dataset](https://img.shields.io/badge/Dataset-Benchmark-2E8B57.svg)](benchmark/)
+[![Leaderboard](https://img.shields.io/badge/Leaderboard-coming%20soon-lightgrey.svg)](#results-and-leaderboard)
 
 Spec2Game-Bench is a benchmark for testing whether large language models can translate detailed natural-language game specifications into complete, playable Pygame projects. It evaluates the whole artifact and its interaction trace rather than an isolated function or a single code snippet.
 
