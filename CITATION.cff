@@ -1,0 +1,50 @@
+cff-version: 1.2.0
+title: "Spec2Game-Bench"
+message: "If you use Spec2Game-Bench, please cite the following paper."
+type: software
+authors:
+  - family-names: Cai
+    given-names: Yixue
+  - family-names: Zhao
+    given-names: Yuzhe
+  - family-names: Chao
+    given-names: Hanxiang
+  - family-names: Ma
+    given-names: Qingsen
+  - family-names: Xiong
+    given-names: Ziheng
+  - family-names: Qi
+    given-names: Jinhu
+  - family-names: King
+    given-names: Irwin
+repository-code: "https://github.com/Aurora1094/Spec2Game-Bench"
+url: "https://arxiv.org/abs/2610.04253"
+license: Apache-2.0
+keywords:
+  - large language models
+  - code generation
+  - benchmark
+  - game generation
+  - specification realization
+preferred-citation:
+  type: article
+  title: "Spec2Game: Can LLMs Generate Complete Playable Games from Detailed Specifications?"
+  authors:
+    - family-names: Cai
+      given-names: Yixue
+    - family-names: Zhao
+      given-names: Yuzhe
+    - family-names: Chao
+      given-names: Hanxiang
+    - family-names: Ma
+      given-names: Qingsen
+    - family-names: Xiong
+      given-names: Ziheng
+    - family-names: Qi
+      given-names: Jinhu
+    - family-names: King
+      given-names: Irwin
+  year: 2026
+  journal: "arXiv"
+  eprint: "2610.04253"
+  url: "https://arxiv.org/abs/2610.04253"
