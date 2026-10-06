@@ -27,8 +27,6 @@ The benchmark contains 15 game families and 150 task instances. Each family has 
 - [Quick start](#quick-start)
 - [Official evaluation](#official-evaluation)
 - [Data and artifacts](#data-and-artifacts)
-- [Documentation](#documentation)
-- [Limitations and scope](#limitations-and-scope)
 - [Citation](#citation)
 
 ## At a glance
@@ -173,23 +171,7 @@ Spec2Game-Bench/
 `-- README.md
 ```
 
-## Documentation
 
-- [Evaluation protocol](docs/evaluation-protocol.md)
-- [Generation protocol](docs/generation-protocol.md)
-- [Judge routing](docs/judge-routing.md)
-- [Core-15 and Full-150](docs/dual_tracks.md)
-- [Data format](docs/data-format.md)
-- [D4 round contracts](docs/d4-round-contracts.md)
-- [Questionnaire export](docs/questionnaire-export.md)
-- [Final acceptance report](docs/final-acceptance-report.md)
-
-## Limitations and scope
-
-- The current benchmark focuses on classic small-scale games and does not cover the full space of game families and mechanics.
-- The main setting is open-loop generation from detailed specifications. It does not provide runtime feedback, semantic repair, or agentic coding workflows during generation.
-- Parts of D2-D4 rely on text or vision judges and may be affected by evaluator-specific bias or limited evidence coverage.
-- The benchmark measures specification realization and user-facing evidence; it does not claim to measure gameplay fun, novelty, or difficulty.
 
 ## Citation
 
