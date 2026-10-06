@@ -1,5 +1,3 @@
-
-
 <p align="center">
   <img src="assets/spec2game-logo.png" alt="Spec2Game-Bench logo" width="560">
 </p>
@@ -19,6 +17,7 @@
   <a href="benchmark/"><img src="https://img.shields.io/badge/Dataset-Benchmark-2E8B57.svg" alt="Dataset"></a>
   <a href="#results-from-the-paper"><img src="https://img.shields.io/badge/Results-Paper-6F42C1.svg" alt="Results from the paper"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-4E5D6C.svg" alt="Apache-2.0 license"></a>
+  <a href="https://github.com/Aurora1094/Spec2Game-Bench/actions/workflows/ci.yml"><img src="https://github.com/Aurora1094/Spec2Game-Bench/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI tests"></a>
 </p>
 
 **Paper:** *Spec2Game: Can LLMs Generate Complete Playable Games from Detailed Specifications?*
