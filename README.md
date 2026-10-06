@@ -1,95 +1,125 @@
 # Spec2Game-Bench
 
-[![Paper](https://img.shields.io/badge/Paper-2610.04253-b31b1b.svg)](https://arxiv.org/abs/2610.04253)
-[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg)](pyproject.toml)
-[![Docs](https://img.shields.io/badge/Docs-Documentation-0A7EA4.svg)](docs/)
-[![Dataset](https://img.shields.io/badge/Dataset-Benchmark-2E8B57.svg)](benchmark/)
-[![Leaderboard](https://img.shields.io/badge/Leaderboard-coming%20soon-lightgrey.svg)](#results-and-leaderboard)
+<p align="center">
+  <img src="assets/spec2game-logo-dynamic.svg" alt="Spec2Game-Bench logo" width="560">
+</p>
 
-Spec2Game-Bench is a benchmark for testing whether large language models can translate detailed natural-language game specifications into complete, playable Pygame projects. It evaluates the whole artifact and its interaction trace rather than an isolated function or a single code snippet.
+<p align="center">
+  <a href="https://arxiv.org/abs/2610.04253"><img src="https://img.shields.io/badge/Paper-2610.04253-b31b1b.svg" alt="Paper: arXiv 2610.04253"></a>
+  <a href="pyproject.toml"><img src="https://img.shields.io/badge/Python-3.10%2B-3776AB.svg" alt="Python 3.10+"></a>
+  <a href="docs/"><img src="https://img.shields.io/badge/Docs-Documentation-0A7EA4.svg" alt="Documentation"></a>
+  <a href="benchmark/"><img src="https://img.shields.io/badge/Dataset-Benchmark-2E8B57.svg" alt="Dataset"></a>
+  <a href="#results-from-the-paper"><img src="https://img.shields.io/badge/Results-Paper-6F42C1.svg" alt="Results from the paper"></a>
+</p>
 
-The benchmark is organized around 15 game families. Each family has one canonical task and nine controlled variants that change rules, parameters, maps, object types, or combinations of these factors. The variants test specification following when the requested behavior differs from familiar game conventions.
+**Paper:** *Spec2Game: Can LLMs Generate Complete Playable Games from Detailed Specifications?*
+
+Spec2Game-Bench evaluates whether large language models can turn detailed natural-language game specifications into complete, playable Pygame projects. The benchmark focuses on **specification realization**: a project that runs is not necessarily a project that implements the requested behavior, feedback, rules, and termination conditions.
+
+The benchmark contains 15 game families and 150 task instances. Each family has one canonical task and nine controlled variants that change rules, parameters, maps, object types, or combinations of these factors. Generated projects are evaluated with source-code, runtime, and visual evidence.
 
 ## Contents
 
-- [Benchmark at a glance](#benchmark-at-a-glance)
-- [Evaluation tracks](#evaluation-tracks)
-- [Evaluation](#evaluation)
+- [At a glance](#at-a-glance)
+- [Benchmark design](#benchmark-design)
+- [Evaluation framework](#evaluation-framework)
+- [Results from the paper](#results-from-the-paper)
 - [Quick start](#quick-start)
-- [Generation and judging](#generation-and-judging)
-- [Running the benchmark](#running-the-benchmark)
-- [Repository layout](#repository-layout)
+- [Official evaluation](#official-evaluation)
 - [Data and artifacts](#data-and-artifacts)
-- [Human review export](#human-review-export)
-- [Results and leaderboard](#results-and-leaderboard)
 - [Documentation](#documentation)
+- [Limitations and scope](#limitations-and-scope)
 - [Citation](#citation)
 
-## Benchmark at a glance
+## At a glance
 
 | Property | Value |
 | --- | --- |
 | Game families | 15 |
-| Difficulty split | 5 Easy, 5 Medium, 5 Hard |
-| Canonical tasks | 15 |
-| Controlled variants | 135 (9 per family) |
-| Core-15 instances | 15 canonical tasks |
-| Full-150 instances | 15 canonical tasks + 135 variants |
-| Canonical checkpoints | 537 |
-| Full-150 checkpoints | 5,475 |
+| Task instances | 150 (15 canonical tasks + 135 controlled variants) |
+| Complexity levels | Easy, Medium, Hard; 5 families per level |
+| Core-15 track | 15 canonical tasks |
+| Full-150 track | All 150 task instances |
+| Formal candidate projects | 3,330 from 14 LLMs |
+| Candidate split | 630 Core-15 + 2,700 Full-150 |
+| Checkpoints | 537 canonical; 5,475 expanded catalog |
 | Evaluation dimensions | D1-D4 |
+| Human assessment | 585 generated projects |
+| Ablation studies | 2 |
 | Candidate output | Five-file Python project |
-| Generation protocol | Four sequential source stages |
 
-The checked-in catalog is ordered and hash-audited. It contains the complete
-specification and checkpoint data needed to reproduce the benchmark definition;
-generated candidates and evaluation traces are kept in an external workspace.
+## Benchmark design
 
-## Evaluation tracks
+### Task construction
 
-Core-15 and Full-150 are separate evaluation tracks. A model generates a new
-candidate for every instance in the selected track; candidates, sampling
-traces, compiler outputs, and scores are not reused across tracks.
+Each task uses a standardized seven-part specification:
+
+1. Game overview
+2. Scene and interface
+3. Objects and states
+4. Player interaction
+5. Core rules and mechanics
+6. Game flow and progression
+7. Goal, feedback, and termination
+
+The 15 families cover real-time reaction, shooting and combat, spatial exploration and platform adventure, logic and puzzle, and strategy and resource management. Each family contains a canonical task and nine standalone controlled variants. Variants preserve the family identity while changing one primary rule or design factor, making them useful for testing robustness to specification changes.
+
+Implementation complexity is assigned with a mechanism-grounded rubric covering operation, object and rule, spatial and scene, adversarial behavior, and interface and information complexity. The resulting Easy, Medium, and Hard labels describe implementation demands rather than player difficulty.
+
+### Evaluation tracks
+
+Core-15 and Full-150 are separate evaluation tracks. Candidates, sampling traces, compiler outputs, and scores are generated independently for each track.
 
 | Track | Instances | Intended use | Aggregation |
 | --- | ---: | --- | --- |
-| **Core-15** | 15 canonical tasks | Broad model comparison at fixed task coverage | Equal mean over the 15 canonical tasks |
+| **Core-15** | 15 canonical tasks | Broad model comparison at fixed task coverage | Equal mean over the 15 families |
 | **Full-150** | 150 tasks | Robustness to controlled specification changes | Equal mean over 10 instances within each family, then equal mean over 15 families |
 
-For Full-150, the base task and its nine variants form one family. A complete
-Full-150 run therefore supports both overall scoring and within-family
-variant-versus-canonical analysis.
+## Evaluation framework
 
-## Evaluation
+Spec2Game evaluates four complementary dimensions:
 
-Each generated project is evaluated with source, runtime, and visual evidence.
+| Dimension | Components | Evidence |
+| --- | --- | --- |
+| **D1: Executability** | Syntax validity, dependency readiness, window creation, event handling, runtime stability, controlled termination | Deterministic local checks and a short isolated runtime probe |
+| **D2: Specification Realization** | Game element, interaction, rule and mechanism, dynamic evolution, goal and termination modeling | Checkpoint-specific execution evidence and source code when required |
+| **D3: Code Quality** | Maintainability, reliability, security, efficiency, conformance | Static analysis, AST checks, import probes, and semantic source judging |
+| **D4: User-Facing Quality** | Visual presentation, dynamic feedback fidelity, visual actionability | Execution screenshots, dynamic checkpoint evidence, and visual questions |
 
-| Dimension | What it measures |
-| --- | --- |
-| **D1: Executability** | Whether the submitted project satisfies the runtime and interface contract. |
-| **D2: Specification realization** | Whether the implemented game state, interactions, rules, dynamics, and termination behavior match the specification. D2 is decomposed into D2.1-D2.5. |
-| **D3: Code quality** | Structural and semantic quality of the generated source. |
-| **D4: User-facing quality** | Static appearance, dynamic feedback, and visual-question evidence from the running game. |
+D4 does not measure gameplay fun, novelty, or difficulty. It measures whether the running project presents its state and feedback clearly enough for a user to understand and choose an appropriate action.
 
-The official score uses the locked continuous D1 contribution factor:
+The official score uses an executability gate:
 
 ```text
 g(D1) = clip((D1 - 40) / 20, 0, 1)
-Final = 0.20*D1 + g(D1)*(0.50*D2 + 0.15*D3 + 0.15*D4)
+Overall = 0.20*D1 + g(D1)*(0.50*D2 + 0.15*D3 + 0.15*D4)
 ```
 
-D1 controls the contribution of D2-D4 through `g(D1)`. D2-D4 are still
-measured for diagnosis whenever valid evidence exists. If a valid dimension is
-missing, the official total remains incomplete; the fixed weights are never
-renormalized. See [Evaluation protocol](docs/evaluation-protocol.md) for full
-evidence and resume semantics.
+D1 reduces the contribution of D2-D4 when the project is not reliably executable. The fixed weights are never renormalized when evidence is missing. See the [evaluation protocol](docs/evaluation-protocol.md) for scoring and evidence semantics.
+
+## Results from the paper
+
+The accompanying paper evaluates 14 LLMs on 3,330 generated projects:
+
+- High executability does not guarantee faithful specification realization. Of 630 Core-15 projects, 387 pass all six D1 checks, but 87 of those still score below 60 on D2.
+- Models are substantially stronger at Game Element Modeling than at Rule and Mechanism Modeling or Goal and Termination Modeling. The reported Core-15 averages are 80.83, 45.65, and 44.05 for these D2 components, respectively.
+- User-facing quality shows a similar gap between appearance and interaction feedback. The reported D4 averages are 70.38 for Visual Presentation, 32.10 for Dynamic Feedback Fidelity, and 40.71 for Visual Actionability.
+- Performance decreases as implementation complexity increases. Core-15 Overall averages are 71.19, 65.00, and 58.42 for Easy, Medium, and Hard families; Full-150 averages are 68.24, 59.61, and 51.23.
+- Replacing minimal descriptions with detailed specifications raises the mean Core-15 Overall score from 50.59 to 68.62 in the first ablation. Adding a checkpoint-derived behavioral checklist provides only a small, model-dependent change.
+
+See the [Spec2Game paper](https://arxiv.org/abs/2610.04253) for complete model tables, ablations, human-assessment results, and appendix rubrics.
 
 ## Quick start
 
-The local checks below do not make paid provider requests:
+The project requires Python 3.10 or newer. Install the package and development dependencies from the repository root:
 
 ```bash
 python -m pip install -e '.[dev]'
+```
+
+Run deterministic local checks without paid provider requests:
+
+```bash
 python main.py validate
 python main.py smoke
 python main.py preflight
@@ -97,51 +127,19 @@ python -m pytest -q
 python -m ruff check src scripts main.py tests
 ```
 
-`smoke` and `preflight` use deterministic local checks unless `--live` is
-specified. A live preflight and an official benchmark require credentials for
-the selected candidate and the locked AWS Mantle judges.
+`smoke` and `preflight` use local checks unless `--live` is specified. All mutable outputs should be written outside the Git checkout with `CODE2PLAY_WORKSPACE` or `--workspace`.
 
-## Generation and judging
+## Official evaluation
 
-Candidate source is generated in four locked stages (`state.py`, `game.py`,
-`rendering.py`, and `main.py`) and validated as a five-file Python project.
-The default example uses Qwen3.7 Plus through Alibaba DashScope. The complete
-stage limits, retry policy, candidate interface, and isolation rules are in
-[Generation protocol](docs/generation-protocol.md).
-
-Evaluation roles, model routing, temperature, stateless request policy, and
-run-manifest requirements are documented in [Judge routing](docs/judge-routing.md).
-The D4 contract lifecycle and evaluator-only boundary are documented in
-[D4 round contracts](docs/d4-round-contracts.md).
-
-## Installation
-
-The project requires Python 3.10 or newer. Install the package and development
-dependencies from the repository root:
+An official run requires credentials for the selected generation provider and the locked judge providers. Build the D4 contracts before generation:
 
 ```bash
-python -m pip install -e '.[dev]'
+python main.py contract build --track full150 --round-id study
 ```
 
-The distribution and catalog are named `spec2game-bench`. The package keeps
-the existing `code2play` Python namespace, console entry point, and
-`CODE2PLAY_*` environment-variable prefix for backward compatibility.
-`python main.py ...` is equivalent when working from a source checkout.
-
-## Running the benchmark
-
-All mutable outputs should be placed outside the Git checkout. Set a workspace
-explicitly with `CODE2PLAY_WORKSPACE` or pass `--workspace`.
-
-For the checked-in example configuration, set the candidate and judge keys and
-then build the D4 contracts before generating candidates:
+Then run a track, for example:
 
 ```bash
-export DASHSCOPE_API_KEY='...'
-export AWS_MANTLE_API_KEY='...'
-export CODE2PLAY_WORKSPACE=/path/to/Code2Play-Workspace
-
-python main.py contract build --track full150 --round-id study
 python main.py benchmark \
   --model qwen3_7_plus \
   --track core15 \
@@ -149,22 +147,15 @@ python main.py benchmark \
   --round-id study
 ```
 
-On PowerShell, use `$env:NAME = '...'` instead. The candidate key changes with
-the selected model configuration; judge requests use `AWS_MANTLE_API_KEY` in
-the example configuration. Use `--track full150` for the Full-150 run and
-`--game`/`--variant` for a focused trial. `contract build --mock` is available
-for local schema and lock tests only; mock contracts are not official evidence.
+The full staged-generation procedure is documented in [Generation protocol](docs/generation-protocol.md). Judge models, request policy, and evidence boundaries are documented in [Judge routing](docs/judge-routing.md). The D4 lock procedure is documented in [D4 round contracts](docs/d4-round-contracts.md).
 
-A run can be inspected without executing new tasks:
+## Data and artifacts
 
-```bash
-python main.py status --run-id qwen-full
-python main.py report --run-ids qwen-core qwen-full
-```
+The checked-in `benchmark/` directory contains the normalized public catalog. Each instance includes a specification, a game configuration, and `checkpoints.jsonl`. `benchmark/conversion_audit.json` records source file hashes and conversion counts. Original DOCX and CSV files remain external and are not copied into the repository.
 
-The resume policy distinguishes missing evaluation results from an incomplete
-generation stage. Use `--resume-generation` only when the run state explicitly
-requests it.
+Generated candidates, contracts, traces, reports, and questionnaire bundles are written under the external workspace. See [Data format](docs/data-format.md) and [Questionnaire export](docs/questionnaire-export.md) for the public data and human-review boundaries.
+
+The evaluator executes generated code in isolated working directories. Run official evaluations in a controlled environment and do not place provider credentials in the repository or in artifacts shared for review.
 
 ## Repository layout
 
@@ -175,74 +166,12 @@ Spec2Game-Bench/
 |-- docs/                       # Protocol, track, data, D4, and review docs
 |-- experiments/                # Experiment launch helpers
 |-- scripts/                    # Source-data conversion and maintenance tools
-|-- src/code2play/
-|   |-- config/                 # Catalog, policy, and workspace resolution
-|   |-- generation/             # Staged generation and prompt contracts
-|   |-- execution/              # Isolation, sampling, and resumable runs
-|   |-- evaluation/             # D1-D4 evaluation and score assembly
-|   |-- d4/                     # Round contracts and visual questions
-|   |-- providers/              # Provider and role routing
-|   |-- human_review/           # Blind questionnaire export and validation
-|   |-- planning/               # No-send and live request plans
-|   `-- reporting/              # Track reports and budget summaries
+|-- src/code2play/              # Generation, execution, evaluation, and reporting
 |-- tests/                      # Unit, integration, and compatibility tests
 |-- main.py                     # Source-checkout CLI entry point
 |-- pyproject.toml              # Package metadata and dependencies
 `-- README.md
 ```
-
-Generated candidates, contracts, traces, reports, and questionnaire bundles
-are written under the external workspace:
-
-```text
-Code2Play-Workspace/
-|-- private-configs/
-|-- rounds/<round-id>/          # Locked D4 contracts and manifest
-|-- runs/<run-id>/              # Candidates, traces, evaluations, reports
-|-- candidates/                 # Candidate snapshots
-`-- questionnaires/             # Public blind bundles and private mappings
-```
-
-## Data and artifacts
-
-The checked-in `benchmark/` directory contains the normalized public catalog.
-Each instance includes a specification, a game configuration, and
-`checkpoints.jsonl`. The canonical catalog has 537 checkpoints; the expanded
-Full-150 catalog has 5,475. `benchmark/conversion_audit.json` records source
-file hashes and conversion counts. Original DOCX and CSV files remain external
-and are not copied into the repository.
-
-To rebuild the catalog from an external source directory:
-
-```bash
-python scripts/convert_benchmark_data.py \
-  --source /path/to/Spec2Game-source \
-  --project .
-python main.py validate
-```
-
-## Human review export
-
-Human review is an export-only sidecar. It creates an anonymous public bundle
-and a private mapping for internal audit; it does not host a server or alter
-automatic scores. See [Questionnaire export](docs/questionnaire-export.md) for
-the fixed item design and public/private boundary.
-
-```bash
-python main.py human export \
-  --task-dir /path/to/task \
-  --output-dir /path/to/questionnaire-round \
-  --blind-id candidate-001
-python main.py human validate \
-  --bundle-dir /path/to/questionnaire-round/public/candidate-001
-```
-
-## Results and leaderboard
-
-Official benchmark results and the public leaderboard will be linked here with
-the paper release. Until then, use the reporting commands above for local run
-summaries. Results from mock contracts or partial runs should not be reported
-as official benchmark evidence.
 
 ## Documentation
 
@@ -255,19 +184,26 @@ as official benchmark evidence.
 - [Questionnaire export](docs/questionnaire-export.md)
 - [Final acceptance report](docs/final-acceptance-report.md)
 
+## Limitations and scope
+
+- The current benchmark focuses on classic small-scale games and does not cover the full space of game families and mechanics.
+- The main setting is open-loop generation from detailed specifications. It does not provide runtime feedback, semantic repair, or agentic coding workflows during generation.
+- Parts of D2-D4 rely on text or vision judges and may be affected by evaluator-specific bias or limited evidence coverage.
+- The benchmark measures specification realization and user-facing evidence; it does not claim to measure gameplay fun, novelty, or difficulty.
+
 ## Citation
 
-If you use Spec2Game-Bench, please cite the accompanying benchmark paper and
-link to this repository. The accompanying preprint is available at
-<https://arxiv.org/abs/2610.04253>.
+If you use Spec2Game-Bench, please cite:
 
 ```bibtex
-@misc{spec2gamebench,
-  title  = {Spec2Game Benchmark: Can LLMs Generate Complete Playable Games from Specifications?},
-  author = {Spec2Game-Bench Authors},
-  year   = {2026},
-  url    = {https://github.com/Aurora1094/Spec2Game-Bench},
-  eprint = {2610.04253},
-  archivePrefix = {arXiv}
+@article{cai2026spec2game,
+  title         = {Spec2Game: Can LLMs Generate Complete Playable Games from Detailed Specifications?},
+  author        = {Cai, Yixue and Zhao, Yuzhe and Chao, Hanxiang and Ma, Qingsen and Xiong, Ziheng and Qi, Jinhu and King, Irwin},
+  year          = {2026},
+  eprint        = {2610.04253},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI},
+  url           = {https://arxiv.org/abs/2610.04253}
 }
 ```
+
